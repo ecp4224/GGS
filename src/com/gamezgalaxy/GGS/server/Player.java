@@ -17,6 +17,9 @@ public class Player extends IOClient {
 		boolean toreturn = super.ReadPacket(packet);
 		if (!toreturn)
 			return false;
+		switch (packet.ID) {
+		
+		}
 		return true;
 		
 	}

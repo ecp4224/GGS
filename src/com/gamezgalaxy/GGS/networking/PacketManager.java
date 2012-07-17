@@ -14,9 +14,21 @@ public class PacketManager {
 	
 	protected Packet[] packets = new Packet[] {
 		new Connect(this),
+		new DespawnPlayer(this),
+		new FinishLevelSend(this),
+		new GlobalPosUpdate(this),
+		new Kick(this),
+		new LevelSend(this),
+		new LevelStartSend(this),
 		new Message(this),
+		new Ping(this),
 		new PosUpdate(this),
-		new SetBlock(this)
+		new ServerMessage(this),
+		new SetBlock(this),
+		new SpawnPlayer(this),
+		new TP(this),
+		new UpdateUser(this),
+		new Welcome(this)
 	};
 	
 	protected ServerSocket serverSocket;

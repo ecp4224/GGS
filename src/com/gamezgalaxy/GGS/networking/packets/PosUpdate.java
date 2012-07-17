@@ -19,13 +19,13 @@ public class PosUpdate extends Packet {
 	}
 
 	@Override
-	public byte[] Read(Server server, Player player) {
+	public void Write(Player player, Server server) {
 		// TODO Auto-generated method stub
-		return null;
+		
 	}
 
 	@Override
-	public void Write(Player player, Server server) {
+	public void Handle(byte[] message, Server server, Player player) {
 		// TODO Auto-generated method stub
 		
 	}

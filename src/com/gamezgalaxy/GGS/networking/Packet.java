@@ -15,7 +15,7 @@ public abstract class Packet {
 	
 	public String name;
 	
-	public abstract byte[] Read(Server server, Player player);
+	public abstract void Handle(byte[] message, Server server, Player player);
 	
 	public abstract void Write(Player player, Server server);
 	

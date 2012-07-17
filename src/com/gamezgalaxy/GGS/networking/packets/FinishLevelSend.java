@@ -6,13 +6,16 @@ import com.gamezgalaxy.GGS.networking.PacketType;
 import com.gamezgalaxy.GGS.server.Player;
 import com.gamezgalaxy.GGS.server.Server;
 
-public class Connect extends Packet {
+public class FinishLevelSend extends Packet {
 
-	public Connect(String name, byte ID, PacketManager parent, PacketType packetType) {
+	public FinishLevelSend(String name, byte ID, PacketManager parent,
+			PacketType packetType) {
 		super(name, ID, parent, packetType);
+		// TODO Auto-generated constructor stub
 	}
-	public Connect(PacketManager pm) {
-		super("Player Connect", (byte)0x00, pm, PacketType.Client_to_Server);
+	
+	public FinishLevelSend(PacketManager pm) {
+		super("Finish Level Send", (byte)0x04, pm, PacketType.Server_to_Client);
 	}
 
 	@Override
@@ -20,6 +23,7 @@ public class Connect extends Packet {
 		// TODO Auto-generated method stub
 		
 	}
+
 	@Override
 	public void Handle(byte[] message, Server server, Player player) {
 		// TODO Auto-generated method stub

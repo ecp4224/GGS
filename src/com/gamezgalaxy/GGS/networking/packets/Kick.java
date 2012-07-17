@@ -6,22 +6,26 @@ import com.gamezgalaxy.GGS.networking.PacketType;
 import com.gamezgalaxy.GGS.server.Player;
 import com.gamezgalaxy.GGS.server.Server;
 
-public class Connect extends Packet {
+public class Kick extends Packet {
 
-	public Connect(String name, byte ID, PacketManager parent, PacketType packetType) {
+	public Kick(String name, byte ID, PacketManager parent,
+			PacketType packetType) {
 		super(name, ID, parent, packetType);
+		// TODO Auto-generated constructor stub
 	}
-	public Connect(PacketManager pm) {
-		super("Player Connect", (byte)0x00, pm, PacketType.Client_to_Server);
+	
+	public Kick(PacketManager pm) {
+		super("Kick", (byte)0x0e, pm, PacketType.Server_to_Client);
+	}
+
+	@Override
+	public void Handle(byte[] message, Server server, Player player) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
 	public void Write(Player player, Server server) {
-		// TODO Auto-generated method stub
-		
-	}
-	@Override
-	public void Handle(byte[] message, Server server, Player player) {
 		// TODO Auto-generated method stub
 		
 	}
