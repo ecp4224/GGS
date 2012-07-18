@@ -1,7 +1,5 @@
 package com.gamezgalaxy.GGS.networking;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
