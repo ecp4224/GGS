@@ -1,16 +1,18 @@
 package com.gamezgalaxy.GGS.networking;
 
+import java.io.DataInputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.PrintStream;
 import java.net.Socket;
+
+import com.gamezgalaxy.GGS.server.Player;
 
 public class IOClient {
 	protected Socket client;
 	
-	protected ObjectOutputStream writer;
+	protected PrintStream writer;
 	
-	protected ObjectInputStream reader;
+	protected DataInputStream reader;
 	
 	protected Thread readerthread;
 	
@@ -20,16 +22,24 @@ public class IOClient {
 		this.client = client;
 		this.pm = pm;
 		try {
-			writer = new ObjectOutputStream(client.getOutputStream());
-			reader = new ObjectInputStream(client.getInputStream());
+			writer = new PrintStream(client.getOutputStream());
+			//writer.flush();
+			reader = new DataInputStream(client.getInputStream());
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			pm.server.Log("Error");
 			e.printStackTrace();
 		}
 	}
 	
+	public void Listen() {
+		readerthread = new Reader(this);
+		readerthread.start();
+		pm.server.Log("Listening..");
+	}
+	
 	public void CloseConnection() {
 		try {
+			pm.server.Log("Closing connection");
 			writer.close();
 			reader.close();
 			client.close();
@@ -40,33 +50,24 @@ public class IOClient {
 	
 	public void WriteData(byte[] data) throws IOException {
 		writer.write(data);
-	}
-	/**
-	 * Read the data the client sends
-	 * @param packet
-	 * @return if returns true, then the read was successful, otherwise it failed.
-	 */
-	public boolean ReadPacket(Packet packet) {
-		if (packet == null) {
-			//TODO Kick the client
-			CloseConnection();
-			return false;
-		}
-		return true;
+		writer.flush();
 	}
 	
 	public class Reader extends Thread {
+		IOClient client;
 		
+		public Reader(IOClient client) { this.client = client; }
 		@Override
 		public void run() {
-			while (pm.server.Running) {
+			while (pm.server.Running && client.client.isConnected()) {
 				try {
 					byte opCode = reader.readByte();
-					
-					
+					Packet packet = pm.getPacket(opCode);
+					byte[] message = new byte[packet.lenght];
+					reader.read(message);
+					packet.Handle(message, pm.server, (Player)client);
 				} catch (IOException e) {
 					CloseConnection();
-					//e.printStackTrace();
 					break;
 				}
 			}

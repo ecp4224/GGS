@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import com.gamezgalaxy.GGS.networking.packets.*;
+import com.gamezgalaxy.GGS.server.Player;
 import com.gamezgalaxy.GGS.server.Server;
 
 public class PacketManager {
@@ -51,9 +52,18 @@ public class PacketManager {
 		return null;
 	}
 	
+	public Packet getPacket(String name) {
+		for (Packet p : packets) {
+			if (p.name.equalsIgnoreCase(name))
+				return p;
+		}
+		return null;
+	}
+	
 	public void StartReading() {
-		reader = new Read();
+		reader = new Read(this);
 		reader.start();
+		server.Log("Listening on port " + server.Port);
 	}
 	
 	public static long ConvertToInt32(byte[] array) {
@@ -70,12 +80,18 @@ public class PacketManager {
 	
 	public class Read extends Thread {
 		
+		PacketManager pm;
+		
+		public Read(PacketManager pm) { this.pm = pm; }
+		
 		@Override
 		public void run() {
 			Socket connection = null;
 			while (server.Running) {
 				try {
 					connection = serverSocket.accept();
+					server.Log("Connection made from " + connection.getInetAddress().toString());
+					new Player(connection, pm);
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

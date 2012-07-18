@@ -28,6 +28,9 @@ public class Kick extends Packet {
 	@Override
 	public void Write(Player player, Server server) {
 		try {
+			while (player.kickreason.length() < 64) {
+				player.kickreason += " ";
+			}
 			byte[] temp = player.kickreason.getBytes("US-ASCII");
 			byte[] finals = new byte[1 + temp.length];
 			finals[0] = ID;

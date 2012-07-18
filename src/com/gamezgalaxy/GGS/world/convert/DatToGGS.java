@@ -24,10 +24,16 @@ public class DatToGGS {
 			gzis = new GZIPInputStream(fis);
 			inputstream = new DataInputStream(gzis);
 			if((inputstream.readInt()) != 0x271bb788) {
+				fis.close();
+				gzis.close();
+				inputstream.close();
 				return;
 			}
 			if((inputstream.readByte()) > 2) {
 				System.out.println("Error: Level version > 2, this is unexpected!");
+				fis.close();
+				gzis.close();
+				inputstream.close();
 				return;
 			}
 			in = new ObjectInputStream(gzis);
@@ -35,13 +41,15 @@ public class DatToGGS {
 			inputstream.close();
 			in.close();
 			System.out.println("Loading level "+filename+" successful");
+			fis.close();
+			gzis.close();
 		} catch(IOException ex) {
 			ex.printStackTrace();
 		} catch(ClassNotFoundException ex) {
 			ex.printStackTrace();
 		}
 		level.initTransient();
-	}
+		}
 
 	// save in file called filename
 	public void save(String filename) {
@@ -156,45 +164,5 @@ public class DatToGGS {
 
 	public void setSize(int x, int y, int z) {
 		level.setData(x, y, z, new byte[x*y*z]);
-	}
-
-	public static void main(String [] args) {
-		DatToGGS le = new DatToGGS();
-		String filename = "server_level.dat";
-		if(args.length > 0) {
-			filename = args[0];
-			le.load(filename);
-			if (le.level == null) {
-				System.out.println("Loading level "+filename+" failed");
-				return;
-			}
-		} else {
-			le.level = new com.mojang.minecraft.level.Level();
-		}
-		// Do some fancy editing here
-
-		// set a custom size: 256 wide, 128 high, 512 length
-		le.setSize(256, 128, 512);
-
-		// first, let's clear out the field
-		le.clearBlocks();
-
-		// add a bunch of walls to fill the lower part of the level
-		for (int i=0; i<le.level.width; i++) {
-			le.wallX(0,le.level.height-1,i,0,(int)le.level.getWaterLevel()-1,3);
-		}
-		// lay the floor
-		le.floor((int)le.level.getWaterLevel()-1,2);
-
-		// let the level find a spawn location for us
-		le.level.findSpawn();
-
-		// Leave our fingerprint
-		le.level.creator = "Minecrafter";
-		le.level.name = "A Custom World";
-		le.level.createTime = System.currentTimeMillis();
-
-		le.save(filename);
-		le.printInfo();
 	}
 }

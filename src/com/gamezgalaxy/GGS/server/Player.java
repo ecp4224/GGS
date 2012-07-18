@@ -1,8 +1,6 @@
 package com.gamezgalaxy.GGS.server;
 
 import java.net.Socket;
-import java.util.Random;
-
 import com.gamezgalaxy.GGS.networking.IOClient;
 import com.gamezgalaxy.GGS.networking.Packet;
 import com.gamezgalaxy.GGS.networking.PacketManager;
@@ -11,8 +9,11 @@ public class Player extends IOClient {
 	protected int X;
 	protected int Y;
 	protected int Z;
-	public String kickreason;
 	protected byte ID;
+	public String kickreason;
+	public String username;
+	public String mppass;
+	public byte ClientType; //This might be used for custom clients *hint hint*
 	public int oldX;
 	public int oldY;
 	public int oldZ;
@@ -21,6 +22,26 @@ public class Player extends IOClient {
 	public Player(Socket client, PacketManager pm) {
 		super(client, pm);
 		ID = getFreeID();
+		Listen();
+	}
+	
+	public void VerifyLogin() throws InterruptedException {
+		//TODO Check for real user and group and such
+		SendWelcome();
+		Thread.sleep(10000);
+		Kick("Bye!");
+	}
+	
+	//NOTE: It appears you can have the client wait on the motd screen...
+	//This could be useful for future use
+	public void SendWelcome() {
+		pm.getPacket("Welcome").Write(this, pm.server);
+	}
+	
+	public void Kick(String reason) {
+		Packet p = pm.getPacket("Kick");
+		this.kickreason = reason;
+		p.Write(this, pm.server);
 	}
 	
 	private byte getFreeID() {
@@ -65,18 +86,6 @@ public class Player extends IOClient {
 	public void setZ(int value) {
 		oldZ = Z;
 		Z = value;
-	}
-	
-	@Override
-	public boolean ReadPacket(Packet packet) {
-		boolean toreturn = super.ReadPacket(packet);
-		if (!toreturn)
-			return false;
-		switch (packet.ID) {
-		
-		}
-		return true;
-		
 	}
 	
 	
