@@ -56,6 +56,18 @@ public class PacketManager {
 		reader.start();
 	}
 	
+	public static long ConvertToInt32(byte[] array) {
+		long toreturn = 0;
+		for (int i = 0; i < array.length; i++) {
+			toreturn += ((long) array[i] & 0xffL) << (8 * i);
+		}
+		return toreturn;
+	}
+	public static short INT_little_endian_TO_big_endian(short i)
+	{
+		return(short)(((i&0xff)<<24)+((i&0xff00)<<8)+((i&0xff0000)>>8)+((i>>24)&0xff));
+	}
+	
 	public class Read extends Thread {
 		
 		@Override
