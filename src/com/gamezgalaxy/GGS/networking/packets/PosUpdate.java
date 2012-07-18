@@ -20,14 +20,16 @@ public class PosUpdate extends Packet {
 
 	@Override
 	public void Write(Player player, Server server) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void Handle(byte[] message, Server server, Player player) {
-		// TODO Auto-generated method stub
-		
+		short X = (short)((message[3] << 8) | message[2]);
+		short Y = (short)((message[5] << 8) | message[4]);
+		short Z = (short)((message[7] << 8) | message[6]);
+		player.setX(X);
+		player.setY(Y);
+		player.setZ(Z);
 	}
 
 }

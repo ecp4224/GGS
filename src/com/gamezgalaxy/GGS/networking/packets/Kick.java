@@ -1,5 +1,8 @@
 package com.gamezgalaxy.GGS.networking.packets;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+
 import com.gamezgalaxy.GGS.networking.Packet;
 import com.gamezgalaxy.GGS.networking.PacketManager;
 import com.gamezgalaxy.GGS.networking.PacketType;
@@ -20,14 +23,23 @@ public class Kick extends Packet {
 
 	@Override
 	public void Handle(byte[] message, Server server, Player player) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void Write(Player player, Server server) {
-		// TODO Auto-generated method stub
-		
+		try {
+			byte[] temp = player.kickreason.getBytes("US-ASCII");
+			byte[] finals = new byte[1 + temp.length];
+			finals[0] = ID;
+			System.arraycopy(temp, 0, finals, 1, temp.length);
+			player.WriteData(finals);
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }

@@ -37,6 +37,10 @@ public class IOClient {
 			e.printStackTrace();
 		}
 	}
+	
+	public void WriteData(byte[] data) throws IOException {
+		writer.write(data);
+	}
 	/**
 	 * Read the data the client sends
 	 * @param packet
