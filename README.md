@@ -17,7 +17,7 @@ for software bugs and issues.
 ##Copyright/License
 
 Unless otherwise noted, this software and its source code is
-Copyright 2011 GamezGalaxy. Dual-licensed under the [GNU General Public License, Version 3][2] and the [Educational Community License, Version 2.0][3]
+Copyright 2012 GamezGalaxy. Licensed under the [GNU General Public License, Version 3][2]
 
 In an effort to add copyright notices to the source code, we utilized automated methods to insert these.
 Some copyright attributions may be incorrect.  If you identify any such cases, please notify us immediately so we may correct it.
@@ -37,4 +37,3 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 [1]: http://www.gamezgalaxy.com
 [2]: http://www.gnu.org/licenses/gpl-3.0.html
-[3]: http://www.opensource.org/licenses/ecl2.php
