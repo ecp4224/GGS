@@ -9,7 +9,6 @@ import java.io.Reader;
 import java.util.zip.GZIPInputStream;
 
 import com.gamezgalaxy.GGS.networking.PacketManager;
-import com.gamezgalaxy.GGS.world.blocks.Block;
 import com.gamezgalaxy.GGS.world.convert.DatToGGS;
 
 public class Level {

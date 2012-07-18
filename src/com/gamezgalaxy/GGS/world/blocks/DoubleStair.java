@@ -2,16 +2,15 @@ package com.gamezgalaxy.GGS.world.blocks;
 
 import com.gamezgalaxy.GGS.world.Block;
 
+public class DoubleStair extends Block {
 
-public class Air extends Block {
-
-	public Air(byte ID, String name) {
+	public DoubleStair(byte ID, String name) {
 		super(ID, name);
 		// TODO Auto-generated constructor stub
 	}
 	
-	public Air() {
-		super((byte)0, "Air");
+	public DoubleStair() {
+		super((byte)43, "DoubleStair");
 	}
 
 }
