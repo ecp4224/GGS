@@ -17,6 +17,22 @@ public class Level {
 		this.width = width;
 		this.height = height;
 		this.depth = depth;
+		blocks = new Block[width*height*depth];
+	}
+	
+	public void FlatGrass() {
+		for (int x = 0; x < width; x++) {
+			for (int y = 0; y < height; y++) {
+				for (int z = 0; z < depth; z++) {
+					if (y < height / 2)
+						blocks[PosToInt(x, y, z)] = Block.getBlock("dirt");
+					else if (y == height / 2)
+						blocks[PosToInt(x, y, z)] = Block.getBlock("grass");
+					else
+						blocks[PosToInt(x, y, z)] = Block.getBlock("air");
+				}
+			}
+		}
 	}
 	
 	public void setTile(Block b, int index) {
@@ -25,11 +41,25 @@ public class Level {
 		blocks[index] = b;
 	}
 	
+	public Block getTile(int index) {
+		if (index < 0) index = 0;
+		if (index >= blocks.length) index = blocks.length - 1;
+		return blocks[index];
+	}
+	
+	public Block getTile(int x, int y, int z) {
+		return getTile(PosToInt(x, y, z));
+	}
+	
+	public short getLength() {
+		return (short)blocks.length;
+	}
+	
 	public void setTile(Block b, int x, int y, int z) {
 		setTile(b, PosToInt(x, y, z));
 	}
 	
-	public int PosToInt(int x, int z, int y) {
+	public int PosToInt(int x, int y, int z) {
         if (x < 0) { return -1; }
         if (x >= width) { return -1; }
         if (y < 0) { return -1; }

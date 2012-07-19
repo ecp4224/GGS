@@ -1,5 +1,7 @@
 package com.gamezgalaxy.GGS.networking.packets;
 
+import java.io.IOException;
+
 import com.gamezgalaxy.GGS.networking.Packet;
 import com.gamezgalaxy.GGS.networking.PacketManager;
 import com.gamezgalaxy.GGS.networking.PacketType;
@@ -20,8 +22,10 @@ public class LevelSend extends Packet {
 
 	@Override
 	public void Write(Player player, Server server) {
-		// TODO Auto-generated method stub
-		
+		byte[] levelbuff = new byte[player.getLevel().getLength() + 4];
+		PacketManager.intToNetworkByteOrder(player.getLevel().getLength(), levelbuff, 0, 4);
+		for (int i = 0; i < player.getLevel().getLength(); i++)
+			levelbuff[i + 4] = player.getLevel().getTile(i).getVisableBlock();
 	}
 
 	@Override

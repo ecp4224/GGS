@@ -3,6 +3,7 @@ package com.gamezgalaxy.GGS.server;
 import java.util.ArrayList;
 
 import com.gamezgalaxy.GGS.networking.PacketManager;
+import com.gamezgalaxy.GGS.world.Level;
 
 public class Server {
 	protected PacketManager pm;
@@ -12,6 +13,7 @@ public class Server {
 	public String Name;
 	public String MOTD;
 	public long Salt;
+	public Level MainLevel;
 	public Server(String Name, int Port, String MOTD) {
 		this.Port = Port;
 		this.Name = Name;
@@ -23,6 +25,10 @@ public class Server {
 		Running = true;
 		Log("Starting..");
 		pm.StartReading();
+		Log("Generating Level..");
+		MainLevel = new Level(128, 64, 128);
+		MainLevel.FlatGrass();
+		Log("Done!");
 	}
 	
 	public void Log(String log) {

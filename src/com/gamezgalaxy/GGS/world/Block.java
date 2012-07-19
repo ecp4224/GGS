@@ -66,6 +66,10 @@ public abstract class Block {
 		
 	}
 	
+	public byte getVisableBlock() {
+		return ID;
+	}
+	
 	public void onDelete(Level l) {
 		
 	}

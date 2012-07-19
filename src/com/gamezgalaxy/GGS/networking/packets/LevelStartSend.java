@@ -1,5 +1,7 @@
 package com.gamezgalaxy.GGS.networking.packets;
 
+import java.io.IOException;
+
 import com.gamezgalaxy.GGS.networking.Packet;
 import com.gamezgalaxy.GGS.networking.PacketManager;
 import com.gamezgalaxy.GGS.networking.PacketType;
@@ -20,8 +22,12 @@ public class LevelStartSend extends Packet {
 
 	@Override
 	public void Write(Player player, Server server) {
-		// TODO Auto-generated method stub
-		
+		try {
+			player.WriteData(new byte[] { ID });
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Override

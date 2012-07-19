@@ -4,12 +4,14 @@ import java.net.Socket;
 import com.gamezgalaxy.GGS.networking.IOClient;
 import com.gamezgalaxy.GGS.networking.Packet;
 import com.gamezgalaxy.GGS.networking.PacketManager;
+import com.gamezgalaxy.GGS.world.Level;
 
 public class Player extends IOClient {
 	protected int X;
 	protected int Y;
 	protected int Z;
 	protected byte ID;
+	protected Level level;
 	public String kickreason;
 	public String username;
 	public String mppass;
@@ -30,6 +32,13 @@ public class Player extends IOClient {
 		SendWelcome();
 		Thread.sleep(10000);
 		Kick("Bye!");
+	}
+	
+	public Level getLevel() {
+		return level;
+	}
+	public void setLevel() {
+		
 	}
 	
 	//NOTE: It appears you can have the client wait on the motd screen...

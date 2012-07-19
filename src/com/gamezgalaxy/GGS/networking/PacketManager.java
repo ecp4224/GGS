@@ -77,6 +77,27 @@ public class PacketManager {
 	{
 		return(short)(((i&0xff)<<24)+((i&0xff00)<<8)+((i&0xff0000)>>8)+((i>>24)&0xff));
 	}
+	/**
+     * Encodes an integer into up to 4 bytes in network byte order in the 
+     * supplied buffer starting at <code>start</code> offset and writing
+     * <code>count</code> bytes.
+     * 
+     * @param num the int to convert to a byte array
+     * @param buf the buffer to write the bytes to
+     * @param start the offset from beginning for the write operation
+     * @param count the number of reserved bytes for the write operation
+     */
+    public static void intToNetworkByteOrder(int num, byte[] buf, int start, int count) {
+        if (count > 4) {
+            throw new IllegalArgumentException(
+                    "Cannot handle more than 4 bytes");
+        }
+
+        for (int i = count - 1; i >= 0; i--) {
+            buf[start + i] = (byte) (num & 0xff);
+            num >>>= 8;
+        }
+    }
 	
 	public class Read extends Thread {
 		
