@@ -1,7 +1,7 @@
 GGS [![Build Status](https://secure.travis-ci.org/GamezGalaxy/GGS.png?branch=master)](http://travis-ci.org/GamezGalaxy/GGS)
 ===
 
-![GG Logo](http://dev.lavoaster.co.uk/public/style_images/4_logo.png)
+![GG Logo](http://www.gamezgalaxy.com/assets/icon.png)
 
 GamezGalaxy Classic Server Software
 [gamezgalaxy.com][1]
