@@ -10,7 +10,6 @@ package com.gamezgalaxy.GGS.networking;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import com.gamezgalaxy.GGS.networking.packets.*;
 import com.gamezgalaxy.GGS.networking.packets.minecraft.Connect;
 import com.gamezgalaxy.GGS.networking.packets.minecraft.DespawnPlayer;
 import com.gamezgalaxy.GGS.networking.packets.minecraft.FinishLevelSend;
@@ -22,7 +21,6 @@ import com.gamezgalaxy.GGS.networking.packets.minecraft.MOTD;
 import com.gamezgalaxy.GGS.networking.packets.minecraft.Message;
 import com.gamezgalaxy.GGS.networking.packets.minecraft.Ping;
 import com.gamezgalaxy.GGS.networking.packets.minecraft.PosUpdate;
-import com.gamezgalaxy.GGS.networking.packets.minecraft.ServerMessage;
 import com.gamezgalaxy.GGS.networking.packets.minecraft.SetBlock;
 import com.gamezgalaxy.GGS.networking.packets.minecraft.SpawnPlayer;
 import com.gamezgalaxy.GGS.networking.packets.minecraft.TP;
@@ -45,7 +43,6 @@ public class PacketManager {
 		new MOTD(this),
 		new Ping(this),
 		new PosUpdate(this),
-		new ServerMessage(this),
 		new SetBlock(this),
 		new SpawnPlayer(this),
 		new TP(this),
