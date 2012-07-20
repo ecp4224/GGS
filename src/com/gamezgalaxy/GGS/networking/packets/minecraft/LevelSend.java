@@ -10,6 +10,7 @@ package com.gamezgalaxy.GGS.networking.packets.minecraft;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.Random;
 import java.util.zip.GZIPOutputStream;
 
 import com.gamezgalaxy.GGS.networking.IOClient;
@@ -62,7 +63,7 @@ public class LevelSend extends Packet {
 				System.arraycopy(gzip, lenght, tempbuffer, 0, gzip.length - lenght);
 				gzip = tempbuffer;
 				int percent = (int)((double)((double)i * (double)100 / (double)number));
-				send[1027] = (byte)(100 - percent); //LOL Backwards progress bar!
+				send[1027] = (byte)percent; 
 				player.WriteData(send);
 				Thread.sleep(10);
 			}

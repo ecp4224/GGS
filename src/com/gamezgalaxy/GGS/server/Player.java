@@ -21,9 +21,9 @@ import com.gamezgalaxy.GGS.networking.packets.minecraft.TP;
 import com.gamezgalaxy.GGS.world.Level;
 
 public class Player extends IOClient {
-	protected int X;
-	protected int Y;
-	protected int Z;
+	protected short X;
+	protected short Y;
+	protected short Z;
 	protected byte ID;
 	protected Level level;
 	protected Thread levelsender;
@@ -34,9 +34,9 @@ public class Player extends IOClient {
 	public String message;
 	public boolean isConnected;
 	public byte ClientType; //This might be used for custom clients *hint hint*
-	public int oldX;
-	public int oldY;
-	public int oldZ;
+	public short oldX;
+	public short oldY;
+	public short oldZ;
 	public byte yaw;
 	public byte pitch;
 	public Ping tick = new Ping(this);
@@ -54,9 +54,9 @@ public class Player extends IOClient {
 		SendWelcome();
 		setLevel(pm.server.MainLevel);
 		levelsender.join(); //Wait for finish
-		setX(level.spawnx);
-		setY(level.spawny);
-		setZ(level.spawnz);
+		setX((short) level.spawnx);
+		setY((short) level.spawny);
+		setZ((short) level.spawnz);
 		spawnPlayer(this);
 		for (Player p : pm.server.players) {
 			if (p.level == level) {
@@ -138,31 +138,31 @@ public class Player extends IOClient {
 		return toreturn;
 	}
 
-	public int getX() {
+	public short getX() {
 		return X;
 	}
-	public int getY() {
+	public short getY() {
 		return Y;
 	}
 	public byte getID() {
 		return ID;
 	}
-	public int getZ() {
+	public short getZ() {
 		return Z;
 	}
-	public void setX(int value) {
+	public void setX(short value) {
 		oldX = X;
 		X = value;
 	}
-	public void setY(int value) {
+	public void setY(short value) {
 		oldY = Y;
 		Y = value;
 	}
-	public void setZ(int value) {
+	public void setZ(short value) {
 		oldZ = Z;
 		Z = value;
 	}
-	public void setPos(int x, int y, int z) {
+	public void setPos(short x, short y, short z) {
 		setX(x);
 		setY(y);
 		setZ(z);
@@ -199,20 +199,25 @@ public class Player extends IOClient {
 		return true; //Message was sent successfully
 	}
 	
+	public void Despawn(Player p) {
+		if (!seeable.contains(p))
+			return;
+		DespawnPlayer pa = (DespawnPlayer)(pm.getPacket((byte)0x0c));
+		pa.pID = p.ID;
+		pa.Write(this, pm.server);
+	}
+	
 	@Override
 	public void CloseConnection() {
 		super.CloseConnection();
 		pm.server.Remove(tick);
-		DespawnPlayer pa = (DespawnPlayer)(pm.getPacket((byte)0x0c));
-		pa.pID = ID;
 		for (Player p : pm.server.players)
-			pa.Write(p, p.pm.server);
+			p.Despawn(this);
 		
 	}
 
 	protected void finishLevel() {
 		levelsender = null;
-		setPos(50, 50, 50);
 	}
 
 	public class Ping extends Tick {

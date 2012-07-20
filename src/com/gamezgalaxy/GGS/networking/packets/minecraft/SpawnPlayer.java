@@ -55,9 +55,9 @@ public class SpawnPlayer extends Packet {
 				name += " ";
 			byte[] nameb = name.getBytes("US-ASCII");
 			System.arraycopy(nameb, 0, send, 2, 64);
-			System.arraycopy(HTNO((short) spawn.getX()), 0, send, 66, 2);
-			System.arraycopy(HTNO((short) spawn.getY()), 0, send, 68, 2);
-			System.arraycopy(HTNO((short) spawn.getZ()), 0, send, 70, 2);
+			System.arraycopy(HTNO(spawn.getX()), 0, send, 66, 2);
+			System.arraycopy(HTNO(spawn.getY()), 0, send, 68, 2);
+			System.arraycopy(HTNO(spawn.getZ()), 0, send, 70, 2);
 			send[72] = spawn.yaw;
 			send[73] = spawn.pitch;
 			player.WriteData(send);

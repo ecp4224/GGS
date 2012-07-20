@@ -52,6 +52,7 @@ public class PosUpdate extends Packet {
 		player.setZ(Z);
 		player.yaw = bb.get(7);
 		player.pitch = bb.get(8);
+		server.UpdatePos();
 		
 	}
 

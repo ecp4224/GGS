@@ -94,8 +94,6 @@ public class Server {
 		@Override
 		public void run() {
 			while (Running) {
-				for (Player p : players)
-					p.updatePlayers();
 				synchronized(ticks) {
 					for (Tick t : ticks) {
 						t.Tick();
@@ -109,5 +107,11 @@ public class Server {
 				}
 			}
 		}
+	}
+	
+	
+	public void UpdatePos() {
+		for (Player p : players)
+			p.updatePlayers();
 	}
 }

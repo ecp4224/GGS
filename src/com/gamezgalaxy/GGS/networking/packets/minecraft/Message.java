@@ -67,20 +67,10 @@ public class Message extends Packet {
 		try {
 			byte[] name = new byte[message.length - 1];
 			System.arraycopy(message, 1, name, 0, name.length);
-<<<<<<< HEAD
-			String m = new String(name, "US-ASCII");
-			server.Log(m);
-=======
 			String m = new String(name, "US-ASCII").trim();
-			//TODO Handle Message function m
->>>>>>> 6025e24512318329d54900cd9e5c4acf58113af7
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-<<<<<<< HEAD
-		
-=======
->>>>>>> 6025e24512318329d54900cd9e5c4acf58113af7
 	}
 }
