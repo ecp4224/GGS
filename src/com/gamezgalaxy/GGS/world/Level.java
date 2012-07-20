@@ -75,7 +75,7 @@ public class Level {
         if (y >= height) { return -1; }
         if (z < 0) { return -1; }
         if (z >= depth) { return -1; }
-        return x + (z * width) + (y * width * height);
+        return x + z * width + y * width * depth;
     }
 	
 	public static Level Convert(String file) throws IOException {

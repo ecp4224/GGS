@@ -42,7 +42,6 @@ public class Message extends Packet {
 			p = (Player)player;
 		else
 			return;
-		p.setPos(50, 50, 50);
 	}
 
 }
