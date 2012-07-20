@@ -68,6 +68,7 @@ public class Message extends Packet {
 			byte[] name = new byte[message.length - 1];
 			System.arraycopy(message, 1, name, 0, name.length);
 			String m = new String(name, "US-ASCII").trim();
+			p.recieveMessage(m);
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

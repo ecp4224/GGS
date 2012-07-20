@@ -9,6 +9,8 @@ package com.gamezgalaxy.GGS.server;
 
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.gamezgalaxy.GGS.networking.IOClient;
 import com.gamezgalaxy.GGS.networking.Packet;
@@ -33,6 +35,7 @@ public class Player extends IOClient {
 	public String mppass;
 	public String message;
 	public boolean isConnected;
+	public boolean cc = true; //Can Player use color codes
 	public byte ClientType; //This might be used for custom clients *hint hint*
 	public short oldX;
 	public short oldY;
@@ -180,10 +183,10 @@ public class Player extends IOClient {
 	}
 	
 	/**
-	 * Sends a message to the player
+	 * Sends a message to the player if the message is less than 64 characters
 	 * 
 	 * @param string message
-	 * @return 1 on success 0 on failure.
+	 * @return boolean true on sent, false on not sent.
 	 */
 	public boolean sendMessage(String message){
 		Packet p = pm.getPacket("Message");
@@ -192,11 +195,44 @@ public class Player extends IOClient {
 			this.message = message;
 			p.Write(this, pm.server);
 		}else{
-			this.message = "FUCK YOU THE MESSAGE IS: "+message.length();
-			p.Write(this, pm.server);
 			return false; //Message is longer than permitted
 		}
 		return true; //Message was sent successfully
+	}
+
+	/**
+	 * Handles the messages a player sends to the server, could be used in the future for run command as player
+	 * 
+	 * @param string message
+	 * @return void
+	 */
+	public void recieveMessage(String message){
+		if(message.startsWith("/"))
+		{
+			if(message.contains("/cc"))
+			{
+				if(this.cc)
+				{
+					this.sendMessage("Color Codes have been disabled.");
+					this.cc = false;
+				}else{
+					this.sendMessage("Color Codes have been enabled.");
+					this.cc = true;
+				}
+			}
+		}else{
+			String m = message;
+			if(m.matches(".*%([0-9]|[a-f]|[k-r])(.+?).*") && this.cc){
+				Pattern pattern = Pattern.compile("%([0-9]|[a-f]|[k-r])(.+?)");
+				Matcher matcher = pattern.matcher(m);
+				while (matcher.find()) {
+				  String code = Character.toString(matcher.group().charAt(1));
+				  m = m.replaceAll("%"+code, "&"+code);
+				}
+			}
+			pm.server.Log("User "+this.username + " sent: " + m);
+			pm.server.sendMessage(this.username + ": " + m);
+		}
 	}
 	
 	public void Despawn(Player p) {
@@ -213,7 +249,6 @@ public class Player extends IOClient {
 		pm.server.Remove(tick);
 		for (Player p : pm.server.players)
 			p.Despawn(this);
-		
 	}
 
 	protected void finishLevel() {
