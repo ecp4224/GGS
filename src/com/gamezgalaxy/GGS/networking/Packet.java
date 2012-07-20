@@ -14,7 +14,7 @@ public abstract class Packet {
 	
 	public byte ID;
 	
-	public int lenght;
+	public int length;
 	
 	public PacketType packetType;
 	

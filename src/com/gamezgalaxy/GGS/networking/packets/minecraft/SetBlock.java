@@ -26,7 +26,7 @@ public class SetBlock extends Packet {
 	}
 	public SetBlock(PacketManager pm) {
 		super("SetBlock", (byte)0x05, pm, PacketType.Client_to_Server);
-		this.lenght = 8;
+		this.length = 8;
 	}
 	@Override
 	public void Write(IOClient player, Server server) {

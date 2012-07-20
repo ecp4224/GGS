@@ -7,6 +7,9 @@
  ******************************************************************************/
 package com.gamezgalaxy.GGS.networking.packets.minecraft;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+
 import com.gamezgalaxy.GGS.networking.IOClient;
 import com.gamezgalaxy.GGS.networking.Packet;
 import com.gamezgalaxy.GGS.networking.PacketManager;
@@ -24,13 +27,12 @@ public class Message extends Packet {
 	
 	public Message(PacketManager pm) {
 		super("Message", (byte)0x0d, pm, PacketType.Client_to_Server);
-		this.lenght = 65;
+		this.length = 65;
 	}
 
 	@Override
-	public void Write(IOClient player, Server server) {
+	public void Write(IOClient p, Server server) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override

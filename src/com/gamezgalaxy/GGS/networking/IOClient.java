@@ -75,9 +75,9 @@ public class IOClient {
 						pm.server.Log("How do..?");
 						continue;
 					}
-					byte[] message = new byte[packet.lenght];
+					byte[] message = new byte[packet.length];
 					reader.read(message);
-					if (message.length < packet.lenght) {
+					if (message.length < packet.length) {
 						pm.server.Log("Bad packet..");
 						continue;
 					}

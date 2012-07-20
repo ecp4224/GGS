@@ -23,7 +23,7 @@ public class Connect extends Packet {
 	}
 	public Connect(PacketManager pm) {
 		super("Player Connect", (byte)0x00, pm, PacketType.Client_to_Server);
-		this.lenght = 130;
+		this.length = 130;
 	}
 
 	@Override

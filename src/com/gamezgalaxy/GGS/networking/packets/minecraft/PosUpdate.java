@@ -24,7 +24,7 @@ public class PosUpdate extends Packet {
 	
 	public PosUpdate(PacketManager pm) {
 		super("PosUpdate", (byte)0x08, pm, PacketType.Client_to_Server);
-		this.lenght = 9;
+		this.length = 9;
 	}
 
 	@Override
