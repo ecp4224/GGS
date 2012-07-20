@@ -5,34 +5,35 @@
  * which accompanies this distribution, and is available at
  * http://www.gnu.org/licenses/gpl.html
  ******************************************************************************/
-package com.gamezgalaxy.GGS.networking.packets;
+package com.gamezgalaxy.GGS.networking.packets.minecraft;
 
+import com.gamezgalaxy.GGS.networking.IOClient;
 import com.gamezgalaxy.GGS.networking.Packet;
 import com.gamezgalaxy.GGS.networking.PacketManager;
 import com.gamezgalaxy.GGS.networking.PacketType;
 import com.gamezgalaxy.GGS.server.Player;
 import com.gamezgalaxy.GGS.server.Server;
 
-public class Ping extends Packet {
+public class DespawnPlayer extends Packet {
 
-	public Ping(String name, byte ID, PacketManager parent,
+	public DespawnPlayer(String name, byte ID, PacketManager parent,
 			PacketType packetType) {
 		super(name, ID, parent, packetType);
 		// TODO Auto-generated constructor stub
 	}
 	
-	public Ping(PacketManager pm) {
-		super("Ping", (byte)0x01, pm, PacketType.Server_to_Client);
+	public DespawnPlayer(PacketManager pm) {
+		super("DespawnPlayer", (byte)0x0c, pm, PacketType.Server_to_Client);
 	}
 
 	@Override
-	public void Write(Player player, Server server) {
+	public void Handle(byte[] message, Server server, IOClient player) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void Handle(byte[] message, Server server, Player player) {
+	public void Write(IOClient player, Server server) {
 		// TODO Auto-generated method stub
 		
 	}

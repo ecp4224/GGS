@@ -11,6 +11,23 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import com.gamezgalaxy.GGS.networking.packets.*;
+import com.gamezgalaxy.GGS.networking.packets.minecraft.Connect;
+import com.gamezgalaxy.GGS.networking.packets.minecraft.DespawnPlayer;
+import com.gamezgalaxy.GGS.networking.packets.minecraft.FinishLevelSend;
+import com.gamezgalaxy.GGS.networking.packets.minecraft.GlobalPosUpdate;
+import com.gamezgalaxy.GGS.networking.packets.minecraft.Kick;
+import com.gamezgalaxy.GGS.networking.packets.minecraft.LevelSend;
+import com.gamezgalaxy.GGS.networking.packets.minecraft.LevelStartSend;
+import com.gamezgalaxy.GGS.networking.packets.minecraft.MOTD;
+import com.gamezgalaxy.GGS.networking.packets.minecraft.Message;
+import com.gamezgalaxy.GGS.networking.packets.minecraft.Ping;
+import com.gamezgalaxy.GGS.networking.packets.minecraft.PosUpdate;
+import com.gamezgalaxy.GGS.networking.packets.minecraft.ServerMessage;
+import com.gamezgalaxy.GGS.networking.packets.minecraft.SetBlock;
+import com.gamezgalaxy.GGS.networking.packets.minecraft.SpawnPlayer;
+import com.gamezgalaxy.GGS.networking.packets.minecraft.TP;
+import com.gamezgalaxy.GGS.networking.packets.minecraft.UpdateUser;
+import com.gamezgalaxy.GGS.networking.packets.minecraft.Welcome;
 import com.gamezgalaxy.GGS.server.Player;
 import com.gamezgalaxy.GGS.server.Server;
 
@@ -25,6 +42,7 @@ public class PacketManager {
 		new LevelSend(this),
 		new LevelStartSend(this),
 		new Message(this),
+		new MOTD(this),
 		new Ping(this),
 		new PosUpdate(this),
 		new ServerMessage(this),

@@ -5,39 +5,48 @@
  * which accompanies this distribution, and is available at
  * http://www.gnu.org/licenses/gpl.html
  ******************************************************************************/
-package com.gamezgalaxy.GGS.networking.packets;
+package com.gamezgalaxy.GGS.networking.packets.minecraft;
 
-import java.io.IOException;
-
+import com.gamezgalaxy.GGS.networking.IOClient;
 import com.gamezgalaxy.GGS.networking.Packet;
 import com.gamezgalaxy.GGS.networking.PacketManager;
 import com.gamezgalaxy.GGS.networking.PacketType;
 import com.gamezgalaxy.GGS.server.Player;
 import com.gamezgalaxy.GGS.server.Server;
 
-public class LevelSend extends Packet {
+public class PosUpdate extends Packet {
 
-	public LevelSend(String name, byte ID, PacketManager parent,
+	public PosUpdate(String name, byte ID, PacketManager parent,
 			PacketType packetType) {
 		super(name, ID, parent, packetType);
 		// TODO Auto-generated constructor stub
 	}
 	
-	public LevelSend(PacketManager pm) {
-		super("Level Send", (byte)0x03, pm, PacketType.Server_to_Client);
+	public PosUpdate(PacketManager pm) {
+		super("PosUpdate", (byte)0x08, pm, PacketType.Client_to_Server);
+		this.lenght = 9;
 	}
 
 	@Override
-	public void Write(Player player, Server server) {
-		byte[] levelbuff = new byte[player.getLevel().getLength() + 4];
-		PacketManager.intToNetworkByteOrder(player.getLevel().getLength(), levelbuff, 0, 4);
-		for (int i = 0; i < player.getLevel().getLength(); i++)
-			levelbuff[i + 4] = player.getLevel().getTile(i).getVisableBlock();
+	public void Write(IOClient player, Server server) {
 	}
 
 	@Override
-	public void Handle(byte[] message, Server server, Player player) {
-		// TODO Auto-generated method stub
+	public void Handle(byte[] message, Server server, IOClient p) {
+		Player player;
+		if (p instanceof Player) {
+			player = (Player)p;
+		}
+		else
+			return;
+		short X = (short)((message[2] << 8) | message[1]);
+		short Y = (short)((message[4] << 8) | message[3]);
+		short Z = (short)((message[6] << 8) | message[5]);
+		player.setX(X);
+		player.setY(Y);
+		player.setZ(Z);
+		player.yaw = message[7];
+		player.pitch = message[8];
 		
 	}
 

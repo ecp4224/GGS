@@ -1,0 +1,70 @@
+/*******************************************************************************
+ * Copyright (c) 2012 GamezGalaxy.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the GNU Public License v3.0
+ * which accompanies this distribution, and is available at
+ * http://www.gnu.org/licenses/gpl.html
+ ******************************************************************************/
+package com.gamezgalaxy.GGS.networking.packets.minecraft;
+
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+
+import com.gamezgalaxy.GGS.networking.IOClient;
+import com.gamezgalaxy.GGS.networking.Packet;
+import com.gamezgalaxy.GGS.networking.PacketManager;
+import com.gamezgalaxy.GGS.networking.PacketType;
+import com.gamezgalaxy.GGS.server.Player;
+import com.gamezgalaxy.GGS.server.Server;
+
+public class TP extends Packet {
+	public byte pID;
+	public Player tp;
+	public TP(String name, byte ID, PacketManager parent, PacketType packetType) {
+		super(name, ID, parent, packetType);
+		// TODO Auto-generated constructor stub
+	}
+
+	public TP(PacketManager pm) {
+		super("TP", (byte)0x08, pm, PacketType.Server_to_Client);
+	}
+
+	@Override
+	public void Handle(byte[] message, Server server, IOClient player) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void Write(IOClient p, Server server) { //PLAYER IS THE PLAYER RECIEVING THE DATA, TP IS THE PERSON TP'ING
+		Player player;
+		if (p instanceof Player) {
+			player = (Player)p;
+		}
+		else
+			return;
+		try {
+			byte[] send = new byte[10];
+			send[0] = ID;
+			send[1] = pID;
+			System.arraycopy(HTNO((short) tp.getX()), 0, send, 2, 2);
+			System.arraycopy(HTNO((short) tp.getY()), 0, send, 4, 2);
+			System.arraycopy(HTNO((short) tp.getZ()), 0, send, 6, 2);
+			send[8] = player.yaw;
+			send[9] = player.pitch;
+			player.WriteData(send);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	public byte[] HTNO(short x) throws IOException {
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		DataOutputStream dos = new DataOutputStream(baos);
+		dos.writeShort(x);
+		dos.flush();
+		return baos.toByteArray();
+	}
+
+}

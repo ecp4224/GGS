@@ -14,13 +14,13 @@ public class Level {
 	
 	Block[] blocks;
 	
-	public int width;
+	public short width;
 	
-	public int height;
+	public short height;
 	
-	public int depth;
+	public short depth;
 	
-	public Level(int width, int height, int depth) {
+	public Level(short width, short height, short depth) {
 		this.width = width;
 		this.height = height;
 		this.depth = depth;
@@ -51,6 +51,8 @@ public class Level {
 	public Block getTile(int index) {
 		if (index < 0) index = 0;
 		if (index >= blocks.length) index = blocks.length - 1;
+		if (blocks[index].name.equals("NULL"))
+			System.out.println("" + blocks[index].getVisableBlock());
 		return blocks[index];
 	}
 	
@@ -58,8 +60,8 @@ public class Level {
 		return getTile(PosToInt(x, y, z));
 	}
 	
-	public short getLength() {
-		return (short)blocks.length;
+	public int getLength() {
+		return blocks.length;
 	}
 	
 	public void setTile(Block b, int x, int y, int z) {
@@ -73,13 +75,13 @@ public class Level {
         if (y >= height) { return -1; }
         if (z < 0) { return -1; }
         if (z >= depth) { return -1; }
-        return x + z * width + y * width * depth;
+        return x + (z * width) + (y * width * height);
     }
 	
 	public static Level Convert(String file) throws IOException {
 		DatToGGS newlvl = new DatToGGS();
 		newlvl.load(file);
-		Level lvl = new Level(newlvl.level.width, newlvl.level.height, newlvl.level.depth);
+		Level lvl = new Level((short)newlvl.level.width, (short)newlvl.level.height, (short)newlvl.level.depth);
 		lvl.blocks = new Block[lvl.width*lvl.height*lvl.depth];
 		int[] cords = new int[3];
 		for (int i = 0; i < lvl.blocks.length; i++) {

@@ -70,11 +70,27 @@ public class IOClient {
 				try {
 					byte opCode = reader.readByte();
 					Packet packet = pm.getPacket(opCode);
+					if (packet == null) {
+						pm.server.Log("Client sent " + opCode);
+						pm.server.Log("How do..?");
+						continue;
+					}
 					byte[] message = new byte[packet.lenght];
 					reader.read(message);
+					if (message.length < packet.lenght) {
+						pm.server.Log("Bad packet..");
+						continue;
+					}
 					packet.Handle(message, pm.server, (Player)client);
 				} catch (IOException e) {
 					CloseConnection();
+					break;
+				}
+				catch (Exception e) {
+					if (client instanceof Player)
+						((Player)client).Kick("ERROR!");
+					CloseConnection();
+					e.printStackTrace();
 					break;
 				}
 			}

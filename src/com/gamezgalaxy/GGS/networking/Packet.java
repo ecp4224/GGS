@@ -22,9 +22,9 @@ public abstract class Packet {
 	
 	public String name;
 	
-	public abstract void Handle(byte[] message, Server server, Player player);
+	public abstract void Handle(byte[] message, Server server, IOClient player);
 	
-	public abstract void Write(Player player, Server server);
+	public abstract void Write(IOClient player, Server server);
 	
 	public Packet(String name, byte ID, PacketManager parent, PacketType packetType) {
 		this.name = name;

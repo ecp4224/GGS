@@ -5,10 +5,11 @@
  * which accompanies this distribution, and is available at
  * http://www.gnu.org/licenses/gpl.html
  ******************************************************************************/
-package com.gamezgalaxy.GGS.networking.packets;
+package com.gamezgalaxy.GGS.networking.packets.minecraft;
 
 import java.io.UnsupportedEncodingException;
 
+import com.gamezgalaxy.GGS.networking.IOClient;
 import com.gamezgalaxy.GGS.networking.Packet;
 import com.gamezgalaxy.GGS.networking.PacketManager;
 import com.gamezgalaxy.GGS.networking.PacketType;
@@ -26,12 +27,18 @@ public class Connect extends Packet {
 	}
 
 	@Override
-	public void Write(Player player, Server server) {
+	public void Write(IOClient player, Server server) {
 		// TODO Auto-generated method stub
 
 	}
 	@Override
-	public void Handle(byte[] message, Server server, Player player) {
+	public void Handle(byte[] message, Server server, IOClient p) {
+		Player player;
+		if (p instanceof Player) {
+			player = (Player)p;
+		}
+		else
+			return;
 		try {
 			byte version = message[0];
 			byte[] name = new byte[64];

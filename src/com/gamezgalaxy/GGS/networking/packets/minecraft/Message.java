@@ -5,36 +5,42 @@
  * which accompanies this distribution, and is available at
  * http://www.gnu.org/licenses/gpl.html
  ******************************************************************************/
-package com.gamezgalaxy.GGS.networking.packets;
+package com.gamezgalaxy.GGS.networking.packets.minecraft;
 
+import com.gamezgalaxy.GGS.networking.IOClient;
 import com.gamezgalaxy.GGS.networking.Packet;
 import com.gamezgalaxy.GGS.networking.PacketManager;
 import com.gamezgalaxy.GGS.networking.PacketType;
 import com.gamezgalaxy.GGS.server.Player;
 import com.gamezgalaxy.GGS.server.Server;
 
-public class UpdateUser extends Packet {
+public class Message extends Packet {
 
-	public UpdateUser(String name, byte ID, PacketManager parent,
+	public Message(String name, byte ID, PacketManager parent,
 			PacketType packetType) {
 		super(name, ID, parent, packetType);
 		// TODO Auto-generated constructor stub
 	}
 	
-	public UpdateUser(PacketManager pm) {
-		super("UpdateUser", (byte)0x0f, pm, PacketType.Server_to_Client);
+	public Message(PacketManager pm) {
+		super("Message", (byte)0x0d, pm, PacketType.Client_to_Server);
+		this.lenght = 65;
 	}
 
 	@Override
-	public void Handle(byte[] message, Server server, Player player) {
+	public void Write(IOClient player, Server server) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void Write(Player player, Server server) {
-		// TODO Auto-generated method stub
-		
+	public void Handle(byte[] message, Server server, IOClient player) {
+		Player p;
+		if (player instanceof Player)
+			p = (Player)player;
+		else
+			return;
+		p.setPos(50, 50, 50);
 	}
 
 }
