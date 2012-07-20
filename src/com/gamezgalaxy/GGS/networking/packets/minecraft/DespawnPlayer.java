@@ -7,6 +7,8 @@
  ******************************************************************************/
 package com.gamezgalaxy.GGS.networking.packets.minecraft;
 
+import java.io.IOException;
+
 import com.gamezgalaxy.GGS.networking.IOClient;
 import com.gamezgalaxy.GGS.networking.Packet;
 import com.gamezgalaxy.GGS.networking.PacketManager;
@@ -16,6 +18,7 @@ import com.gamezgalaxy.GGS.server.Server;
 
 public class DespawnPlayer extends Packet {
 
+	public byte pID;
 	public DespawnPlayer(String name, byte ID, PacketManager parent,
 			PacketType packetType) {
 		super(name, ID, parent, packetType);
@@ -34,8 +37,15 @@ public class DespawnPlayer extends Packet {
 
 	@Override
 	public void Write(IOClient player, Server server) {
-		// TODO Auto-generated method stub
-		
+		byte[] finals = new byte[2];
+		finals[0] = ID;
+		finals[1] = pID;
+		try {
+			player.WriteData(finals);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }

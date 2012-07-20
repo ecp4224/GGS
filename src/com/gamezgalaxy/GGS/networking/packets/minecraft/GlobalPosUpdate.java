@@ -18,6 +18,7 @@ import com.gamezgalaxy.GGS.server.Server;
 
 public class GlobalPosUpdate extends Packet {
 
+	public Player toupdate;
 	public GlobalPosUpdate(String name, byte ID, PacketManager parent,
 			PacketType packetType) {
 		super(name, ID, parent, packetType);
@@ -42,12 +43,12 @@ public class GlobalPosUpdate extends Packet {
 			return;
 		byte[] finals = new byte[7];
 		finals[0] = ID;
-		finals[1] = player.getID();
-		finals[2] = (byte)(player.getX() - player.oldX);
-		finals[3] = (byte)(player.getY() - player.oldY);
-		finals[4] = (byte)(player.getZ() - player.oldZ);
-		finals[5] = player.yaw;
-		finals[6] = player.pitch;
+		finals[1] = toupdate.getID();
+		finals[2] = (byte)(toupdate.getX() - toupdate.oldX);
+		finals[3] = (byte)(toupdate.getY() - toupdate.oldY);
+		finals[4] = (byte)(toupdate.getZ() - toupdate.oldZ);
+		finals[5] = toupdate.yaw;
+		finals[6] = toupdate.pitch;
 		try {
 			player.WriteData(finals);
 		} catch (IOException e) {

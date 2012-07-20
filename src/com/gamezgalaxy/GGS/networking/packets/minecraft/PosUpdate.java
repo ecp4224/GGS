@@ -7,6 +7,8 @@
  ******************************************************************************/
 package com.gamezgalaxy.GGS.networking.packets.minecraft;
 
+import java.nio.ByteBuffer;
+
 import com.gamezgalaxy.GGS.networking.IOClient;
 import com.gamezgalaxy.GGS.networking.Packet;
 import com.gamezgalaxy.GGS.networking.PacketManager;
@@ -39,14 +41,17 @@ public class PosUpdate extends Packet {
 		}
 		else
 			return;
-		short X = (short)((message[2] << 8) | message[1]);
-		short Y = (short)((message[4] << 8) | message[3]);
-		short Z = (short)((message[6] << 8) | message[5]);
+		ByteBuffer bb = ByteBuffer.allocate(9);
+		bb.put(message);
+		//byte ID = bb.get(0);
+		short X = bb.getShort(1);
+		short Y = bb.getShort(3);
+		short Z = bb.getShort(5);
 		player.setX(X);
 		player.setY(Y);
 		player.setZ(Z);
-		player.yaw = message[7];
-		player.pitch = message[8];
+		player.yaw = bb.get(7);
+		player.pitch = bb.get(8);
 		
 	}
 

@@ -22,7 +22,6 @@ import com.gamezgalaxy.GGS.networking.packets.minecraft.MOTD;
 import com.gamezgalaxy.GGS.networking.packets.minecraft.Message;
 import com.gamezgalaxy.GGS.networking.packets.minecraft.Ping;
 import com.gamezgalaxy.GGS.networking.packets.minecraft.PosUpdate;
-import com.gamezgalaxy.GGS.networking.packets.minecraft.ServerMessage;
 import com.gamezgalaxy.GGS.networking.packets.minecraft.SetBlock;
 import com.gamezgalaxy.GGS.networking.packets.minecraft.SpawnPlayer;
 import com.gamezgalaxy.GGS.networking.packets.minecraft.TP;
@@ -45,7 +44,6 @@ public class PacketManager {
 		new MOTD(this),
 		new Ping(this),
 		new PosUpdate(this),
-		new ServerMessage(this),
 		new SetBlock(this),
 		new SpawnPlayer(this),
 		new TP(this),

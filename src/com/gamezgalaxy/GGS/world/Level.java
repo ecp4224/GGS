@@ -20,10 +20,19 @@ public class Level {
 	
 	public short depth;
 	
+	public int spawnx;
+	
+	public int spawny;
+	
+	public int spawnz;
+	
 	public Level(short width, short height, short depth) {
 		this.width = width;
 		this.height = height;
 		this.depth = depth;
+		this.spawnx = 50;
+		this.spawny = 50;
+		this.spawnz = 50;
 		blocks = new Block[width*height*depth];
 	}
 	

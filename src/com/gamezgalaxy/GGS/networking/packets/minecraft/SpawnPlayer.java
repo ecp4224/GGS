@@ -21,7 +21,7 @@ import com.gamezgalaxy.GGS.server.Server;
 
 public class SpawnPlayer extends Packet {
 
-	public byte pID;
+	public Player spawn;
 	public SpawnPlayer(String name, byte ID, PacketManager parent,
 			PacketType packetType) {
 		super(name, ID, parent, packetType);
@@ -49,17 +49,17 @@ public class SpawnPlayer extends Packet {
 		try {
 			byte[] send = new byte[74];
 			send[0] = ID;
-			send[1] = pID;
-			String name = player.username;
+			send[1] = (spawn == player) ? (byte)0xFF : spawn.getID();
+			String name = spawn.username;
 			while (name.length() < 64)
 				name += " ";
 			byte[] nameb = name.getBytes("US-ASCII");
 			System.arraycopy(nameb, 0, send, 2, 64);
-			System.arraycopy(HTNO((short) player.getX()), 0, send, 66, 2);
-			System.arraycopy(HTNO((short) player.getY()), 0, send, 68, 2);
-			System.arraycopy(HTNO((short) player.getZ()), 0, send, 70, 2);
-			send[72] = player.yaw;
-			send[73] = player.pitch;
+			System.arraycopy(HTNO((short) spawn.getX()), 0, send, 66, 2);
+			System.arraycopy(HTNO((short) spawn.getY()), 0, send, 68, 2);
+			System.arraycopy(HTNO((short) spawn.getZ()), 0, send, 70, 2);
+			send[72] = spawn.yaw;
+			send[73] = spawn.pitch;
 			player.WriteData(send);
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block

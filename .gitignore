@@ -6,8 +6,8 @@
 *.ear
 
 *.pydevproject
-.project
-.metadata
+*.project
+*.metadata
 bin/**
 tmp/**
 tmp/**/*
@@ -16,9 +16,9 @@ tmp/**/*
 *.swp
 *~.nib
 local.properties
-.settings/
-.loadpath
-.classpath
+*.settings/
+*.loadpath
+*.classpath
 
 # External tool builders
 .externalToolBuilders/

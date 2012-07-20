@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import com.gamezgalaxy.GGS.networking.IOClient;
 import com.gamezgalaxy.GGS.networking.Packet;
 import com.gamezgalaxy.GGS.networking.PacketManager;
+import com.gamezgalaxy.GGS.networking.packets.minecraft.DespawnPlayer;
+import com.gamezgalaxy.GGS.networking.packets.minecraft.GlobalPosUpdate;
 import com.gamezgalaxy.GGS.networking.packets.minecraft.MOTD;
 import com.gamezgalaxy.GGS.networking.packets.minecraft.SpawnPlayer;
 import com.gamezgalaxy.GGS.networking.packets.minecraft.TP;
@@ -47,11 +49,20 @@ public class Player extends IOClient {
 	public void VerifyLogin() throws InterruptedException {
 		//TODO Check for real user and group and such
 		username = username.trim();
+		pm.server.players.add(this);
 		SendWelcome();
 		setLevel(pm.server.MainLevel);
-		//levelsender.join(); //Wait for finish
+		levelsender.join(); //Wait for finish
+		setX(level.spawnx);
+		setY(level.spawny);
+		setZ(level.spawnz);
 		spawnPlayer(this);
-		setPos(50, 50, 50);
+		for (Player p : pm.server.players) {
+			if (p.level == level) {
+				spawnPlayer(p); //Spawn p for me
+				p.spawnPlayer(this); //Spawn me for p
+			}
+		}
 	}
 	
 	public void sendMoTD(String topline, String bottomline) {
@@ -61,15 +72,23 @@ public class Player extends IOClient {
 		m.Write(this, pm.server);
 	}
 	
+	public void updatePlayers() {
+		for (Player p : seeable) {
+			if (p == this)
+				continue;
+			GlobalPosUpdate gps = (GlobalPosUpdate)(pm.getPacket("GlobalPosUpdate"));
+			gps.toupdate = p;
+			gps.Write(this, p.pm.server);
+		}
+	}
+	
 	public void spawnPlayer(Player p) {
 		if (seeable.contains(p))
 			return;
 		SpawnPlayer sp = (SpawnPlayer)(pm.getPacket((byte)0x07));
-		if (p == this)
-			sp.pID = (byte)0xFF;
-		else
-			sp.pID = p.ID;
-		sp.Write(p, p.pm.server);
+		sp.spawn = p;
+		sp.Write(this, p.pm.server);
+		seeable.add(p);
 	}
 
 	public Level getLevel() {
@@ -79,16 +98,8 @@ public class Player extends IOClient {
 		if (this.level == level)
 			return;
 		this.level = level;
-		Packet pa;
-		pa = pm.getPacket((byte)0x02);
-		pa.Write(this, pm.server);
-		pa = null;
-		pa = pm.getPacket((byte)0x03);
-		pa.Write(this, pm.server);
-		pa = null;
-		pa = pm.getPacket((byte)0x04);
-		pa.Write(this, pm.server);
-		pa = null;
+		levelsender = new SendLevel(this);
+		levelsender.start();
 	}
 
 	public boolean isLoading() {
@@ -171,11 +182,16 @@ public class Player extends IOClient {
 	public void CloseConnection() {
 		super.CloseConnection();
 		pm.server.Remove(tick);
+		DespawnPlayer pa = (DespawnPlayer)(pm.getPacket((byte)0x0c));
+		pa.pID = ID;
+		for (Player p : pm.server.players)
+			pa.Write(p, p.pm.server);
+		
 	}
 
 	protected void finishLevel() {
 		levelsender = null;
-		//setPos(50, 50, 50);
+		setPos(50, 50, 50);
 	}
 
 	public class Ping extends Tick {

@@ -42,6 +42,16 @@ public class Message extends Packet {
 			p = (Player)player;
 		else
 			return;
+		try {
+			byte[] name = new byte[message.length - 1];
+			System.arraycopy(message, 1, name, 0, name.length);
+			String m = new String(name, "US-ASCII");
+			server.Log(m);
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 
 }

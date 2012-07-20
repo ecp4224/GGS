@@ -7,7 +7,11 @@
  ******************************************************************************/
 package com.gamezgalaxy.GGS.server;
 
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -22,9 +26,10 @@ public class Server {
 	public ArrayList<Player> players = new ArrayList<Player>();
 	public boolean Running;
 	public int Port;
+	public int MaxPlayers;
 	public String Name;
 	public String MOTD;
-	public long Salt;
+	public String Salt;
 	public Level MainLevel;
 	public Server(String Name, int Port, String MOTD) {
 		this.Port = Port;
@@ -43,6 +48,22 @@ public class Server {
 		MainLevel.FlatGrass();
 		tick.start();
 		Log("Done!");
+		Log("Generating salt");
+		SecureRandom sr = null;
+		try {
+			sr = SecureRandom.getInstance("SHA1PRNG");
+		} catch (NoSuchAlgorithmException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		for (int i = 0; i < 100; i++) {
+			byte[] seedb = new byte[16];
+			sr.nextBytes(seedb);
+			Salt = new sun.misc.BASE64Encoder().encode(seedb);
+			if (new Random().nextDouble() < .3)
+				break;
+		}
+		Log("SALT: " + Salt);
 	}
 
 	public void Stop() throws InterruptedException {
@@ -73,6 +94,8 @@ public class Server {
 		@Override
 		public void run() {
 			while (Running) {
+				for (Player p : players)
+					p.updatePlayers();
 				synchronized(ticks) {
 					for (Tick t : ticks) {
 						t.Tick();

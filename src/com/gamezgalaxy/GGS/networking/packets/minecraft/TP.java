@@ -51,8 +51,8 @@ public class TP extends Packet {
 			System.arraycopy(HTNO((short) tp.getX()), 0, send, 2, 2);
 			System.arraycopy(HTNO((short) tp.getY()), 0, send, 4, 2);
 			System.arraycopy(HTNO((short) tp.getZ()), 0, send, 6, 2);
-			send[8] = player.yaw;
-			send[9] = player.pitch;
+			send[8] = tp.yaw;
+			send[9] = tp.pitch;
 			player.WriteData(send);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

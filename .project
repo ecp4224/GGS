@@ -14,11 +14,4 @@
 	<natures>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
-	<linkedResources>
-		<link>
-			<name>minecraft-server.jar</name>
-			<type>1</type>
-			<locationURI>PARENT-4-PROJECT_LOC/server/minecraft-server.jar</locationURI>
-		</link>
-	</linkedResources>
 </projectDescription>
