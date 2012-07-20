@@ -10,6 +10,7 @@ package com.gamezgalaxy.GGS.networking.packets.minecraft;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 
 import com.gamezgalaxy.GGS.networking.IOClient;
 import com.gamezgalaxy.GGS.networking.Packet;
@@ -45,15 +46,15 @@ public class TP extends Packet {
 		else
 			return;
 		try {
-			byte[] send = new byte[10];
-			send[0] = ID;
-			send[1] = pID;
-			System.arraycopy(HTNO((short) tp.getX()), 0, send, 2, 2);
-			System.arraycopy(HTNO((short) tp.getY()), 0, send, 4, 2);
-			System.arraycopy(HTNO((short) tp.getZ()), 0, send, 6, 2);
-			send[8] = tp.yaw;
-			send[9] = tp.pitch;
-			player.WriteData(send);
+			ByteBuffer bb = ByteBuffer.allocate(10);
+			bb.put(ID);
+			bb.put((tp == p) ? (byte)-1 : tp.getID());
+			bb.putShort(tp.getX());
+			bb.putShort(tp.getY());
+			bb.putShort(tp.getZ());
+			bb.put(tp.yaw);
+			bb.put(tp.pitch);
+			player.WriteData(bb.array());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

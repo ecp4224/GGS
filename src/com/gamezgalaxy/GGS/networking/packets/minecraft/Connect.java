@@ -51,7 +51,13 @@ public class Connect extends Packet {
 			player.mppass = new String(name, "US-ASCII");
 			name = null;
 			player.ClientType = message[129];
-			player.VerifyLogin();
+			if (player.VerifyLogin()) {
+				player.username = player.username.trim();
+				server.players.add(player);
+				player.Login();
+			}
+			else
+				return;
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

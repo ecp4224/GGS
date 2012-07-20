@@ -8,6 +8,9 @@
 package com.gamezgalaxy.GGS.world;
 
 import java.io.IOException;
+
+import com.gamezgalaxy.GGS.server.Player;
+import com.gamezgalaxy.GGS.server.Server;
 import com.gamezgalaxy.GGS.world.convert.DatToGGS;
 
 public class Level {

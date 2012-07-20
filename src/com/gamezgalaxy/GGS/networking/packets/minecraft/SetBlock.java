@@ -7,12 +7,16 @@
  ******************************************************************************/
 package com.gamezgalaxy.GGS.networking.packets.minecraft;
 
+import java.io.IOException;
+import java.nio.ByteBuffer;
+
 import com.gamezgalaxy.GGS.networking.IOClient;
 import com.gamezgalaxy.GGS.networking.Packet;
 import com.gamezgalaxy.GGS.networking.PacketManager;
 import com.gamezgalaxy.GGS.networking.PacketType;
 import com.gamezgalaxy.GGS.server.Player;
 import com.gamezgalaxy.GGS.server.Server;
+import com.gamezgalaxy.GGS.world.PlaceMode;
 
 /**
  * This packet will handle both the 0x05 packet and the 0x06 packet
@@ -20,7 +24,10 @@ import com.gamezgalaxy.GGS.server.Server;
  *
  */
 public class SetBlock extends Packet {
-
+	public short X;
+	public short Y;
+	public short Z;
+	public byte block;
 	public SetBlock(String name, byte ID, PacketManager parent, PacketType packetType) {
 		super(name, ID, parent, packetType);
 	}
@@ -30,13 +37,39 @@ public class SetBlock extends Packet {
 	}
 	@Override
 	public void Write(IOClient player, Server server) {
-		// TODO Auto-generated method stub
-		
+		Player p = null;
+		if (player instanceof Player)
+			p = (Player)player;
+		else
+			return;
+		ByteBuffer bb = ByteBuffer.allocate(8);
+		bb.put((byte)0x06);
+		bb.putShort(X);
+		bb.putShort(Y);
+		bb.putShort(Z);
+		bb.put(block);
+		try {
+			player.WriteData(bb.array());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	@Override
 	public void Handle(byte[] message, Server server, IOClient player) {
-		// TODO Auto-generated method stub
-		
+		Player p = null;
+		if (player instanceof Player)
+			p = (Player)player;
+		else
+			return;
+		ByteBuffer bb = ByteBuffer.allocate(9);
+		bb.put(message);
+		short X = bb.getShort(0);
+		short Y = bb.getShort(2);
+		short Z = bb.getShort(4);
+		PlaceMode pm = PlaceMode.getType(bb.get(6));
+		byte block = bb.get(7);
+		p.HandleBlockChange(X, Y, Z, pm, block);
 	}
 
 }

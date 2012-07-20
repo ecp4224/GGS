@@ -44,7 +44,7 @@ public class Server {
 		Log("Starting..");
 		pm.StartReading();
 		Log("Generating Level..");
-		MainLevel = new Level((short)1024, (short)64, (short)1024);
+		MainLevel = new Level((short)64, (short)64, (short)64);
 		MainLevel.FlatGrass();
 		tick.start();
 		Log("Done!");

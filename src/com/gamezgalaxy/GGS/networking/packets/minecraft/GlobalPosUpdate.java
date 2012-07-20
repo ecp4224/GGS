@@ -41,20 +41,55 @@ public class GlobalPosUpdate extends Packet {
 		}
 		else
 			return;
-		byte[] finals = new byte[7];
-		finals[0] = ID;
-		finals[1] = toupdate.getID();
-		finals[2] = (byte)(toupdate.getX() - toupdate.oldX);
-		finals[3] = (byte)(toupdate.getY() - toupdate.oldY);
-		finals[4] = (byte)(toupdate.getZ() - toupdate.oldZ);
-		finals[5] = toupdate.yaw;
-		finals[6] = toupdate.pitch;
+		byte[] finals;
+		if (posUpdate() && rotUpdate()) {
+			finals = new byte[7];
+			finals[0] = ID;
+			finals[1] = toupdate.getID();
+			finals[2] = (byte)(toupdate.getX() - toupdate.oldX);
+			finals[3] = (byte)(toupdate.getY() - toupdate.oldY);
+			finals[4] = (byte)(toupdate.getZ() - toupdate.oldZ);
+			finals[5] = toupdate.yaw;
+			finals[6] = toupdate.pitch;
+		}
+		else if (posUpdate()) {
+			finals = new byte[5];
+			finals[0] = (byte)0x0a;
+			finals[1] = toupdate.getID();
+			finals[2] = (byte)(toupdate.getX() - toupdate.oldX);
+			finals[3] = (byte)(toupdate.getY() - toupdate.oldY);
+			finals[4] = (byte)(toupdate.getZ() - toupdate.oldZ);
+		}
+		else if (rotUpdate()) {
+			finals = new byte[4];
+			finals[0] = (byte)0x0b;
+			finals[1] = toupdate.getID();
+			finals[2] = toupdate.yaw;
+			finals[3] = toupdate.pitch;
+		}
+		else { //PING!
+			finals = new byte[1];
+			finals[0] = (byte)0x01;
+		}
 		try {
 			player.WriteData(finals);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		toupdate.oldX = toupdate.getX();
+		toupdate.oldY = toupdate.getY();
+		toupdate.oldZ = toupdate.getZ();
+		toupdate.oldyaw = toupdate.yaw;
+		toupdate.oldpitch = toupdate.pitch;
+	}
+	
+	public boolean posUpdate() {
+		return toupdate.getX() - toupdate.oldX != 0 || toupdate.getY() - toupdate.oldY != 0 || toupdate.getZ() - toupdate.oldZ != 0;
+	}
+	
+	public boolean rotUpdate() {
+		return toupdate.yaw - toupdate.oldyaw != 0 || toupdate.pitch - toupdate.oldpitch != 0;
 	}
 
 }
