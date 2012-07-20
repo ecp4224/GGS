@@ -136,7 +136,7 @@ public class Player extends IOClient {
 		pm.server.sendMessage(username + " has joined the server.");
 		spawnPlayer(this);
 		setPos((short)((0.5 + level.spawnx) * 32), (short)((1 + level.spawny) * 32), (short)((0.5 + level.spawnz) * 32));
-		for (Player p : pm.server.players) {
+		for (Player p : pm.server.getPlayers()) {
 			if (p.level == level) {
 				spawnPlayer(p); //Spawn p for me
 				p.spawnPlayer(this); //Spawn me for p
@@ -198,12 +198,12 @@ public class Player extends IOClient {
 	 */
 	public static void GlobalBlockChange(short X, short Y, short Z, Block block, Level l, Server s) {
 		l.setTile(block, X, Y, Z);
-		SetBlock sb = (SetBlock)(s.pm.getPacket((byte)0x05));
+		SetBlock sb = (SetBlock)(s.getPacketManager().getPacket((byte)0x05));
 		sb.X = X;
 		sb.Y = Y;
 		sb.Z = Z;
 		sb.block = block.getVisableBlock();
-		for (Player p : s.players)
+		for (Player p : s.getPlayers())
 			if (p.level == l)
 				sb.Write(p, s);
 	}
@@ -325,7 +325,7 @@ public class Player extends IOClient {
 		byte toreturn = 0;
 		for (int i = 0; i < 255; i++) {
 			found = true;
-			for (Player p : pm.server.players) {
+			for (Player p : pm.server.getPlayers()) {
 				if (p.ID == i) {
 					found = false;
 					break;
@@ -458,7 +458,7 @@ public class Player extends IOClient {
 		t.pID = ID;
 		t.tp = this; //This player is teleporting
 		t.Write(this, pm.server); //Tell him that
-		for (Player p : pm.server.players) {
+		for (Player p : pm.server.getPlayers()) {
 			if (p.level == level && p != this)
 				t.Write(p, p.pm.server); //Tell all the other players as well...
 		}
@@ -540,7 +540,7 @@ public class Player extends IOClient {
 		pm.server.removePlayer(this);
 		pm.server.Log(this.username + " has left the server.");
 		pm.server.sendMessage(this.username + " has left the server.");
-		for (Player p : pm.server.players)
+		for (Player p : pm.server.getPlayers())
 			p.Despawn(this);
 		super.CloseConnection();
 		pm.server.Remove(tick); //Do this last as this takes a while to remove

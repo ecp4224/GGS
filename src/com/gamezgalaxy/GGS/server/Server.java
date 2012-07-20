@@ -19,11 +19,10 @@ import com.gamezgalaxy.GGS.networking.PacketManager;
 import com.gamezgalaxy.GGS.world.Level;
 
 public class Server {
-	protected PacketManager pm;
-	protected Lock lock = new ReentrantLock();
-	protected ArrayList<Tick> ticks = new ArrayList<Tick>();
-	protected Thread tick;
-	protected ArrayList<Player> players = new ArrayList<Player>();
+	private PacketManager pm;
+	private ArrayList<Tick> ticks = new ArrayList<Tick>();
+	private Thread tick;
+	private ArrayList<Player> players = new ArrayList<Player>();
 	public boolean Running;
 	public int Port;
 	public int MaxPlayers;
@@ -31,7 +30,10 @@ public class Server {
 	public String MOTD;
 	public String Salt;
 	public Level MainLevel;
-	public ArrayList<Player> getList() {
+	public PacketManager getPacketManager() {
+		return pm;
+	}
+	public ArrayList<Player> getPlayers() {
 		synchronized(players) {
 			return players;
 		}
@@ -130,12 +132,12 @@ public class Server {
 
 
 	public void UpdatePos() {
-		for (Player p : players)
+		for (Player p : getPlayers())
 			p.updatePlayers();
 	}
 
 	public void sendMessage(String message) {
-		for (Player p : players)
+		for (Player p : getPlayers())
 			p.sendMessage(message);
 	}
 }
