@@ -33,6 +33,28 @@ public class Message extends Packet {
 	@Override
 	public void Write(IOClient p, Server server) {
 		// TODO Auto-generated method stub
+		Player player;
+		if (p instanceof Player) {
+			player = (Player)p;
+		}
+		else
+			return;
+		try {
+			while (player.message.length() < 64) {
+				player.message += " ";
+			}
+			byte[] temp = player.message.getBytes("US-ASCII");
+			byte[] finals = new byte[2 + temp.length];
+			finals[0] = ID; finals[1] = player.getID();
+			System.arraycopy(temp, 0, finals, 2, temp.length);
+			player.WriteData(finals);
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -45,13 +67,20 @@ public class Message extends Packet {
 		try {
 			byte[] name = new byte[message.length - 1];
 			System.arraycopy(message, 1, name, 0, name.length);
+<<<<<<< HEAD
 			String m = new String(name, "US-ASCII");
 			server.Log(m);
+=======
+			String m = new String(name, "US-ASCII").trim();
+			//TODO Handle Message function m
+>>>>>>> 6025e24512318329d54900cd9e5c4acf58113af7
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+<<<<<<< HEAD
 		
+=======
+>>>>>>> 6025e24512318329d54900cd9e5c4acf58113af7
 	}
-
 }

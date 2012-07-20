@@ -10,7 +10,6 @@ package com.gamezgalaxy.GGS.networking;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import com.gamezgalaxy.GGS.networking.packets.*;
 import com.gamezgalaxy.GGS.networking.packets.minecraft.Connect;
 import com.gamezgalaxy.GGS.networking.packets.minecraft.DespawnPlayer;
 import com.gamezgalaxy.GGS.networking.packets.minecraft.FinishLevelSend;
