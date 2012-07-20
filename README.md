@@ -1,4 +1,4 @@
-GGS [![Build Status](https://secure.travis-ci.org/GamezGalaxy/GGS.png?branch=master)](http://travis-ci.org/GamezGalaxy/GGS)
+GGSs
 ===
 
 ![GG Logo](http://www.gamezgalaxy.com/assets/icon.png)
