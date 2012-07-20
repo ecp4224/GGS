@@ -537,8 +537,7 @@ public class Player extends IOClient {
 	 */
 	@Override
 	public void CloseConnection() {
-		if (pm.server.players.contains(this))
-			pm.server.players.remove(this);
+		pm.server.removePlayer(this);
 		pm.server.Log(this.username + " has left the server.");
 		pm.server.sendMessage(this.username + " has left the server.");
 		for (Player p : pm.server.players)
