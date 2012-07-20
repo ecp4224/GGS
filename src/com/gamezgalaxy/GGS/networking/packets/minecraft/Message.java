@@ -64,7 +64,6 @@ public class Message extends Packet {
 			p = (Player)player;
 		else
 			return;
-
 		try {
 			byte[] name = new byte[message.length - 1];
 			System.arraycopy(message, 1, name, 0, name.length);

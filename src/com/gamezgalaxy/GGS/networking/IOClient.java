@@ -57,7 +57,7 @@ public class IOClient {
 	
 	public void WriteData(byte[] data) throws IOException {
 		writer.write(data);
-		writer.flush();
+		//writer.flush();
 	}
 	
 	public class Reader extends Thread {

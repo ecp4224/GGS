@@ -10,6 +10,8 @@ package com.gamezgalaxy.GGS.networking.packets.minecraft;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 
 import com.gamezgalaxy.GGS.networking.IOClient;
 import com.gamezgalaxy.GGS.networking.Packet;
@@ -39,13 +41,13 @@ public class FinishLevelSend extends Packet {
 		else
 			return;
 		try {
-			byte[] send = new byte[7];
-			send[0] = ID;
-			System.arraycopy(HTNO(player.getLevel().width), 0, send, 1, 2);
-			System.arraycopy(HTNO(player.getLevel().depth), 0, send, 3, 2);
-			System.arraycopy(HTNO(player.getLevel().height), 0, send, 5, 2);
-			System.out.println(player.getLevel().height + ":" + player.getLevel().depth);
-			player.WriteData(send);
+			ByteBuffer bb = ByteBuffer.allocate(7);
+			bb.order(ByteOrder.BIG_ENDIAN);
+			bb.put(ID);
+			bb.putShort(player.getLevel().width);
+			bb.putShort(player.getLevel().height);
+			bb.putShort(player.getLevel().depth);
+			player.WriteData(bb.array());
 		}
 		catch (IOException e) {
 			e.printStackTrace();
@@ -58,10 +60,9 @@ public class FinishLevelSend extends Packet {
 
 	}
 	public byte[] HTNO(short x) throws IOException {
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		DataOutputStream dos = new DataOutputStream(baos);
-		dos.writeShort(x);
-		dos.flush();
-		return baos.toByteArray();
+		ByteBuffer bb = ByteBuffer.allocate(2); 
+		bb.order(ByteOrder.BIG_ENDIAN); 
+		bb.putShort(x); 
+		return bb.array();
 	}
 }

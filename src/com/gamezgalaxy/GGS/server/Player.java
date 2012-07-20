@@ -50,7 +50,7 @@ public class Player extends IOClient {
 		username = username.trim();
 		SendWelcome();
 		setLevel(pm.server.MainLevel);
-		levelsender.join(); //Wait for finish
+		//levelsender.join(); //Wait for finish
 		spawnPlayer(this);
 		setPos(50, 50, 50);
 	}
@@ -80,8 +80,16 @@ public class Player extends IOClient {
 		if (this.level == level)
 			return;
 		this.level = level;
-		levelsender = new SendLevel(this);
-		levelsender.start();
+		Packet pa;
+		pa = pm.getPacket((byte)0x02);
+		pa.Write(this, pm.server);
+		pa = null;
+		pa = pm.getPacket((byte)0x03);
+		pa.Write(this, pm.server);
+		pa = null;
+		pa = pm.getPacket((byte)0x04);
+		pa.Write(this, pm.server);
+		pa = null;
 	}
 
 	public boolean isLoading() {
@@ -188,6 +196,7 @@ public class Player extends IOClient {
 
 	protected void finishLevel() {
 		levelsender = null;
+		//setPos(50, 50, 50);
 	}
 
 	public class Ping extends Tick {

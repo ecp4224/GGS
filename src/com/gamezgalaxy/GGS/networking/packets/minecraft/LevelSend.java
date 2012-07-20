@@ -51,6 +51,7 @@ public class LevelSend extends Packet {
 			int number = (int)Math.ceil(((double)(gzip.length)) / 1024);
 			byte[] send;
 			byte[] tempbuffer;
+			byte[] tosend;
 			for (int i = 1; gzip.length > 0; ++i) {
 				short lenght = (short)Math.min(gzip.length, 1024);
 				send = new byte[1028];
@@ -61,11 +62,14 @@ public class LevelSend extends Packet {
 				System.arraycopy(gzip, lenght, tempbuffer, 0, gzip.length - lenght);
 				gzip = tempbuffer;
 				int percent = (int)((double)((double)i * (double)100 / (double)number));
-				System.out.println(percent);
-				send[1026] = (byte)((double)((double)i * (double)100 / (double)number)); //LOL Backwards progress bar!
+				send[1027] = (byte)(100 - percent); //LOL Backwards progress bar!
 				player.WriteData(send);
+				Thread.sleep(10);
 			}
 		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
