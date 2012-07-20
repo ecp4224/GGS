@@ -60,6 +60,8 @@ public class Player extends IOClient {
 		setX((short) level.spawnx);
 		setY((short) level.spawny);
 		setZ((short) level.spawnz);
+		pm.server.Log(username + " has joined the server.");
+		pm.server.sendMessage(username + " has joined the server.");
 		spawnPlayer(this);
 		for (Player p : pm.server.players) {
 			if (p.level == level) {
@@ -190,7 +192,6 @@ public class Player extends IOClient {
 	 */
 	public boolean sendMessage(String message){
 		Packet p = pm.getPacket("Message");
-		pm.server.Log(message);
 		if(message.length() < 64){
 			this.message = message;
 			p.Write(this, pm.server);
@@ -230,7 +231,7 @@ public class Player extends IOClient {
 				  m = m.replaceAll("%"+code, "&"+code);
 				}
 			}
-			pm.server.Log("User "+this.username + " sent: " + m);
+			pm.server.Log("User "+this.username + " sent: " + message);
 			pm.server.sendMessage(this.username + ": " + m);
 		}
 	}
@@ -245,6 +246,8 @@ public class Player extends IOClient {
 	
 	@Override
 	public void CloseConnection() {
+		pm.server.Log(this.username + " has left the server.");
+		pm.server.sendMessage(this.username + " has left the server.");
 		super.CloseConnection();
 		pm.server.Remove(tick);
 		for (Player p : pm.server.players)
