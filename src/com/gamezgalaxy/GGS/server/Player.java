@@ -29,6 +29,7 @@ public class Player extends IOClient {
 	public String kickreason;
 	public String username;
 	public String mppass;
+	public String message;
 	public boolean isConnected;
 	public byte ClientType; //This might be used for custom clients *hint hint*
 	public int oldX;
@@ -157,6 +158,26 @@ public class Player extends IOClient {
 			if (p.level == level && p != this)
 				t.Write(p, p.pm.server);
 		}
+	}
+	
+	/**
+	 * Sends a message to the player
+	 * 
+	 * @param string message
+	 * @return 1 on success 0 on failure.
+	 */
+	public boolean sendMessage(String message){
+		Packet p = pm.getPacket("Message");
+		pm.server.Log(message);
+		if(message.length() < 64){
+			this.message = message;
+			p.Write(this, pm.server);
+		}else{
+			this.message = "FUCK YOU THE MESSAGE IS: "+message.length();
+			p.Write(this, pm.server);
+			return false; //Message is longer than permitted
+		}
+		return true; //Message was sent successfully
 	}
 	
 	@Override
