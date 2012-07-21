@@ -19,6 +19,9 @@ import java.util.Random;
 import com.gamezgalaxy.GGS.networking.PacketManager;
 import com.gamezgalaxy.GGS.system.LogInterface;
 import com.gamezgalaxy.GGS.system.Logger;
+import com.gamezgalaxy.GGS.system.heartbeat.Beat;
+import com.gamezgalaxy.GGS.system.heartbeat.MBeat;
+import com.gamezgalaxy.GGS.system.heartbeat.WBeat;
 import com.gamezgalaxy.GGS.world.Level;
 
 public class Server implements LogInterface {
@@ -26,14 +29,19 @@ public class Server implements LogInterface {
 	private Logger logger;
 	private ArrayList<Tick> ticks = new ArrayList<Tick>();
 	private Thread tick;
+	private Beat heartbeater;
 	public ArrayList<Player> players = new ArrayList<Player>();
 	public boolean Running;
 	public int Port;
 	public int MaxPlayers;
 	public String Name;
+	public String altName;
+	public String description;
+	public String flags;
 	public String MOTD;
 	public String Salt;
 	public Level MainLevel;
+	public boolean Public;
 	public PacketManager getPacketManager() {
 		return pm;
 	}
@@ -90,6 +98,12 @@ public class Server implements LogInterface {
 				break;
 		}
 		Log("SALT: " + Salt);
+		Log("Create heartbeat..");
+		heartbeater = new Beat(this);
+		heartbeater.addHeart(new MBeat());
+		heartbeater.addHeart(new WBeat());
+		heartbeater.start();
+		Log("Done!");
 	}
 
 	public void Stop() throws InterruptedException {
