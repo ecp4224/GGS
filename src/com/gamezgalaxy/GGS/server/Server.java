@@ -111,12 +111,6 @@ public class Server {
 		}
 	}
 
-
-	public void UpdatePos() {
-		for (Player p : players)
-			p.updatePlayers();
-	}
-
 	public void sendMessage(String message) {
 		for (Player p : players)
 			p.sendMessage(message);
