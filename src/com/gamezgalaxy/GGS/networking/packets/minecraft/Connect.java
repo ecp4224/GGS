@@ -53,7 +53,7 @@ public class Connect extends Packet {
 			player.ClientType = message[129];
 			if (player.VerifyLogin()) {
 				player.username = player.username.trim();
-				server.addPlayer(player);
+				server.players.add(player);
 				player.Login();
 			}
 			else
