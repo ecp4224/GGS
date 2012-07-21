@@ -1,6 +1,6 @@
 package com.gamezgalaxy.GGS.API;
 
-public interface Cancellable {
+public interface Cancelable {
 	
 	public boolean isCancelled();
 	

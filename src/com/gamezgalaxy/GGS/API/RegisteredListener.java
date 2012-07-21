@@ -24,8 +24,8 @@ public class RegisteredListener {
 	}
 	
 	public void execute(Event event) throws Exception {
-		if (event instanceof Cancellable) {
-			if (((Cancellable)event).isCancelled())
+		if (event instanceof Cancelable) {
+			if (((Cancelable)event).isCancelled())
 				return;
 		}
 		executor.execute(listen, event);

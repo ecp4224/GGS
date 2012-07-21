@@ -10,6 +10,7 @@ package com.gamezgalaxy.GGS.networking.packets.minecraft;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
+import com.gamezgalaxy.GGS.API.player.PlayerMoveEvent;
 import com.gamezgalaxy.GGS.networking.IOClient;
 import com.gamezgalaxy.GGS.networking.Packet;
 import com.gamezgalaxy.GGS.networking.PacketManager;
@@ -48,11 +49,17 @@ public class PosUpdate extends Packet {
 		short X = bb.getShort(1);
 		short Y = bb.getShort(3);
 		short Z = bb.getShort(5);
+		player.yaw = bb.get(7);
+		player.pitch = bb.get(8);
 		player.setX(X);
 		player.setY(Y);
 		player.setZ(Z);
-		player.yaw = bb.get(7);
-		player.pitch = bb.get(8);
+		PlayerMoveEvent event = new PlayerMoveEvent(player, X, Y, Z);
+		server.getEvnetSystem().callEvent(event);
+		if (event.isCancelled()) {
+			player.setPos(player.oldX, player.oldY, player.oldZ);
+			return;
+		}
 		try {
 			player.UpdatePos();
 		} catch (IOException e) {

@@ -1,0 +1,19 @@
+[2012/07/21 19:41:02] Starting..
+[2012/07/21 19:41:02] Listening on port 25558
+[2012/07/21 19:41:02] Generating Level..
+[2012/07/21 19:41:02] Done!
+[2012/07/21 19:41:02] Generating salt
+[2012/07/21 19:41:02] SALT: stB0r+TLnb6YKdGZAsFdZQ==
+[2012/07/21 19:41:02] Create heartbeat..
+[2012/07/21 19:41:02] Done!
+[2012/07/21 19:41:02] URL: http://www.minecraft.net/classic/play/1a6fcc8fd80cece4f098641e7c30e799
+[2012/07/21 19:41:08] Connection made from /127.0.0.1
+[2012/07/21 19:41:08] Listening..
+[2012/07/21 19:41:08] lolwut has joined the server.
+[2012/07/21 19:41:36] Connection made from /127.0.0.1
+[2012/07/21 19:41:36] Listening..
+[2012/07/21 19:41:36] lolwut1 has joined the server.
+[2012/07/21 19:42:10] lolwut has left the server.
+[2012/07/21 19:42:10] Closing connection
+[2012/07/21 19:42:11] lolwut1 has left the server.
+[2012/07/21 19:42:11] Closing connection

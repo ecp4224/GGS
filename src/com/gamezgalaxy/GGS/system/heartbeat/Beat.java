@@ -61,13 +61,12 @@ public class Beat {
 			URL url;
 			HttpURLConnection connection = null;
 			BufferedReader reader;
-			DataOutputStream os;
 			byte[] data;
 			while (running) {
 				synchronized(hearts) {
 					for (Heart h : hearts) {
 						try {
-							url = new URL(h.getURL());
+							url = new URL(h.getURL() + "?" + h.Prepare(server));
 							connection = (HttpURLConnection)url.openConnection();
 							data = h.Prepare(server).getBytes();
 							connection.setDoOutput(true);
@@ -77,12 +76,6 @@ public class Beat {
 							connection.setDoOutput(true);
 							connection.connect();
 							try {
-								os = new DataOutputStream(connection.getOutputStream());
-								try {
-									os.write(data);
-								} finally {
-									os.close();
-								}
 								reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 								try {
 									h.onPump(reader, server);
@@ -102,7 +95,7 @@ public class Beat {
 					}
 				}
 				try {
-					Thread.sleep(25000);
+					Thread.sleep(30000);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

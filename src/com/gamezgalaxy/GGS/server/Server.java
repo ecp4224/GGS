@@ -7,15 +7,15 @@
  ******************************************************************************/
 package com.gamezgalaxy.GGS.server;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Random;
+
+import com.gamezgalaxy.GGS.API.EventSystem;
 import com.gamezgalaxy.GGS.networking.PacketManager;
 import com.gamezgalaxy.GGS.system.LogInterface;
 import com.gamezgalaxy.GGS.system.Logger;
@@ -30,6 +30,7 @@ public class Server implements LogInterface {
 	private ArrayList<Tick> ticks = new ArrayList<Tick>();
 	private Thread tick;
 	private Beat heartbeater;
+	private EventSystem es;
 	public ArrayList<Player> players = new ArrayList<Player>();
 	public boolean Running;
 	public int Port;
@@ -42,6 +43,9 @@ public class Server implements LogInterface {
 	public String Salt;
 	public Level MainLevel;
 	public boolean Public;
+	public final EventSystem getEvnetSystem() {
+		return es;
+	}
 	public PacketManager getPacketManager() {
 		return pm;
 	}
@@ -55,6 +59,7 @@ public class Server implements LogInterface {
 
 	public void Start() {
 		Running = true;
+		es = new EventSystem(this);
 		Calendar cal = Calendar.getInstance();
 		cal.clear(Calendar.HOUR);
 		cal.clear(Calendar.MINUTE);

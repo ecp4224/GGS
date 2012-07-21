@@ -4,41 +4,34 @@ import com.gamezgalaxy.GGS.API.Cancelable;
 import com.gamezgalaxy.GGS.API.EventList;
 import com.gamezgalaxy.GGS.server.Player;
 
-public class PlayerChatEvent extends PlayerEvent implements Cancelable {
-
+public class PlayerMoveEvent extends PlayerEvent implements Cancelable {
 	private static EventList events = new EventList();
 	
-	private boolean _canceled; 
+	private boolean _canceled;
 	
-	private String message;
+	private short X;
 	
-	private String orginalmessage;
+	private short Y;
 	
-	public PlayerChatEvent(Player who, String message) {
-		super(who);
-		this.message = message;
-		this.orginalmessage = message;
+	private short Z;
+	
+	public PlayerMoveEvent(Player who) {
+		this(who, (short)0, (short)0, (short)0);
 	}
 	
+	public PlayerMoveEvent(Player who, short x, short y, short z) {
+		super(who);
+		this.X = x;
+		this.Y = y;
+		this.Z = z;
+	}
+
 	@Override
 	public EventList getEvents() {
 		return events;
 	}
-	
 	public static EventList getEventList() {
 		return events;
-	}
-	
-	public String getMessage() {
-		return message;
-	}
-	
-	public String getOrginalMessage() {
-		return orginalmessage;
-	}
-	
-	public void setMessage(String message) {
-		this.message = message;
 	}
 
 	@Override
@@ -50,4 +43,5 @@ public class PlayerChatEvent extends PlayerEvent implements Cancelable {
 	public void Cancel(boolean cancel) {
 		_canceled = cancel;
 	}
+
 }

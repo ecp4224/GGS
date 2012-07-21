@@ -17,13 +17,14 @@ public class EventSystem {
 	}
 	
 	public void callEvent(Event event) {
-		EventList events = event.getEventList();
+		EventList events = event.getEvents();
 		RegisteredListener[] listeners = events.getRegisteredListeners();
 		for (RegisteredListener listen : listeners) {
 			try {
 				listen.execute(event);
 			}
 			catch (Exception e) {
+				server.Log("==!EVENT ERROR!==");
 				e.printStackTrace();
 			}
 		}
@@ -33,7 +34,7 @@ public class EventSystem {
             try {
 				getEventListeners(getRegistrationClass(entry.getKey())).registerAll(entry.getValue());
 			} catch (IllegalAccessException e) {
-				// TODO Auto-generated catch block
+				server.Log("==!EVENT ERROR!==");
 				e.printStackTrace();
 			}
         }
@@ -41,10 +42,11 @@ public class EventSystem {
 	
 	private EventList getEventListeners(Class<? extends Event> type) {
         try {
-            Method method = getRegistrationClass(type).getDeclaredMethod("getHandlerList");
+            Method method = getRegistrationClass(type).getDeclaredMethod("getEventList");
             method.setAccessible(true);
             return (EventList) method.invoke(null);
         } catch (Exception e) {
+        	server.Log("==!EVENT ERROR!==");
             e.printStackTrace();
             return null;
         }
@@ -52,7 +54,7 @@ public class EventSystem {
 	
 	private Class<? extends Event> getRegistrationClass(Class<? extends Event> clazz) throws IllegalAccessException {
         try {
-            clazz.getDeclaredMethod("getHandlerList");
+            clazz.getDeclaredMethod("getEventList");
             return clazz;
         } catch (NoSuchMethodException e) {
             if (clazz.getSuperclass() != null
@@ -60,7 +62,7 @@ public class EventSystem {
                     && Event.class.isAssignableFrom(clazz.getSuperclass())) {
                 return getRegistrationClass(clazz.getSuperclass().asSubclass(Event.class));
             } else {
-                throw new IllegalAccessException("Unable to find handler list for event " + clazz.getName());
+                throw new IllegalAccessException("Unable to find event list for event " + clazz.getName());
             }
         }
     }
@@ -96,7 +98,7 @@ public class EventSystem {
         			}
         		}
         	};
-        	events.add(new RegisteredListener(listen, exe));
+        	events.add(new RegisteredListener(listen, exe, m.getAnnotation(EventHandler.class).priority()));
         }
         return ret;
 	}

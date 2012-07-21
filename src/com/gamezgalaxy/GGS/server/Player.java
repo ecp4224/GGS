@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.gamezgalaxy.GGS.API.player.PlayerChatEvent;
 import com.gamezgalaxy.GGS.networking.IOClient;
 import com.gamezgalaxy.GGS.networking.Packet;
 import com.gamezgalaxy.GGS.networking.PacketManager;
@@ -511,6 +512,10 @@ public class Player extends IOClient {
 				  m = m.replaceAll("%"+code, "&"+code);
 				}
 			}
+			PlayerChatEvent event = new PlayerChatEvent(this, message);
+			pm.server.getEvnetSystem().callEvent(event);
+			if (event.isCancelled())
+				return;
 			pm.server.Log("User "+this.username + " sent: " + message);
 			pm.server.sendMessage(this.username + ": " + m);
 		}

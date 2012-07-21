@@ -5,7 +5,7 @@
  * which accompanies this distribution, and is available at
  * http://www.gnu.org/licenses/gpl.html
  ******************************************************************************/
-package com.gamezgalaxy.GGS.console;
+package com.gamezgalaxy.test.console;
 
 import java.util.Scanner;
 
@@ -16,6 +16,7 @@ public class Main {
 	public static void main(String[] args) {
 		Server s = new Server("Test", 25558, "Test");
 		s.Start();
+		s.getEvnetSystem().registerEvents(new Test());
 		while (true) {
 			String line = new Scanner(System.in).nextLine();
 			if (line.equals("stop")) {

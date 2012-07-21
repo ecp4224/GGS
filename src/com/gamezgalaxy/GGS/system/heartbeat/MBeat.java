@@ -6,11 +6,12 @@ import java.io.IOException;
 import com.gamezgalaxy.GGS.server.Server;
 
 public class MBeat extends Heart {
+	private boolean show = false;
 	@Override
 	public String Prepare(Server server) {
 		return "port=" + server.Port +
 				"&max=" + server.MaxPlayers +
-				"&name=" + server.Name +
+				"&name=" + server.Name.trim() +
 				"&public=" + server.Public +
 				"&version=7" +
 				"&salt=" + server.Salt +
@@ -32,7 +33,10 @@ public class MBeat extends Heart {
 		} finally {
 			rdr.close();
 		}
-		server.Log("URL: " + url);
+		if (!show) {
+			server.Log("URL: " + url);
+			show = true;
+		}
 		return url;
 	}
 
