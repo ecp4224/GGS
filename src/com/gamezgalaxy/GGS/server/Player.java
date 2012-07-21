@@ -7,6 +7,7 @@
  ******************************************************************************/
 package com.gamezgalaxy.GGS.server;
 
+import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
@@ -136,7 +137,7 @@ public class Player extends IOClient {
 		pm.server.sendMessage(username + " has joined the server.");
 		spawnPlayer(this);
 		setPos((short)((0.5 + level.spawnx) * 32), (short)((1 + level.spawny) * 32), (short)((0.5 + level.spawnz) * 32));
-		for (Player p : pm.server.getPlayers()) {
+		for (Player p : pm.server.players) {
 			if (p.level == level) {
 				spawnPlayer(p); //Spawn p for me
 				p.spawnPlayer(this); //Spawn me for p
@@ -203,7 +204,7 @@ public class Player extends IOClient {
 		sb.Y = Y;
 		sb.Z = Z;
 		sb.block = block.getVisableBlock();
-		for (Player p : s.getPlayers())
+		for (Player p : s.players)
 			if (p.level == l)
 				sb.Write(p, s);
 	}
@@ -229,24 +230,21 @@ public class Player extends IOClient {
 		m.Write(this, pm.server);
 	}
 	
-	/**
-	 * Update all the players this player can see
-	 */
-	public void updatePlayers() {
+	public void UpdatePos() throws IOException {
+		if (!isLoggedin)
+			return;
 		TP t = (TP)(pm.getPacket("TP"));
 		GlobalPosUpdate gps = (GlobalPosUpdate)(pm.getPacket("GlobalPosUpdate"));
-		for (Player p : seeable) {
+		byte[] tosend;
+		if (Math.abs(getX() - oldX) >= 127 || Math.abs(getY() - oldY) >= 127 || Math.abs(getZ() - oldZ) >= 127)
+			tosend = t.toSend(this);
+		else
+			tosend = gps.toSend(this);
+		for (Player p : pm.server.players) {
 			if (p == this)
 				continue;
-			if (Math.abs(p.getX() - p.oldX) >= 127 || Math.abs(p.getY() - p.oldY) >= 127 || Math.abs(p.getZ() - p.oldZ) >= 127) {
-				t.pID = p.ID;
-				t.tp = p;
-				t.Write(this, p.pm.server);
-			}
-			else {
-				gps.toupdate = p;
-				gps.Write(this, p.pm.server);
-			}
+			if (p.level == level)
+				p.WriteData(tosend);
 		}
 	}
 	
@@ -325,7 +323,7 @@ public class Player extends IOClient {
 		byte toreturn = 0;
 		for (int i = 0; i < 255; i++) {
 			found = true;
-			for (Player p : pm.server.getPlayers()) {
+			for (Player p : pm.server.players) {
 				if (p.ID == i) {
 					found = false;
 					break;
@@ -458,7 +456,7 @@ public class Player extends IOClient {
 		t.pID = ID;
 		t.tp = this; //This player is teleporting
 		t.Write(this, pm.server); //Tell him that
-		for (Player p : pm.server.getPlayers()) {
+		for (Player p : pm.server.players) {
 			if (p.level == level && p != this)
 				t.Write(p, p.pm.server); //Tell all the other players as well...
 		}
@@ -537,10 +535,11 @@ public class Player extends IOClient {
 	 */
 	@Override
 	public void CloseConnection() {
-		pm.server.removePlayer(this);
+		if (pm.server.players.contains(this))
+			pm.server.players.remove(this);
 		pm.server.Log(this.username + " has left the server.");
 		pm.server.sendMessage(this.username + " has left the server.");
-		for (Player p : pm.server.getPlayers())
+		for (Player p : pm.server.players)
 			p.Despawn(this);
 		super.CloseConnection();
 		pm.server.Remove(tick); //Do this last as this takes a while to remove

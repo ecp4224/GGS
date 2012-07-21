@@ -30,6 +30,18 @@ public class TP extends Packet {
 	public TP(PacketManager pm) {
 		super("TP", (byte)0x08, pm, PacketType.Server_to_Client);
 	}
+	
+	public byte[] toSend(Player toteleport) {
+		ByteBuffer bb = ByteBuffer.allocate(10);
+		bb.put(ID);
+		bb.put(toteleport.getID());
+		bb.putShort(toteleport.getX());
+		bb.putShort(toteleport.getY());
+		bb.putShort(toteleport.getZ());
+		bb.put(toteleport.yaw);
+		bb.put(toteleport.pitch);
+		return bb.array();
+	}
 
 	@Override
 	public void Handle(byte[] message, Server server, IOClient player) {

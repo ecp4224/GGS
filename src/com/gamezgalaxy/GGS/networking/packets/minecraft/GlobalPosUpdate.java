@@ -28,6 +28,40 @@ public class GlobalPosUpdate extends Packet {
 	public GlobalPosUpdate(PacketManager pm) {
 		super("GlobalPosUpdate", (byte)0x09, pm, PacketType.Server_to_Client);
 	}
+	
+	public byte[] toSend(Player p) {
+		byte[] finals;
+		if (posUpdate(p) && rotUpdate(p)) {
+			finals = new byte[7];
+			finals[0] = ID;
+			finals[1] = p.getID();
+			finals[2] = (byte)(p.getX() - p.oldX);
+			finals[3] = (byte)(p.getY() - p.oldY);
+			finals[4] = (byte)(p.getZ() - p.oldZ);
+			finals[5] = p.yaw;
+			finals[6] = p.pitch;
+		}
+		else if (posUpdate(p)) {
+			finals = new byte[5];
+			finals[0] = (byte)0x0a;
+			finals[1] = p.getID();
+			finals[2] = (byte)(p.getX() - p.oldX);
+			finals[3] = (byte)(p.getY() - p.oldY);
+			finals[4] = (byte)(p.getZ() - p.oldZ);
+		}
+		else if (rotUpdate(p)) {
+			finals = new byte[4];
+			finals[0] = (byte)0x0b;
+			finals[1] = p.getID();
+			finals[2] = p.yaw;
+			finals[3] = p.pitch;
+		}
+		else { //PING!
+			finals = new byte[1];
+			finals[0] = (byte)0x01;
+		}
+		return finals;
+	}
 
 	@Override
 	public void Handle(byte[] message, Server server, IOClient player) {
@@ -42,7 +76,7 @@ public class GlobalPosUpdate extends Packet {
 		else
 			return;
 		byte[] finals;
-		if (posUpdate() && rotUpdate()) {
+		if (posUpdate(toupdate) && rotUpdate(toupdate)) {
 			finals = new byte[7];
 			finals[0] = ID;
 			finals[1] = toupdate.getID();
@@ -52,7 +86,7 @@ public class GlobalPosUpdate extends Packet {
 			finals[5] = toupdate.yaw;
 			finals[6] = toupdate.pitch;
 		}
-		else if (posUpdate()) {
+		else if (posUpdate(toupdate)) {
 			finals = new byte[5];
 			finals[0] = (byte)0x0a;
 			finals[1] = toupdate.getID();
@@ -60,7 +94,7 @@ public class GlobalPosUpdate extends Packet {
 			finals[3] = (byte)(toupdate.getY() - toupdate.oldY);
 			finals[4] = (byte)(toupdate.getZ() - toupdate.oldZ);
 		}
-		else if (rotUpdate()) {
+		else if (rotUpdate(toupdate)) {
 			finals = new byte[4];
 			finals[0] = (byte)0x0b;
 			finals[1] = toupdate.getID();
@@ -84,11 +118,11 @@ public class GlobalPosUpdate extends Packet {
 		toupdate.oldpitch = toupdate.pitch;
 	}
 	
-	public boolean posUpdate() {
+	public boolean posUpdate(Player toupdate) {
 		return toupdate.getX() - toupdate.oldX != 0 || toupdate.getY() - toupdate.oldY != 0 || toupdate.getZ() - toupdate.oldZ != 0;
 	}
 	
-	public boolean rotUpdate() {
+	public boolean rotUpdate(Player toupdate) {
 		return toupdate.yaw - toupdate.oldyaw != 0 || toupdate.pitch - toupdate.oldpitch != 0;
 	}
 

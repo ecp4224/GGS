@@ -7,6 +7,7 @@
  ******************************************************************************/
 package com.gamezgalaxy.GGS.networking.packets.minecraft;
 
+import java.io.IOException;
 import java.nio.ByteBuffer;
 
 import com.gamezgalaxy.GGS.networking.IOClient;
@@ -52,7 +53,12 @@ public class PosUpdate extends Packet {
 		player.setZ(Z);
 		player.yaw = bb.get(7);
 		player.pitch = bb.get(8);
-		server.UpdatePos();
+		try {
+			player.UpdatePos();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 	}
 

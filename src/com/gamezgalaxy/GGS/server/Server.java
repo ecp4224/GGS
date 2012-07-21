@@ -22,7 +22,7 @@ public class Server {
 	private PacketManager pm;
 	private ArrayList<Tick> ticks = new ArrayList<Tick>();
 	private Thread tick;
-	private ArrayList<Player> players = new ArrayList<Player>();
+	public ArrayList<Player> players = new ArrayList<Player>();
 	public boolean Running;
 	public int Port;
 	public int MaxPlayers;
@@ -32,25 +32,6 @@ public class Server {
 	public Level MainLevel;
 	public PacketManager getPacketManager() {
 		return pm;
-	}
-	public ArrayList<Player> getPlayers() {
-		synchronized(players) {
-			return players;
-		}
-	}
-	public void addPlayer(Player p) {
-		synchronized(players) {
-			if (players.contains(p))
-				return;
-			players.add(p);
-		}
-	}
-	public void removePlayer(Player p) {
-		synchronized(players) {
-			if (!players.contains(p))
-				return;
-			players.remove(p);
-		}
 	}
 	public Server(String Name, int Port, String MOTD) {
 		this.Port = Port;
@@ -132,12 +113,12 @@ public class Server {
 
 
 	public void UpdatePos() {
-		for (Player p : getPlayers())
+		for (Player p : players)
 			p.updatePlayers();
 	}
 
 	public void sendMessage(String message) {
-		for (Player p : getPlayers())
+		for (Player p : players)
 			p.sendMessage(message);
 	}
 }
