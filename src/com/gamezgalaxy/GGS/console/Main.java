@@ -16,7 +16,20 @@ public class Main {
 	public static void main(String[] args) {
 		Server s = new Server("Test", 25558, "Test");
 		s.Start();
-		new Scanner(System.in).nextLine();
+		while (true) {
+			String line = new Scanner(System.in).nextLine();
+			if (line.equals("stop")) {
+				try {
+					s.Stop();
+					break;
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			else
+				s.Log(line);
+		}
+		System.out.println("Server stopped..");
 	}
-
 }

@@ -88,6 +88,22 @@ public class PacketManager {
 		server.Log("Listening on port " + server.Port);
 	}
 	
+	public void StopReading() {
+		reader.stop();
+		try {
+			serverSocket.close();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		try {
+			reader.join();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	public static long ConvertToInt32(byte[] array) {
 		long toreturn = 0;
 		for (int i = 0; i < array.length; i++) {

@@ -7,19 +7,23 @@
  ******************************************************************************/
 package com.gamezgalaxy.GGS.server;
 
-import java.io.UnsupportedEncodingException;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Random;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-
 import com.gamezgalaxy.GGS.networking.PacketManager;
+import com.gamezgalaxy.GGS.system.LogInterface;
+import com.gamezgalaxy.GGS.system.Logger;
 import com.gamezgalaxy.GGS.world.Level;
 
-public class Server {
+public class Server implements LogInterface {
 	private PacketManager pm;
+	private Logger logger;
 	private ArrayList<Tick> ticks = new ArrayList<Tick>();
 	private Thread tick;
 	public ArrayList<Player> players = new ArrayList<Player>();
@@ -43,6 +47,26 @@ public class Server {
 
 	public void Start() {
 		Running = true;
+		Calendar cal = Calendar.getInstance();
+		cal.clear(Calendar.HOUR);
+		cal.clear(Calendar.MINUTE);
+		cal.clear(Calendar.SECOND);
+		cal.clear(Calendar.MILLISECOND);
+		logger = new Logger("logs/" + cal.getTime() + ".txt", this);
+		String filename = cal.getTime().toString().replace(" ", "-");
+		String finalname = filename.split("-")[0] + "-" + filename.split("-")[1] + "-" + filename.split("-")[2];
+		try {
+			logger.ChangeFilePath("logs/" + finalname + ".txt");
+		} catch (IOException e2) {
+			System.out.println("logs/" + finalname + ".txt");
+			e2.printStackTrace();
+		}
+		try {
+			logger.Start(false);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		Log("Starting..");
 		pm.StartReading();
 		Log("Generating Level..");
@@ -70,11 +94,19 @@ public class Server {
 
 	public void Stop() throws InterruptedException {
 		Running = false;
+		System.out.println("Stopping server..");
+		pm.StopReading();
 		tick.join();
+		logger.Stop();
 	}
 
+	@SuppressWarnings("unchecked")
 	public void Log(String log) {
-		System.out.println(log);
+		logger.Log(log);
+	}
+	
+	public Logger getLogger() {
+		return logger;
 	}
 
 	public  void Add(Tick t) {
@@ -114,5 +146,17 @@ public class Server {
 	public void sendMessage(String message) {
 		for (Player p : players)
 			p.sendMessage(message);
+	}
+	@Override
+	public void onLog(String message) {
+		//TODO ..colors?
+		System.out.println(message);
+	}
+	@Override
+	public void onError(String message) {
+		//TODO ..colors?
+		System.out.println("==!ERROR!==");
+		System.out.println(message);
+		System.out.println("==!ERROR!==");
 	}
 }
