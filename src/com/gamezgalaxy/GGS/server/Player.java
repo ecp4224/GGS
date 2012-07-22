@@ -137,6 +137,7 @@ public class Player extends IOClient {
 		}
 		Listen();
 		pm.server.Add(tick);
+		this.chat = new Messages(pm.server);
 	}
 	
 	/**
@@ -164,8 +165,8 @@ public class Player extends IOClient {
 		oldX = X;
 		oldY = Y;
 		oldZ = Z;
-		pm.server.Log(username + " has joined the server.");
-		chat.serverBroadcast(username + " has joined the server.");
+		pm.server.Log(this.username + " has joined the server.");
+		chat.serverBroadcast(this.username + " has joined the server.");
 		spawnPlayer(this);
 		setPos((short)((0.5 + level.spawnx) * 32), (short)((1 + level.spawny) * 32), (short)((0.5 + level.spawnz) * 32));
 		for (Player p : pm.server.players) {
@@ -577,8 +578,11 @@ public class Player extends IOClient {
 	public void CloseConnection() {
 		if (pm.server.players.contains(this))
 			pm.server.players.remove(this);
-		pm.server.Log(this.username + " has left the server.");
-		chat.serverBroadcast(this.username + " has left the server.");
+		if(this.username != null)
+		{
+			pm.server.Log(this.username + " has left the server.");
+			chat.serverBroadcast(this.username + " has left the server.");
+		}
 		for (Player p : pm.server.players)
 			p.Despawn(this);
 		super.CloseConnection();

@@ -6,11 +6,11 @@ import com.gamezgalaxy.GGS.API.player.PlayerChatEvent;
 import com.gamezgalaxy.GGS.API.player.PlayerMoveEvent;
 
 public class Test implements Listener {
-	
+	/*
 	@EventHandler
 	public void TestEvent(PlayerChatEvent event) {
 		System.out.println("HI!");
-	}
+	}*/
 	
 	@EventHandler
 	public void TestEvent2(PlayerMoveEvent event) {

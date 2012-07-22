@@ -87,10 +87,10 @@ public class IOClient {
 					break;
 				}
 				catch (Exception e) {
+					e.printStackTrace();
 					if (client instanceof Player)
 						((Player)client).Kick("ERROR!");
 					CloseConnection();
-					e.printStackTrace();
 					break;
 				}
 			}

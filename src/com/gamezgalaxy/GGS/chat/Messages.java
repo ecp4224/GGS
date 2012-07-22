@@ -1,15 +1,12 @@
 package com.gamezgalaxy.GGS.chat;
 
-import java.util.ArrayList;
-
-import com.gamezgalaxy.GGS.networking.PacketManager;
 import com.gamezgalaxy.GGS.server.Player;
-import com.gamezgalaxy.GGS.world.Level;
+import com.gamezgalaxy.GGS.server.Server;
 
 public class Messages {
-	protected Player player;
-	protected PacketManager pm;
-	public ArrayList<Player> players = new ArrayList<Player>();
+	protected Server server;
+	
+	public Messages(Server server) { this.server = server; }
 	
 	/**
 	 * Send a message to all players on the server regardless of world
@@ -18,7 +15,7 @@ public class Messages {
 	 */
 	public void serverBroadcast(String message)
 	{
-		for (Player p : players)
+		for (Player p : server.players)
 			p.sendMessage(message);
 	}
 	
@@ -30,7 +27,7 @@ public class Messages {
 	 */
 	public void worldBroadcast(String message, String world)
 	{
-		for (Player p : players)
+		for (Player p : server.players)
 		{
 			if(p.world == world)
 				p.sendMessage(message);
@@ -45,7 +42,7 @@ public class Messages {
 	 */
 	public void sendMessage(String message, String playerName)
 	{
-		for (Player p : players)
+		for (Player p : server.players)
 			if(p.username == playerName)
 				p.sendMessage(message);
 	}
