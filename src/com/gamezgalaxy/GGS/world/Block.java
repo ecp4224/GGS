@@ -39,6 +39,7 @@ public abstract class Block {
 			new Lava(),
 			new Leaves(),
 			new Lime(),
+			new Magenta(),
 			new MossyCobblestone(),
 			new Obsidian(),
 			new Orange(),

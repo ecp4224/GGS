@@ -17,7 +17,7 @@ public class Cobblestone extends Block {
 	}
 	
 	public Cobblestone() {
-		super((byte)3, "Dirt");
+		super((byte)4, "Cobblestone");
 	}
 
 }
