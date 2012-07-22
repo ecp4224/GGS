@@ -14,6 +14,7 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.gamezgalaxy.GGS.API.player.PlayerBlockPlaceEvent;
 import com.gamezgalaxy.GGS.API.player.PlayerChatEvent;
 import com.gamezgalaxy.GGS.API.player.PlayerCommandEvent;
 import com.gamezgalaxy.GGS.chat.Messages;
@@ -200,9 +201,17 @@ public class Player extends IOClient {
 			return;
 		}*/
 		if (type == PlaceMode.PLACE)
+		{
+			PlayerBlockPlaceEvent event = new PlayerBlockPlaceEvent(this, X, Y, Z, Block.getBlock(holding), level, pm.server);
+			pm.server.getEventSystem().callEvent(event);
+			if (event.isCancelled())
+				return;
 			GlobalBlockChange(X, Y, Z, Block.getBlock(holding), level, pm.server);
+		}
 		else if (type == PlaceMode.BREAK)
+		{
 			GlobalBlockChange(X, Y, Z, Block.getBlock((byte)0), level, pm.server);
+		}
 	}
 
 	/**
