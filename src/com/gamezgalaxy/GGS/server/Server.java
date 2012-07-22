@@ -161,11 +161,6 @@ public class Server implements LogInterface {
 			}
 		}
 	}
-
-	public void sendMessage(String message) {
-		for (Player p : players)
-			p.sendMessage(message);
-	}
 	@Override
 	public void onLog(String message) {
 		//TODO ..colors?
