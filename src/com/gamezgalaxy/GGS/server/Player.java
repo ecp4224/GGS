@@ -10,6 +10,7 @@ package com.gamezgalaxy.GGS.server;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -195,10 +196,10 @@ public class Player extends IOClient {
 			Kick("Hack Client detected!");
 			return;
 		}
-		if (X > level.width || X < 0 || Y > level.height || Y < 0 || Z > level.depth || Z < 0) {
+		/*if (X > level.width || X < 0 || Y > level.height || Y < 0 || Z > level.depth || Z < 0) {
 			Kick("Hack Client detected!");
 			return;
-		}
+		}*/
 		if (type == PlaceMode.PLACE)
 		{
 			PlayerBlockPlaceEvent event = new PlayerBlockPlaceEvent(this, X, Y, Z, Block.getBlock(holding), level, pm.server);
@@ -210,6 +211,38 @@ public class Player extends IOClient {
 		else if (type == PlaceMode.BREAK)
 		{
 			GlobalBlockChange(X, Y, Z, Block.getBlock((byte)0), level, pm.server);
+		}
+	}
+
+	/**
+	 * Thread to check for hacks.
+	 */
+	private class HackThread extends Thread
+	{
+		// TODO: Organize this much better. Don't know if a Thread is the best approach...
+		// TODO: Any of hack checking.
+
+		@Override
+		public void run()
+		{
+			try {
+				Thread.sleep(5000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+
+			//chat.serverBroadcast(String.valueOf((X / level.width) * 2) + ", " +
+			//		String.valueOf((Y / level.height) * 2) + ", " +
+			//		String.valueOf((Z / level.depth) * 2) + " : " +
+			//		String.valueOf(level.width) + ", " + String.valueOf(level.height) + ", " + String.valueOf(level.depth));
+
+			if(((X / level.width) * 2) > level.width || ((X / level.width) * 2) < 0 ||
+					((Y / level.height) * 2) > level.height || ((Y / level.height) * 2) < 0 ||
+					((Z / level.depth) > level.depth || ((Z / level.depth) < 0)))
+			{
+				Kick("Hack Client detected!");
+				return;
+			}
 		}
 	}
 	
@@ -274,6 +307,9 @@ public class Player extends IOClient {
 	public void UpdatePos() throws IOException {
 		if (!isLoggedin)
 			return;
+
+		(new Thread(new HackThread())).start();
+
 		TP t = (TP)(pm.getPacket("TP"));
 		GlobalPosUpdate gps = (GlobalPosUpdate)(pm.getPacket("GlobalPosUpdate"));
 		byte[] tosend;
@@ -299,6 +335,7 @@ public class Player extends IOClient {
 		SpawnPlayer sp = (SpawnPlayer)(pm.getPacket((byte)0x07));
 		sp.spawn = p;
 		sp.Write(this, p.pm.server);
+		seeable.add(p);
 		seeable.add(p);
 	}
 
