@@ -14,6 +14,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.gamezgalaxy.GGS.API.player.PlayerChatEvent;
+import com.gamezgalaxy.GGS.API.player.PlayerCommandEvent;
+import com.gamezgalaxy.GGS.chat.Messages;
 import com.gamezgalaxy.GGS.networking.IOClient;
 import com.gamezgalaxy.GGS.networking.Packet;
 import com.gamezgalaxy.GGS.networking.PacketManager;
@@ -34,6 +36,7 @@ public class Player extends IOClient {
 	protected byte ID;
 	protected Level level;
 	protected Thread levelsender;
+	protected Messages chat;
 	protected ArrayList<Player> seeable = new ArrayList<Player>();
 	protected Ping tick = new Ping(this);
 	/**
@@ -48,6 +51,10 @@ public class Player extends IOClient {
 	 * The username of the player
 	 */
 	public String username;
+	/**
+	 * The world the player is currently in
+	 */
+	public String world;
 	/**
 	 * The mppass the user used to login
 	 */
@@ -158,7 +165,7 @@ public class Player extends IOClient {
 		oldY = Y;
 		oldZ = Z;
 		pm.server.Log(username + " has joined the server.");
-		pm.server.sendMessage(username + " has joined the server.");
+		chat.serverBroadcast(username + " has joined the server.");
 		spawnPlayer(this);
 		setPos((short)((0.5 + level.spawnx) * 32), (short)((1 + level.spawny) * 32), (short)((0.5 + level.spawnz) * 32));
 		for (Player p : pm.server.players) {
@@ -511,7 +518,12 @@ public class Player extends IOClient {
 	 */
 	public void recieveMessage(String message){
 		if(message.startsWith("/"))
-		{
+		{	
+			PlayerCommandEvent event = new PlayerCommandEvent(this, message);
+			pm.server.getEventSystem().callEvent(event);
+			if (event.isCancelled())
+				return;
+			
 			if(message.contains("/cc"))
 			{
 				if(this.cc)
@@ -539,8 +551,8 @@ public class Player extends IOClient {
 			pm.server.getEventSystem().callEvent(event);
 			if (event.isCancelled())
 				return;
-			pm.server.Log("User "+this.username + " sent: " + message);
-			pm.server.sendMessage(this.username + ": " + m);
+			pm.server.Log("User "+ this.username + " sent: " + message);
+			chat.serverBroadcast(this.username + ": " + m);
 		}
 	}
 	
@@ -566,7 +578,7 @@ public class Player extends IOClient {
 		if (pm.server.players.contains(this))
 			pm.server.players.remove(this);
 		pm.server.Log(this.username + " has left the server.");
-		pm.server.sendMessage(this.username + " has left the server.");
+		chat.serverBroadcast(this.username + " has left the server.");
 		for (Player p : pm.server.players)
 			p.Despawn(this);
 		super.CloseConnection();
