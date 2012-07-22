@@ -10,9 +10,11 @@ package com.gamezgalaxy.GGS.server;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.gamezgalaxy.GGS.API.player.PlayerBlockPlaceEvent;
 import com.gamezgalaxy.GGS.API.player.PlayerChatEvent;
 import com.gamezgalaxy.GGS.API.player.PlayerCommandEvent;
 import com.gamezgalaxy.GGS.chat.Messages;
@@ -109,11 +111,19 @@ public class Player extends IOClient {
 	 * @param client The socket the player used to connect
 	 * @param pm The PacketManager the player connected to
 	 */
-	public Player(Socket client, PacketManager pm) {
-		this(client, pm, (byte)255);
+
+	/**
+	 * Local variable referencing to the Server class.
+	 */
+	private Server server;
+
+	public Player(Socket client, PacketManager pm, Server server) {
+		this(client, pm, (byte)255, server);
+		this.server = server;
 	}
-	public Player(Socket client, PacketManager pm, byte opCode) {
+	public Player(Socket client, PacketManager pm, byte opCode, Server server) {
 		super(client, pm);
+		this.server = server;
 		ID = getFreeID();
 		this.chat = new Messages(pm.server);
 		if (opCode != 255) {
@@ -194,14 +204,54 @@ public class Player extends IOClient {
 			Kick("Hack Client detected!");
 			return;
 		}
-		if (X > level.width || X < 0 || Y > level.height || Y < 0 || Z > level.depth || Z < 0) {
+		/*if (X > level.width || X < 0 || Y > level.height || Y < 0 || Z > level.depth || Z < 0) {
 			Kick("Hack Client detected!");
 			return;
-		}
+		}*/
 		if (type == PlaceMode.PLACE)
+		{
+			PlayerBlockPlaceEvent event = new PlayerBlockPlaceEvent(this, X, Y, Z, Block.getBlock(holding), level, pm.server);
+			pm.server.getEventSystem().callEvent(event);
+			if (event.isCancelled())
+				return;
 			GlobalBlockChange(X, Y, Z, Block.getBlock(holding), level, pm.server);
+		}
 		else if (type == PlaceMode.BREAK)
+		{
 			GlobalBlockChange(X, Y, Z, Block.getBlock((byte)0), level, pm.server);
+		}
+	}
+
+	/**
+	 * Thread to check for hacks.
+	 */
+	private class HackThread extends Thread
+	{
+		// TODO: Organize this much better. Don't know if a Thread is the best approach...
+		// TODO: Any of hack checking.
+
+		@Override
+		public void run()
+		{
+			try {
+				Thread.sleep(5000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+
+			//chat.serverBroadcast(String.valueOf((X / level.width) * 2) + ", " +
+			//		String.valueOf((Y / level.height) * 2) + ", " +
+			//		String.valueOf((Z / level.depth) * 2) + " : " +
+			//		String.valueOf(level.width) + ", " + String.valueOf(level.height) + ", " + String.valueOf(level.depth));
+
+			if(((X / level.width) * 2) > level.width || ((X / level.width) * 2) < 0 ||
+					((Y / level.height) * 2) > level.height || ((Y / level.height) * 2) < 0 ||
+					((Z / level.depth) > level.depth || ((Z / level.depth) < 0)))
+			{
+				Kick("Hack Client detected!");
+				return;
+			}
+		}
 	}
 	
 	/**
@@ -265,6 +315,10 @@ public class Player extends IOClient {
 	public void UpdatePos() throws IOException {
 		if (!isLoggedin)
 			return;
+
+		// TODO: Don't run this if your on WoM, your an op, and +ophack is enabled.
+		(new Thread(new HackThread())).start();
+
 		TP t = (TP)(pm.getPacket("TP"));
 		GlobalPosUpdate gps = (GlobalPosUpdate)(pm.getPacket("GlobalPosUpdate"));
 		byte[] tosend;
@@ -290,6 +344,7 @@ public class Player extends IOClient {
 		SpawnPlayer sp = (SpawnPlayer)(pm.getPacket((byte)0x07));
 		sp.spawn = p;
 		sp.Write(this, p.pm.server);
+		seeable.add(p);
 		seeable.add(p);
 	}
 
@@ -538,6 +593,13 @@ public class Player extends IOClient {
 			}
 			else if (message.contains("/spawn"))
 				setPos((short)((0.5 + level.spawnx) * 32), (short)((1 + level.spawny) * 32), (short)((0.5 + level.spawnz) * 32));
+			else if(message.contains("/stop")) {
+				try {
+					server.Stop();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
 		}else{
 			String m = message;
 			if(m.matches(".*%([0-9]|[a-f]|[k-r])(.+?).*") && this.cc){
