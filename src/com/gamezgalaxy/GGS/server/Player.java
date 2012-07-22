@@ -14,6 +14,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.gamezgalaxy.GGS.API.player.PlayerChatEvent;
+import com.gamezgalaxy.GGS.API.player.PlayerCommandEvent;
 import com.gamezgalaxy.GGS.chat.Messages;
 import com.gamezgalaxy.GGS.networking.IOClient;
 import com.gamezgalaxy.GGS.networking.Packet;
@@ -494,13 +495,13 @@ public class Player extends IOClient {
 	 */
 	public void recieveMessage(String message){
 		if(message.startsWith("/"))
-		{
-			//ALRIGHTY THEN LETS GET THIS PARTY STARTED
+		{	
+			PlayerCommandEvent event = new PlayerCommandEvent(this, message);
+			pm.server.getEventSystem().callEvent(event);
+			if (event.isCancelled())
+				return;
 			
-			
-			
-			
-			/*if(message.contains("/cc"))
+			if(message.contains("/cc"))
 			{
 				if(this.cc)
 				{
@@ -512,7 +513,7 @@ public class Player extends IOClient {
 				}
 			}
 			else if (message.contains("/spawn"))
-				setPos((short)((0.5 + level.spawnx) * 32), (short)((1 + level.spawny) * 32), (short)((0.5 + level.spawnz) * 32));*/
+				setPos((short)((0.5 + level.spawnx) * 32), (short)((1 + level.spawny) * 32), (short)((0.5 + level.spawnz) * 32));
 		}else{
 			String m = message;
 			if(m.matches(".*%([0-9]|[a-f]|[k-r])(.+?).*") && this.cc){
