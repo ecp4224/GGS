@@ -65,6 +65,10 @@ public class PlayerCommandEvent extends PlayerEvent implements Cancelable {
 		return orginalmessage;
 	}
 	
+	public List<String> getArgs(){
+		return this.command;
+	}
+	
 	public void setCommand(List<String> command) {
 		this.command = command;
 	}
