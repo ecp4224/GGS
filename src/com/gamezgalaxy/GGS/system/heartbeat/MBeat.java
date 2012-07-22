@@ -1,5 +1,8 @@
 package com.gamezgalaxy.GGS.system.heartbeat;
 
+import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.io.BufferedReader;
 import java.io.IOException;
 
@@ -35,6 +38,15 @@ public class MBeat extends Heart {
 		}
 		if (!show) {
 			server.Log("URL: " + url);
+
+			String data1 = "mc://localhost/username/" + server.Salt;
+			{
+				StringSelection data2 = new StringSelection(data1);
+				Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+				clipboard.setContents(data2, data2);
+			}
+
+			server.Log("Local Direct URL: " + data1);
 			show = true;
 		}
 		return url;
