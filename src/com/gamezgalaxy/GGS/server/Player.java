@@ -103,8 +103,31 @@ public class Player extends IOClient {
 	 * @param pm The PacketManager the player connected to
 	 */
 	public Player(Socket client, PacketManager pm) {
+		this(client, pm, (byte)255);
+	}
+	public Player(Socket client, PacketManager pm, byte opCode) {
 		super(client, pm);
 		ID = getFreeID();
+		if (opCode != 255) {
+			Packet packet = pm.getPacket(opCode);
+			if (packet == null) {
+				pm.server.Log("Client sent " + opCode);
+				pm.server.Log("How do..?");
+			} else {
+				byte[] message = new byte[packet.length];
+				try {
+					reader.read(message);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				if (message.length < packet.length) {
+					pm.server.Log("Bad packet..");
+				}
+				else
+					packet.Handle(message, pm.server, this);
+			}
+		}
 		Listen();
 		pm.server.Add(tick);
 	}

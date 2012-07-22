@@ -96,9 +96,11 @@ public class Logger {
 	 * @throws Exception
 	 */
 	public void Log(String message) {
-		if (!Running)
-			return;
-		queue.add(message);
+		synchronized(queue) {
+			if (!Running)
+				return;
+			queue.add(message);
+		}
 	}
 
 	/**
@@ -131,25 +133,27 @@ public class Logger {
 			Calendar cal = Calendar.getInstance();
 			Iterator it = null;
 			while (Running) {
-				it=queue.iterator();
-				if (it == null)
-					continue;
-				while (it.hasNext()) {
-					cal = Calendar.getInstance();
-					String message = (String)it.next();
-					String date = dateFormat.format(cal.getTime());
-					String finalmessage = "[" + date + "] " + message;
-					if (owner != null && owner instanceof LogInterface) {
-						if (message.contains("ERROR"))
-							((LogInterface)owner).onError(finalmessage);
-						else
-							((LogInterface)owner).onLog(finalmessage);
+				synchronized(queue) {
+					it=queue.iterator();
+					if (it == null)
+						continue;
+					while (it.hasNext()) {
+						cal = Calendar.getInstance();
+						String message = (String)it.next();
+						String date = dateFormat.format(cal.getTime());
+						String finalmessage = "[" + date + "] " + message;
+						if (owner != null && owner instanceof LogInterface) {
+							if (message.contains("ERROR"))
+								((LogInterface)owner).onError(finalmessage);
+							else
+								((LogInterface)owner).onLog(finalmessage);
+						}
+						if (out != null)
+							out.println(finalmessage);
 					}
-					if (out != null)
-						out.println(finalmessage);
+					queue.clear();
+					out.flush();
 				}
-				queue.clear();
-				out.flush();
 				try {
 					Thread.sleep(100);
 				} catch (InterruptedException e) {

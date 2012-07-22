@@ -7,7 +7,12 @@
  ******************************************************************************/
 package com.gamezgalaxy.GGS.world;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 
 import com.gamezgalaxy.GGS.server.Player;
 import com.gamezgalaxy.GGS.server.Server;
@@ -28,6 +33,8 @@ public class Level {
 	public int spawny;
 	
 	public int spawnz;
+	
+	public String name;
 	
 	public Level(short width, short height, short depth) {
 		this.width = width;
@@ -90,6 +97,26 @@ public class Level {
         return x + z * width + y * width * depth;
     }
 	
+	public void Save() throws IOException {
+		FileOutputStream fos = new FileOutputStream("levels/" + name + ".ggs");
+		ObjectOutputStream out = new ObjectOutputStream(fos);
+		out.writeObject(this);
+		out.close();
+		fos.close();
+	}
+	
+	public static Level Load(String filename) throws IOException, ClassNotFoundException {
+		Level l = null;
+		if (filename.endsWith(".dat"))
+			l = Convert(filename);
+		else {
+			FileInputStream fis = new FileInputStream(filename);
+			ObjectInputStream obj = new ObjectInputStream(fis);
+			l = (Level)obj.readObject();
+		}
+		return l;
+	}
+	
 	public static Level Convert(String file) throws IOException {
 		DatToGGS newlvl = new DatToGGS();
 		newlvl.load(file);
@@ -100,6 +127,7 @@ public class Level {
 			cords = newlvl.getCoords(i);
 			lvl.blocks[lvl.PosToInt(cords[0], cords[1], cords[2])] = Block.getBlock(newlvl.level.blocks[i]);
 		}
+		lvl.Save();
 		return lvl;
 	}
 

@@ -7,6 +7,7 @@
  ******************************************************************************/
 package com.gamezgalaxy.GGS.networking;
 
+import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -136,6 +137,18 @@ public class PacketManager {
             num >>>= 8;
         }
     }
+    
+    public void Accept(Socket connection) throws IOException {
+    	DataInputStream reader = new DataInputStream(connection.getInputStream());
+    	byte firstsend = reader.readByte();
+    	switch (firstsend) {
+    	case 0: //Minecraft player
+    		new Player(connection, this, firstsend);
+    	case (byte)'G': //A browser or website is using GET
+    		//TODO Add support for browsers
+    	}
+    	reader.close();
+    }
 	
 	public class Read extends Thread {
 		
@@ -150,7 +163,7 @@ public class PacketManager {
 				try {
 					connection = serverSocket.accept();
 					server.Log("Connection made from " + connection.getInetAddress().toString());
-					new Player(connection, pm);
+					Accept(connection);
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

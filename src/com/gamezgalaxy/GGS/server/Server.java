@@ -117,6 +117,7 @@ public class Server implements LogInterface {
 		pm.StopReading();
 		tick.join();
 		logger.Stop();
+		heartbeater.stop();
 	}
 
 	@SuppressWarnings("unchecked")
