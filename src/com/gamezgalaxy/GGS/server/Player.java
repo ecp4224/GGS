@@ -115,6 +115,7 @@ public class Player extends IOClient {
 	public Player(Socket client, PacketManager pm, byte opCode) {
 		super(client, pm);
 		ID = getFreeID();
+		this.chat = new Messages(pm.server);
 		if (opCode != 255) {
 			Packet packet = pm.getPacket(opCode);
 			if (packet == null) {
@@ -137,7 +138,6 @@ public class Player extends IOClient {
 		}
 		Listen();
 		pm.server.Add(tick);
-		this.chat = new Messages(pm.server);
 	}
 	
 	/**
