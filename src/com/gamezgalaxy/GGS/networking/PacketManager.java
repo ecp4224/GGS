@@ -147,7 +147,6 @@ public class PacketManager {
     	case (byte)'G': //A browser or website is using GET
     		//TODO Add support for browsers
     	}
-    	reader.close();
     }
 	
 	public class Read extends Thread {
