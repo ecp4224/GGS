@@ -316,6 +316,7 @@ public class Player extends IOClient {
 		if (!isLoggedin)
 			return;
 
+		// TODO: Don't run this if your on WoM, your an op, and +ophack is enabled.
 		(new Thread(new HackThread())).start();
 
 		TP t = (TP)(pm.getPacket("TP"));
