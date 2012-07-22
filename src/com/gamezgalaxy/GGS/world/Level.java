@@ -40,9 +40,9 @@ public class Level {
 		this.width = width;
 		this.height = height;
 		this.depth = depth;
-		this.spawnx = 50;
-		this.spawny = 50;
-		this.spawnz = 50;
+		this.spawnx = width / 2;
+		this.spawny = 33;
+		this.spawnz = depth / 2;
 		blocks = new Block[width*height*depth];
 	}
 	
