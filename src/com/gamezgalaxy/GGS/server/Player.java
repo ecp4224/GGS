@@ -111,11 +111,19 @@ public class Player extends IOClient {
 	 * @param client The socket the player used to connect
 	 * @param pm The PacketManager the player connected to
 	 */
-	public Player(Socket client, PacketManager pm) {
-		this(client, pm, (byte)255);
+
+	/**
+	 * Local variable referencing to the Server class.
+	 */
+	private Server server;
+
+	public Player(Socket client, PacketManager pm, Server server) {
+		this(client, pm, (byte)255, server);
+		this.server = server;
 	}
-	public Player(Socket client, PacketManager pm, byte opCode) {
+	public Player(Socket client, PacketManager pm, byte opCode, Server server) {
 		super(client, pm);
+		this.server = server;
 		ID = getFreeID();
 		this.chat = new Messages(pm.server);
 		if (opCode != 255) {
@@ -584,6 +592,13 @@ public class Player extends IOClient {
 			}
 			else if (message.contains("/spawn"))
 				setPos((short)((0.5 + level.spawnx) * 32), (short)((1 + level.spawny) * 32), (short)((0.5 + level.spawnz) * 32));
+			else if(message.contains("/stop")) {
+				try {
+					server.Stop();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
 		}else{
 			String m = message;
 			if(m.matches(".*%([0-9]|[a-f]|[k-r])(.+?).*") && this.cc){

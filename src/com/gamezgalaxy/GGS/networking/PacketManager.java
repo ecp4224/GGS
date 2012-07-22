@@ -143,7 +143,7 @@ public class PacketManager {
     	byte firstsend = reader.readByte();
     	switch (firstsend) {
     	case 0: //Minecraft player
-    		new Player(connection, this, firstsend);
+    		new Player(connection, this, firstsend, server);
     	case (byte)'G': //A browser or website is using GET
     		//TODO Add support for browsers
     	}
