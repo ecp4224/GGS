@@ -6,7 +6,7 @@ import com.gamezgalaxy.GGS.networking.PacketManager;
 import com.gamezgalaxy.GGS.server.Player;
 import com.gamezgalaxy.GGS.world.Level;
 
-public abstract class Messages {
+public class Messages {
 	protected Player player;
 	protected PacketManager pm;
 	public ArrayList<Player> players = new ArrayList<Player>();
