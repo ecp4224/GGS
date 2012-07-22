@@ -46,12 +46,6 @@ public class Beat {
 		if (!running)
 			return;
 		running = false;
-		try {
-			beater.join();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 
 	private class Beater extends Thread {
