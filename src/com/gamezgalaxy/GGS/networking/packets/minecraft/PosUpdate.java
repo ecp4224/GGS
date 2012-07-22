@@ -55,9 +55,9 @@ public class PosUpdate extends Packet {
 		player.setY(Y);
 		player.setZ(Z);
 		PlayerMoveEvent event = new PlayerMoveEvent(player, X, Y, Z);
-		server.getEvnetSystem().callEvent(event);
+		server.getEventSystem().callEvent(event);
 		if (event.isCancelled()) {
-			player.setPos(player.oldX, player.oldY, player.oldZ);
+			player.setPos(player.oldX, player.oldY, player.oldZ, player.oldyaw, player.oldpitch);
 			return;
 		}
 		try {

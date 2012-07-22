@@ -43,7 +43,7 @@ public class Server implements LogInterface {
 	public String Salt;
 	public Level MainLevel;
 	public boolean Public;
-	public final EventSystem getEvnetSystem() {
+	public final EventSystem getEventSystem() {
 		return es;
 	}
 	public PacketManager getPacketManager() {

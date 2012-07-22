@@ -513,7 +513,7 @@ public class Player extends IOClient {
 				}
 			}
 			PlayerChatEvent event = new PlayerChatEvent(this, message);
-			pm.server.getEvnetSystem().callEvent(event);
+			pm.server.getEventSystem().callEvent(event);
 			if (event.isCancelled())
 				return;
 			pm.server.Log("User "+this.username + " sent: " + message);
