@@ -113,11 +113,15 @@ public class Server implements LogInterface {
 
 	public void Stop() throws InterruptedException {
 		Running = false;
-		System.out.println("Stopping server..");
+		Log("Stopping server...");
+		for(Player p : players)
+		{
+			p.sendMessage("Stopping server...");
+		}
 		pm.StopReading();
 		tick.join();
 		logger.Stop();
-		//heartbeater.stop(); // Don't stop because there is a sleep for 30 seconds. For some reason it has to sleep that long before continuing...
+		heartbeater.stop();
 		System.exit(0);
 	}
 
