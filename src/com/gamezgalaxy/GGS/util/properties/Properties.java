@@ -1,4 +1,4 @@
-package com.gamezgalaxy.GGS.system;
+package com.gamezgalaxy.GGS.util.properties;
 
 import java.io.BufferedReader;
 import java.io.DataInputStream;

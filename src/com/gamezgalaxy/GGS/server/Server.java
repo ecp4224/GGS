@@ -18,9 +18,9 @@ import java.util.Random;
 
 import com.gamezgalaxy.GGS.API.EventSystem;
 import com.gamezgalaxy.GGS.networking.PacketManager;
-import com.gamezgalaxy.GGS.system.LogInterface;
-import com.gamezgalaxy.GGS.system.Logger;
-import com.gamezgalaxy.GGS.system.Properties;
+import com.gamezgalaxy.GGS.util.logger.LogInterface;
+import com.gamezgalaxy.GGS.util.logger.Logger;
+import com.gamezgalaxy.GGS.util.properties.Properties;
 import com.gamezgalaxy.GGS.system.heartbeat.Beat;
 import com.gamezgalaxy.GGS.system.heartbeat.MBeat;
 import com.gamezgalaxy.GGS.system.heartbeat.WBeat;
