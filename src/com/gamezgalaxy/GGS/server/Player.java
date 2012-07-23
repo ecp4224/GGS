@@ -8,7 +8,10 @@
 package com.gamezgalaxy.GGS.server;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.net.Socket;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -106,6 +109,8 @@ public class Player extends IOClient {
 	 * The old pitch of the player
 	 */
 	public byte oldpitch;
+	
+	public static MessageDigest digest;
 	/**
 	 * Create a new Player object
 	 * @param client The socket the player used to connect
@@ -119,10 +124,17 @@ public class Player extends IOClient {
 
 	public Player(Socket client, PacketManager pm, Server server) {
 		this(client, pm, (byte)255, server);
-		this.server = server;
 	}
 	public Player(Socket client, PacketManager pm, byte opCode, Server server) {
 		super(client, pm);
+		if (digest == null) {
+			try {
+				digest = MessageDigest.getInstance("MD5");
+			} catch (NoSuchAlgorithmException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
 		this.server = server;
 		ID = getFreeID();
 		this.chat = new Messages(pm.server);
@@ -155,8 +167,12 @@ public class Player extends IOClient {
 	 * @return Returns true if the account is valid, otherwise it will return false
 	 */
 	public boolean VerifyLogin() {
-		//TODO Check for real user and group and such
-		return true;
+		return mppass.equals(getRealmppass());
+	}
+	
+	public String getRealmppass() {
+		digest.update((String.valueOf(server.Salt) + username).getBytes());
+		return new BigInteger(1, digest.digest()).toString(16);
 	}
 	
 	/**

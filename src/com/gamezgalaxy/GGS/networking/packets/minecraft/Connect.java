@@ -44,11 +44,11 @@ public class Connect extends Packet {
 			byte[] name = new byte[64];
 			for (int i = 1; i < 64; i++)
 				name[i - 1] = message[i];
-			player.username = new String(name, "US-ASCII");
+			player.username = new String(name, "US-ASCII").trim();
 			name = new byte[64];
 			for (int i = 65; i < 65 + 32; i++)
 				name[i - 65] = message[i];
-			player.mppass = new String(name, "US-ASCII");
+			player.mppass = new String(name, "US-ASCII").trim();
 			name = null;
 			player.ClientType = message[129];
 			if (player.VerifyLogin()) {
@@ -56,8 +56,10 @@ public class Connect extends Packet {
 				server.players.add(player);
 				player.Login();
 			}
-			else
+			else {
+				player.Kick("Invalid Login!");
 				return;
+			}
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
