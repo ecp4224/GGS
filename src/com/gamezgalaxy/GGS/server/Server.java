@@ -144,12 +144,21 @@ public class Server implements LogInterface {
 
 	public void Stop() throws InterruptedException {
 		Running = false;
-		System.out.println("Stopping server..");
-		pm.StopReading();
+		Log("Stopping server...");
+		for(Player p : players)
+		{
+			p.sendMessage("Stopping server...");
+		}
 		tick.join();
 		logger.Stop();
 		heartbeater.stop();
-		//System.exit(0); We dont want to stop the program in here, the server is to act as an API
+		for(Player p : players) // Implementing this again because I want to stop everything first.
+		{						// The idea is that at the begining of the "stopping" session, the player receives that the server is stopping.
+								// Then after everything has stopped but the server itself, the player is kicked from the server before actually shutdown.
+			p.Kick("Server shut down. Thanks for playing!"); // Kicking so we can place a message that the server was stopped.
+
+		}
+		pm.StopReading();
 	}
 
 	@SuppressWarnings("unchecked")
