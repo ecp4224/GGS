@@ -7,6 +7,7 @@
  ******************************************************************************/
 package com.gamezgalaxy.GGS.server;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
@@ -19,13 +20,16 @@ import com.gamezgalaxy.GGS.API.EventSystem;
 import com.gamezgalaxy.GGS.networking.PacketManager;
 import com.gamezgalaxy.GGS.system.LogInterface;
 import com.gamezgalaxy.GGS.system.Logger;
+import com.gamezgalaxy.GGS.system.Properties;
 import com.gamezgalaxy.GGS.system.heartbeat.Beat;
 import com.gamezgalaxy.GGS.system.heartbeat.MBeat;
 import com.gamezgalaxy.GGS.system.heartbeat.WBeat;
 import com.gamezgalaxy.GGS.world.Level;
+import com.gamezgalaxy.GGS.world.LevelHandler;
 
 public class Server implements LogInterface {
 	private PacketManager pm;
+	private LevelHandler lm;
 	private Logger logger;
 	private ArrayList<Tick> ticks = new ArrayList<Tick>();
 	private Thread tick;
@@ -43,6 +47,10 @@ public class Server implements LogInterface {
 	public String Salt;
 	public Level MainLevel;
 	public boolean Public;
+	public final String configpath = "system.config";
+	public final LevelHandler getLevelHandler() {
+		return lm;
+	}
 	public final EventSystem getEventSystem() {
 		return es;
 	}
@@ -55,6 +63,17 @@ public class Server implements LogInterface {
 		this.MOTD = MOTD;
 		pm = new PacketManager(this);
 		tick = new Ticker();
+	}
+	
+	public void Load() {
+		Name = Properties.getValue("Server-Name");
+		altName = Properties.getValue("WOM-Alternate-Name");
+		MOTD = Properties.getValue("MOTD");
+		Port = Properties.getInt("Port");
+		MaxPlayers = Properties.getInt("Max-Players");
+		Public = Properties.getBool("Public");
+		description = Properties.getValue("WOM-Server-description");
+		flags = Properties.getValue("WOM-Server-Flags");
 	}
 
 	public void Start() {
@@ -81,10 +100,22 @@ public class Server implements LogInterface {
 			e.printStackTrace();
 		}
 		Log("Starting..");
+		Properties.init(this);
+		Load();
 		pm.StartReading();
-		Log("Generating Level..");
-		MainLevel = new Level((short)64, (short)64, (short)64);
-		MainLevel.FlatGrass();
+		Log("Loading main level..");
+		lm = new LevelHandler(this);
+		if (!new File(Properties.getValue("MainLevel")).exists()) {
+			Level l = new Level((short)64, (short)64, (short)64);
+			l.name = "Main";
+			l.FlatGrass();
+			try {
+				l.Save();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		MainLevel = lm.loadLevel(Properties.getValue("MainLevel"));
 		tick.start();
 		Log("Done!");
 		Log("Generating salt");
@@ -98,7 +129,7 @@ public class Server implements LogInterface {
 		for (int i = 0; i < 100; i++) {
 			byte[] seedb = new byte[16];
 			sr.nextBytes(seedb);
-			Salt = new sun.misc.BASE64Encoder().encode(seedb);
+			Salt = new sun.misc.BASE64Encoder().encode(seedb).replace("=", "" + ((Salt != null) ? Salt.toCharArray()[0] : "A"));
 			if (new Random().nextDouble() < .3)
 				break;
 		}
@@ -117,8 +148,8 @@ public class Server implements LogInterface {
 		pm.StopReading();
 		tick.join();
 		logger.Stop();
-		//heartbeater.stop(); // Don't stop because there is a sleep for 30 seconds. For some reason it has to sleep that long before continuing...
-		System.exit(0);
+		heartbeater.stop();
+		//System.exit(0); We dont want to stop the program in here, the server is to act as an API
 	}
 
 	@SuppressWarnings("unchecked")

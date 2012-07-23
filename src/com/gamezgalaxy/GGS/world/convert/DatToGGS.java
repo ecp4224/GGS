@@ -56,6 +56,8 @@ public class DatToGGS {
 			ex.printStackTrace();
 		}
 		level.initTransient();
+		width = level.width;
+		height = level.height;
 		}
 
 	// save in file called filename

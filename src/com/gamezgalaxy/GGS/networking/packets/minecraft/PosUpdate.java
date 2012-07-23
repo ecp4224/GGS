@@ -60,6 +60,14 @@ public class PosUpdate extends Packet {
 			player.setPos(player.oldX, player.oldY, player.oldZ, player.oldyaw, player.oldpitch);
 			return;
 		}
+		//TODO Add rank checking
+		if(((X / player.getLevel().width) * 2) > player.getLevel().width || ((X / player.getLevel().width) * 2) < 0 ||
+				((Y / player.getLevel().height) * 2) > player.getLevel().height || ((Y / player.getLevel().height) * 2) < 0 ||
+				((Z / player.getLevel().depth) > player.getLevel().depth || ((Z / player.getLevel().depth) < 0)))
+		{
+			player.Kick("Hack Client detected!");
+			return;
+		}
 		try {
 			player.UpdatePos();
 		} catch (IOException e) {

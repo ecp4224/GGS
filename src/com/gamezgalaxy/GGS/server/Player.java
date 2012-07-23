@@ -221,38 +221,6 @@ public class Player extends IOClient {
 			GlobalBlockChange(X, Y, Z, Block.getBlock((byte)0), level, pm.server);
 		}
 	}
-
-	/**
-	 * Thread to check for hacks.
-	 */
-	private class HackThread extends Thread
-	{
-		// TODO: Organize this much better. Don't know if a Thread is the best approach...
-		// TODO: Any of hack checking.
-
-		@Override
-		public void run()
-		{
-			try {
-				Thread.sleep(5000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-
-			//chat.serverBroadcast(String.valueOf((X / level.width) * 2) + ", " +
-			//		String.valueOf((Y / level.height) * 2) + ", " +
-			//		String.valueOf((Z / level.depth) * 2) + " : " +
-			//		String.valueOf(level.width) + ", " + String.valueOf(level.height) + ", " + String.valueOf(level.depth));
-
-			if(((X / level.width) * 2) > level.width || ((X / level.width) * 2) < 0 ||
-					((Y / level.height) * 2) > level.height || ((Y / level.height) * 2) < 0 ||
-					((Z / level.depth) > level.depth || ((Z / level.depth) < 0)))
-			{
-				Kick("Hack Client detected!");
-				return;
-			}
-		}
-	}
 	
 	/**
 	 * Send a block update to this player
@@ -315,9 +283,6 @@ public class Player extends IOClient {
 	public void UpdatePos() throws IOException {
 		if (!isLoggedin)
 			return;
-
-		// TODO: Don't run this if your on WoM, your an op, and +ophack is enabled.
-		(new Thread(new HackThread())).start();
 
 		TP t = (TP)(pm.getPacket("TP"));
 		GlobalPosUpdate gps = (GlobalPosUpdate)(pm.getPacket("GlobalPosUpdate"));

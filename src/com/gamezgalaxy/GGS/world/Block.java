@@ -7,10 +7,12 @@
  ******************************************************************************/
 package com.gamezgalaxy.GGS.world;
 
+import java.io.Serializable;
+
 import com.gamezgalaxy.GGS.world.blocks.*;
 
 
-public abstract class Block {
+public abstract class Block implements Serializable {
 	
 	static Block[] blocks = new Block[] {
 			new Air(),

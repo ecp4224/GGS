@@ -7,18 +7,17 @@
  ******************************************************************************/
 package com.gamezgalaxy.GGS.world;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
-import com.gamezgalaxy.GGS.server.Player;
-import com.gamezgalaxy.GGS.server.Server;
 import com.gamezgalaxy.GGS.world.convert.DatToGGS;
 
-public class Level {
+public class Level implements Serializable {
+	static final byte VERSION = 1;
+	
+	static ArrayList<Level> list = new ArrayList<Level>();
 	
 	Block[] blocks;
 	
@@ -70,6 +69,8 @@ public class Level {
 	public Block getTile(int index) {
 		if (index < 0) index = 0;
 		if (index >= blocks.length) index = blocks.length - 1;
+		if (blocks[index] == null)
+			return Block.getBlock((byte)0);
 		if (blocks[index].name.equals("NULL"))
 			System.out.println("" + blocks[index].getVisableBlock());
 		return blocks[index];
@@ -98,10 +99,15 @@ public class Level {
     }
 	
 	public void Save() throws IOException {
+		if (!new File("levels").exists())
+			new File("levels").mkdir();
 		FileOutputStream fos = new FileOutputStream("levels/" + name + ".ggs");
-		ObjectOutputStream out = new ObjectOutputStream(fos);
+		GZIPOutputStream gos = new GZIPOutputStream(fos);
+		ObjectOutputStream out = new ObjectOutputStream(gos);
+		out.write(VERSION);
 		out.writeObject(this);
 		out.close();
+		gos.close();
 		fos.close();
 	}
 	
@@ -111,22 +117,35 @@ public class Level {
 			l = Convert(filename);
 		else {
 			FileInputStream fis = new FileInputStream(filename);
-			ObjectInputStream obj = new ObjectInputStream(fis);
-			l = (Level)obj.readObject();
+			GZIPInputStream gis = new GZIPInputStream(fis);
+			ObjectInputStream obj = new ObjectInputStream(gis);
+			byte version = obj.readByte();
+			switch (version) {
+			case 1: //current
+				l = (Level)obj.readObject();
+			}
+			obj.close();
+			gis.close();
+			fis.close();
 		}
 		return l;
 	}
 	
 	public static Level Convert(String file) throws IOException {
+		String name = new File(file).getName().split("\\.")[0];
 		DatToGGS newlvl = new DatToGGS();
 		newlvl.load(file);
-		Level lvl = new Level((short)newlvl.level.width, (short)newlvl.level.height, (short)newlvl.level.depth);
-		lvl.blocks = new Block[lvl.width*lvl.height*lvl.depth];
+		Level lvl = new Level((short)newlvl.level.width, (short)newlvl.level.height, (short)newlvl.level.height);
 		int[] cords = new int[3];
-		for (int i = 0; i < lvl.blocks.length; i++) {
+		for (int i = 0; i < newlvl.level.blocks.length; i++) {
 			cords = newlvl.getCoords(i);
-			lvl.blocks[lvl.PosToInt(cords[0], cords[1], cords[2])] = Block.getBlock(newlvl.level.blocks[i]);
+			try {
+				lvl.blocks[lvl.PosToInt(cords[0], cords[1], cords[2])] = Block.getBlock(newlvl.level.blocks[i]);
+			} catch (Exception e) {
+				System.out.println(i + "= " + cords[0] + ":" + cords[1] + ":" + cords[2]);
+			}
 		}
+		lvl.name = name;
 		lvl.Save();
 		return lvl;
 	}

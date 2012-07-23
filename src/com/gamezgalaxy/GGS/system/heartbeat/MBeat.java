@@ -14,7 +14,7 @@ public class MBeat extends Heart {
 	public String Prepare(Server server) {
 		return "port=" + server.Port +
 				"&max=" + server.MaxPlayers +
-				"&name=" + server.Name.trim() +
+				"&name=" + server.Name.trim().replace(" ", "%20") +
 				"&public=" + server.Public +
 				"&version=7" +
 				"&salt=" + server.Salt +

@@ -32,5 +32,6 @@ public class Main {
 				s.Log(line);
 		}
 		System.out.println("Server stopped..");
+		System.exit(0);
 	}
 }
