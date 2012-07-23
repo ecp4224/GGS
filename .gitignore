@@ -11,7 +11,6 @@
 bin/**
 tmp/**
 tmp/**/*
-logs/*
 *.tmp
 *.bak
 *.swp
@@ -32,3 +31,8 @@ local.properties
 
 # PDT-specific
 .buildpath
+
+#GGS Files
+logs/*
+levels/*
+properites/*
