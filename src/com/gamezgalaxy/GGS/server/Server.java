@@ -122,6 +122,12 @@ public class Server implements LogInterface {
 		tick.join();
 		logger.Stop();
 		heartbeater.stop();
+		for(Player p : players) // Implementing this again because I want to stop everything first.
+		{						// The idea is that at the begining of the "stopping" session, the player receives that the server is stopping.
+								// Then after everything has stopped but the server itself, the player is kicked from the server before actually shutdown.
+			p.Kick("Server shut down. Thanks for playing!"); // Kicking so we can place a message that the server was stopped.
+
+		}
 		System.exit(0);
 	}
 

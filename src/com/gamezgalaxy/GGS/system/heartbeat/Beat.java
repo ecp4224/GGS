@@ -1,13 +1,8 @@
 package com.gamezgalaxy.GGS.system.heartbeat;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 
+import com.gamezgalaxy.GGS.server.Player;
 import com.gamezgalaxy.GGS.server.Server;
 
 public class Beat {
@@ -39,7 +34,7 @@ public class Beat {
 		if (running)
 			return;
 		running = true;
-		beater = new Beater();
+		beater = new Beater(this);
 		beater.start();
 	}
 	public void stop() {
@@ -48,53 +43,35 @@ public class Beat {
 		running = false;
 	}
 
-	private class Beater extends Thread {
+	public Server getServer() {
+		return server;
+	}
 
-		@Override
-		public void run() {
-			URL url;
-			HttpURLConnection connection = null;
-			BufferedReader reader;
-			byte[] data;
-			while (running) {
-				synchronized(hearts) {
-					for (Heart h : hearts) {
-						try {
-							url = new URL(h.getURL() + "?" + h.Prepare(server));
-							connection = (HttpURLConnection)url.openConnection();
-							data = h.Prepare(server).getBytes();
-							connection.setDoOutput(true);
-							connection.setRequestProperty("Content-Lenght", String.valueOf(data.length));
-							connection.setUseCaches(false);
-							connection.setDoInput(true);
-							connection.setDoOutput(true);
-							connection.connect();
-							try {
-								reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-								try {
-									h.onPump(reader, server);
-								} catch (Exception e) {
-									e.printStackTrace();
-								}
-							} catch (Exception e) {
-								e.printStackTrace();
-							}
-						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						} finally {
-							if (connection != null)
-								connection.disconnect();
-						}
-					}
-				}
-				try {
-					Thread.sleep(30000);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		}
+	public void setServer(Server server) {
+		this.server = server;
+	}
+
+	public ArrayList<Heart> getHearts() {
+		return hearts;
+	}
+
+	public void setHearts(ArrayList<Heart> hearts) {
+		this.hearts = hearts;
+	}
+
+	public Thread getBeater() {
+		return beater;
+	}
+
+	public void setBeater(Thread beater) {
+		this.beater = beater;
+	}
+
+	public boolean isRunning() {
+		return running;
+	}
+
+	public void setRunning(boolean running) {
+		this.running = running;
 	}
 }
