@@ -1,4 +1,4 @@
-package com.gamezgalaxy.GGS.system;
+package com.gamezgalaxy.GGS.util.logger;
 
 import java.io.File;
 import java.io.FileNotFoundException;

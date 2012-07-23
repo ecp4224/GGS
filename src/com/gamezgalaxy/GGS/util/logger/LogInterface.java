@@ -1,4 +1,4 @@
-package com.gamezgalaxy.GGS.system;
+package com.gamezgalaxy.GGS.util.logger;
 
 public interface LogInterface {
 	public void onLog(String message);
