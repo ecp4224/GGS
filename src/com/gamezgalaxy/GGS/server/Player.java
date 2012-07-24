@@ -228,10 +228,6 @@ public class Player extends IOClient {
 			Kick("Hack Client detected!");
 			return;
 		}
-		/*if (X > level.width || X < 0 || Y > level.height || Y < 0 || Z > level.depth || Z < 0) {
-			Kick("Hack Client detected!");
-			return;
-		}*/
 		if (type == PlaceMode.PLACE)
 		{
 			PlayerBlockPlaceEvent event = new PlayerBlockPlaceEvent(this, X, Y, Z, Block.getBlock(holding), level, pm.server);
