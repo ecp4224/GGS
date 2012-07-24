@@ -17,6 +17,8 @@ import com.gamezgalaxy.GGS.world.convert.DatToGGS;
 public class Level implements Serializable {
 	static final byte VERSION = 1;
 	
+	static ArrayList<Level> list = new ArrayList<Level>();
+	
 	Block[] blocks;
 	
 	public short width;
