@@ -10,13 +10,14 @@ package com.gamezgalaxy.GGS.server;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Random;
+import java.util.*;
 
 import com.gamezgalaxy.GGS.API.EventSystem;
+import com.gamezgalaxy.GGS.API.GGSPlugin;
 import com.gamezgalaxy.GGS.networking.PacketManager;
 import com.gamezgalaxy.GGS.util.logger.LogInterface;
 import com.gamezgalaxy.GGS.util.logger.Logger;
@@ -28,6 +29,7 @@ import com.gamezgalaxy.GGS.world.Level;
 import com.gamezgalaxy.GGS.world.LevelHandler;
 
 public class Server implements LogInterface {
+	private Map<String, Class<?>> classes = new HashMap<String, Class<?>>();
 	private PacketManager pm;
 	private LevelHandler lm;
 	private Logger logger;
@@ -140,6 +142,25 @@ public class Server implements LogInterface {
 		heartbeater.addHeart(new WBeat());
 		heartbeater.start();
 		Log("Done!");
+
+		try {
+			Class c = Class.forName("com.gamezgalaxy.test.console.TestPlugin");
+			Constructor<? extends GGSPlugin> constructor = c.getConstructor();
+			GGSPlugin result = constructor.newInstance();
+
+			result.initialize(this);
+			result.onEnable();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (NoSuchMethodException e) {
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
+		} catch (InstantiationException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void Stop() throws InterruptedException {
