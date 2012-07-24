@@ -118,6 +118,7 @@ public class Server implements LogInterface {
 			}
 		}
 		MainLevel = lm.loadLevel(Properties.getValue("MainLevel"));
+		lm.loadLevels();
 		tick.start();
 		Log("Done!");
 		Log("Generating salt");

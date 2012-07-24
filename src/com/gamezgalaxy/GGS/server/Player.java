@@ -39,6 +39,7 @@ import com.gamezgalaxy.GGS.networking.packets.minecraft.TP;
 import com.gamezgalaxy.GGS.system.BanHandler;
 import com.gamezgalaxy.GGS.world.Block;
 import com.gamezgalaxy.GGS.world.Level;
+import com.gamezgalaxy.GGS.world.LevelHandler;
 import com.gamezgalaxy.GGS.world.PlaceMode;
 
 public class Player extends IOClient {
@@ -555,12 +556,35 @@ public class Player extends IOClient {
 		return true; //Message was sent successfully
 	}
 
+	public void changeLevel(Level level) throws InterruptedException
+	{
+		setLevel(level);
+		levelsender.join(); //Wait for finish
+		X = (short)((0.5 + level.spawnx) * 32);
+		Y = (short)((1 + level.spawny) * 32);
+		Z = (short)((0.5 + level.spawnz) * 32);
+		oldX = X;
+		oldY = Y;
+		oldZ = Z;
+		//pm.server.Log(this.username + " has joined the server.");
+		//chat.serverBroadcast(this.username + " has joined the server.");
+		spawnPlayer(this);
+		setPos((short)((0.5 + level.spawnx) * 32), (short)((1 + level.spawny) * 32), (short)((0.5 + level.spawnz) * 32));
+		for (Player p : pm.server.players) {
+			if (p.level == level) {
+				spawnPlayer(p); //Spawn p for me
+				p.spawnPlayer(this); //Spawn me for p
+			}
+		}
+		setPos((short) ((0.5 + level.spawnx) * 32), (short) ((1 + level.spawny) * 32), (short) ((0.5 + level.spawnz) * 32));
+	}
+
 	public void processCommand(String message)
 	{
 		List<String> list = new ArrayList<String>();
 		Collections.addAll(list, message.split(" "));
 
-		String[] args = new String[list.size()];
+		String[] args = new String[list.size() - 1];
 
 		for(int i = 1; i < list.size(); i++)
 		{
@@ -591,7 +615,7 @@ public class Player extends IOClient {
 				e.printStackTrace();
 			}
 		} else if(command.equals("/ban")) {
-			if(args.length == 2)
+			if(args.length == 1)
 			{
 				try {
 					FileWriter out = new FileWriter("properties/banned.txt", true);
@@ -607,9 +631,54 @@ public class Player extends IOClient {
 				}
 			}
 		} else if(command.equals("/unban")) {
-			if(args.length == 2)
+			if(args.length == 1)
 			{
 				server.removeLineFromFile("properties/banned.txt", args[0]);
+			}
+		} else if(command.equals("/newlvl")) {
+			if(args.length == 4)
+			{
+				LevelHandler handler = server.getLevelHandler();
+				handler.loadLevels();
+				Level[] levels = handler.levels.toArray(new Level[handler.levels.size()]);
+
+				if(handler.findLevel(args[0]) == null)
+				{
+					handler.newLevel(args[0], Short.valueOf(args[1]), Short.valueOf(args[2]), Short.valueOf(args[3]));
+
+					sendMessage("Created new level: " + args[0] + ".");
+				} else {
+					sendMessage("Level already exists...");
+				}
+			}
+		} else if(command.equals("/g")) {
+			if(args.length == 1)
+			{
+				LevelHandler handler = server.getLevelHandler();
+				Level level = handler.findLevel(args[0]);
+
+				if(level != null)
+				{
+					//Despawn(this);
+					try {
+						changeLevel(level);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				} else {
+					sendMessage("Level doesn't exist...");
+				}
+			}
+		} else if(command.equals("/loaded")) {
+			LevelHandler handler = server.getLevelHandler();
+			Level[] levels = handler.levels.toArray(new Level[handler.levels.size()]);
+
+			for(Level l : levels)
+			{
+				if(l != null)
+				{
+					sendMessage(l.name);
+				}
 			}
 		}
 

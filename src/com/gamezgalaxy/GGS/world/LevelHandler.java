@@ -1,13 +1,19 @@
 package com.gamezgalaxy.GGS.world;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import com.gamezgalaxy.GGS.server.Player;
 import com.gamezgalaxy.GGS.server.Server;
+import com.gamezgalaxy.GGS.util.properties.Properties;
 
 public class LevelHandler {
-	private ArrayList<Level> levels = new ArrayList<Level>();
+	// TODO: System of detected unloaded. Someone else do that please.
+
+	public List<Level> levels = new CopyOnWriteArrayList<Level>();
 	
 	private Server server;
 	
@@ -18,15 +24,33 @@ public class LevelHandler {
 		saver = new Saver();
 		saver.start();
 	}
+
+	public void newLevel(String name, short width, short height, short length)
+	{
+		if(!new File("levels/" + name).exists())
+		{
+			Level level = new Level(width, height, length);
+
+			level.name = name;
+			level.FlatGrass();
+			try {
+				level.Save();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+			levels.add(level);
+		}
+	}
 	
 	public Level findLevel(String name) {
 		Level temp = null;
 		for (int i = 0; i < levels.size(); i++) {
-			if (levels.get(i).name.equalsIgnoreCase(name))
+			if ((levels.get(i).name + ".ggs").equalsIgnoreCase(name))
 				return levels.get(i);
-			if (levels.get(i).name.contains(name) && temp == null)
+			if ((levels.get(i).name + ".ggs").contains(name) && temp == null)
 				temp = levels.get(i);
-			else if (levels.get(i).name.contains(name) && temp != null)
+			else if ((levels.get(i).name + ".ggs").contains(name) && temp != null)
 				return null;
 		}
 		return temp;
@@ -38,6 +62,25 @@ public class LevelHandler {
 			if (server.players.get(i).getLevel() == level)
 				temp.add(server.players.get(i));
 		return temp;
+	}
+
+	public void loadLevels()
+	{
+		File levelsFolder = new File("levels");
+		File[] levelFiles = levelsFolder.listFiles();
+		Level level;
+
+		String file;
+		for(File f : levelFiles)
+		{
+			file = f.getName();
+			level = findLevel(file);
+
+			if(level == null)
+			{
+				loadLevel(levelsFolder.getPath() + "/" + file);
+			}
+		}
 	}
 	
 	public Level loadLevel(String filename) {
