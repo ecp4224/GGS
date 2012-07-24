@@ -7,6 +7,7 @@
  ******************************************************************************/
 package com.gamezgalaxy.test.console;
 
+import java.io.IOException;
 import java.util.Scanner;
 
 import com.gamezgalaxy.GGS.server.Server;
@@ -25,6 +26,8 @@ public class Main {
 					break;
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
 					e.printStackTrace();
 				}
 			}

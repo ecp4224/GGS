@@ -174,7 +174,9 @@ public class Player extends IOClient {
 	 * @return Returns true if the account is valid, otherwise it will return false
 	 */
 	public boolean VerifyLogin() {
-		return mppass.equals(getRealmppass());
+		//DOESN'T WORK...
+		return true;
+		//return mppass.equals(getRealmppass());
 	}
 	
 	public String getRealmppass() {
@@ -585,6 +587,8 @@ public class Player extends IOClient {
 			try {
 				server.Stop();
 			} catch (InterruptedException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		} else if(command.equals("/ban")) {

@@ -215,13 +215,16 @@ public class Server implements LogInterface {
 		}
 	}
 
-	public void Stop() throws InterruptedException {
+	public void Stop() throws InterruptedException, IOException {
 		Running = false;
 		Log("Stopping server...");
 		for(Player p : players)
 		{
 			p.sendMessage("Stopping server...");
 		}
+
+		MainLevel.Save();
+
 		tick.join();
 		logger.Stop();
 		heartbeater.stop();
@@ -232,6 +235,8 @@ public class Server implements LogInterface {
 
 		}
 		pm.StopReading();
+
+		System.exit(0);
 	}
 
 	@SuppressWarnings("unchecked")
