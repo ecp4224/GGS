@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
@@ -32,28 +33,44 @@ public class Beater extends Thread {
 			synchronized(beat.getHearts()) {
 				for (Heart h : beat.getHearts()) {
 					try {
-						url = new URL(h.getURL() + "?" + h.Prepare(beat.getServer()));
-						connection = (HttpURLConnection)url.openConnection();
-						data = h.Prepare(beat.getServer()).getBytes();
-						connection.setDoOutput(true);
-						connection.setRequestProperty("Content-Lenght", String.valueOf(data.length));
-						connection.setUseCaches(false);
-						connection.setDoInput(true);
-						connection.setDoOutput(true);
-						connection.connect();
-						try {
-							reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+						URL u = new URL("http://www.minecraft.net/");
+						HttpURLConnection con = (HttpURLConnection)u.openConnection();
+						con.connect();
+
+						if(con.getResponseCode() == HttpURLConnection.HTTP_OK)
+						{
+							url = new URL(h.getURL() + "?" + h.Prepare(beat.getServer()));
+							connection = (HttpURLConnection)url.openConnection();
+							data = h.Prepare(beat.getServer()).getBytes();
+							connection.setDoOutput(true);
+							connection.setRequestProperty("Content-Lenght", String.valueOf(data.length));
+							connection.setUseCaches(false);
+							connection.setDoInput(true);
+							connection.setDoOutput(true);
+							connection.connect();
 							try {
-								h.onPump(reader, beat.getServer());
+								reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+								try {
+									h.onPump(reader, beat.getServer());
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
 							} catch (Exception e) {
 								e.printStackTrace();
 							}
-						} catch (Exception e) {
-							e.printStackTrace();
 						}
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
+					} catch (MalformedURLException e) {
 						e.printStackTrace();
+					} catch (IOException e) {
+						//e.printStackTrace();
+						System.out.println("Unable to connect to minecraft.net!");
+						try {
+							beat.getServer().Stop();
+						} catch (InterruptedException e1) {
+							e1.printStackTrace();
+						} catch (IOException e1) {
+							e1.printStackTrace();
+						}
 					} finally {
 						if (connection != null)
 							connection.disconnect();
