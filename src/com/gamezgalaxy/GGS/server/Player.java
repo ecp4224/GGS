@@ -13,6 +13,9 @@ import java.net.Socket;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -533,7 +536,7 @@ public class Player extends IOClient {
 	/**
 	 * Sends a message to the player if the message is less than 64 characters
 	 * 
-	 * @param string message
+	 * @param message
 	 * @return boolean true on sent, false on not sent.
 	 */
 	public boolean sendMessage(String message){
@@ -547,10 +550,45 @@ public class Player extends IOClient {
 		return true; //Message was sent successfully
 	}
 
+	public void processCommand(String message)
+	{
+		List<String> stuff = new ArrayList<String>();
+
+		Collections.addAll(stuff, message.split(" "));
+
+		for(int i = 1; i < stuff.size(); i++)
+		{
+			sendMessage(stuff.get(i));
+		}
+
+		String command = message.split(" ")[0];
+
+		if(command.equals("/cc"))
+		{
+			if(this.cc)
+			{
+				this.sendMessage("Color Codes have been disabled.");
+				this.cc = false;
+			}else{
+				this.sendMessage("Color Codes have been enabled.");
+				this.cc = true;
+			}
+		}
+		else if (command.equals("/spawn"))
+			setPos((short)((0.5 + level.spawnx) * 32), (short)((1 + level.spawny) * 32), (short)((0.5 + level.spawnz) * 32));
+		else if(command.equals("/stop")) {
+			try {
+				server.Stop();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
 	/**
 	 * Handles the messages a player sends to the server, could be used in the future for run command as player
 	 * 
-	 * @param string message
+	 * @param message
 	 * @return void
 	 */
 	public void recieveMessage(String message){
@@ -561,26 +599,7 @@ public class Player extends IOClient {
 			if (event.isCancelled())
 				return;
 			
-			if(message.contains("/cc"))
-			{
-				if(this.cc)
-				{
-					this.sendMessage("Color Codes have been disabled.");
-					this.cc = false;
-				}else{
-					this.sendMessage("Color Codes have been enabled.");
-					this.cc = true;
-				}
-			}
-			else if (message.contains("/spawn"))
-				setPos((short)((0.5 + level.spawnx) * 32), (short)((1 + level.spawny) * 32), (short)((0.5 + level.spawnz) * 32));
-			else if(message.contains("/stop")) {
-				try {
-					server.Stop();
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
+			processCommand(message);
 		}else{
 			String m = message;
 			if(m.matches(".*%([0-9]|[a-f]|[k-r])(.+?).*") && this.cc){
