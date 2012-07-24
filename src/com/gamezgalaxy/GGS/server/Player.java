@@ -116,6 +116,8 @@ public class Player extends IOClient {
 	 * The old pitch of the player
 	 */
 	public byte oldpitch;
+	
+	public static MessageDigest digest;
 	/**
 	 * Create a new Player object
 	 * @param client The socket the player used to connect
@@ -132,6 +134,14 @@ public class Player extends IOClient {
 	}
 	public Player(Socket client, PacketManager pm, byte opCode, Server server) {
 		super(client, pm);
+		if (digest == null) {
+			try {
+				digest = MessageDigest.getInstance("MD5");
+			} catch (NoSuchAlgorithmException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
 		this.server = server;
 		ID = getFreeID();
 		this.chat = new Messages(pm.server);
@@ -164,18 +174,12 @@ public class Player extends IOClient {
 	 * @return Returns true if the account is valid, otherwise it will return false
 	 */
 	public boolean VerifyLogin() {
-		String salt = server.Salt;
-		String hash = new StringBuilder().append(String.valueOf(salt)).append(username).toString();
-		MessageDigest digest;
-		try {
-			digest = MessageDigest.getInstance("MD5");
-		} catch (NoSuchAlgorithmException e) {
-			throw new RuntimeException("No MD5 algorithm!");
-		}
-		digest.update(hash.getBytes());
-		if (!mppass.equals(new BigInteger(1, digest.digest()).toString(16)))
-			return false;
-		return true;
+		return mppass.equals(getRealmppass());
+	}
+	
+	public String getRealmppass() {
+		digest.update((String.valueOf(server.Salt) + username).getBytes());
+		return new BigInteger(1, digest.digest()).toString(16);
 	}
 	
 	/**

@@ -135,6 +135,7 @@ public class Server implements LogInterface {
 			if (new Random().nextDouble() < .3)
 				break;
 		}
+		Salt = LetterOrNumber(Salt);
 		Log("SALT: " + Salt);
 		Log("Create heartbeat..");
 		heartbeater = new Beat(this);
@@ -148,6 +149,26 @@ public class Server implements LogInterface {
 
 		PluginsThread pluginsThread = new PluginsThread(this);
 		pluginsThread.start();
+	}
+	
+	public static String LetterOrNumber(String string) {
+		final String works = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890";
+		String finals = "";
+		boolean change = true;
+		for (char c : string.toCharArray()) {
+			for (char x : works.toCharArray()) {
+				if (x == c) {
+					change = false;
+					break;
+				}
+			}
+			if (change)
+				finals += works.toCharArray()[new Random().nextInt(works.toCharArray().length)];
+			else
+				finals += c;
+			change = true;
+		}
+		return finals;
 	}
 
 	private class PluginsThread extends Thread
