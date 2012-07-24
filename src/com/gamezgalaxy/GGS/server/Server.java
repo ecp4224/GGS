@@ -29,7 +29,7 @@ import com.gamezgalaxy.GGS.world.Level;
 import com.gamezgalaxy.GGS.world.LevelHandler;
 
 public class Server implements LogInterface {
-	private Map<String, Class<?>> classes = new HashMap<String, Class<?>>();
+	private boolean startPlugins;
 	private PacketManager pm;
 	private LevelHandler lm;
 	private Logger logger;
@@ -143,23 +143,51 @@ public class Server implements LogInterface {
 		heartbeater.start();
 		Log("Done!");
 
-		try {
-			Class c = Class.forName("com.gamezgalaxy.test.console.TestPlugin");
-			Constructor<? extends GGSPlugin> constructor = c.getConstructor();
-			GGSPlugin result = constructor.newInstance();
+		PluginsThread pluginsThread = new PluginsThread(this);
+		pluginsThread.start();
+	}
 
-			result.initialize(this);
-			result.onEnable();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (NoSuchMethodException e) {
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			e.printStackTrace();
-		} catch (InstantiationException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
+	private class PluginsThread extends Thread
+	{
+		public PluginsThread(Server server)
+		{
+			this.server = server;
+		}
+
+		private Server server;
+
+		@Override
+		public void run()
+		{
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+
+			// TODO: Automatically find all classes that extend to GGPlugin.
+			// TODO: Create a system where the plugin is in a separate JAR.
+
+			try {
+				Class c = Class.forName("com.gamezgalaxy.test.console.TestPlugin");
+				Constructor<? extends GGSPlugin> constructor = c.getConstructor();
+				GGSPlugin result = constructor.newInstance();
+
+				result.initialize(server);
+				result.onEnable();
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			} catch (NoSuchMethodException e) {
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
+				e.printStackTrace();
+			} catch (InstantiationException e) {
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+			}
+
+			Log("Plugins started!");
 		}
 	}
 
@@ -186,7 +214,15 @@ public class Server implements LogInterface {
 	public void Log(String log) {
 		logger.Log(log);
 	}
-	
+
+	public boolean isStartPlugins() {
+		return startPlugins;
+	}
+
+	public void setStartPlugins(boolean startPlugins) {
+		this.startPlugins = startPlugins;
+	}
+
 	public Logger getLogger() {
 		return logger;
 	}

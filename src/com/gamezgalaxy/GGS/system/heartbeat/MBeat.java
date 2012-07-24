@@ -48,6 +48,8 @@ public class MBeat extends Heart {
 
 			server.Log("Local Direct URL: " + data1);
 			show = true;
+
+			server.Log("Starting plugins...");
 		}
 		return url;
 	}

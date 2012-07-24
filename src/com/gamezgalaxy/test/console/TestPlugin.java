@@ -1,6 +1,7 @@
 package com.gamezgalaxy.test.console;
 
 import com.gamezgalaxy.GGS.API.GGSPlugin;
+import com.gamezgalaxy.GGS.server.Player;
 
 /**
  * Created with IntelliJ IDEA.
@@ -14,16 +15,27 @@ public class TestPlugin extends GGSPlugin
 	@Override
 	public void onEnable()
 	{
-		super.onEnable();
-
 		System.out.println("enable");
+
+		super.onEnable();
 	}
 
 	@Override
 	public void onDisable()
 	{
-		super.onDisable();
-
 		System.out.println("disable");
+
+		super.onEnable();
+	}
+
+	@Override
+	public void onCommand(Player sender, String command, String[] args)
+	{
+		if(command.equals("/g"))
+		{
+			System.out.println("/g was used");
+		}
+
+		super.onCommand(sender, command, args);
 	}
 }

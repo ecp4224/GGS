@@ -8,6 +8,8 @@
 package com.gamezgalaxy.GGS.server;
 
 import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigInteger;
 import java.net.Socket;
 import java.security.MessageDigest;
@@ -20,6 +22,7 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.gamezgalaxy.GGS.API.GGSPlugin;
 import com.gamezgalaxy.GGS.API.player.PlayerBlockPlaceEvent;
 import com.gamezgalaxy.GGS.API.player.PlayerChatEvent;
 import com.gamezgalaxy.GGS.API.player.PlayerCommandEvent;
@@ -552,13 +555,14 @@ public class Player extends IOClient {
 
 	public void processCommand(String message)
 	{
-		List<String> stuff = new ArrayList<String>();
+		List<String> list = new ArrayList<String>();
+		Collections.addAll(list, message.split(" "));
 
-		Collections.addAll(stuff, message.split(" "));
+		String[] args = new String[list.size()];
 
-		for(int i = 1; i < stuff.size(); i++)
+		for(int i = 1; i < list.size(); i++)
 		{
-			sendMessage(stuff.get(i));
+			args[i - 1] = list.get(i);
 		}
 
 		String command = message.split(" ")[0];
@@ -582,6 +586,27 @@ public class Player extends IOClient {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
+		}
+
+		// TODO: Automatically find all classes that extend to GGPlugin.
+		// TODO: Create a system where the plugin is in a separate JAR.
+
+		try {
+			Class c = Class.forName("com.gamezgalaxy.test.console.TestPlugin");
+			Constructor<? extends GGSPlugin> constructor = c.getConstructor();
+			GGSPlugin result = constructor.newInstance();
+
+			result.onCommand(this, command, args);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (NoSuchMethodException e) {
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
+		} catch (InstantiationException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
 		}
 	}
 

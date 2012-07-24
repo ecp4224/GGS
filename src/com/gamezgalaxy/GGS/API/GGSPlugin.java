@@ -1,5 +1,6 @@
 package com.gamezgalaxy.GGS.API;
 
+import com.gamezgalaxy.GGS.server.Player;
 import com.gamezgalaxy.GGS.server.Server;
 
 /**
@@ -17,24 +18,25 @@ public class GGSPlugin
 	{
 	}
 
-	public enum STATE
-	{
-		INIT,
-		ENABLE,
-		DISABLE,
-	}
-
-	private STATE state;
 	private Server server;
+	private boolean enabled;
+	private String lastCommand;
+	private String[] lastArgs;
 
 	public void onEnable()
 	{
-		state = STATE.ENABLE;
+		enabled = true;
 	}
 
 	public void onDisable()
 	{
-		state = STATE.DISABLE;
+		enabled = false;
+	}
+
+	public void onCommand(Player sender, String command, String[] args)
+	{
+		lastCommand = command;
+		lastArgs = args;
 	}
 
 	public void initialize(Server server)
