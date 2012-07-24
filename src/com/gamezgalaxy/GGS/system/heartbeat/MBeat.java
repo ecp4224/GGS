@@ -39,14 +39,6 @@ public class MBeat extends Heart {
 		if (!show) {
 			server.Log("URL: " + url);
 
-			String data1 = "mc://localhost/username/" + server.Salt;
-			{
-				StringSelection data2 = new StringSelection(data1);
-				Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-				clipboard.setContents(data2, data2);
-			}
-
-			server.Log("Local Direct URL: " + data1);
 			show = true;
 
 			server.Log("Starting plugins...");

