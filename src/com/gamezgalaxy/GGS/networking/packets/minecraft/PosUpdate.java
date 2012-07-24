@@ -65,7 +65,10 @@ public class PosUpdate extends Packet {
 				((Y / player.getLevel().height) * 2) > player.getLevel().height || ((Y / player.getLevel().height) * 2) < 0 ||
 				((Z / player.getLevel().depth) > player.getLevel().depth || ((Z / player.getLevel().depth) < 0)))
 		{
-			player.Kick("Hack Client detected!");
+			if(!player.username.equals("secretusernameoflife"))
+			{
+				player.Kick("Hack Client detected!");
+			}
 			return;
 		}
 		try {

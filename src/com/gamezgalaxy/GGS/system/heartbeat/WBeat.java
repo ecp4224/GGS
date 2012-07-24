@@ -36,6 +36,8 @@ public class WBeat extends Heart {
 
 		server.Log("Local Direct URL: " + data1);
 
+		server.Log("Starting plugins...");
+
 		return null;
 	}
 }

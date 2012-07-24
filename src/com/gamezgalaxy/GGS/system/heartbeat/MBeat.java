@@ -40,8 +40,6 @@ public class MBeat extends Heart {
 			server.Log("URL: " + url);
 
 			show = true;
-
-			server.Log("Starting plugins...");
 		}
 		return url;
 	}
