@@ -588,6 +588,8 @@ public class Player extends IOClient {
 				server.Stop();
 			} catch (InterruptedException e) {
 				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
 		} else if(command.equals("/ban")) {
 			if(args.length == 2)

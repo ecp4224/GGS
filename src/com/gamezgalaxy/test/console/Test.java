@@ -24,8 +24,8 @@ public class Test implements Listener {
 	@EventHandler
 	public void TestEvent3(PlayerBlockPlaceEvent event){
 		if (event.getBlock().toString().contains("Dirt")){
-			event.Cancel(true);
-			event.setBlock(Block.getBlock((byte)43));
+			//event.Cancel(true);
+			//event.setBlock(Block.getBlock((byte)43));
 		}
 	}
 

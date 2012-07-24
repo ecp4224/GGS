@@ -53,6 +53,8 @@ public class ConsoleCommands extends Thread
 					server.Stop();
 				} catch (InterruptedException e) {
 					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
 				}
 			} else if(command.equals("ban")) {
 				if(args.length == 2)
