@@ -20,6 +20,7 @@ import com.gamezgalaxy.GGS.networking.PacketManager;
 import com.gamezgalaxy.GGS.util.logger.LogInterface;
 import com.gamezgalaxy.GGS.util.logger.Logger;
 import com.gamezgalaxy.GGS.util.properties.Properties;
+import com.gamezgalaxy.GGS.system.BanHandler;
 import com.gamezgalaxy.GGS.system.heartbeat.Beat;
 import com.gamezgalaxy.GGS.system.heartbeat.MBeat;
 import com.gamezgalaxy.GGS.system.heartbeat.WBeat;
@@ -78,6 +79,7 @@ public class Server implements LogInterface {
 
 	public void Start() {
 		Running = true;
+		BanHandler.init();
 		es = new EventSystem(this);
 		Calendar cal = Calendar.getInstance();
 		cal.clear(Calendar.HOUR);

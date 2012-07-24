@@ -36,6 +36,7 @@ import com.gamezgalaxy.GGS.networking.packets.minecraft.MOTD;
 import com.gamezgalaxy.GGS.networking.packets.minecraft.SetBlock;
 import com.gamezgalaxy.GGS.networking.packets.minecraft.SpawnPlayer;
 import com.gamezgalaxy.GGS.networking.packets.minecraft.TP;
+import com.gamezgalaxy.GGS.system.BanHandler;
 import com.gamezgalaxy.GGS.world.Block;
 import com.gamezgalaxy.GGS.world.Level;
 import com.gamezgalaxy.GGS.world.PlaceMode;
@@ -173,8 +174,7 @@ public class Player extends IOClient {
 	 * @return Returns true if the account is valid, otherwise it will return false
 	 */
 	public boolean VerifyLogin() {
-		return true;
-		//return mppass.equals(getRealmppass());
+		return mppass.equals(getRealmppass());
 	}
 	
 	public String getRealmppass() {

@@ -17,6 +17,7 @@ import com.gamezgalaxy.GGS.networking.PacketManager;
 import com.gamezgalaxy.GGS.networking.PacketType;
 import com.gamezgalaxy.GGS.server.Player;
 import com.gamezgalaxy.GGS.server.Server;
+import com.gamezgalaxy.GGS.system.BanHandler;
 
 public class Connect extends Packet {
 
@@ -57,34 +58,8 @@ public class Connect extends Packet {
 				player.username = player.username.trim();
 				server.players.add(player);
 
-				try {
-					FileInputStream fstream = new FileInputStream("properties/banned.txt");
-					DataInputStream in = new DataInputStream(fstream);
-					BufferedReader br = new BufferedReader(new InputStreamReader(in));
-					List<String> lines = new ArrayList<String>();
-
-					String line;
-					while((line = br.readLine()) != null)
-					{
-						lines.add(line);
-					}
-
-					for(String s : lines)
-					{
-						if(player.username.equals(s))
-						{
-							player.Kick("YOU ARE BANNED FOR ETERNITY!");
-						}
-					}
-
-					fstream.close();
-					in.close();
-					br.close();
-				} catch (FileNotFoundException e) {
-					e.printStackTrace();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+				if (BanHandler.isBanned(player.username))
+					player.Kick("You are banned!");
 
 				player.Login();
 			}

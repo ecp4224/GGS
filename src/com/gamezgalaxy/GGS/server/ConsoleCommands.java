@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import com.gamezgalaxy.GGS.system.BanHandler;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Oliver Yasuna
@@ -55,18 +57,7 @@ public class ConsoleCommands extends Thread
 			} else if(command.equals("ban")) {
 				if(args.length == 2)
 				{
-					try {
-						FileWriter out = new FileWriter("properties/banned.txt", true);
-
-						out.write(args[0] + "\n");
-
-						out.flush();
-						out.close();
-					} catch (FileNotFoundException e) {
-						e.printStackTrace();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
+					BanHandler.ban(args[0]);
 				}
 			} else if(command.equals("unban")) {
 				if(args.length == 2)
