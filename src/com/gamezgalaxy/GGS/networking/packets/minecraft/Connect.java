@@ -7,7 +7,9 @@
  ******************************************************************************/
 package com.gamezgalaxy.GGS.networking.packets.minecraft;
 
-import java.io.UnsupportedEncodingException;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.gamezgalaxy.GGS.networking.IOClient;
 import com.gamezgalaxy.GGS.networking.Packet;
@@ -54,6 +56,36 @@ public class Connect extends Packet {
 			if (player.VerifyLogin()) {
 				player.username = player.username.trim();
 				server.players.add(player);
+
+				try {
+					FileInputStream fstream = new FileInputStream("properties/banned.txt");
+					DataInputStream in = new DataInputStream(fstream);
+					BufferedReader br = new BufferedReader(new InputStreamReader(in));
+					List<String> lines = new ArrayList<String>();
+
+					String line;
+					while((line = br.readLine()) != null)
+					{
+						lines.add(line);
+					}
+
+					for(String s : lines)
+					{
+						if(player.username.equals(s))
+						{
+							player.Kick("YOU ARE BANNED FOR ETERNITY!");
+						}
+					}
+
+					fstream.close();
+					in.close();
+					br.close();
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+
 				player.Login();
 			}
 			else {

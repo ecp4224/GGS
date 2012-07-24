@@ -7,7 +7,7 @@
  ******************************************************************************/
 package com.gamezgalaxy.GGS.server;
 
-import java.io.IOException;
+import java.io.*;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigInteger;
@@ -173,7 +173,8 @@ public class Player extends IOClient {
 	 * @return Returns true if the account is valid, otherwise it will return false
 	 */
 	public boolean VerifyLogin() {
-		return mppass.equals(getRealmppass());
+		return true;
+		//return mppass.equals(getRealmppass());
 	}
 	
 	public String getRealmppass() {
@@ -553,6 +554,57 @@ public class Player extends IOClient {
 		return true; //Message was sent successfully
 	}
 
+	public void removeLineFromFile(String file, String lineToRemove)
+	{
+		try {
+
+			File inFile = new File(file);
+
+			if (!inFile.isFile()) {
+				System.out.println("Parameter is not an existing file");
+				return;
+			}
+
+			//Construct the new file that will later be renamed to the original filename.
+			File tempFile = new File(inFile.getAbsolutePath() + ".tmp");
+
+			BufferedReader br = new BufferedReader(new FileReader(file));
+			PrintWriter pw = new PrintWriter(new FileWriter(tempFile));
+
+			String line = null;
+
+			//Read from the original file and write to the new
+			//unless content matches data to be removed.
+			while ((line = br.readLine()) != null) {
+
+				if (!line.trim().equals(lineToRemove)) {
+
+					pw.println(line);
+					pw.flush();
+				}
+			}
+			pw.close();
+			br.close();
+
+			//Delete the original file
+			if (!inFile.delete()) {
+				System.out.println("Could not delete file");
+				return;
+			}
+
+			//Rename the new file to the filename the original file had.
+			if (!tempFile.renameTo(inFile))
+				System.out.println("Could not rename file");
+
+		}
+		catch (FileNotFoundException ex) {
+			ex.printStackTrace();
+		}
+		catch (IOException ex) {
+			ex.printStackTrace();
+		}
+	}
+
 	public void processCommand(String message)
 	{
 		List<String> list = new ArrayList<String>();
@@ -585,6 +637,27 @@ public class Player extends IOClient {
 				server.Stop();
 			} catch (InterruptedException e) {
 				e.printStackTrace();
+			}
+		} else if(command.equals("/ban")) {
+			if(args.length == 2)
+			{
+				try {
+					FileWriter out = new FileWriter("properties/banned.txt", true);
+
+					out.write(args[0] + "\n");
+
+					out.flush();
+					out.close();
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		} else if(command.equals("/unban")) {
+			if(args.length == 2)
+			{
+				removeLineFromFile("properties/banned.txt", args[0]);
 			}
 		}
 
