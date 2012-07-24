@@ -16,6 +16,8 @@ public class BanHandler {
 	static ArrayList<String> banned = new ArrayList<String>();
 	
 	public static void init() {
+		banned.clear();
+
 		try {
 			if (!new File("properties/banned.txt").exists())
 				new File("properties/banned.txt").createNewFile();
@@ -83,6 +85,8 @@ public class BanHandler {
 	}
 	
 	public static boolean isBanned(String name) {
+		init();
+
 		for (String s : banned) {
 			if (s.split("\\:")[0].equalsIgnoreCase(name))
 				return !pastDate(name);

@@ -56,12 +56,15 @@ public class Connect extends Packet {
 			player.ClientType = message[129];
 			if (player.VerifyLogin()) {
 				player.username = player.username.trim();
-				server.players.add(player);
 
 				if (BanHandler.isBanned(player.username))
+				{
 					player.Kick("You are banned!");
+				} else {
+					server.players.add(player);
 
-				player.Login();
+					player.Login();
+				}
 			}
 			else {
 				player.Kick("Invalid Login!");

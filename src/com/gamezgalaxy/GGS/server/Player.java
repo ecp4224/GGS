@@ -174,9 +174,7 @@ public class Player extends IOClient {
 	 * @return Returns true if the account is valid, otherwise it will return false
 	 */
 	public boolean VerifyLogin() {
-		//DOESN'T WORK...
-		return true;
-		//return mppass.equals(getRealmppass());
+		return mppass.equals(getRealmppass());
 	}
 	
 	public String getRealmppass() {
@@ -392,6 +390,7 @@ public class Player extends IOClient {
 			reason = "No reason given";
 		Packet p = pm.getPacket("Kick");
 		this.kickreason = reason;
+		server.players.remove(this);
 		p.Write(this, pm.server);
 	}
 
