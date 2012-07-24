@@ -566,8 +566,6 @@ public class Player extends IOClient {
 		oldX = X;
 		oldY = Y;
 		oldZ = Z;
-		//pm.server.Log(this.username + " has joined the server.");
-		//chat.serverBroadcast(this.username + " has joined the server.");
 		spawnPlayer(this);
 		setPos((short)((0.5 + level.spawnx) * 32), (short)((1 + level.spawny) * 32), (short)((0.5 + level.spawnz) * 32));
 		for (Player p : pm.server.players) {
