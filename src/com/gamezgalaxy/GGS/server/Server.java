@@ -272,4 +272,24 @@ public class Server implements LogInterface {
 		System.out.println(message);
 		System.out.println("==!ERROR!==");
 	}
+
+	public Player getPlayer(String name)
+	{
+		Player player = null;
+
+		for(Player p : players)
+		{
+			if(p.username.equals(name))
+			{
+				player = p;
+			}
+		}
+
+		if(player != null)
+		{
+			return player;
+		}
+
+		return null;
+	}
 }
