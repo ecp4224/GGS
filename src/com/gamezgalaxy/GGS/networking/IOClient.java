@@ -26,6 +26,8 @@ public class IOClient {
 	protected PacketManager pm;
 	
 	public IOClient(Socket client, PacketManager pm) {
+		if (client == null)
+			return;
 		this.client = client;
 		this.pm = pm;
 		try {
@@ -39,6 +41,8 @@ public class IOClient {
 	}
 	
 	public void Listen() {
+		if (reader == null)
+			return;
 		readerthread = new Reader(this);
 		readerthread.start();
 		pm.server.Log("Listening..");

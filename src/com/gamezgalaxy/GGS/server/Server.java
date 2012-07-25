@@ -15,7 +15,8 @@ import java.security.SecureRandom;
 import java.util.*;
 
 import com.gamezgalaxy.GGS.API.EventSystem;
-import com.gamezgalaxy.GGS.API.GGSPlugin;
+import com.gamezgalaxy.GGS.API.plugin.CommandHandler;
+import com.gamezgalaxy.GGS.groups.Group;
 import com.gamezgalaxy.GGS.networking.PacketManager;
 import com.gamezgalaxy.GGS.util.logger.LogInterface;
 import com.gamezgalaxy.GGS.util.logger.Logger;
@@ -32,6 +33,7 @@ public class Server implements LogInterface {
 	private PacketManager pm;
 	private LevelHandler lm;
 	private Logger logger;
+	private CommandHandler ch;
 	private ArrayList<Tick> ticks = new ArrayList<Tick>();
 	private Thread tick;
 	private Beat heartbeater;
@@ -55,8 +57,11 @@ public class Server implements LogInterface {
 	public final EventSystem getEventSystem() {
 		return es;
 	}
-	public PacketManager getPacketManager() {
+	public final PacketManager getPacketManager() {
 		return pm;
+	}
+	public final CommandHandler getCommandHandler() {
+		return ch;
 	}
 	public Server(String Name, int Port, String MOTD) {
 		this.Port = Port;
@@ -102,6 +107,8 @@ public class Server implements LogInterface {
 			e.printStackTrace();
 		}
 		Log("Starting..");
+		ch = new CommandHandler(this);
+		Group.Load();
 		Properties.init(this);
 		Load();
 		pm.StartReading();
@@ -147,9 +154,6 @@ public class Server implements LogInterface {
 
 		ConsoleCommands consoleCommands = new ConsoleCommands(this);
 		consoleCommands.start();
-
-		PluginsThread pluginsThread = new PluginsThread(this);
-		pluginsThread.start();
 	}
 	
 	public static String LetterOrNumber(String string) {
@@ -170,50 +174,6 @@ public class Server implements LogInterface {
 			change = true;
 		}
 		return finals;
-	}
-
-	private class PluginsThread extends Thread
-	{
-		public PluginsThread(Server server)
-		{
-			this.server = server;
-		}
-
-		private Server server;
-
-		@Override
-		public void run()
-		{
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-
-			// TODO: Automatically find all classes that extend to GGPlugin.
-			// TODO: Create a system where the plugin is in a separate JAR.
-
-			try {
-				Class c = Class.forName("com.gamezgalaxy.test.console.TestPlugin");
-				Constructor<? extends GGSPlugin> constructor = c.getConstructor();
-				GGSPlugin result = constructor.newInstance();
-
-				result.initialize(server);
-				result.onEnable();
-			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
-			} catch (NoSuchMethodException e) {
-				e.printStackTrace();
-			} catch (InvocationTargetException e) {
-				e.printStackTrace();
-			} catch (InstantiationException e) {
-				e.printStackTrace();
-			} catch (IllegalAccessException e) {
-				e.printStackTrace();
-			}
-
-			Log("Plugins started!");
-		}
 	}
 
 	public void Stop() throws InterruptedException, IOException {

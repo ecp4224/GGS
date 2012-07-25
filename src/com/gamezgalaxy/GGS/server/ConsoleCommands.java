@@ -48,25 +48,7 @@ public class ConsoleCommands extends Thread
 
 			String command = s.split(" ")[0];
 
-			if(command.equals("stop")) {
-				try {
-					server.Stop();
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			} else if(command.equals("ban")) {
-				if(args.length == 2)
-				{
-					BanHandler.ban(args[0]);
-				}
-			} else if(command.equals("unban")) {
-				if(args.length == 2)
-				{
-					server.removeLineFromFile("properties/banned.txt", args[0]);
-				}
-			}
+			server.getCommandHandler().execute(null, command, args);
 		}
 	}
 }

@@ -21,12 +21,11 @@ import java.util.List;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import com.gamezgalaxy.GGS.API.GGSPlugin;
 import com.gamezgalaxy.GGS.API.player.PlayerBlockPlaceEvent;
 import com.gamezgalaxy.GGS.API.player.PlayerChatEvent;
 import com.gamezgalaxy.GGS.API.player.PlayerCommandEvent;
 import com.gamezgalaxy.GGS.chat.Messages;
+import com.gamezgalaxy.GGS.groups.Group;
 import com.gamezgalaxy.GGS.networking.IOClient;
 import com.gamezgalaxy.GGS.networking.Packet;
 import com.gamezgalaxy.GGS.networking.PacketManager;
@@ -117,6 +116,11 @@ public class Player extends IOClient {
 	 * The old pitch of the player
 	 */
 	public byte oldpitch;
+	
+	/**
+	 * The group the player is in
+	 */
+	private Group group;
 	
 	public static MessageDigest digest;
 	/**
@@ -211,6 +215,21 @@ public class Player extends IOClient {
 		}
 		setPos((short)((0.5 + level.spawnx) * 32), (short)((1 + level.spawny) * 32), (short)((0.5 + level.spawnz) * 32));
 		isLoggedin = true;
+	}
+	
+	/**
+	 * Get the current group the player is in
+	 * @return The group
+	 */
+	public Group getGroup() {
+		return group;
+	}
+	
+	/**
+	 * Change the group the player is in
+	 */
+	public void setGroup() {
+		//TODO Set group
 	}
 	
 	/**
@@ -575,7 +594,10 @@ public class Player extends IOClient {
 
 	public void processCommand(String message)
 	{
-		List<String> list = new ArrayList<String>();
+		message = message.substring(1); //Get rid of the / at the beginning
+		server.getCommandHandler().execute(this, message.split(" ")[0], message.substring(message.indexOf(message.split(" ")[0]) + 1));
+		/* Leaving this here so you can reference the old commands
+		 * List<String> list = new ArrayList<String>();
 		Collections.addAll(list, message.split(" "));
 
 		String[] args = new String[list.size() - 1];
@@ -695,7 +717,7 @@ public class Player extends IOClient {
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
-		}
+		}*/
 	}
 
 	/**
@@ -730,6 +752,10 @@ public class Player extends IOClient {
 			pm.server.Log("User "+ this.username + " sent: " + message);
 			chat.serverBroadcast(this.username + ": " + m);
 		}
+	}
+	
+	public Server getServer() {
+		return server;
 	}
 	
 	/**

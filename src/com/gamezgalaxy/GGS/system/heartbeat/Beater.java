@@ -33,7 +33,7 @@ public class Beater extends Thread {
 			synchronized(beat.getHearts()) {
 				for (Heart h : beat.getHearts()) {
 					try {
-						URL u = new URL("http://www.minecraft.net/");
+						URL u = new URL(h.getURL());
 						HttpURLConnection con = (HttpURLConnection)u.openConnection();
 						con.connect();
 
@@ -62,15 +62,7 @@ public class Beater extends Thread {
 					} catch (MalformedURLException e) {
 						e.printStackTrace();
 					} catch (IOException e) {
-						//e.printStackTrace();
-						System.out.println("Unable to connect to minecraft.net!");
-						try {
-							beat.getServer().Stop();
-						} catch (InterruptedException e1) {
-							e1.printStackTrace();
-						} catch (IOException e1) {
-							e1.printStackTrace();
-						}
+						System.out.println("Unable to connect to " + h.getURL() + "!");
 					} finally {
 						if (connection != null)
 							connection.disconnect();
