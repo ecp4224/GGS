@@ -1,3 +1,10 @@
+/*******************************************************************************
+ * Copyright (c) 2012 GamezGalaxy.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the GNU Public License v3.0
+ * which accompanies this distribution, and is available at
+ * http://www.gnu.org/licenses/gpl.html
+ ******************************************************************************/
 package com.gamezgalaxy.GGS.API.plugin;
 
 import java.util.ArrayList;
@@ -6,7 +13,7 @@ import com.gamezgalaxy.GGS.server.Player;
 import com.gamezgalaxy.GGS.server.Server;
 
 public class CommandHandler {
-	private static ArrayList<Command> commands = new ArrayList<Command>();
+	private ArrayList<Command> commands = new ArrayList<Command>();
 	
 	private Server _server;
 	

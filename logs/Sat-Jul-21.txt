@@ -1,3 +1,10 @@
+#-------------------------------------------------------------------------------
+# Copyright (c) 2012 GamezGalaxy.
+# All rights reserved. This program and the accompanying materials
+# are made available under the terms of the GNU Public License v3.0
+# which accompanies this distribution, and is available at
+# http://www.gnu.org/licenses/gpl.html
+#-------------------------------------------------------------------------------
 [2012/07/21 19:41:02] Starting..
 [2012/07/21 19:41:02] Listening on port 25558
 [2012/07/21 19:41:02] Generating Level..

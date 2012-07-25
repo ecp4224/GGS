@@ -16,6 +16,7 @@ import java.util.*;
 
 import com.gamezgalaxy.GGS.API.EventSystem;
 import com.gamezgalaxy.GGS.API.plugin.CommandHandler;
+import com.gamezgalaxy.GGS.API.plugin.PluginHandler;
 import com.gamezgalaxy.GGS.groups.Group;
 import com.gamezgalaxy.GGS.networking.PacketManager;
 import com.gamezgalaxy.GGS.util.logger.LogInterface;
@@ -34,6 +35,7 @@ public class Server implements LogInterface {
 	private LevelHandler lm;
 	private Logger logger;
 	private CommandHandler ch;
+	private PluginHandler ph;
 	private ArrayList<Tick> ticks = new ArrayList<Tick>();
 	private Thread tick;
 	private Beat heartbeater;
@@ -62,6 +64,9 @@ public class Server implements LogInterface {
 	}
 	public final CommandHandler getCommandHandler() {
 		return ch;
+	}
+	public final PluginHandler getPluginHandler() {
+		return ph;
 	}
 	public Server(String Name, int Port, String MOTD) {
 		this.Port = Port;
@@ -151,9 +156,10 @@ public class Server implements LogInterface {
 		heartbeater.addHeart(new WBeat());
 		heartbeater.start();
 		Log("Done!");
-
-		ConsoleCommands consoleCommands = new ConsoleCommands(this);
-		consoleCommands.start();
+		ph = new PluginHandler();
+		ph.loadplugins(this);
+		//ConsoleCommands consoleCommands = new ConsoleCommands(this);
+		//consoleCommands.start();
 	}
 	
 	public static String LetterOrNumber(String string) {

@@ -1,3 +1,10 @@
+/*******************************************************************************
+ * Copyright (c) 2012 GamezGalaxy.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the GNU Public License v3.0
+ * which accompanies this distribution, and is available at
+ * http://www.gnu.org/licenses/gpl.html
+ ******************************************************************************/
 package com.gamezgalaxy.GGS.world;
 
 import java.io.File;
@@ -46,11 +53,11 @@ public class LevelHandler {
 	public Level findLevel(String name) {
 		Level temp = null;
 		for (int i = 0; i < levels.size(); i++) {
-			if ((levels.get(i).name + ".ggs").equalsIgnoreCase(name))
+			if ((levels.get(i).name).equalsIgnoreCase(name))
 				return levels.get(i);
-			if ((levels.get(i).name + ".ggs").contains(name) && temp == null)
+			if ((levels.get(i).name).contains(name) && temp == null)
 				temp = levels.get(i);
-			else if ((levels.get(i).name + ".ggs").contains(name) && temp != null)
+			else if ((levels.get(i).name).contains(name) && temp != null)
 				return null;
 		}
 		return temp;

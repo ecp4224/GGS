@@ -34,9 +34,7 @@ public class WBeat extends Heart {
 			clipboard.setContents(data2, data2);
 		}
 
-		server.Log("Local Direct URL: " + data1);
-
-		server.Log("Starting plugins...");
+		server.Log("Local Direct URL: " + data1); //This might not be needed...
 
 		return null;
 	}

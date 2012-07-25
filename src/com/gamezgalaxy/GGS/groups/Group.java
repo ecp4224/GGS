@@ -1,3 +1,10 @@
+/*******************************************************************************
+ * Copyright (c) 2012 GamezGalaxy.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the GNU Public License v3.0
+ * which accompanies this distribution, and is available at
+ * http://www.gnu.org/licenses/gpl.html
+ ******************************************************************************/
 package com.gamezgalaxy.GGS.groups;
 
 import java.io.IOException;
@@ -70,7 +77,6 @@ public class Group {
 					Element e = (Element)nl.item(i);
 					try {
 						groups.add(read(e));
-						System.out.println("Group " + groups.get(groups.size() - 1).name + " loaded!");
 					} catch (Exception ee) {
 						ee.printStackTrace();
 					}
@@ -91,10 +97,8 @@ public class Group {
 			Map.Entry me = (Map.Entry)i.next();
 			Group g = (Group) me.getKey();
 			Group parent = find((String) me.getValue());
-			if (parent != null) {
+			if (parent != null)
 				g.parent = parent;
-				System.out.println("Parent " + parent.name + " added to " + g.name);
-			}
 		}
 		temp.clear();
 	}
