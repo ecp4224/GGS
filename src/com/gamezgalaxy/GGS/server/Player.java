@@ -135,7 +135,7 @@ public class Player extends IOClient {
 	private Server server;
 
 	public Player(Socket client, PacketManager pm, Server server) {
-		this(client, pm, (byte)255, server);
+		this(client, pm, (byte) 255, server);
 	}
 	public Player(Socket client, PacketManager pm, byte opCode, Server server) {
 		super(client, pm);
@@ -288,7 +288,7 @@ public class Player extends IOClient {
 	 */
 	public static void GlobalBlockChange(short X, short Y, short Z, Block block, Level l, Server s) {
 		l.setTile(block, X, Y, Z);
-		SetBlock sb = (SetBlock)(s.getPacketManager().getPacket((byte)0x05));
+		SetBlock sb = (SetBlock)(s.getPacketManager().getPacket((byte) 0x05));
 		sb.X = X;
 		sb.Y = Y;
 		sb.Z = Z;
