@@ -8,17 +8,11 @@
 package com.gamezgalaxy.GGS.server;
 
 import java.io.*;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.math.BigInteger;
 import java.net.Socket;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import com.gamezgalaxy.GGS.API.player.PlayerBlockPlaceEvent;
@@ -35,10 +29,8 @@ import com.gamezgalaxy.GGS.networking.packets.minecraft.MOTD;
 import com.gamezgalaxy.GGS.networking.packets.minecraft.SetBlock;
 import com.gamezgalaxy.GGS.networking.packets.minecraft.SpawnPlayer;
 import com.gamezgalaxy.GGS.networking.packets.minecraft.TP;
-import com.gamezgalaxy.GGS.system.BanHandler;
 import com.gamezgalaxy.GGS.world.Block;
 import com.gamezgalaxy.GGS.world.Level;
-import com.gamezgalaxy.GGS.world.LevelHandler;
 import com.gamezgalaxy.GGS.world.PlaceMode;
 
 public class Player extends IOClient {

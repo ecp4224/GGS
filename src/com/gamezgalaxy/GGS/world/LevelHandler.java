@@ -15,7 +15,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import com.gamezgalaxy.GGS.server.Player;
 import com.gamezgalaxy.GGS.server.Server;
-import com.gamezgalaxy.GGS.util.properties.Properties;
+import com.gamezgalaxy.GGS.server.Tick;
 
 public class LevelHandler {
 	// TODO: System of detected unloaded. Someone else do that please.
@@ -24,12 +24,9 @@ public class LevelHandler {
 	
 	private Server server;
 	
-	private Thread saver;
-	
 	public LevelHandler(Server server) {
 		this.server = server;
-		saver = new Saver();
-		saver.start();
+		server.Add(new Saver());
 	}
 
 	public void newLevel(String name, short width, short height, short length)
@@ -73,21 +70,11 @@ public class LevelHandler {
 
 	public void loadLevels()
 	{
+		levels.clear();
 		File levelsFolder = new File("levels");
 		File[] levelFiles = levelsFolder.listFiles();
-		Level level;
-
-		String file;
 		for(File f : levelFiles)
-		{
-			file = f.getName();
-			level = findLevel(file);
-
-			if(level == null)
-			{
-				loadLevel(levelsFolder.getPath() + "/" + file);
-			}
-		}
+			loadLevel(levelsFolder.getPath() + "/" + f.getName());
 	}
 	
 	public Level loadLevel(String filename) {
@@ -109,15 +96,19 @@ public class LevelHandler {
 	public void unloadLevel(Level level) {
 		if (!levels.contains(level))
 			return;
-		//TODO Call unload and finalize method
-		//TODO Move all players to main level
+		try {
+			level.Unload(server);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		levels.remove(level);
 	}
 	
-	private class Saver extends Thread {
+	private class Saver extends Tick {
 		
 		@Override
-		public void run() {
+		public void Tick() {
 			while(server.Running) {
 				for (int i = 0; i < levels.size(); i++) {
 					try {

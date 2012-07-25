@@ -7,9 +7,6 @@
  ******************************************************************************/
 package com.gamezgalaxy.GGS.system.heartbeat;
 
-import java.awt.*;
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.StringSelection;
 import java.io.BufferedReader;
 import java.io.IOException;
 

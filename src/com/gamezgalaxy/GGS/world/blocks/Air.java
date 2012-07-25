@@ -12,6 +12,11 @@ import com.gamezgalaxy.GGS.world.Block;
 
 public class Air extends Block {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public Air(byte ID, String name) {
 		super(ID, name);
 		// TODO Auto-generated constructor stub

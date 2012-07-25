@@ -14,6 +14,11 @@ import com.gamezgalaxy.GGS.world.blocks.*;
 
 public abstract class Block implements Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	static Block[] blocks = new Block[] {
 			new Air(),
 			new Aqua(),

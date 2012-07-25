@@ -21,6 +21,8 @@ import com.gamezgalaxy.GGS.server.Server;
 public class PluginHandler {
 	private ArrayList<Plugin> plugins = new ArrayList<Plugin>();
 	
+	private ArrayList<Game> games = new ArrayList<Game>();
+	
 	public void loadplugins(Server server) {
 		if (!new File("plugins/").exists())
 			new File("plugins/").mkdir();
@@ -80,8 +82,11 @@ public class PluginHandler {
 		// Avoid Class.newInstance, for it is evil.
 		Constructor<? extends Plugin> ctor = runClass.getConstructor(Server.class);
 		Plugin doRun = ctor.newInstance(server);
-		plugins.add(doRun);
 		doRun.onLoad(args);
+		if (doRun instanceof Game)
+			games.add((Game)doRun);
+		else
+			plugins.add(doRun);
 	}
 
 }

@@ -37,11 +37,6 @@ public class SetBlock extends Packet {
 	}
 	@Override
 	public void Write(IOClient player, Server server) {
-		Player p = null;
-		if (player instanceof Player)
-			p = (Player)player;
-		else
-			return;
 		ByteBuffer bb = ByteBuffer.allocate(8);
 		bb.put((byte)0x06);
 		bb.putShort(X);

@@ -8,8 +8,6 @@
 package com.gamezgalaxy.GGS.server;
 
 import java.io.*;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.*;
@@ -205,8 +203,7 @@ public class Server implements LogInterface {
 
 		System.exit(0);
 	}
-
-	@SuppressWarnings("unchecked")
+	
 	public void Log(String log) {
 		logger.Log(log);
 	}

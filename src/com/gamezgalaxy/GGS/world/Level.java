@@ -12,12 +12,16 @@ import java.util.ArrayList;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
+import com.gamezgalaxy.GGS.server.Player;
+import com.gamezgalaxy.GGS.server.Server;
 import com.gamezgalaxy.GGS.world.convert.DatToGGS;
 
 public class Level implements Serializable {
-	static final byte VERSION = 1;
 	
-	static ArrayList<Level> list = new ArrayList<Level>();
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6250572320060286713L;
 	
 	Block[] blocks;
 	
@@ -104,11 +108,20 @@ public class Level implements Serializable {
 		FileOutputStream fos = new FileOutputStream("levels/" + name + ".ggs");
 		GZIPOutputStream gos = new GZIPOutputStream(fos);
 		ObjectOutputStream out = new ObjectOutputStream(gos);
-		out.write(VERSION);
+		out.writeLong(serialVersionUID);
 		out.writeObject(this);
 		out.close();
 		gos.close();
 		fos.close();
+	}
+	
+	public void Unload(Server server) throws IOException {
+		Save();
+		for (Player p : server.players) {
+			if (p.getLevel() == this)
+				p.setLevel(server.MainLevel);
+		}
+		blocks = null;
 	}
 	
 	public static Level Load(String filename) throws IOException, ClassNotFoundException {
@@ -119,11 +132,11 @@ public class Level implements Serializable {
 			FileInputStream fis = new FileInputStream(filename);
 			GZIPInputStream gis = new GZIPInputStream(fis);
 			ObjectInputStream obj = new ObjectInputStream(gis);
-			byte version = obj.readByte();
-			switch (version) {
-			case 1: //current
+			long version = obj.readLong();
+			if (version == serialVersionUID)
 				l = (Level)obj.readObject();
-			}
+			else
+				throw new IOException("The level version does not match the current");
 			obj.close();
 			gis.close();
 			fis.close();

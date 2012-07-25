@@ -10,10 +10,7 @@ package com.gamezgalaxy.test.console;
 import com.gamezgalaxy.GGS.API.EventHandler;
 import com.gamezgalaxy.GGS.API.Listener;
 import com.gamezgalaxy.GGS.API.player.PlayerBlockPlaceEvent;
-import com.gamezgalaxy.GGS.API.player.PlayerChatEvent;
 import com.gamezgalaxy.GGS.API.player.PlayerMoveEvent;
-import com.gamezgalaxy.GGS.server.Server;
-import com.gamezgalaxy.GGS.world.Block;
 
 public class Test implements Listener {
 	/*

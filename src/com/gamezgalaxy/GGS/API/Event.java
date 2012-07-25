@@ -6,12 +6,6 @@
  * http://www.gnu.org/licenses/gpl.html
  ******************************************************************************/
 package com.gamezgalaxy.GGS.API;
-
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.lang.reflect.Method;
 public abstract class Event {
 	
 	private String name;
@@ -19,4 +13,8 @@ public abstract class Event {
 	public Event() { }
 	
 	public abstract EventList getEvents();
+	
+	public String getEventName() {
+		return (name == "" || name == null) ? getClass().getSimpleName() : name;
+	}
 }

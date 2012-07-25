@@ -7,8 +7,6 @@
  ******************************************************************************/
 package com.gamezgalaxy.GGS.networking.packets.minecraft;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;

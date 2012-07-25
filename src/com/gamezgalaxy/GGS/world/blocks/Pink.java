@@ -11,6 +11,11 @@ import com.gamezgalaxy.GGS.world.Block;
 
 public class Pink extends Block {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public Pink(byte ID, String name) {
 		super(ID, name);
 		// TODO Auto-generated constructor stub

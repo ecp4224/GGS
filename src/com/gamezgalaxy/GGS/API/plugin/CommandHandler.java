@@ -53,6 +53,25 @@ public class CommandHandler {
 			c.execute(player, args);
 	}
 	
+	public void addCommand(Command cmd) {
+		if (commands.contains(cmd))
+			return;
+		commands.add(cmd);
+	}
+	
+	public void removeCommand(Command cmd) {
+		if (!commands.contains(cmd))
+			return;
+		commands.remove(cmd);
+	}
+	
+	public void removeCommand(String name) {
+		Command c = find(name);
+		if (c == null)
+			return;
+		removeCommand(c);
+	}
+	
 	public void loadPermissions() {
 		//TODO Load all command permissions
 	}

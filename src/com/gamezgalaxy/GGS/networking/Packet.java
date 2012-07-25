@@ -7,7 +7,6 @@
  ******************************************************************************/
 package com.gamezgalaxy.GGS.networking;
 
-import com.gamezgalaxy.GGS.server.Player;
 import com.gamezgalaxy.GGS.server.Server;
 
 public abstract class Packet {

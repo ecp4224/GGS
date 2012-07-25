@@ -11,6 +11,11 @@ import com.gamezgalaxy.GGS.world.Block;
 
 public class Lime extends Block {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public Lime(byte ID, String name) {
 		super(ID, name);
 		// TODO Auto-generated constructor stub

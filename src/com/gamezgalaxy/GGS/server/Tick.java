@@ -7,8 +7,6 @@
  ******************************************************************************/
 package com.gamezgalaxy.GGS.server;
 
-import java.util.ArrayList;
-
 public abstract class Tick {
 	
 	public abstract void Tick();

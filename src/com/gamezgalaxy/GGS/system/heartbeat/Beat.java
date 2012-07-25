@@ -9,7 +9,6 @@ package com.gamezgalaxy.GGS.system.heartbeat;
 
 import java.util.ArrayList;
 
-import com.gamezgalaxy.GGS.server.Player;
 import com.gamezgalaxy.GGS.server.Server;
 
 public class Beat {

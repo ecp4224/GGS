@@ -50,5 +50,17 @@ public class PlayerMoveEvent extends PlayerEvent implements Cancelable {
 	public void Cancel(boolean cancel) {
 		_canceled = cancel;
 	}
+	
+	public short getX() {
+		return X;
+	}
+	
+	public short getY() {
+		return Y;
+	}
+	
+	public short getZ() {
+		return Z;
+	}
 
 }

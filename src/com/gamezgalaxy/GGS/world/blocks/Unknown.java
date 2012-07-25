@@ -11,6 +11,11 @@ import com.gamezgalaxy.GGS.world.Block;
 
 public class Unknown extends Block {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public Unknown(byte ID, String name) {
 		super(ID, name);
 		// TODO Auto-generated constructor stub

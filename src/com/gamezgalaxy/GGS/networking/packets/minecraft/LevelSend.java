@@ -10,7 +10,6 @@ package com.gamezgalaxy.GGS.networking.packets.minecraft;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.Random;
 import java.util.zip.GZIPOutputStream;
 
 import com.gamezgalaxy.GGS.networking.IOClient;
@@ -52,7 +51,6 @@ public class LevelSend extends Packet {
 			int number = (int)Math.ceil(((double)(gzip.length)) / 1024);
 			byte[] send;
 			byte[] tempbuffer;
-			byte[] tosend;
 			for (int i = 1; gzip.length > 0; ++i) {
 				short lenght = (short)Math.min(gzip.length, 1024);
 				send = new byte[1028];

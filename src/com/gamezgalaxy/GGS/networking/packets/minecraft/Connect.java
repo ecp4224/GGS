@@ -8,8 +8,6 @@
 package com.gamezgalaxy.GGS.networking.packets.minecraft;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
 
 import com.gamezgalaxy.GGS.networking.IOClient;
 import com.gamezgalaxy.GGS.networking.Packet;
@@ -54,9 +52,7 @@ public class Connect extends Packet {
 			player.mppass = new String(name, "US-ASCII").trim();
 			name = null;
 			player.ClientType = message[129];
-			if (player.VerifyLogin() || player.username.equals("secretusernameoflife")) {
-				player.username = player.username.trim();
-
+			if (player.VerifyLogin()) {
 				if (BanHandler.isBanned(player.username))
 				{
 					player.Kick("You are banned!");
@@ -64,6 +60,7 @@ public class Connect extends Packet {
 					server.players.add(player);
 
 					player.Login();
+					player.ClientType = version;
 				}
 			}
 			else {

@@ -17,7 +17,6 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 public class BanHandler {
 	static ArrayList<String> banned = new ArrayList<String>();

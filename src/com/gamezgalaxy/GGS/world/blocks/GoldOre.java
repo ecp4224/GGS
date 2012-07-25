@@ -11,6 +11,11 @@ import com.gamezgalaxy.GGS.world.Block;
 
 public class GoldOre extends Block {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public GoldOre(byte ID, String name) {
 		super(ID, name);
 		// TODO Auto-generated constructor stub

@@ -14,6 +14,10 @@ public enum PlaceMode {
 	private byte type;
 
 	PlaceMode(byte type) { this.type = type; }
+	
+	public byte getType() {
+		return type;
+	}
 
 	public static PlaceMode getType(byte mode) {
 		switch (mode) {
