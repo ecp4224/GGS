@@ -271,19 +271,12 @@ public class Server implements LogInterface {
 
 	public Player getPlayer(String name)
 	{
-		Player player = null;
-
 		for(Player p : players)
 		{
 			if(p.username.equals(name))
 			{
-				player = p;
+				return p;
 			}
-		}
-
-		if(player != null)
-		{
-			return player;
 		}
 
 		return null;
