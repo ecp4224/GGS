@@ -41,10 +41,10 @@ public class Goto extends Command
 	@Override
 	public void execute(Player player, String[] args)
 	{
-		if(args.length == 1)
+		if(args.length == 2)
 		{
 			LevelHandler handler = player.getServer().getLevelHandler();
-			Level level = handler.findLevel(args[0]);
+			Level level = handler.findLevel(args[1]);
 
 			if(level != null)
 			{
@@ -56,6 +56,8 @@ public class Goto extends Command
 			} else {
 				player.sendMessage("Level doesn't exist...");
 			}
+		} else {
+			player.sendMessage("Correct format: /goto (level name)");
 		}
 	}
 }

@@ -47,14 +47,16 @@ public class Newlvl extends Command
 			handler.loadLevels();
 			Level[] levels = handler.levels.toArray(new Level[handler.levels.size()]);
 
-			if(handler.findLevel(args[0]) == null)
+			if(handler.findLevel(args[1]) == null)
 			{
-				handler.newLevel(args[0], Short.valueOf(args[1]), Short.valueOf(args[2]), Short.valueOf(args[3]));
+				handler.newLevel(args[1], Short.valueOf(args[2]), Short.valueOf(args[3]), Short.valueOf(args[4]));
 
-				player.sendMessage("Created new level: " + args[0] + ".");
+				player.sendMessage("Created new level: " + args[1] + ".");
 			} else {
 				player.sendMessage("Level already exists...");
 			}
+		} else {
+			player.sendMessage("Correct format: /newlvl (name) (width) (height) (length)");
 		}
 	}
 }

@@ -5,6 +5,8 @@ import com.gamezgalaxy.GGS.server.Player;
 import com.gamezgalaxy.GGS.world.Level;
 import com.gamezgalaxy.GGS.world.LevelHandler;
 
+import java.io.File;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Oliver Yasuna
@@ -41,8 +43,17 @@ public class Load extends Command
 	@Override
 	public void execute(Player player, String[] args)
 	{
-		LevelHandler handler = player.getServer().getLevelHandler();
+		if(args.length == 2)
+		{
+			LevelHandler handler = player.getServer().getLevelHandler();
+			File levelFile = new File("levels/" + args[1] + ".ggs");
 
-		handler.loadLevel("levels/" + args[1] + ".ggs");
+			if(levelFile.exists())
+			{
+				handler.loadLevel(levelFile.getPath());
+			} else {
+				player.sendMessage("Level does not exist.");
+			}
+		}
 	}
 }

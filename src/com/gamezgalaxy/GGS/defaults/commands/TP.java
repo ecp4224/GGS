@@ -57,6 +57,8 @@ public class TP extends Command
 			} else {
 				player.sendMessage("Either " + args[1] + " or " + args[2] + " is not online.");
 			}
+		} else {
+			player.sendMessage("Correct format: /tp (player) or /tp (player) (to player)");
 		}
 	}
 }
