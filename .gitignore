@@ -1,5 +1,4 @@
 *.class
-
 # Package Files #
 *.jar
 *.war
@@ -37,3 +36,4 @@ logs/*
 levels/*
 properties/*
 plugins/*
+*.project
