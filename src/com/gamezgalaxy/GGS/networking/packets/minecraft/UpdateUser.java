@@ -34,7 +34,7 @@ public class UpdateUser extends Packet {
 	@Override
 	public void Write(IOClient player, Server server) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }
