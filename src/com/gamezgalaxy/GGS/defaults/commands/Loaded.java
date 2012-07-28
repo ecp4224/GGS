@@ -42,14 +42,14 @@ public class Loaded extends Command
 	public void execute(Player player, String[] args)
 	{
 		LevelHandler handler = player.getServer().getLevelHandler();
-		Level[] levels = handler.levels.toArray(new Level[handler.levels.size()]);
+		StringBuilder finalStr = new StringBuilder();
 
-		for(Level l : levels)
+		for(Level l : handler.levels)
 		{
-			if(l != null)
-			{
-				player.sendMessage(l.name);
-			}
+			finalStr.append(l.name);
+			finalStr.append(", ");
 		}
+
+		player.sendMessage(finalStr.toString());
 	}
 }
