@@ -126,6 +126,16 @@ public class Player extends IOClient {
 	 */
 	private Server server;
 
+	/**
+	 * The activity of the player.
+	 */
+	private boolean afk;
+
+	/**
+	 * Most recent player this player has pm'd with.
+	 */
+	public Player lastCommunication;
+
 	public Player(Socket client, PacketManager pm, Server server) {
 		this(client, pm, (byte) 255, server);
 	}
@@ -162,6 +172,9 @@ public class Player extends IOClient {
 					packet.Handle(message, pm.server, this);
 			}
 		}
+
+		afk = false;
+
 		Listen();
 		pm.server.Add(tick);
 	}
@@ -839,5 +852,20 @@ public class Player extends IOClient {
 			pa = null;
 			p.finishLevel();
 		}
+	}
+
+	public Messages getChat()
+	{
+		return chat;
+	}
+
+	public boolean isAfk()
+	{
+		return afk;
+	}
+
+	public void setAfk(boolean afk)
+	{
+		this.afk = afk;
 	}
 }

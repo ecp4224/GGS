@@ -3,16 +3,13 @@ package com.gamezgalaxy.GGS.defaults.commands;
 import com.gamezgalaxy.GGS.API.plugin.Command;
 import com.gamezgalaxy.GGS.server.Player;
 
-import java.io.IOException;
-
 /**
  * Created with IntelliJ IDEA.
  * User: Oliver Yasuna
- * Date: 7/25/12
- * Time: 3:14 AM
- * To change this template use File | Settings | File Templates.
+ * Date: 7/27/12
+ * Time: 9:18 PM
  */
-public class Stop extends Command
+public class Afk extends Command
 {
 	@Override
 	public String[] getShortcuts()
@@ -23,13 +20,13 @@ public class Stop extends Command
 	@Override
 	public String getName()
 	{
-		return "stop";
+		return "afk";
 	}
 
 	@Override
 	public boolean isOpCommand()
 	{
-		return true;
+		return false;
 	}
 
 	@Override
@@ -41,12 +38,15 @@ public class Stop extends Command
 	@Override
 	public void execute(Player player, String[] args)
 	{
-		try {
-			player.getServer().Stop();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
+		if(player.isAfk())
+		{
+			player.setAfk(false);
+
+			player.getChat().serverBroadcast(player.username + " is no longer afk.");
+		} else {
+			player.setAfk(true);
+
+			player.getChat().serverBroadcast(player.username + " is now afk...");
 		}
 	}
 }

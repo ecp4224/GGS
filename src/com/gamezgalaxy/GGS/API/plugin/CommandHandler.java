@@ -13,7 +13,7 @@ import com.gamezgalaxy.GGS.server.Player;
 import com.gamezgalaxy.GGS.server.Server;
 
 public class CommandHandler {
-	private ArrayList<Command> commands = new ArrayList<Command>();
+	public ArrayList<Command> commands = new ArrayList<Command>();
 	
 	private Server _server;
 	
@@ -46,11 +46,18 @@ public class CommandHandler {
 			else
 				_server.Log("Command not found!");
 		}
+
 		Command c = find(command);
-		if (player != null && !player.getGroup().canExecute(c))
-			player.sendMessage("Sorry, you dont have permission to execute this command!");
-		else
+
+		if(c != null)
+		{
+			// Commented out until working.
+
+			//if (player != null && !player.getGroup().canExecute(c))
+			//	player.sendMessage("Sorry, you dont have permission to execute this command!");
+			//else
 			c.execute(player, args);
+		}
 	}
 	
 	public void addCommand(Command cmd) {
