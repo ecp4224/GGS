@@ -37,3 +37,5 @@ levels/*
 properties/*
 plugins/*
 *.project
+.project
+.classpath
