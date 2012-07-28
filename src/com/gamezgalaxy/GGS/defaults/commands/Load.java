@@ -43,6 +43,6 @@ public class Load extends Command
 	{
 		LevelHandler handler = player.getServer().getLevelHandler();
 
-		handler.loadLevel(args[1] + ".ggs");
+		handler.loadLevel("levels/" + args[1] + ".ggs");
 	}
 }
