@@ -8,13 +8,16 @@
 package com.gamezgalaxy.GGS.server;
 
 import java.io.*;
+import java.net.URL;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.*;
 
 import com.gamezgalaxy.GGS.API.EventSystem;
+import com.gamezgalaxy.GGS.API.plugin.Command;
 import com.gamezgalaxy.GGS.API.plugin.CommandHandler;
 import com.gamezgalaxy.GGS.API.plugin.PluginHandler;
+import com.gamezgalaxy.GGS.defaults.commands.*;
 import com.gamezgalaxy.GGS.groups.Group;
 import com.gamezgalaxy.GGS.networking.PacketManager;
 import com.gamezgalaxy.GGS.util.logger.LogInterface;
@@ -26,6 +29,7 @@ import com.gamezgalaxy.GGS.system.heartbeat.MBeat;
 import com.gamezgalaxy.GGS.system.heartbeat.WBeat;
 import com.gamezgalaxy.GGS.world.Level;
 import com.gamezgalaxy.GGS.world.LevelHandler;
+import sun.reflect.Reflection;
 
 public class Server implements LogInterface {
 	private boolean startPlugins;
@@ -158,6 +162,26 @@ public class Server implements LogInterface {
 		ph.loadplugins(this);
 		//ConsoleCommands consoleCommands = new ConsoleCommands(this);
 		//consoleCommands.start();
+
+		try {
+			addCommands();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void addCommands() throws IOException
+	{
+		ch.addCommand(new Afk());
+		ch.addCommand(new Ban());
+		ch.addCommand(new Goto());
+		ch.addCommand(new Loaded());
+		ch.addCommand(new Newlvl());
+		ch.addCommand(new Spawn());
+		ch.addCommand(new Stop());
+		ch.addCommand(new Unban());
+		ch.addCommand(new TP());
+		ch.addCommand(new Send());
 	}
 	
 	public static String LetterOrNumber(String string) {

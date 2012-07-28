@@ -12,7 +12,7 @@ import com.gamezgalaxy.GGS.world.LevelHandler;
  * Time: 3:27 AM
  * To change this template use File | Settings | File Templates.
  */
-public class NewLVL extends Command
+public class Newlvl extends Command
 {
 	@Override
 	public String[] getShortcuts()
@@ -29,13 +29,13 @@ public class NewLVL extends Command
 	@Override
 	public boolean isOpCommand()
 	{
-		return false;
+		return true;
 	}
 
 	@Override
 	public int getDefaultPermissionLevel()
 	{
-		return 0; // DON'T KNOW THE PERMISSION LEVEL FOR STANDARD USER.
+		return 0;
 	}
 
 	@Override
