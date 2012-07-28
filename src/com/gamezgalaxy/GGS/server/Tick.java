@@ -7,8 +7,8 @@
  ******************************************************************************/
 package com.gamezgalaxy.GGS.server;
 
-public abstract class Tick {
+public interface Tick {
 	
-	public abstract void Tick();
+	void Tick();
 
 }

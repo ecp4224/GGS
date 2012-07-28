@@ -23,19 +23,4 @@ public class WBeat extends Heart {
 	public String getURL() {
 		return "http://direct.worldofminecraft.com/hb.php";
 	}
-
-	@Override
-	public String onPump(BufferedReader rdr, Server server) throws IOException
-	{
-		String data1 = "mc://localhost/secretusernameoflife/" + server.Salt;
-		{
-			StringSelection data2 = new StringSelection(data1);
-			Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-			clipboard.setContents(data2, data2);
-		}
-
-		server.Log("Local Direct URL: " + data1); //This might not be needed...
-
-		return null;
-	}
 }

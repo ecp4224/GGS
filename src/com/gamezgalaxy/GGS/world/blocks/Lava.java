@@ -7,9 +7,10 @@
  ******************************************************************************/
 package com.gamezgalaxy.GGS.world.blocks;
 
-import com.gamezgalaxy.GGS.world.Block;
+import com.gamezgalaxy.GGS.server.Server;
+import com.gamezgalaxy.GGS.world.PhysicsBlock;
 
-public class Lava extends Block {
+public class Lava extends PhysicsBlock {
 
 	/**
 	 * 
@@ -18,11 +19,25 @@ public class Lava extends Block {
 
 	public Lava(byte ID, String name) {
 		super(ID, name);
-		// TODO Auto-generated constructor stub
 	}
 	
 	public Lava() {
 		super((byte)10, "Lava");
+	}
+
+	public Lava(byte b, String string, Server s) {
+		super(b, string, s);
+	}
+
+	@Override
+	public PhysicsBlock clone(Server s) {
+		Lava l = new Lava((byte)10, "Lava", s);
+		return l;
+	}
+
+	@Override
+	public void Tick() {
+		//TODO Add physics for lava
 	}
 
 }

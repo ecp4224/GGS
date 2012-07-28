@@ -207,6 +207,7 @@ public class Player extends IOClient {
 		}
 		setPos((short)((0.5 + level.spawnx) * 32), (short)((1 + level.spawny) * 32), (short)((0.5 + level.spawnz) * 32));
 		isLoggedin = true;
+		GlobalBlockChange((short)0, (short)35, (short)1, Block.getBlock("Lava"), this.level, this.server);
 	}
 	
 	/**
@@ -277,9 +278,11 @@ public class Player extends IOClient {
 	 * @param block The block to send
 	 * @param l The level the update happened in
 	 * @param s The server the update happened in
+	 * @param updateLevel Weather the level should be updated
 	 */
-	public static void GlobalBlockChange(short X, short Y, short Z, Block block, Level l, Server s) {
-		l.setTile(block, X, Y, Z);
+	public static void GlobalBlockChange(short X, short Y, short Z, Block block, Level l, Server s, boolean updateLevel) {
+		if (updateLevel)
+			l.setTile(block, X, Y, Z, s);
 		SetBlock sb = (SetBlock)(s.getPacketManager().getPacket((byte) 0x05));
 		sb.X = X;
 		sb.Y = Y;
@@ -288,6 +291,19 @@ public class Player extends IOClient {
 		for (Player p : s.players)
 			if (p.level == l)
 				sb.Write(p, s);
+	}
+	
+	/**
+	 * Send a block update to all the players on level "l" in server "s"
+	 * @param X The X pos of the udpate
+	 * @param Y The Y pos of the update
+	 * @param Z The Z pos of the update
+	 * @param block The block to send
+	 * @param l The level the update happened in
+	 * @param s The server the update happened in
+	 */
+	public static void GlobalBlockChange(short X, short Y, short Z, Block block, Level l, Server s) {
+		GlobalBlockChange(X, Y, Z, block, l, s, true);
 	}
 	
 	/**
@@ -786,7 +802,7 @@ public class Player extends IOClient {
 		levelsender = null;
 	}
 
-	protected class Ping extends Tick {
+	protected class Ping implements Tick {
 
 		Player p;
 		public Ping(Player p) { this.p = p; }

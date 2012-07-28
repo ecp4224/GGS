@@ -105,22 +105,19 @@ public class LevelHandler {
 		levels.remove(level);
 	}
 	
-	private class Saver extends Tick {
-		
+	private class Saver implements Tick {
+		int temp = 6000;
 		@Override
 		public void Tick() {
-			while(server.Running) {
-				for (int i = 0; i < levels.size(); i++) {
-					try {
-						levels.get(i).Save();
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
+			if (temp > 0) {
+				temp--;
+				return;
+			}
+			temp = 6000;
+			for (int i = 0; i < levels.size(); i++) {
 				try {
-					Thread.sleep(60000);
-				} catch (InterruptedException e) {
+					levels.get(i).Save();
+				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}

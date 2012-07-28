@@ -239,16 +239,15 @@ public class Server implements LogInterface {
 		@Override
 		public void run() {
 			while (Running) {
-				synchronized(ticks) {
-					for (Tick t : ticks) {
-						t.Tick();
-					}
-					try {
-						Thread.sleep(10);
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+				for (int i = 0; i < ticks.size(); i++) {
+					Tick t = ticks.get(i);
+					t.Tick();
+				}
+				try {
+					Thread.sleep(10);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
 			}
 		}
