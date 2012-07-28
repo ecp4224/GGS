@@ -8,6 +8,7 @@
 package com.gamezgalaxy.GGS.world;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 import com.gamezgalaxy.GGS.world.blocks.*;
 
@@ -73,6 +74,8 @@ public abstract class Block implements Serializable {
 			new YellowFlower()
 	};
 	
+	private static ArrayList<Block> custom = new ArrayList<Block>();
+	
 	public byte ID;
 	
 	public String name;
@@ -89,6 +92,18 @@ public abstract class Block implements Serializable {
 		
 	}
 	
+	public static void addBlock(Block b) {
+		if (custom.contains(b))
+			return;
+		custom.add(b);
+	}
+	
+	public static void removeBlock(Block b) {
+		if (!custom.contains(b))
+			return;
+		custom.remove(b);
+	}
+	
 	public Block(byte ID, String name) {
 		this.ID = ID;
 		this.name = name;
@@ -99,10 +114,18 @@ public abstract class Block implements Serializable {
 			if (b.ID == ID)
 				return b;
 		}
+		for (Block b : custom) {
+			if (b.ID == ID)
+				return b;
+		}
 		return new Unknown();
 	}
 	
 	public static Block getBlock(String name) {
+		for (Block b : blocks) {
+			if (b.name.equalsIgnoreCase(name))
+				return b;
+		}
 		for (Block b : blocks) {
 			if (b.name.equalsIgnoreCase(name))
 				return b;

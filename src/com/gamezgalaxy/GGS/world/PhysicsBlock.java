@@ -19,6 +19,13 @@ public abstract class PhysicsBlock extends Block implements Tick {
 		this._server = server;
 	}
 	
+	@Override
+	public void onDelete(Level l) {
+		if (_level != l)
+			return;
+		_level.ticks.remove(this);
+	}
+	
 	/**
 	 * Create a clone of the Physics Block.
 	 * @param s
@@ -125,6 +132,14 @@ public abstract class PhysicsBlock extends Block implements Tick {
 	 */
 	public int getZ() {
 		return _z;
+	}
+	
+	/**
+	 * Get the current level
+	 * @return The level this block is in
+	 */
+	public Level getLevel() {
+		return _level;
 	}
 
 }

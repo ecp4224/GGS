@@ -28,7 +28,7 @@ public class Level implements Serializable {
 	
 	private boolean run;
 	
-	private ArrayList<Tick> ticks = new ArrayList<Tick>();
+	public ArrayList<Tick> ticks = new ArrayList<Tick>();
 	
 	Block[] blocks;
 	
@@ -82,8 +82,8 @@ public class Level implements Serializable {
 	public void setTile(Block b, int index, Server server) {
 		if (index < 0) index = 0;
 		if (index >= blocks.length) index = blocks.length - 1;
-		if (blocks[index] instanceof PhysicsBlock)
-			this.ticks.remove((PhysicsBlock)blocks[index]);
+		blocks[index].onDelete(this);
+		b.onPlace(this);
 		if (b instanceof PhysicsBlock) {
 			PhysicsBlock pb = ((PhysicsBlock)b).clone(server);
 			pb.setLevel(this);

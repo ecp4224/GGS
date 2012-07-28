@@ -7,9 +7,11 @@
  ******************************************************************************/
 package com.gamezgalaxy.GGS.world.blocks;
 
+import com.gamezgalaxy.GGS.server.Server;
 import com.gamezgalaxy.GGS.world.Block;
+import com.gamezgalaxy.GGS.world.PhysicsBlock;
 
-public class Sand extends Block {
+public class Sand extends PhysicsBlock {
 
 	/**
 	 * 
@@ -23,6 +25,22 @@ public class Sand extends Block {
 	
 	public Sand() {
 		super((byte)12, "Sand");
+	}
+	
+	public Sand(byte b, String string, Server s) {
+		super(b, string, s);
+	}
+
+	@Override
+	public PhysicsBlock clone(Server s) {
+		Sand ss = new Sand((byte)12, "Sand", s);
+		return ss;
+	}
+
+	@Override
+	public void Tick() {
+		if (getLevel().getTile(getX(), getY() - 1, getZ()) == Block.getBlock((byte)0))
+			move(getX(), getY() - 1, getZ());
 	}
 
 }
