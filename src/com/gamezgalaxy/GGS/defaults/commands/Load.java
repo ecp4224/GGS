@@ -9,10 +9,10 @@ import com.gamezgalaxy.GGS.world.LevelHandler;
  * Created with IntelliJ IDEA.
  * User: Oliver Yasuna
  * Date: 7/25/12
- * Time: 3:30 AM
+ * Time: 3:27 AM
  * To change this template use File | Settings | File Templates.
  */
-public class Loaded extends Command
+public class Load extends Command
 {
 	@Override
 	public String[] getShortcuts()
@@ -23,13 +23,13 @@ public class Loaded extends Command
 	@Override
 	public String getName()
 	{
-		return "loaded";
+		return "load";
 	}
 
 	@Override
 	public boolean isOpCommand()
 	{
-		return false;
+		return true;
 	}
 
 	@Override
@@ -42,14 +42,7 @@ public class Loaded extends Command
 	public void execute(Player player, String[] args)
 	{
 		LevelHandler handler = player.getServer().getLevelHandler();
-		StringBuilder finalStr = new StringBuilder();
 
-		for(Level l : handler.levels)
-		{
-			finalStr.append(l.name);
-			finalStr.append(", ");
-		}
-
-		player.sendMessage(finalStr.toString());
+		handler.loadLevel("levels/" + args[1] + ".ggs");
 	}
 }

@@ -2,8 +2,8 @@ package com.gamezgalaxy.GGS.defaults.commands;
 
 import com.gamezgalaxy.GGS.API.plugin.Command;
 import com.gamezgalaxy.GGS.server.Player;
-import com.gamezgalaxy.GGS.world.Level;
-import com.gamezgalaxy.GGS.world.LevelHandler;
+
+import java.io.File;
 
 /**
  * Created with IntelliJ IDEA.
@@ -12,7 +12,7 @@ import com.gamezgalaxy.GGS.world.LevelHandler;
  * Time: 3:30 AM
  * To change this template use File | Settings | File Templates.
  */
-public class Loaded extends Command
+public class Maps extends Command
 {
 	@Override
 	public String[] getShortcuts()
@@ -23,7 +23,7 @@ public class Loaded extends Command
 	@Override
 	public String getName()
 	{
-		return "loaded";
+		return "maps";
 	}
 
 	@Override
@@ -41,13 +41,17 @@ public class Loaded extends Command
 	@Override
 	public void execute(Player player, String[] args)
 	{
-		LevelHandler handler = player.getServer().getLevelHandler();
+		File levelsFolder = new File("levels");
+		File[] levelFiles = levelsFolder.listFiles();
 		StringBuilder finalStr = new StringBuilder();
 
-		for(Level l : handler.levels)
+		for(File f : levelFiles)
 		{
-			finalStr.append(l.name);
-			finalStr.append(", ");
+			if(f.getName().split("\\.")[1].equals("ggs"))
+			{
+				finalStr.append(f.getName().split("\\.")[0]);
+				finalStr.append(", ");
+			}
 		}
 
 		player.sendMessage(finalStr.toString());
