@@ -7,10 +7,12 @@
  ******************************************************************************/
 package com.gamezgalaxy.GGS.world.blocks;
 
-import com.gamezgalaxy.GGS.world.Block;
+import com.gamezgalaxy.GGS.server.Server;
+import com.gamezgalaxy.GGS.world.PhysicsBlock;
 
-public class Gravel extends Block {
+public class Gravel extends PhysicsBlock {
 
+	int wait = 0;
 	/**
 	 * 
 	 */
@@ -20,9 +22,30 @@ public class Gravel extends Block {
 		super(ID, name);
 		// TODO Auto-generated constructor stub
 	}
-	
+
 	public Gravel() {
 		super((byte)13, "Gravel");
+	}
+
+	public Gravel(byte b, String string, Server s) {
+		super(b, string, s);
+	}
+
+	@Override
+	public PhysicsBlock clone(Server s) {
+		Gravel ss = new Gravel((byte)12, "Gravel", s);
+		ss.wait = wait;
+		return ss;
+	}
+
+	@Override
+	public void Tick() {
+		if (wait <= 3) {
+			wait++;
+			return;
+		}
+		if (getLevel().getTile(getX(), getY() - 1, getZ()).getVisableBlock() == 0)
+			move(getX(), getY() - 1, getZ());
 	}
 
 }
