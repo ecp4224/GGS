@@ -1,4 +1,4 @@
-GGSs
+GGS
 ===
 
 ![GG Logo](http://www.gamezgalaxy.com/assets/icon.png)
