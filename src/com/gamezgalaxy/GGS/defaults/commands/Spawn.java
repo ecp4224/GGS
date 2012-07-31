@@ -1,15 +1,15 @@
+/*******************************************************************************
+ * Copyright (c) 2012 GamezGalaxy.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the GNU Public License v3.0
+ * which accompanies this distribution, and is available at
+ * http://www.gnu.org/licenses/gpl.html
+ ******************************************************************************/
 package com.gamezgalaxy.GGS.defaults.commands;
 
 import com.gamezgalaxy.GGS.API.plugin.Command;
 import com.gamezgalaxy.GGS.iomodel.Player;
 
-/**
- * Created with IntelliJ IDEA.
- * User: Oliver Yasuna
- * Date: 7/25/12
- * Time: 3:08 AM
- * To change this template use File | Settings | File Templates.
- */
 public class Spawn extends Command
 {
 	@Override
