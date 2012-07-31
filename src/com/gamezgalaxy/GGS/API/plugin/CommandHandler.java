@@ -7,9 +7,17 @@
  ******************************************************************************/
 package com.gamezgalaxy.GGS.API.plugin;
 
+import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 
-import com.gamezgalaxy.GGS.server.Player;
+import com.gamezgalaxy.GGS.iomodel.Player;
 import com.gamezgalaxy.GGS.server.Server;
 
 public class CommandHandler {
@@ -79,12 +87,68 @@ public class CommandHandler {
 		removeCommand(c);
 	}
 	
-	public void loadPermissions() {
-		//TODO Load all command permissions
+	public void loadPermissions() throws IOException {
+		if (!new File("properties").exists())
+			new File("properties").mkdir();
+		if (!new File("properties/commands.config").exists())
+			makeDefault();
+		FileInputStream fstream = new FileInputStream("properties/commands.config");
+		DataInputStream in = new DataInputStream(fstream);
+		BufferedReader br = new BufferedReader(new InputStreamReader(in));
+		String strLine;
+		while ((strLine = br.readLine()) != null)   {
+			if (strLine.startsWith("#"))
+				continue;
+			String cmdname = strLine.split("\\:")[0];
+			for (Command c : commands) {
+				if (c.getName().equalsIgnoreCase(cmdname)) {
+					c.setPermissionLevel(Integer.parseInt(strLine.split("\\:")[1]));
+					break;
+				}
+			}
+		}
+		in.close();
 	}
 	
-	public void savePermissions() {
-		//TODO Save all command permissions
+	public void makeDefault() {
+		PrintWriter out = null;
+		try {
+			new File("properties/commands.config").createNewFile();
+			out = new PrintWriter("properties/commands.config");
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			return;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return;
+		}
+		out.println("#Permission file for commands");
+		out.println("#Name:Permission Level");
+		for (Command c : commands) {
+			out.println(c.getName() + ":" + c.getDefaultPermissionLevel());
+		}
+		out.flush();
+		out.close();
+	}
+	
+	public void savePermissions() throws IOException {
+		if (new File("properties/commands.config").exists())
+			new File("properties/commands.config").delete();
+		new File("properties/commands.config").createNewFile();
+		PrintWriter out = null;
+		try {
+			out = new PrintWriter("properties/commands.config");
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			return;
+		}
+		out.println("#Permission file for commands");
+		out.println("#Name:Permission Level");
+		for (Command c : commands) {
+			out.println(c.getName() + ":" + c.getPermissionLevel());
+		}
+		out.flush();
+		out.close();
 	}
 
 }

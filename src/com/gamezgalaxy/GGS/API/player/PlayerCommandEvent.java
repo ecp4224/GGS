@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 
 import com.gamezgalaxy.GGS.API.Cancelable;
 import com.gamezgalaxy.GGS.API.EventList;
-import com.gamezgalaxy.GGS.server.Player;
+import com.gamezgalaxy.GGS.iomodel.Player;
 
 public class PlayerCommandEvent extends PlayerEvent implements Cancelable {
 

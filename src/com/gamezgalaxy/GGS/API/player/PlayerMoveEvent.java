@@ -9,7 +9,7 @@ package com.gamezgalaxy.GGS.API.player;
 
 import com.gamezgalaxy.GGS.API.Cancelable;
 import com.gamezgalaxy.GGS.API.EventList;
-import com.gamezgalaxy.GGS.server.Player;
+import com.gamezgalaxy.GGS.iomodel.Player;
 
 public class PlayerMoveEvent extends PlayerEvent implements Cancelable {
 	private static EventList events = new EventList();

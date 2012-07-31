@@ -9,7 +9,7 @@ package com.gamezgalaxy.GGS.API.player;
 
 import com.gamezgalaxy.GGS.API.Cancelable;
 import com.gamezgalaxy.GGS.API.EventList;
-import com.gamezgalaxy.GGS.server.Player;
+import com.gamezgalaxy.GGS.iomodel.Player;
 import com.gamezgalaxy.GGS.server.Server;
 import com.gamezgalaxy.GGS.world.Block;
 import com.gamezgalaxy.GGS.world.Level;

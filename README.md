@@ -1,4 +1,4 @@
-GGSs
+GGS
 ===
 
 ![GG Logo](http://www.gamezgalaxy.com/assets/icon.png)
@@ -6,9 +6,11 @@ GGSs
 GamezGalaxy Classic Server Software
 [gamezgalaxy.com][1]
 
-##Important information for Modders / Forkers / Users
-GamezGalaxy will not provide support for your server. We will, however, provide support
-for software bugs and issues.
+#Offical GamezGalaxy Plugins
+- [Lavasurvival][3]
+- [Zombiesurvival][4]
+- [CTF][5]
+- [All-In-One][6]
 
 ##Issues and Pull requests
 - Found a bug? [Report it](https://github.com/gamezgalaxy/GGS/issues)
@@ -37,3 +39,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 [1]: http://www.gamezgalaxy.com
 [2]: http://www.gnu.org/licenses/gpl-3.0.html
+[3]: https://github.com/GamezGalaxy/Lavasurvival-Plugin
+[4]: https://github.com/GamezGalaxy/Zombiesurvival-Plugin
+[5]: https://github.com/GamezGalaxy/CTF
+[6]: https://github.com/GamezGalaxy/All-In-One

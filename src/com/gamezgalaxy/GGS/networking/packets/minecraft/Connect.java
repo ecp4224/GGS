@@ -9,11 +9,13 @@ package com.gamezgalaxy.GGS.networking.packets.minecraft;
 
 import java.io.*;
 
+import com.gamezgalaxy.GGS.API.player.PlayerConnectEvent;
+import com.gamezgalaxy.GGS.API.player.PlayerLoginEvent;
+import com.gamezgalaxy.GGS.iomodel.Player;
 import com.gamezgalaxy.GGS.networking.IOClient;
 import com.gamezgalaxy.GGS.networking.Packet;
 import com.gamezgalaxy.GGS.networking.PacketManager;
 import com.gamezgalaxy.GGS.networking.PacketType;
-import com.gamezgalaxy.GGS.server.Player;
 import com.gamezgalaxy.GGS.server.Server;
 import com.gamezgalaxy.GGS.system.BanHandler;
 
@@ -51,8 +53,9 @@ public class Connect extends Packet {
 				name[i - 65] = message[i];
 			player.mppass = new String(name, "US-ASCII").trim();
 			name = null;
-			player.ClientType = message[129];
-			if (player.VerifyLogin()) {
+			PlayerConnectEvent connect = new PlayerConnectEvent(player);
+			server.getEventSystem().callEvent(connect);
+			if (player.VerifyLogin() && !connect.isCancelled()) {
 				if (BanHandler.isBanned(player.username))
 				{
 					player.Kick("You are banned!");
@@ -60,11 +63,16 @@ public class Connect extends Packet {
 					server.players.add(player);
 
 					player.Login();
+					PlayerLoginEvent login = new PlayerLoginEvent(player);
+					server.getEventSystem().callEvent(login);
 					player.ClientType = version;
 				}
 			}
 			else {
-				player.Kick("Invalid Login!");
+				if (connect.getKickMessage().equals(""))
+					player.Kick("Invalid Login!");
+				else
+					player.Kick(connect.getKickMessage());
 				return;
 			}
 		} catch (UnsupportedEncodingException e) {

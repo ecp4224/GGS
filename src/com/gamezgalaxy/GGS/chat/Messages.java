@@ -7,7 +7,7 @@
  ******************************************************************************/
 package com.gamezgalaxy.GGS.chat;
 
-import com.gamezgalaxy.GGS.server.Player;
+import com.gamezgalaxy.GGS.iomodel.Player;
 import com.gamezgalaxy.GGS.server.Server;
 
 public class Messages {

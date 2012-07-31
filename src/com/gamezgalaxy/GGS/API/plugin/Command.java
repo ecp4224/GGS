@@ -7,7 +7,7 @@
  ******************************************************************************/
 package com.gamezgalaxy.GGS.API.plugin;
 
-import com.gamezgalaxy.GGS.server.Player;
+import com.gamezgalaxy.GGS.iomodel.Player;
 
 public abstract class Command {
 	

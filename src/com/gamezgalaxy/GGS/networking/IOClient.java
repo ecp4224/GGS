@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.net.Socket;
 
-import com.gamezgalaxy.GGS.server.Player;
+import com.gamezgalaxy.GGS.iomodel.Player;
 
 public class IOClient {
 	protected Socket client;

@@ -1,7 +1,7 @@
 package com.gamezgalaxy.GGS.defaults.commands;
 
 import com.gamezgalaxy.GGS.API.plugin.Command;
-import com.gamezgalaxy.GGS.server.Player;
+import com.gamezgalaxy.GGS.iomodel.Player;
 
 /**
  * Created with IntelliJ IDEA.
