@@ -24,16 +24,6 @@ public class Lava extends PhysicsBlock {
 	
 	private int type;
 	
-	/**
-	 * 1 = Meaning the block didnt update
-	 * 2 = The block did update
-	 * 3 = Ignore this block
-	 * 0 = Source block
-	 */
-	private int update;
-	
-	private static int wait;
-	
 	private final Random random = new Random();
 
 	public Lava(byte ID, String name) {
@@ -54,7 +44,6 @@ public class Lava extends PhysicsBlock {
 		l.type = type;
 		if (l.type == 0)
 			l.type = random.nextInt(6) + 1;
-		l.type = 4; //TODO REMOVE
 		return l;
 	}
 
@@ -62,7 +51,7 @@ public class Lava extends PhysicsBlock {
 	public void Tick() {
 		if (!nearSponge(getLevel().PosToInt(getX(), getY(), getZ()))) {
 			if (time < random.nextInt(6)) {
-				if (type == 2 && check(getLevel().PosToInt(getX(), getY() - 1, getZ())) == 1)
+				if (type == 2 && check(getLevel().PosToInt(getX(), getY() - 1, getZ())))
 					add(getX(), getY() - 1, getZ());
 				time++;
 				return;
@@ -74,7 +63,7 @@ public class Lava extends PhysicsBlock {
 			int i = 0;
 			while (i != x1 && (getLevel().getTile(getX() + i + 1, getY(), getZ()).getVisableBlock() == 0 || getLevel().getTile(getX() + i + 1, getY(), getZ()).getVisableBlock() == this.getVisableBlock())) {
 				i++;
-				if (check(getLevel().PosToInt(getX() + i, getY(), getZ())) == 0 || check(getLevel().PosToInt(getX() + i, getY(), getZ())) == 2)
+				if (!check(getLevel().PosToInt(getX() + i, getY(), getZ())))
 					break;
 				else
 					add(getX() + i, getY(), getZ());
@@ -82,7 +71,7 @@ public class Lava extends PhysicsBlock {
 			i = 0;
 			while (i != x2 && (getLevel().getTile(getX() - i - 1, getY(), getZ()).getVisableBlock() == 0 || getLevel().getTile(getX() - i - 1, getY(), getZ()).getVisableBlock() == this.getVisableBlock())) {
 				i++;
-				if (check(getLevel().PosToInt(getX() - i, getY(), getZ())) == 0 || check(getLevel().PosToInt(getX() - i, getY(), getZ())) == 2)
+				if (!check(getLevel().PosToInt(getX() - i, getY(), getZ())))
 					break;
 				else
 					add(getX() - i, getY(), getZ());
@@ -90,7 +79,7 @@ public class Lava extends PhysicsBlock {
 			i = 0;
 			while (i != z1 && (getLevel().getTile(getX(), getY(), getZ() + i + 1).getVisableBlock() == 0 || getLevel().getTile(getX(), getY(), getZ() + i + 1).getVisableBlock() == this.getVisableBlock())) {
 				i++;
-				if (check(getLevel().PosToInt(getX(), getY(), getZ() + i)) == 0 || check(getLevel().PosToInt(getX(), getY(), getZ() + i)) == 2)
+				if (!check(getLevel().PosToInt(getX(), getY(), getZ() + i)))
 					break;
 				else
 					add(getX(), getY(), getZ() + i);
@@ -98,46 +87,39 @@ public class Lava extends PhysicsBlock {
 			i = 0;
 			while (i != z2 && (getLevel().getTile(getX(), getY(), getZ() - i - 1).getVisableBlock() == 0 || getLevel().getTile(getX(), getY(), getZ() - i - 1).getVisableBlock() == this.getVisableBlock())) {
 				i++;
-				if (check(getLevel().PosToInt(getX(), getY(), getZ() - i)) == 0 || check(getLevel().PosToInt(getX(), getY(), getZ() - i)) == 2)
+				if (!check(getLevel().PosToInt(getX(), getY(), getZ() - i)))
 					break;
 				else
 					add(getX(), getY(), getZ() - i);
 			}
-			if (check(getLevel().PosToInt(getX(), getY() - 1, getZ())) == 1)
+			if (check(getLevel().PosToInt(getX(), getY() - 1, getZ())))
 				add(getX(), getY() - 1, getZ());
 			//TODO Add other kinds of physics
 		}
 	}
-	public int check(int x, int y, int z) {
+	public boolean check(int x, int y, int z) {
 		return check(getLevel().PosToInt(x, y, z));
 	}
-	public int check(int b) {
-		System.out.println(wait);
-		int temp = wait + 1;
-		wait = 0;
-		if (b < 0 || b >= getLevel().getLength()) {
-			wait = temp;
-			return 2;
-		}
+	public boolean check(int b) {
+		if (b < 0 || b >= getLevel().getLength())
+			return false;
 		Block bb = getLevel().getTile(b);
 		byte btype = bb.getVisableBlock();
 		if (bb.getVisableBlock() == 0 && !nearSponge(b))
-			return 1;
+			return true;
 		if ((bb.getVisableBlock() == 41 || bb.getVisableBlock() == 15) && type >= 5)
-			return 1;
+			return true;
 		if ((btype == 16 || btype == 47) && type >= 4)
-			return 1;
+			return true;
 		if (btype >= 21 && btype <= 36 && type >= 3)
-			return 1;
+			return true;
 		if ((btype == 5 || btype == 17 || btype == 18 || btype == 39 || btype == 40) && type > 1)
-			return 1;
+			return true;
 		if ((btype == 1 || btype == 4 || btype == 9 || btype == 20 || btype == 42 || btype == 49) && type == 6)
-			return 1;
-		if (btype == this.getVisableBlock()) {
-			wait = temp;
-			return 2;
-		}
-		return 0;
+			return true;
+		if (btype == this.getVisableBlock())
+			return false;
+		return false;
 	}
 	public boolean nearSponge(int b) {
 		for (int x = -2; x <= +2; ++x) {

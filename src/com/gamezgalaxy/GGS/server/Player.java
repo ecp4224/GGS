@@ -184,8 +184,7 @@ public class Player extends IOClient {
 	 * @return Returns true if the account is valid, otherwise it will return false
 	 */
 	public boolean VerifyLogin() {
-		return true;
-		//return mppass.equals(getRealmppass());
+		return mppass.equals(getRealmppass());
 	}
 	
 	public String getRealmppass() {
