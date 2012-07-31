@@ -11,7 +11,7 @@ import com.gamezgalaxy.GGS.API.plugin.Command;
 import com.gamezgalaxy.GGS.iomodel.Player;
 import com.gamezgalaxy.GGS.system.BanHandler;
 
-public class ban extends Command
+public class Ban extends Command
 {
 	@Override
 	public String[] getShortcuts()

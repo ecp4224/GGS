@@ -12,7 +12,7 @@ import com.gamezgalaxy.GGS.iomodel.Player;
 import com.gamezgalaxy.GGS.world.Level;
 import com.gamezgalaxy.GGS.world.LevelHandler;
 
-public class NewLVL extends Command
+public class Newlvl extends Command
 {
 	@Override
 	public String[] getShortcuts()
