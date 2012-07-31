@@ -18,7 +18,7 @@ import com.gamezgalaxy.GGS.API.plugin.PluginHandler;
 import com.gamezgalaxy.GGS.defaults.commands.*;
 import com.gamezgalaxy.GGS.groups.Group;
 import com.gamezgalaxy.GGS.iomodel.Player;
-import com.gamezgalaxy.GGS.networking.PacketManager;
+import com.gamezgalaxy.GGS.networking.packets.PacketManager;
 import com.gamezgalaxy.GGS.util.logger.LogInterface;
 import com.gamezgalaxy.GGS.util.logger.Logger;
 import com.gamezgalaxy.GGS.util.properties.Properties;

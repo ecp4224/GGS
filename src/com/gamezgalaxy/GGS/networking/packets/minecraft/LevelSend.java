@@ -14,9 +14,9 @@ import java.util.zip.GZIPOutputStream;
 
 import com.gamezgalaxy.GGS.iomodel.Player;
 import com.gamezgalaxy.GGS.networking.IOClient;
-import com.gamezgalaxy.GGS.networking.Packet;
-import com.gamezgalaxy.GGS.networking.PacketManager;
-import com.gamezgalaxy.GGS.networking.PacketType;
+import com.gamezgalaxy.GGS.networking.packets.Packet;
+import com.gamezgalaxy.GGS.networking.packets.PacketManager;
+import com.gamezgalaxy.GGS.networking.packets.PacketType;
 import com.gamezgalaxy.GGS.server.Server;
 
 public class LevelSend extends Packet {

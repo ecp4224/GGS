@@ -3,7 +3,7 @@ package com.gamezgalaxy.GGS.iomodel;
 import java.net.Socket;
 
 import com.gamezgalaxy.GGS.networking.IOClient;
-import com.gamezgalaxy.GGS.networking.PacketManager;
+import com.gamezgalaxy.GGS.networking.packets.PacketManager;
 
 public class Browser extends IOClient {
 

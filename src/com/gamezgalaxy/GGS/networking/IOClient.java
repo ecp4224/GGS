@@ -13,6 +13,8 @@ import java.io.PrintStream;
 import java.net.Socket;
 
 import com.gamezgalaxy.GGS.iomodel.Player;
+import com.gamezgalaxy.GGS.networking.packets.Packet;
+import com.gamezgalaxy.GGS.networking.packets.PacketManager;
 
 public class IOClient {
 	protected Socket client;
