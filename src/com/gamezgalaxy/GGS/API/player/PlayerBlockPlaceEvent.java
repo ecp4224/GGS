@@ -56,6 +56,7 @@ public class PlayerBlockPlaceEvent extends PlayerEvent implements Cancelable {
 	}
 	
 	public void setBlock(Block block) {
+		this.level.setTile(block, X, Y, Z, server);
 		Player.GlobalBlockChange(X, Y, Z, block, level, server);
 		this.block = block;
 	}

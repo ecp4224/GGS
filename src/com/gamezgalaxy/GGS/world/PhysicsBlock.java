@@ -86,8 +86,10 @@ public abstract class PhysicsBlock extends Block implements Tick {
 	public void add(int newx, int newy, int newz) {
 		if (_level == null)
 			return;
+		if (_level.getTile(newx, newy, newz).getVisableBlock() == this.getVisableBlock())
+			return;
 		_level.setTile(this, newx, newy, newz, _server);
-		Player.GlobalBlockChange((short)_x, (short)_y, (short)_z, this, _level, _server, false);
+		Player.GlobalBlockChange((short)newx, (short)newy, (short)newz, this, _level, _server, false);
 	}
 	
 	/**
@@ -100,7 +102,7 @@ public abstract class PhysicsBlock extends Block implements Tick {
 		if (_level == null)
 			return;
 		_level.setTile(Block.getBlock((byte)0), x, y, z, _server);
-		Player.GlobalBlockChange((short)_x, (short)_y, (short)_z, this, _level, _server, false);
+		Player.GlobalBlockChange((short)x, (short)y, (short)z, this, _level, _server, false);
 	}
 	
 	/**

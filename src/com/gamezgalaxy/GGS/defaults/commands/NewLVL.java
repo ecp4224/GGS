@@ -12,7 +12,7 @@ import com.gamezgalaxy.GGS.world.LevelHandler;
  * Time: 3:27 AM
  * To change this template use File | Settings | File Templates.
  */
-public class Newlvl extends Command
+public class NewLVL extends Command
 {
 	@Override
 	public String[] getShortcuts()
