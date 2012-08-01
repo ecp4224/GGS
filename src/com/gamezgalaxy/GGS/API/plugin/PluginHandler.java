@@ -119,6 +119,7 @@ public class PluginHandler {
 			if(plugin instanceof Game)
 			{
 				games.add((Game)plugin);
+				server.Add((Game)plugin);
 			} else {
 				plugins.add(plugin);
 			}
