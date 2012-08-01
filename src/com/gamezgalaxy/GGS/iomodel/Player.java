@@ -197,6 +197,8 @@ public class Player extends IOClient {
 	public void Login() throws InterruptedException {
 		if (isLoggedin)
 			return;
+		if (Group.getGroup(this) == null)
+			setGroup(Group.getDefault());
 		SendWelcome();
 		setLevel(pm.server.MainLevel);
 		levelsender.join(); //Wait for finish
@@ -233,7 +235,8 @@ public class Player extends IOClient {
 	 * Change the group the player is in
 	 */
 	public void setGroup(Group newgroup) {
-		Group.getGroup(this).removeMember(username);
+		if (Group.getGroup(this) != null)
+			Group.getGroup(this).removeMember(username);
 		newgroup.addMember(username);
 	}
 	

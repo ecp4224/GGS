@@ -59,12 +59,10 @@ public class CommandHandler {
 
 		if(c != null)
 		{
-			// Commented out until working.
-
-			//if (player != null && !player.getGroup().canExecute(c))
-			//	player.sendMessage("Sorry, you dont have permission to execute this command!");
-			//else
-			c.execute(player, args);
+			if (player != null && !player.getGroup().canExecute(c))
+				player.sendMessage("Sorry, you dont have permission to execute this command!");
+			else
+				c.execute(player, args);
 		}
 	}
 	

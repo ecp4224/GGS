@@ -40,6 +40,7 @@ public class Group {
 	static HashMap temp = new HashMap();
 	private ArrayList<String> members = new ArrayList<String>();
 	private ArrayList<Player> online = new ArrayList<Player>();
+	private static Group defaultgroup;
 	public int permissionlevel;
 	public boolean isOP;
 	public String name;
@@ -120,14 +121,14 @@ public class Group {
 		out.flush();
 		out.close();
 	}
-	public class Listen implements Listener {
+	private class Listen implements Listener {
 		
 		@EventHandler
 		public void connect(PlayerLoginEvent event) {
 			for (String member : members) {
 				if (event.getPlayer().username.equalsIgnoreCase(member)) {
 					online.add(event.getPlayer());
-					break;
+					return;
 				}
 			}
 		}
@@ -149,6 +150,10 @@ public class Group {
 			}
 		}
 		return null;
+	}
+	
+	public static Group getDefault() {
+		return defaultgroup;
 	}
 
 	public static void Load(Server server) {
@@ -187,6 +192,8 @@ public class Group {
 				g.parent = parent;
 		}
 		temp.clear();
+		if (defaultgroup == null)
+			defaultgroup = groups.get(0);
 	}
 	
 	private static Group read(Element e, Server server) {
@@ -195,11 +202,15 @@ public class Group {
 		int permission = getIntValue(e, "permission");
 		String[] exceptions = new String[0];
 		String parent = "null";
+		boolean defaultg = false;
 		try {
 			parent = e.getAttribute("parent");
 		} catch (Exception ee) { }
 		try {
 			exceptions = getTextValue(e, "exceptions").split("\\:");
+		} catch (Exception ee) { }
+		try {
+			defaultg = getTextValue(e, "default").equalsIgnoreCase("true");
 		} catch (Exception ee) { }
 		Group g = new Group(name, permission, isOp, server);
 		if (!parent.equals("null"))
@@ -207,6 +218,8 @@ public class Group {
 		for (String s : exceptions) {
 			g.exceptions.add(s);
 		}
+		if (defaultg)
+			defaultgroup = g;
 		return g;
 	}
 	
