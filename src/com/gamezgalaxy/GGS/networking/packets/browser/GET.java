@@ -7,6 +7,9 @@
  ******************************************************************************/
 package com.gamezgalaxy.GGS.networking.packets.browser;
 
+import java.io.UnsupportedEncodingException;
+
+import com.gamezgalaxy.GGS.iomodel.Browser;
 import com.gamezgalaxy.GGS.networking.IOClient;
 import com.gamezgalaxy.GGS.networking.packets.Packet;
 import com.gamezgalaxy.GGS.networking.packets.PacketManager;
@@ -25,6 +28,17 @@ public class GET extends Packet {
 
 	@Override
 	public void Handle(byte[] message, Server server, IOClient player) {
+		if (player instanceof Browser) {
+			String full = "";
+			try {
+				full = new String(message, "US-ASCII");
+			} catch (UnsupportedEncodingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			String url = full.split("\\ ")[1];
+			((Browser)player).GET(url, full, server);
+		}
 	}
 
 	@Override

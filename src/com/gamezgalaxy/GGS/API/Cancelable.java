@@ -9,8 +9,16 @@ package com.gamezgalaxy.GGS.API;
 
 public interface Cancelable {
 	
+	/**
+	 * Check to see if the event is canceled
+	 * @return Weather or not the event is canceled
+	 */
 	public boolean isCancelled();
 	
+	/**
+	 * Cancel the event
+	 * @param cancel If set to true, the event will cancel. If set to false, the event will not cancel
+	 */
 	public void Cancel(boolean cancel);
 
 }

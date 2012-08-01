@@ -12,7 +12,9 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import com.gamezgalaxy.GGS.iomodel.Browser;
 import com.gamezgalaxy.GGS.iomodel.Player;
+import com.gamezgalaxy.GGS.networking.packets.browser.GET;
 import com.gamezgalaxy.GGS.networking.packets.minecraft.Connect;
 import com.gamezgalaxy.GGS.networking.packets.minecraft.DespawnPlayer;
 import com.gamezgalaxy.GGS.networking.packets.minecraft.FinishLevelSend;
@@ -49,7 +51,8 @@ public class PacketManager {
 		new SpawnPlayer(this),
 		new TP(this),
 		new UpdateUser(this),
-		new Welcome(this)
+		new Welcome(this),
+		new GET(this)
 	};
 	
 	protected ServerSocket serverSocket;
@@ -146,7 +149,7 @@ public class PacketManager {
     	case 0: //Minecraft player
     		new Player(connection, this, firstsend, server);
     	case (byte)'G': //A browser or website is using GET
-    		//TODO Add support for browsers
+    		new Browser(connection, this, firstsend);
     	}
     }
 	
