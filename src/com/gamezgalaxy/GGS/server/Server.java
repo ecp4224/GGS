@@ -171,10 +171,10 @@ public class Server implements LogInterface {
 	public void addCommands() throws IOException
 	{
 		ch.addCommand(new Afk());
-		ch.addCommand(new ban());
+		ch.addCommand(new Ban());
 		ch.addCommand(new Goto());
 		ch.addCommand(new Loaded());
-		ch.addCommand(new NewLVL());
+		ch.addCommand(new Newlvl());
 		ch.addCommand(new Spawn());
 		ch.addCommand(new Stop());
 		ch.addCommand(new Unban());
