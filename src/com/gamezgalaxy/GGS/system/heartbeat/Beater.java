@@ -14,13 +14,6 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-/**
- * Created with IntelliJ IDEA.
- * User: Oliver Yasuna
- * Date: 7/22/12
- * Time: 9:22 PM
- * To change this template use File | Settings | File Templates.
- */
 public class Beater extends Thread {
 
 	public Beater(Beat beat)

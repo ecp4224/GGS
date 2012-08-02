@@ -12,13 +12,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * Created with IntelliJ IDEA.
- * User: Oliver Yasuna
- * Date: 7/23/12
- * Time: 11:15 PM
- * To change this template use File | Settings | File Templates.
- */
 public class ConsoleCommands extends Thread
 {
 	public ConsoleCommands(Server server)
