@@ -37,7 +37,7 @@ public class Load extends Command
 	@Override
 	public int getDefaultPermissionLevel()
 	{
-		return 0;
+		return 100;
 	}
 
 	@Override
