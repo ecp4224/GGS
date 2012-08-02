@@ -13,6 +13,7 @@ import java.net.Socket;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import com.gamezgalaxy.GGS.API.player.PlayerBlockPlaceEvent;
@@ -46,6 +47,7 @@ public class Player extends IOClient {
 	protected Messages chat;
 	protected ArrayList<Player> seeable = new ArrayList<Player>();
 	protected Ping tick = new Ping(this);
+	private HashMap extra = new HashMap();
 	/**
 	 * Weather or not the player is logged in
 	 */
@@ -188,6 +190,27 @@ public class Player extends IOClient {
 	public String getRealmppass() {
 		digest.update((String.valueOf(server.Salt) + username).getBytes());
 		return new BigInteger(1, digest.digest()).toString(16);
+	}
+	
+	/**
+	 * Returns extra data stored in the player
+	 * @param key The name of the data
+	 * @return The data that was stored
+	 */
+	public Object getObject(String key) {
+		return extra.get(key);
+	}
+	
+	/**
+	 * Store extra data into the player, you can get this data back by
+	 * using the getObject method
+	 * @param key The name of the data
+	 * @param object The object to save
+	 */
+	public void setValue(String key, Object object) {
+		if (extra.containsKey(key))
+			extra.remove(key);
+		extra.put(key, object);
 	}
 	
 	/**
