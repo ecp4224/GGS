@@ -113,7 +113,7 @@ public class Server implements LogInterface {
 		}
 		Log("Starting..");
 		ch = new CommandHandler(this);
-		Group.Load(this);
+		//Group.Load(this);
 		Properties.init(this);
 		Load();
 		pm.StartReading();

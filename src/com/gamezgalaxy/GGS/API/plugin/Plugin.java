@@ -9,20 +9,45 @@ package com.gamezgalaxy.GGS.API.plugin;
 
 import com.gamezgalaxy.GGS.server.Server;
 
-public abstract class Plugin {
-	
+import java.util.Properties;
+
+public abstract class Plugin
+{
 	private Server _server;
+	private Properties properties;
 	
-	public Plugin(Server server) {
+	public Plugin(Server server, Properties properties)
+	{
 		this._server = server;
+		this.properties = properties;
 	}
 	
 	public abstract void onLoad(String[] args);
 	
 	public abstract void onUnload();
-	
-	public Server getServer() {
+
+	public String getName_()
+	{
+		return properties.getProperty("name");
+	}
+
+	public String getVersion()
+	{
+		return properties.getProperty("version");
+	}
+
+	public String getAuthor()
+	{
+		return properties.getProperty("author");
+	}
+
+	public Server getServer()
+	{
 		return _server;
 	}
 
+	public Properties getProperties()
+	{
+		return properties;
+	}
 }

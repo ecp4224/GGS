@@ -10,10 +10,12 @@ package com.gamezgalaxy.GGS.API.plugin;
 import com.gamezgalaxy.GGS.server.Server;
 import com.gamezgalaxy.GGS.server.Tick;
 
+import java.util.Properties;
+
 public abstract class Game extends Plugin implements Tick {
 
-	public Game(Server server) {
-		super(server);
+	public Game(Server server, Properties properties) {
+		super(server, properties);
 	}
 	
 	public abstract void Start();

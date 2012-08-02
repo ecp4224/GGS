@@ -82,7 +82,7 @@ public class PluginHandler {
 								File pluginFile = new File("plugins/" + pluginFiles[i].getName());
 								String[] args = new String[] { "-normal" };
 
-								loadplugin(pluginFile, properties.getProperty("main-class"), args, server);
+								loadplugin(pluginFile, properties.getProperty("main-class"), args, server, properties);
 							}
 						}
 					}
@@ -101,7 +101,7 @@ public class PluginHandler {
 		}
 	}
 
-	public void loadplugin(File file, String classpath, String[] args, Server server)
+	public void loadplugin(File file, String classpath, String[] args, Server server, Properties properties)
 	{
 		// TODO: NOT TESTED! Waiting for Eddie to make the server stable with his packet stuff.
 
@@ -110,8 +110,8 @@ public class PluginHandler {
 			ClassLoader loader = URLClassLoader.newInstance(urls, getClass().getClassLoader());
 			Class<?> class_ = Class.forName(classpath, true, loader);
 			Class<? extends Plugin> runClass = class_.asSubclass(Plugin.class);
-			Constructor<? extends Plugin> constructor = runClass.getConstructor(Server.class);
-			Plugin plugin = constructor.newInstance(server);
+			Constructor<? extends Plugin> constructor = runClass.getConstructor(Server.class, Properties.class);
+			Plugin plugin = constructor.newInstance(server, properties);
 			plugin.onLoad(args);
 			if(plugin instanceof Game)
 			{
