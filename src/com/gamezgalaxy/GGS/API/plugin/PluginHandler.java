@@ -95,7 +95,6 @@ public class PluginHandler {
 	{
 		try {
 			Scanner scan = new Scanner(file);
-
 			return scan.nextLine();
 		} catch(Exception e) {
 			return "null";
@@ -112,10 +111,8 @@ public class PluginHandler {
 			Class<?> class_ = Class.forName(classpath, true, loader);
 			Class<? extends Plugin> runClass = class_.asSubclass(Plugin.class);
 			Constructor<? extends Plugin> constructor = runClass.getConstructor(Server.class);
-			Plugin plugin = constructor.newInstance();
-
+			Plugin plugin = constructor.newInstance(server);
 			plugin.onLoad(args);
-
 			if(plugin instanceof Game)
 			{
 				games.add((Game)plugin);
