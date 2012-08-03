@@ -280,7 +280,6 @@ public class Player extends IOClient {
 		}
 		setPos((short)((0.5 + level.spawnx) * 32), (short)((1 + level.spawny) * 32), (short)((0.5 + level.spawnz) * 32));
 		isLoggedin = true;
-		GlobalBlockChange((short)0, (short)35, (short)1, Block.getBlock("Lava"), this.level, this.server);
 	}
 	
 	/**
