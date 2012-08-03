@@ -35,7 +35,7 @@ public class Stop extends Command
 	@Override
 	public int getDefaultPermissionLevel()
 	{
-		return 0;
+		return 100;
 	}
 
 	@Override

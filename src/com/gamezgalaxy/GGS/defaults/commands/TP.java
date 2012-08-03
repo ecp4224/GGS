@@ -27,13 +27,13 @@ public class TP extends Command
 	@Override
 	public boolean isOpCommand()
 	{
-		return false;
+		return true;
 	}
 
 	@Override
 	public int getDefaultPermissionLevel()
 	{
-		return 0;
+		return 100;
 	}
 
 	@Override
