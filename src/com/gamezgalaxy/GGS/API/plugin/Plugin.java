@@ -21,6 +21,9 @@ public abstract class Plugin
 		this._server = server;
 		this.properties = properties;
 	}
+	public Plugin(Server server) {
+		this._server = server;
+	}
 	
 	public abstract void onLoad(String[] args);
 	

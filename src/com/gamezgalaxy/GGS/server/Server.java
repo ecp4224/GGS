@@ -22,6 +22,8 @@ import com.gamezgalaxy.GGS.networking.packets.PacketManager;
 import com.gamezgalaxy.GGS.util.logger.LogInterface;
 import com.gamezgalaxy.GGS.util.logger.Logger;
 import com.gamezgalaxy.GGS.util.properties.Properties;
+import com.gamezgalaxy.GGS.sql.ISQL;
+import com.gamezgalaxy.GGS.sql.MySQL;
 import com.gamezgalaxy.GGS.system.BanHandler;
 import com.gamezgalaxy.GGS.system.heartbeat.Beat;
 import com.gamezgalaxy.GGS.system.heartbeat.MBeat;
@@ -40,6 +42,7 @@ public class Server implements LogInterface {
 	private Thread tick;
 	private Beat heartbeater;
 	private EventSystem es;
+	private ISQL sql;
 	public ArrayList<Player> players = new ArrayList<Player>();
 	public boolean Running;
 	public int Port;
@@ -68,6 +71,9 @@ public class Server implements LogInterface {
 	public final PluginHandler getPluginHandler() {
 		return ph;
 	}
+	public final ISQL getSQL() {
+		return sql;
+	}
 	public Server(String Name, int Port, String MOTD) {
 		this.Port = Port;
 		this.Name = Name;
@@ -85,6 +91,22 @@ public class Server implements LogInterface {
 		Public = Properties.getBool("Public");
 		description = Properties.getValue("WOM-Server-description");
 		flags = Properties.getValue("WOM-Server-Flags");
+		try {
+			sql = (ISQL)Class.forName(Properties.getValue("SQL-Driver")).newInstance();
+		} catch (InstantiationException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		sql.setPrefix(Properties.getValue("SQL-table-prefix"));
+		if (sql instanceof MySQL) {
+			final MySQL mysql = (MySQL)sql;
+			mysql.setUsername(Properties.getValue("MySQL-username"));
+			mysql.setPassword(Properties.getValue("MySQL-password"));
+			mysql.setDatabase(Properties.getValue("MySQL-database-name"));
+		}
 	}
 
 	public void Start() {
@@ -113,7 +135,7 @@ public class Server implements LogInterface {
 		}
 		Log("Starting..");
 		ch = new CommandHandler(this);
-		//Group.Load(this);
+		Group.Load(this);
 		Properties.init(this);
 		Load();
 		pm.StartReading();
@@ -150,6 +172,13 @@ public class Server implements LogInterface {
 		}
 		Salt = LetterOrNumber(Salt);
 		Log("SALT: " + Salt);
+		Log("Setting up SQL");
+		sql.Connect(this);
+		final String[] commands = new String[] {
+				"CREATE TABLE if not exists " + sql.getPrefix() + "_extra (name VARCHAR(20), setting TEXT, value TEXT);",
+		};
+		sql.ExecuteQuery(commands);
+		Log("Done!");
 		Log("Create heartbeat..");
 		heartbeater = new Beat(this);
 		heartbeater.addHeart(new MBeat());

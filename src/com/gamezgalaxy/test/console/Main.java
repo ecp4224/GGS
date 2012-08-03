@@ -17,7 +17,6 @@ public class Main {
 	public static void main(String[] args) {
 		Server s = new Server("Test", 25565, "Test");
 		s.Start();
-		s.getEventSystem().registerEvents(new Test());
 		while (true) {
 			String line = new Scanner(System.in).nextLine();
 			if (line.equals("stop")) {

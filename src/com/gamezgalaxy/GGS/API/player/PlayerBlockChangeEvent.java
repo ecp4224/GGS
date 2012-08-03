@@ -46,6 +46,26 @@ public class PlayerBlockChangeEvent extends PlayerEvent implements Cancelable {
 		this._type = place;
 	}
 	
+	public short getX() {
+		return X;
+	}
+	
+	public short getY() {
+		return Y;
+	}
+	
+	public short getZ() {
+		return Z;
+	}
+	
+	public Level getLevel() {
+		return level;
+	}
+	
+	public Server getServer() {
+		return server;
+	}
+	
 	@Override
 	public EventList getEvents() {
 		return events;

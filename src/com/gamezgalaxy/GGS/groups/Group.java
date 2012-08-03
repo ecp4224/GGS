@@ -102,6 +102,8 @@ public class Group {
 		
 	}
 	public void saveMembers() {
+		if (!new File("ranks").exists())
+			new File("ranks").mkdir();
 		if (new File("ranks/" + name).exists())
 			new File("ranks/" + name).delete();
 		PrintWriter out = null;

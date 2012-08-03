@@ -148,8 +148,10 @@ public class PacketManager {
     	switch (firstsend) {
     	case 0: //Minecraft player
     		new Player(connection, this, firstsend, server);
+    		break;
     	case (byte)'G': //A browser or website is using GET
     		new Browser(connection, this, firstsend);
+    	    break;
     	}
     }
 	

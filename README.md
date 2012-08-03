@@ -6,11 +6,16 @@ GGS
 GamezGalaxy Classic Server Software
 [gamezgalaxy.com][1]
 
-#Offical GamezGalaxy Plugins
+##Offical GamezGalaxy Plugins
 - [Lavasurvival][3]
 - [Zombiesurvival][4]
 - [CTF][5]
 - [All-In-One][6]
+
+##Required Dependencies
+- [Minecraft Classic Server][9]
+- [MySQL Driver][7]
+- [SQLite Driver][8]
 
 ##Issues and Pull requests
 - Found a bug? [Report it](https://github.com/gamezgalaxy/GGS/issues)
@@ -43,3 +48,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 [4]: https://github.com/GamezGalaxy/Zombiesurvival-Plugin
 [5]: https://github.com/GamezGalaxy/CTF
 [6]: https://github.com/GamezGalaxy/All-In-One
+[7]: http://www.mysql.com/downloads/connector/j/
+[8]: http://mirror.nexua.org/Dependencies/sqlite-jdbc.jar
+[9]: http://www.minecraft.net/classic/list

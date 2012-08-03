@@ -50,6 +50,7 @@ public class Properties {
 		addSetting("WOM-Server-description", "A server");
 		addSetting("WOM-Server-Flags", "[GGS]");
 		addSetting("MainLevel", "levels/Main.ggs");
+		addSetting("SQL-Driver", "com.gamezgalaxy.GGS.sql.SQLite");
 		try {
 			save(filename);
 		} catch (FileNotFoundException e) {

@@ -12,6 +12,8 @@ import java.math.BigInteger;
 import java.net.Socket;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.regex.Matcher;
@@ -196,9 +198,32 @@ public class Player extends IOClient {
 	/**
 	 * Returns extra data stored in the player
 	 * @param key The name of the data
-	 * @return The data that was stored
+	 * @return The data that was stored. The data will most likely be a string, you need to convert the String to the proper object
 	 */
-	public Object getObject(String key) {
+	public Object getValue(String key) {
+		if (!extra.containsKey(key)) {
+			Object value = null;
+			ResultSet r = server.getSQL().fillData("SElECT count(*) FROM " + server.getSQL().getPrefix() + "_extra WHERE name='" + username + "' AND setting='" + key + "'");
+			int size = 0;
+			try {
+				size = r.getInt(1);
+			} catch (SQLException e) {
+				e.printStackTrace();
+				return null;
+			}
+			if (size == 0)
+				return null;
+			else {
+				r = server.getSQL().fillData("SElECT * FROM " + server.getSQL().getPrefix() + "_extra WHERE name='" + username + "' AND setting='" + key + "'");
+				try {
+					value = r.getObject("value");
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+				extra.put(key, value);
+				return value;
+			}
+		}
 		return extra.get(key);
 	}
 	
@@ -212,6 +237,17 @@ public class Player extends IOClient {
 		if (extra.containsKey(key))
 			extra.remove(key);
 		extra.put(key, object);
+	}
+	
+	public void saveValue(String key) throws SQLException {
+		if (!extra.containsKey(key))
+			return;
+		ResultSet r = server.getSQL().fillData("SElECT count(*) FROM " + server.getSQL().getPrefix() + "_extra WHERE name='" + username + "' AND setting='" + key + "'");
+		int size = r.getInt(1);
+		if (size == 0)
+			server.getSQL().ExecuteQuery("INSERT INTO " + server.getSQL().getPrefix() + "_extra (name, setting, value) VALUES ('" + username + "', '" + key + "', '" + extra.get(key).toString() + "')");
+		else
+			server.getSQL().ExecuteQuery("UPDATE " + server.getSQL().getPrefix() + "_extra SET value='" + extra.get(key).toString() + "'");
 	}
 	
 	/**

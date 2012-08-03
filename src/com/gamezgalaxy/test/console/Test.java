@@ -7,9 +7,12 @@
  ******************************************************************************/
 package com.gamezgalaxy.test.console;
 
+import java.sql.SQLException;
+
 import com.gamezgalaxy.GGS.API.EventHandler;
 import com.gamezgalaxy.GGS.API.Listener;
 import com.gamezgalaxy.GGS.API.browser.BrowserGETRequestEvent;
+import com.gamezgalaxy.GGS.API.player.PlayerLoginEvent;
 import com.gamezgalaxy.GGS.API.player.PlayerMoveEvent;
 import com.gamezgalaxy.GGS.world.Block;
 
@@ -21,7 +24,16 @@ public class Test implements Listener {
 	}*/
 	
 	@EventHandler
-	public void TestEvent2(PlayerMoveEvent event) {
+	public void TestEvent2(PlayerLoginEvent event) {
+		double l = Double.parseDouble((String)(event.getPlayer().getValue("THIS IS A TEST!")));
+		System.out.println(l);
+		l++;
+		event.getPlayer().setValue("THIS IS A TEST!", l);
+		try {
+			event.getPlayer().saveValue("THIS IS A TEST!");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	@EventHandler
