@@ -13,12 +13,15 @@ import com.gamezgalaxy.GGS.iomodel.Player;
 import com.gamezgalaxy.GGS.server.Server;
 import com.gamezgalaxy.GGS.world.Block;
 import com.gamezgalaxy.GGS.world.Level;
+import com.gamezgalaxy.GGS.world.PlaceMode;
 
-public class PlayerBlockPlaceEvent extends PlayerEvent implements Cancelable {
+public class PlayerBlockChangeEvent extends PlayerEvent implements Cancelable {
 
 	private static EventList events = new EventList();
 	
-	private boolean _canceled; 
+	private boolean _canceled;
+	
+	private PlaceMode _type;
 	
 	private Block block;
 	
@@ -31,7 +34,7 @@ public class PlayerBlockPlaceEvent extends PlayerEvent implements Cancelable {
 	private Server server;
 	
 	
-	public PlayerBlockPlaceEvent(Player who, short X, short Y, short Z, Block id, Level level, Server server) {
+	public PlayerBlockChangeEvent(Player who, short X, short Y, short Z, Block id, Level level, Server server, PlaceMode place) {
 		super(who);
 		this.who = who;
 		this.block = id;
@@ -40,6 +43,7 @@ public class PlayerBlockPlaceEvent extends PlayerEvent implements Cancelable {
 		this.Z = Z;
 		this.level = level;
 		this.server = server;
+		this._type = place;
 	}
 	
 	@Override
@@ -55,17 +59,16 @@ public class PlayerBlockPlaceEvent extends PlayerEvent implements Cancelable {
 		return block;
 	}
 	
+	public PlaceMode getPlaceType() {
+		return _type;
+	}
+	
 	public void setBlock(Block block) {
 		this.level.setTile(block, X, Y, Z, server);
 		Player.GlobalBlockChange(X, Y, Z, block, level, server);
 		this.block = block;
 	}
-	/*
-	public void setBlock(short X, short Y, short Z, Block id, Level l, Server s) {
-		Player.GlobalBlockChange(X, Y, Z, id, l, s);
-		this.block = id;
-	}
-	*/
+	
 	@Override
 	public boolean isCancelled() {
 		return _canceled;

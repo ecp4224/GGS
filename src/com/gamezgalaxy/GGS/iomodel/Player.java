@@ -16,7 +16,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import com.gamezgalaxy.GGS.API.player.PlayerBlockPlaceEvent;
+
+import com.gamezgalaxy.GGS.API.player.PlayerBlockChangeEvent;
 import com.gamezgalaxy.GGS.API.player.PlayerChatEvent;
 import com.gamezgalaxy.GGS.API.player.PlayerCommandEvent;
 import com.gamezgalaxy.GGS.API.player.PlayerDisconnectEvent;
@@ -272,18 +273,21 @@ public class Player extends IOClient {
 	 * @param holding What the client was holding
 	 */
 	public void HandleBlockChange(short X, short Y, short Z, PlaceMode type, byte holding) {
+		Block getOrginal = level.getTile(X, Y, Z);
 		//TODO Call event
 		//TODO Check other stuff
 		if (holding > 49) {
 			Kick("Hack Client detected!");
 			return;
 		}
+		PlayerBlockChangeEvent event = new PlayerBlockChangeEvent(this, X, Y, Z, Block.getBlock(holding), level, pm.server, type);
+		pm.server.getEventSystem().callEvent(event);
+		if (event.isCancelled()) {
+			SendBlockChange(X, Y, Z, getOrginal);
+			return;
+		}
 		if (type == PlaceMode.PLACE)
 		{
-			PlayerBlockPlaceEvent event = new PlayerBlockPlaceEvent(this, X, Y, Z, Block.getBlock(holding), level, pm.server);
-			pm.server.getEventSystem().callEvent(event);
-			if (event.isCancelled())
-				return;
 			GlobalBlockChange(X, Y, Z, Block.getBlock(holding), level, pm.server);
 		}
 		else if (type == PlaceMode.BREAK)
@@ -321,6 +325,7 @@ public class Player extends IOClient {
 	public static void GlobalBlockChange(short X, short Y, short Z, Block block, Level l, Server s, boolean updateLevel) {
 		if (updateLevel)
 			l.setTile(block, X, Y, Z, s);
+		//Do this way to save on packet overhead
 		SetBlock sb = (SetBlock)(s.getPacketManager().getPacket((byte) 0x05));
 		sb.X = X;
 		sb.Y = Y;
@@ -329,6 +334,22 @@ public class Player extends IOClient {
 		for (Player p : s.players)
 			if (p.level == l)
 				sb.Write(p, s);
+	}
+	
+	/**
+	 * Send a block to this player
+	 * @param X The X coord of the block
+	 * @param Y The Y coord of the block
+	 * @param Z The Z coord of the block
+ 	 * @param block The block to send
+	 */
+	public void SendBlockChange(short X, short Y, short Z, Block block) {
+		SetBlock sb = (SetBlock)(server.getPacketManager().getPacket((byte) 0x05));
+		sb.X = X;
+		sb.Y = Y;
+		sb.Z = Z;
+		sb.block = block.getVisableBlock();
+		sb.Write(this, server);
 	}
 	
 	/**
