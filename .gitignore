@@ -35,6 +35,9 @@ local.properties
 logs/*
 levels/*
 properties/*
+ranks/*
+*.db
+.db
 plugins/*
 *.project
 .project

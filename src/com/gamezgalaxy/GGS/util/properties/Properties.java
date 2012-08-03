@@ -51,6 +51,10 @@ public class Properties {
 		addSetting("WOM-Server-Flags", "[GGS]");
 		addSetting("MainLevel", "levels/Main.ggs");
 		addSetting("SQL-Driver", "com.gamezgalaxy.GGS.sql.SQLite");
+		addSetting("SQL-table-prefix", "ggs");
+		addSetting("MySQL-username", "root");
+		addSetting("MySQL-password", "password");
+		addSetting("MySQL-database-name", "ggsdb");
 		try {
 			save(filename);
 		} catch (FileNotFoundException e) {
