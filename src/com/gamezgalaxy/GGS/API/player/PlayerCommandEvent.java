@@ -72,8 +72,15 @@ public class PlayerCommandEvent extends PlayerEvent implements Cancelable {
 		return orginalmessage;
 	}
 	
+	public String getCommand() {
+		return this.command.get(0);
+	}
+	
 	public List<String> getArgs(){
-		return this.command;
+		ArrayList<String> args = new ArrayList<String>();
+		for (int i = 1; i < command.size(); i++)
+			args.add(command.get(i));
+		return args;
 	}
 	
 	public void setCommand(List<String> command) {
