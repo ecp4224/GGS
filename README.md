@@ -11,6 +11,7 @@ GamezGalaxy Classic Server Software
 - [Zombiesurvival][4]
 - [CTF][5]
 - [All-In-One][6]
+- [GIRC][10]
 
 ##Required Dependencies
 - [Minecraft Classic Server][9]
@@ -51,3 +52,4 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 [7]: http://www.mysql.com/downloads/connector/j/
 [8]: http://mirror.nexua.org/Dependencies/sqlite-jdbc.jar
 [9]: http://www.minecraft.net/classic/list
+[10]: https://github.com/GamezGalaxy/GIRC
