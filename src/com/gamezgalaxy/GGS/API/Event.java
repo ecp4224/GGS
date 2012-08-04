@@ -15,6 +15,6 @@ public abstract class Event {
 	public abstract EventList getEvents();
 	
 	public String getEventName() {
-		return (name == "" || name == null) ? getClass().getSimpleName() : name;
+		return ( name == null || name.equals("")) ? getClass().getSimpleName() : name;
 	}
 }

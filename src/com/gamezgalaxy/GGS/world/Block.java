@@ -80,18 +80,34 @@ public abstract class Block implements Serializable {
 	
 	public String name;
 	
+	/**
+	 * This method is called when the block is placed
+	 * @param l The level the block was placed in
+	 */
 	public void onPlace(Level l) {
 		
 	}
 	
+	/**
+	 * Get the block ID the client will see
+	 * @return The ID
+	 */
 	public byte getVisableBlock() {
 		return ID;
 	}
 	
+	/**
+	 * This method is called when the block is delete
+	 * @param l The level the block was deleted in
+	 */
 	public void onDelete(Level l) {
 		
 	}
 	
+	/**
+	 * Add a custom block to the block list
+	 * @param b An empty version of the custom block.
+	 */
 	public static void addBlock(Block b) {
 		if (custom.contains(b))
 			return;
@@ -104,11 +120,21 @@ public abstract class Block implements Serializable {
 		custom.remove(b);
 	}
 	
+	/**
+	 * Initialize a new block
+	 * @param ID The ID of the block
+	 * @param name The name of the block
+	 */
 	public Block(byte ID, String name) {
 		this.ID = ID;
 		this.name = name;
 	}
 	
+	/**
+	 * Get a block by ID
+	 * @param ID The ID of the block to look for
+	 * @return An empty version of the block with the basic information in it
+	 */
 	public static Block getBlock(byte ID) {
 		for (Block b : blocks) {
 			if (b.ID == ID)
@@ -121,6 +147,11 @@ public abstract class Block implements Serializable {
 		return new Unknown();
 	}
 	
+	/**
+	 * Get a block by name
+	 * @param name The name of the block to look for
+	 * @return An empty version of the block with the basic information in it
+	 */
 	public static Block getBlock(String name) {
 		for (Block b : blocks) {
 			if (b.name.equalsIgnoreCase(name))

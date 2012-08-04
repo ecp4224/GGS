@@ -110,8 +110,9 @@ public class PluginHandler {
 			ClassLoader loader = URLClassLoader.newInstance(urls, getClass().getClassLoader());
 			Class<?> class_ = Class.forName(classpath, true, loader);
 			Class<? extends Plugin> runClass = class_.asSubclass(Plugin.class);
-			Constructor<? extends Plugin> constructor = runClass.getConstructor(Server.class, Properties.class);
-			Plugin plugin = constructor.newInstance(server, properties);
+			Constructor<? extends Plugin> constructor = runClass.getConstructor(Server.class);
+			Plugin plugin = constructor.newInstance(server);
+			plugin.setProperties(properties);
 			plugin.onLoad(args);
 			if(plugin instanceof Game)
 			{

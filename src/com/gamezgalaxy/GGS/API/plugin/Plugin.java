@@ -33,6 +33,10 @@ public abstract class Plugin
 	{
 		return properties.getProperty("name");
 	}
+	
+	public void setProperties(Properties prop) {
+		this.properties = prop;
+	}
 
 	public String getVersion()
 	{
