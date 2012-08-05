@@ -321,14 +321,11 @@ public class Player extends IOClient {
 			SendBlockChange(X, Y, Z, getOrginal);
 			return;
 		}
+		Block place = event.getBlock();
 		if (type == PlaceMode.PLACE)
-		{
-			GlobalBlockChange(X, Y, Z, Block.getBlock(holding), level, pm.server);
-		}
+			GlobalBlockChange(X, Y, Z, place, level, pm.server);
 		else if (type == PlaceMode.BREAK)
-		{
 			GlobalBlockChange(X, Y, Z, Block.getBlock((byte)0), level, pm.server);
-		}
 	}
 	
 	/**
