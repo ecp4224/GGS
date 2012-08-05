@@ -65,7 +65,7 @@ public class Connect extends Packet {
 					player.Login();
 					PlayerLoginEvent login = new PlayerLoginEvent(player);
 					server.getEventSystem().callEvent(login);
-					player.ClientType = message[130];
+					player.ClientType = message[129];
 				}
 			}
 			else {
