@@ -184,6 +184,7 @@ public class Level implements Serializable {
 				throw new IOException("The level version does not match the current");
 			l.ticks = new ArrayList<Tick>();
 			l.physics = l.new Ticker();
+			l.name = new File(filename).getName().split("\\.")[0];
 			l.run = true;
 			l.physics.start();
 			obj.close();
