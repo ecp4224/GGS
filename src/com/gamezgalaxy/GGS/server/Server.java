@@ -78,7 +78,6 @@ public class Server implements LogInterface {
 		this.Port = Port;
 		this.Name = Name;
 		this.MOTD = MOTD;
-		pm = new PacketManager(this);
 		tick = new Ticker();
 	}
 	
@@ -138,6 +137,7 @@ public class Server implements LogInterface {
 		Group.Load(this);
 		Properties.init(this);
 		Load();
+		pm = new PacketManager(this);
 		pm.StartReading();
 		Log("Loading main level..");
 		lm = new LevelHandler(this);
@@ -294,7 +294,12 @@ public class Server implements LogInterface {
 			while (Running) {
 				for (int i = 0; i < ticks.size(); i++) {
 					Tick t = ticks.get(i);
-					t.Tick();
+					try {
+						t.Tick();
+					} catch (Exception e) {
+						Log("ERROR TICKING!");
+						e.printStackTrace();
+					}
 				}
 				try {
 					Thread.sleep(10);

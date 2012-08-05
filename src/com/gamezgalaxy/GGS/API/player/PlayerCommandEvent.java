@@ -73,7 +73,7 @@ public class PlayerCommandEvent extends PlayerEvent implements Cancelable {
 	}
 	
 	public String getCommand() {
-		return this.command.get(0);
+		return this.command.get(0).substring(1);
 	}
 	
 	public List<String> getArgs(){
