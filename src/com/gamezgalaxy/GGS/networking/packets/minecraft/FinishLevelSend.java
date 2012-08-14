@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
+import com.gamezgalaxy.GGS.API.io.PacketPrepareEvent;
 import com.gamezgalaxy.GGS.iomodel.Player;
 import com.gamezgalaxy.GGS.networking.IOClient;
 import com.gamezgalaxy.GGS.networking.packets.Packet;
@@ -32,6 +33,10 @@ public class FinishLevelSend extends Packet {
 
 	@Override
 	public void Write(IOClient p, Server server) {
+		PacketPrepareEvent event = new PacketPrepareEvent(p, this, server);
+		server.getEventSystem().callEvent(event);
+		if (event.isCancelled())
+			return;
 		Player player;
 		if (p instanceof Player) {
 			player = (Player)p;

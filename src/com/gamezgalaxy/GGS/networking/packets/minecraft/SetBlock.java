@@ -10,6 +10,7 @@ package com.gamezgalaxy.GGS.networking.packets.minecraft;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
+import com.gamezgalaxy.GGS.API.io.PacketPrepareEvent;
 import com.gamezgalaxy.GGS.iomodel.Player;
 import com.gamezgalaxy.GGS.networking.IOClient;
 import com.gamezgalaxy.GGS.networking.packets.Packet;
@@ -37,6 +38,10 @@ public class SetBlock extends Packet {
 	}
 	@Override
 	public void Write(IOClient player, Server server) {
+		PacketPrepareEvent event = new PacketPrepareEvent(player, this, server);
+		server.getEventSystem().callEvent(event);
+		if (event.isCancelled())
+			return;
 		ByteBuffer bb = ByteBuffer.allocate(8);
 		bb.put((byte)0x06);
 		bb.putShort(X);

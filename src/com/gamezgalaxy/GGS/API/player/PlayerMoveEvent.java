@@ -37,6 +37,10 @@ public class PlayerMoveEvent extends PlayerEvent implements Cancelable {
 	public EventList getEvents() {
 		return events;
 	}
+	/**
+	 * Get a list of registered listeners
+	 * @return The list of listeners
+	 */
 	public static EventList getEventList() {
 		return events;
 	}

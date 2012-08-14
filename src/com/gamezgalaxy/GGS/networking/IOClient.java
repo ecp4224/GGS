@@ -12,6 +12,8 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.net.Socket;
 
+import com.gamezgalaxy.GGS.API.io.PacketReceivedEvent;
+import com.gamezgalaxy.GGS.API.io.PacketSentEvent;
 import com.gamezgalaxy.GGS.iomodel.Player;
 import com.gamezgalaxy.GGS.networking.packets.Packet;
 import com.gamezgalaxy.GGS.networking.packets.PacketManager;
@@ -62,6 +64,11 @@ public class IOClient {
 	}
 	
 	public void WriteData(byte[] data) throws IOException {
+		Packet p = pm.getPacket(data[0]);
+		if (p != null) {
+			PacketSentEvent event = new PacketSentEvent(this, pm.server, p);
+			pm.server.getEventSystem().callEvent(event);
+		}
 		writer.write(data);
 		writer.flush();
 	}
@@ -75,6 +82,10 @@ public class IOClient {
 			while (pm.server.Running && client.client.isConnected()) {
 				try {
 					byte opCode = reader.readByte();
+					PacketReceivedEvent event = new PacketReceivedEvent(client, pm.server, reader, opCode);
+					pm.server.getEventSystem().callEvent(event);
+					if (event.isCancelled())
+						continue;
 					Packet packet = pm.getPacket(opCode);
 					if (packet == null) {
 						pm.server.Log("Client sent " + opCode);

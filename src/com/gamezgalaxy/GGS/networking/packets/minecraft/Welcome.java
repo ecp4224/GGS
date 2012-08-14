@@ -10,6 +10,7 @@ package com.gamezgalaxy.GGS.networking.packets.minecraft;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
+import com.gamezgalaxy.GGS.API.io.PacketPrepareEvent;
 import com.gamezgalaxy.GGS.networking.IOClient;
 import com.gamezgalaxy.GGS.networking.packets.Packet;
 import com.gamezgalaxy.GGS.networking.packets.PacketManager;
@@ -30,6 +31,10 @@ public class Welcome extends Packet {
 
 	@Override
 	public void Write(IOClient player, Server server) {
+		PacketPrepareEvent event = new PacketPrepareEvent(player, this, server);
+		server.getEventSystem().callEvent(event);
+		if (event.isCancelled())
+			return;
 		try {
 			byte[] finals = new byte[131];
 			finals[0] = ID;

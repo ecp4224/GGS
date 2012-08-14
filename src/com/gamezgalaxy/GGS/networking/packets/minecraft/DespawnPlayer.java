@@ -9,6 +9,7 @@ package com.gamezgalaxy.GGS.networking.packets.minecraft;
 
 import java.io.IOException;
 
+import com.gamezgalaxy.GGS.API.io.PacketPrepareEvent;
 import com.gamezgalaxy.GGS.networking.IOClient;
 import com.gamezgalaxy.GGS.networking.packets.Packet;
 import com.gamezgalaxy.GGS.networking.packets.PacketManager;
@@ -36,6 +37,10 @@ public class DespawnPlayer extends Packet {
 
 	@Override
 	public void Write(IOClient player, Server server) {
+		PacketPrepareEvent event = new PacketPrepareEvent(player, this, server);
+		server.getEventSystem().callEvent(event);
+		if (event.isCancelled())
+			return;
 		byte[] finals = new byte[2];
 		finals[0] = ID;
 		finals[1] = pID;
