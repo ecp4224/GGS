@@ -34,6 +34,7 @@ import com.gamezgalaxy.GGS.API.player.PlayerLoginEvent;
 import com.gamezgalaxy.GGS.API.plugin.Command;
 import com.gamezgalaxy.GGS.iomodel.Player;
 import com.gamezgalaxy.GGS.server.Server;
+import com.gamezgalaxy.GGS.util.FileUtils;
 
 public class Group {
 	static ArrayList<Group> groups = new ArrayList<Group>();
@@ -159,10 +160,15 @@ public class Group {
 	}
 
 	public static void Load(Server server) {
+		
+		
+		
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		try {
+			FileUtils.CreateIfNotExist(FileUtils.PROPS_DIR, "groups.xml", DEFAULT_XML);
+			
 			DocumentBuilder db = dbf.newDocumentBuilder();
-			Document dom = db.parse("properties/groups.xml");
+			Document dom = db.parse(FileUtils.PROPS_DIR + "groups.xml");
 			Element elm = dom.getDocumentElement();
 			NodeList nl = elm.getElementsByTagName("Group");
 			if (nl != null && nl.getLength() > 0) {
@@ -250,4 +256,36 @@ public class Group {
 		//in production application you would catch the exception
 		return Integer.parseInt(getTextValue(ele,tagName));
 	}
+	
+	
+	private static final String DEFAULT_XML = "<!-- \n" +
+			  "Copyright (c) 2012 GamezGalaxy.\n" +
+			  "All rights reserved. This program and the accompanying materials\n" +
+			  "are made available under the terms of the GNU Public License v3.0\n" +
+			  "which accompanies this distribution, and is available at\n" +
+			  "http://www.gnu.org/licenses/gpl.html\n" +
+			"-->\n" +
+			"<Groups>\n" +
+			 " <Group>\n" +
+			        "<name>Guest</name>\n" +
+			        "<isop>False</isop>\n" +
+			        "<permission>0</permission>\n" +
+			        "<default>true</default>\n" +
+			  "</Group>\n" +
+			  "<Group parent=\"Guest\">\n" +
+			        "<name>Guest1</name>\n" +
+			        "<isop>False</isop>\n" +
+			        "<permission>0</permission>\n" +
+			  "</Group>\n" +
+			  "<Group>\n" +
+			        "<name>Builder</name>\n" +
+			        "<isop>False</isop>\n" +
+			        "<permission>50</permission>\n" +
+			  "</Group>\n" +
+			  "<Group>\n" +
+			        "<name>Op</name>\n" +
+			        "<isop>True</isop>\n" +
+			        "<permission>100</permission>\n" +
+			 " </Group>\n" +
+			"</Groups>";
 }

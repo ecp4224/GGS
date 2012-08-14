@@ -121,7 +121,7 @@ public class Server implements LogInterface {
 		String filename = cal.getTime().toString().replace(" ", "-");
 		String finalname = filename.split("-")[0] + "-" + filename.split("-")[1] + "-" + filename.split("-")[2];
 		try {
-			logger.ChangeFilePath("logs/" + finalname + ".txt");
+			logger.ChangeFilePath("logs/" , finalname + ".txt");
 		} catch (IOException e2) {
 			System.out.println("logs/" + finalname + ".txt");
 			e2.printStackTrace();
