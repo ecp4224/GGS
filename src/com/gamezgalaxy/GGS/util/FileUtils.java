@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class FileUtils.
  */

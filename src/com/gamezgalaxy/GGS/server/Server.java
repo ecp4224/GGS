@@ -142,7 +142,7 @@ public class Server implements LogInterface {
 		Log("Loading main level..");
 		lm = new LevelHandler(this);
 		if (!new File(Properties.getValue("MainLevel")).exists()) {
-			Level l = new Level((short)2048, (short)32, (short)2048);
+			Level l = new Level((short)64, (short)64, (short)64);
 			l.name = "Main";
 			l.FlatGrass();
 			try {
