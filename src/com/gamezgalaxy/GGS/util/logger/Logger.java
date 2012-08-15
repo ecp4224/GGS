@@ -18,6 +18,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import com.gamezgalaxy.GGS.util.FileUtils;
+
 public class Logger {
 	private final DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 
@@ -119,17 +121,15 @@ public class Logger {
 		this.filepath = filename;
 		if (out != null)
 			out.close();
-		if (!new File(this.filepath).exists()) {
-			new File(this.filepath).createNewFile();
-		}
+		FileUtils.CreateIfNotExist(filepath);
 		out = new PrintWriter(filepath);
 	}
+	
 	public void ChangeFilePath(String directory, String filename) throws IOException {
 		this.filepath = directory + File.separator + filename;
 		if (out != null)
 			out.close();
-		if (!new File(directory, filename).exists())
-			new File(directory, filename).createNewFile();
+		FileUtils.CreateIfNotExist(directory, filename);
 		out = new PrintWriter(filepath);
 	}
 	

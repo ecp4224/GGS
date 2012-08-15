@@ -18,6 +18,8 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Date;
 
+import com.gamezgalaxy.GGS.util.FileUtils;
+
 public class BanHandler {
 	static ArrayList<String> banned = new ArrayList<String>();
 	
@@ -25,9 +27,8 @@ public class BanHandler {
 		banned.clear();
 
 		try {
-			if (!new File("properties/banned.txt").exists())
-				new File("properties/banned.txt").createNewFile();
-			FileInputStream fstream = new FileInputStream("properties/banned.txt");
+			FileUtils.CreateIfNotExist(FileUtils.PROPS_DIR , FileUtils.BANNED_FILE);
+			FileInputStream fstream = new FileInputStream(FileUtils.PROPS_DIR + FileUtils.BANNED_FILE);
 			DataInputStream in = new DataInputStream(fstream);
 			BufferedReader br = new BufferedReader(new InputStreamReader(in));
 
@@ -46,9 +47,8 @@ public class BanHandler {
 	}
 	
 	public static void save() throws FileNotFoundException {
-		if (new File("properties/banned.txt").exists())
-			new File("properties/banned.txt").delete();
-		PrintWriter out = new PrintWriter("properties/banned.txt");
+		FileUtils.DeleteIfExist(FileUtils.PROPS_DIR + FileUtils.BANNED_FILE);
+		PrintWriter out = new PrintWriter(FileUtils.PROPS_DIR + FileUtils.BANNED_FILE);
 		for (String s : banned) {
 			out.println(s);
 		}
