@@ -83,8 +83,9 @@ public abstract class Block implements Serializable {
 	/**
 	 * This method is called when the block is placed
 	 * @param l The level the block was placed in
+	 * @param index 
 	 */
-	public void onPlace(Level l) {
+	public void onPlace(Level l, int index) {
 		
 	}
 	
@@ -99,8 +100,9 @@ public abstract class Block implements Serializable {
 	/**
 	 * This method is called when the block is delete
 	 * @param l The level the block was deleted in
+	 * @param index 
 	 */
-	public void onDelete(Level l) {
+	public void onDelete(Level l, int index) {
 		
 	}
 	

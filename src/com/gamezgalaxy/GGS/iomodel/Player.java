@@ -200,7 +200,7 @@ public class Player extends IOClient {
 	 * @param key The name of the data
 	 * @return The data that was stored. The data will most likely be a string, you need to convert the String to the proper object
 	 */
-	public Object getValue(String key) {
+	public String getValue(String key) {
 		if (!extra.containsKey(key)) {
 			Object value = null;
 			ResultSet r = server.getSQL().fillData("SElECT count(*) FROM " + server.getSQL().getPrefix() + "_extra WHERE name='" + username + "' AND setting='" + key + "'");
@@ -221,10 +221,10 @@ public class Player extends IOClient {
 					e.printStackTrace();
 				}
 				extra.put(key, value);
-				return value;
+				return "" + value;
 			}
 		}
-		return extra.get(key);
+		return "" + extra.get(key);
 	}
 	
 	/**

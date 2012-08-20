@@ -14,6 +14,7 @@ import java.net.Socket;
 
 import com.gamezgalaxy.GGS.iomodel.Browser;
 import com.gamezgalaxy.GGS.iomodel.Player;
+import com.gamezgalaxy.GGS.networking.IOClient;
 import com.gamezgalaxy.GGS.networking.packets.browser.GET;
 import com.gamezgalaxy.GGS.networking.packets.minecraft.Connect;
 import com.gamezgalaxy.GGS.networking.packets.minecraft.DespawnPlayer;
@@ -152,6 +153,14 @@ public class PacketManager {
     	case (byte)'G': //A browser or website is using GET
     		new Browser(connection, this, firstsend);
     	    break;
+    	case 2: //SMP Player
+    		Packet p = this.getPacket(firstsend);
+    		if (p == null)
+    			connection.close();
+    		IOClient ic = new IOClient(connection, this);
+    		//ic.Listen();
+    		p.Handle(new byte[0], server, ic);
+    		break;
     	}
     }
 	

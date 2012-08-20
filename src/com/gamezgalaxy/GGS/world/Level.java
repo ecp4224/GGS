@@ -82,8 +82,7 @@ public class Level implements Serializable {
 	public void setTile(Block b, int index, Server server) {
 		if (index < 0) index = 0;
 		if (index >= blocks.length) index = blocks.length - 1;
-		blocks[index].onDelete(this);
-		b.onPlace(this);
+		Block wasthere = blocks[index];
 		if (b instanceof PhysicsBlock) {
 			PhysicsBlock pb = ((PhysicsBlock)b).clone(server);
 			pb.setLevel(this);
@@ -96,6 +95,8 @@ public class Level implements Serializable {
 		}
 		else
 			blocks[index] = b;
+		wasthere.onDelete(this, index);
+		b.onPlace(this, index);
 	}
 	
 	public Block getTile(int index) {

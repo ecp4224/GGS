@@ -8,6 +8,8 @@
 package com.gamezgalaxy.GGS.networking.packets.minecraft;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.nio.ByteBuffer;
 
 import com.gamezgalaxy.GGS.API.io.PacketPrepareEvent;
 import com.gamezgalaxy.GGS.networking.IOClient;
@@ -44,8 +46,21 @@ public class LevelStartSend extends Packet {
 
 	@Override
 	public void Handle(byte[] message, Server server, IOClient player) {
-		// TODO Auto-generated method stub
-		
+		//SMP Handshake
+		final String KICKMESSAGE = "This is not an SMP Server!";
+		try {
+			byte[] kickbyte = KICKMESSAGE.getBytes("US-ASCII");
+			ByteBuffer bb = ByteBuffer.allocate(3 + kickbyte.length);
+			bb.put((byte)255);
+			bb.putShort((short)kickbyte.length);
+			bb.put(kickbyte);
+			player.WriteData(bb.array());
+		} catch (UnsupportedEncodingException e) {;
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		player.CloseConnection();
 	}
 
 }
