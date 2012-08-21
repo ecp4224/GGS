@@ -155,7 +155,11 @@ public class Level implements Serializable {
 	}
 	
 	public void Unload(Server server) throws IOException {
-		Save();
+		Unload(server, true);
+	}
+	public void Unload(Server server, boolean save) throws IOException {
+		if (save)
+			Save();
 		run = false;
 		try {
 			physics.join();
@@ -163,6 +167,7 @@ public class Level implements Serializable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		server.Log("Unloading " + name);
 		for (Player p : server.players) {
 			if (p.getLevel() == this)
 				p.setLevel(server.MainLevel);
@@ -233,5 +238,4 @@ public class Level implements Serializable {
 			}
 		}
 	}
-
 }

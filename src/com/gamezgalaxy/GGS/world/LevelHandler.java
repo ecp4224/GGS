@@ -92,12 +92,14 @@ public class LevelHandler {
 			levels.add(l);
 		return l;
 	}
-	
 	public void unloadLevel(Level level) {
+		unloadLevel(level, true);
+	}
+	public void unloadLevel(Level level, boolean save) {
 		if (!levels.contains(level))
 			return;
 		try {
-			level.Unload(server);
+			level.Unload(server, save);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

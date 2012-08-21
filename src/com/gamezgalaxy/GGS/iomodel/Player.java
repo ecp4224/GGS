@@ -448,7 +448,6 @@ public class Player extends IOClient {
 		sp.spawn = p;
 		sp.Write(this, p.pm.server);
 		seeable.add(p);
-		seeable.add(p);
 	}
 
 	/**
@@ -467,6 +466,7 @@ public class Player extends IOClient {
 		if (this.level == level)
 			return;
 		this.level = level;
+		server.Log(username + " moved to " + level.name);
 		levelsender = new SendLevel(this);
 		levelsender.start();
 	}
