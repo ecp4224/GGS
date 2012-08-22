@@ -164,13 +164,12 @@ public class Level implements Serializable {
 		try {
 			physics.join();
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		server.Log("Unloading " + name);
 		for (Player p : server.players) {
 			if (p.getLevel() == this)
-				p.setLevel(server.MainLevel);
+				p.changeLevel(server.MainLevel, true);
 		}
 		blocks = null;
 	}

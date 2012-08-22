@@ -48,11 +48,7 @@ public class Goto extends Command
 
 			if(level != null)
 			{
-				try {
-					player.changeLevel(level);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
+				player.changeLevel(level);
 			} else {
 				player.sendMessage("Level doesn't exist...");
 			}

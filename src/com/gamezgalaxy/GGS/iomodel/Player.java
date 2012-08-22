@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.gamezgalaxy.GGS.API.level.PlayerJoinedLevel;
 import com.gamezgalaxy.GGS.API.player.PlayerBlockChangeEvent;
 import com.gamezgalaxy.GGS.API.player.PlayerChatEvent;
 import com.gamezgalaxy.GGS.API.player.PlayerCommandEvent;
@@ -462,7 +463,7 @@ public class Player extends IOClient {
 	 * Send a new level to the player
 	 * @param level The level to send
 	 */
-	public void setLevel(Level level) {
+	private void setLevel(Level level) {
 		if (this.level == level)
 			return;
 		this.level = level;
@@ -669,26 +670,58 @@ public class Player extends IOClient {
 		}
 		return true; //Message was sent successfully
 	}
-
-	public void changeLevel(Level level) throws InterruptedException
+	/**
+	 * Change the level the player is currently in. This method will
+	 * call {@link #changeLevel(Level, boolean)} with threading being false.
+	 * So this method will block until the level sending is finished.
+	 * @param level The new level the player will be moved to.
+	 */
+	public void changeLevel(Level level) {
+		changeLevel(level, false);
+	}
+	/**
+	 * Change the level the player is currently in. This method will
+	 * block if threading is false. If threading is true, level sending will
+	 * begin in a separate thread and this method wont block.
+	 * @param level The new level the player will be moved to.
+	 * @param threading Weather to make this call in a separate thread or not.
+	 */
+	public void changeLevel(Level level, boolean threading)
 	{
-		setLevel(level);
-		levelsender.join(); //Wait for finish
-		X = (short)((0.5 + level.spawnx) * 32);
-		Y = (short)((1 + level.spawny) * 32);
-		Z = (short)((0.5 + level.spawnz) * 32);
-		oldX = X;
-		oldY = Y;
-		oldZ = Z;
-		spawnPlayer(this);
-		setPos((short)((0.5 + level.spawnx) * 32), (short)((1 + level.spawny) * 32), (short)((0.5 + level.spawnz) * 32));
-		for (Player p : pm.server.players) {
-			if (p.level == level) {
-				spawnPlayer(p); //Spawn p for me
-				p.spawnPlayer(this); //Spawn me for p
+		if (!threading) {
+			setLevel(level);
+			try {
+				levelsender.join(); //Wait for finish
+			} catch (InterruptedException e) { } 
+			X = (short)((0.5 + level.spawnx) * 32);
+			Y = (short)((1 + level.spawny) * 32);
+			Z = (short)((0.5 + level.spawnz) * 32);
+			oldX = X;
+			oldY = Y;
+			oldZ = Z;
+			spawnPlayer(this);
+			setPos((short)((0.5 + level.spawnx) * 32), (short)((1 + level.spawny) * 32), (short)((0.5 + level.spawnz) * 32));
+			for (Player p : pm.server.players) {
+				if (p.level == level) {
+					spawnPlayer(p); //Spawn p for me
+					p.spawnPlayer(this); //Spawn me for p
+				}
 			}
+			setPos((short) ((0.5 + level.spawnx) * 32), (short) ((1 + level.spawny) * 32), (short) ((0.5 + level.spawnz) * 32));
 		}
-		setPos((short) ((0.5 + level.spawnx) * 32), (short) ((1 + level.spawny) * 32), (short) ((0.5 + level.spawnz) * 32));
+		else {
+			Thread aynct = new asyncLevel(level);
+			aynct.start();
+		}
+	}
+	
+	/**
+	 * This clears the chat screen for the client
+	 * by sending 20 blank messages
+	 */
+	public void clearChatScreen() {
+		for (int i = 0; i < 20; i++)
+			sendMessage("");
 	}
 
 	public void processCommand(String message)
@@ -893,6 +926,8 @@ public class Player extends IOClient {
 
 	protected void finishLevel() {
 		levelsender = null;
+		PlayerJoinedLevel event = new PlayerJoinedLevel(this, this.level);
+		server.getEventSystem().callEvent(event);
 	}
 
 	protected class Ping implements Tick {
@@ -911,6 +946,17 @@ public class Player extends IOClient {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+		}
+	}
+	
+	protected class asyncLevel extends Thread {
+		
+		Level level;
+		
+		public asyncLevel(Level level) { this.level = level; }
+		@Override
+		public void run() {
+			changeLevel(level, false);
 		}
 	}
 
