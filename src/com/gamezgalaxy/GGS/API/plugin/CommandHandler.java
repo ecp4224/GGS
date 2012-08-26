@@ -79,6 +79,12 @@ public class CommandHandler {
 		if (commands.contains(cmd))
 			return;
 		commands.add(cmd);
+		try {
+			loadPermissions();
+			savePermissions();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void removeCommand(Command cmd) {
