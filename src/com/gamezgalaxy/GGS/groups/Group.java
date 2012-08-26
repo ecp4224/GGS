@@ -43,7 +43,7 @@ public class Group {
 	private ArrayList<Player> online = new ArrayList<Player>();
 	private static Group defaultgroup;
 	public int permissionlevel;
-	public boolean isOP;
+	public boolean isOP = false;
 	public String name;
 	public Group parent;
 	public ArrayList<String> exceptions = new ArrayList<String>(); //Commands this group can use despite permission level
@@ -85,6 +85,19 @@ public class Group {
 		members.add(name);
 		saveMembers();
 	}
+	
+	public void addPlayer(Player p) {
+		addMember(p.username);
+		if (!online.contains(p))
+			online.add(p);
+	}
+	
+	public void removePlayer(Player p) {
+		removeMember(p.username);
+		if (online.contains(p))
+			online.remove(p);
+	}
+	
 	public void loadMembers() throws IOException {
 		if (!new File("ranks").exists())
 			new File("ranks").mkdir();
@@ -228,6 +241,11 @@ public class Group {
 		}
 		if (defaultg)
 			defaultgroup = g;
+		try {
+			g.loadMembers();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
 		return g;
 	}
 	

@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 import com.gamezgalaxy.GGS.API.io.PacketPrepareEvent;
+import com.gamezgalaxy.GGS.iomodel.Player;
 import com.gamezgalaxy.GGS.networking.IOClient;
 import com.gamezgalaxy.GGS.networking.packets.Packet;
 import com.gamezgalaxy.GGS.networking.packets.PacketManager;
@@ -36,6 +37,10 @@ public class Welcome extends Packet {
 		if (event.isCancelled())
 			return;
 		try {
+			boolean isop = false;
+			if (player instanceof Player) {
+				isop = ((Player)player).getGroup().isOP;
+			}
 			byte[] finals = new byte[131];
 			finals[0] = ID;
 			finals[1] = 0x07;
@@ -47,7 +52,7 @@ public class Welcome extends Packet {
 			byte[] motd = server.MOTD.getBytes("US-ASCII");
 			System.arraycopy(name, 0, finals, 2, name.length);
 			System.arraycopy(motd, 0, finals, name.length + 2, motd.length);
-			finals[130] = 0x00;
+			finals[130] = (isop ? (byte)100 : (byte)0);
 			player.WriteData(finals);
 			
 		} catch (UnsupportedEncodingException e) {

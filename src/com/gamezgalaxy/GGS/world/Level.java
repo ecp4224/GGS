@@ -169,7 +169,7 @@ public class Level implements Serializable {
 		server.Log("Unloading " + name);
 		for (Player p : server.players) {
 			if (p.getLevel() == this)
-				p.changeLevel(server.MainLevel, true);
+				p.changeLevel(server.MainLevel, false);
 		}
 		blocks = null;
 	}

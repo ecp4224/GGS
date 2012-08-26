@@ -7,6 +7,9 @@
  ******************************************************************************/
 package com.gamezgalaxy.GGS.networking.packets.minecraft;
 
+import java.io.IOException;
+
+import com.gamezgalaxy.GGS.iomodel.Player;
 import com.gamezgalaxy.GGS.networking.IOClient;
 import com.gamezgalaxy.GGS.networking.packets.Packet;
 import com.gamezgalaxy.GGS.networking.packets.PacketManager;
@@ -27,14 +30,24 @@ public class UpdateUser extends Packet {
 
 	@Override
 	public void Handle(byte[] message, Server server, IOClient player) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void Write(IOClient player, Server server) {
-		// TODO Auto-generated method stub
-
+		Player p = null;
+		if (player instanceof Player) {
+			p = (Player)player;
+		}
+		else
+			return;
+		byte[] final1 = new byte[2];
+		final1[0] = (byte)0x0f;
+		final1[1] = (byte)(p.getGroup().isOP ? 0x64 : 0x00);
+		try {
+			player.WriteData(final1);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

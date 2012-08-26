@@ -54,18 +54,27 @@ public class CommandHandler {
 			else
 				_server.Log("Command not found!");
 		}
-
 		Command c = find(command);
-
+		if (args.length == 1 && args[0].equals(""))
+			args = new String[0];
 		if(c != null)
 		{
 			if (player != null && !player.getGroup().canExecute(c))
 				player.sendMessage("Sorry, you dont have permission to execute this command!");
-			else
+			else {
+				_server.Log(player.username + " used /" + c.getName() + arrayToString(args));
 				c.execute(player, args);
+			}
 		}
 	}
 	
+	public String arrayToString(String[] args) {
+		String finals = "";
+		for (String s : args) {
+			finals += " " + s;
+		}
+		return finals;
+	}
 	public void addCommand(Command cmd) {
 		if (commands.contains(cmd))
 			return;

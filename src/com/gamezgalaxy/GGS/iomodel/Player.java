@@ -295,9 +295,16 @@ public class Player extends IOClient {
 	 * Change the group the player is in
 	 */
 	public void setGroup(Group newgroup) {
+		Group old = Group.getGroup(this);
 		if (Group.getGroup(this) != null)
-			Group.getGroup(this).removeMember(username);
-		newgroup.addMember(username);
+			Group.getGroup(this).removePlayer(this);
+		newgroup.addPlayer(this);
+		if (!this.isLoggedin)
+			return;
+		if ((old != null && old.isOP && !newgroup.isOP) || (old != null && !old.isOP && newgroup.isOP) || old == null) {
+			Packet p = pm.getPacket((byte)0x0f);
+			p.Write(this, server);
+		}
 	}
 	
 	/**
@@ -708,6 +715,8 @@ public class Player extends IOClient {
 				}
 			}
 			setPos((short) ((0.5 + level.spawnx) * 32), (short) ((1 + level.spawny) * 32), (short) ((0.5 + level.spawnz) * 32));
+			PlayerJoinedLevel event = new PlayerJoinedLevel(this, this.level);
+			server.getEventSystem().callEvent(event);
 		}
 		else {
 			Thread aynct = new asyncLevel(level);
@@ -727,7 +736,10 @@ public class Player extends IOClient {
 	public void processCommand(String message)
 	{
 		message = message.substring(1); //Get rid of the / at the beginning
-		server.getCommandHandler().execute(this, message.split(" ")[0], message.substring(message.indexOf(message.split(" ")[0]) + 1));
+		if (message.split("\\ ").length > 1)
+			server.getCommandHandler().execute(this, message.split("\\ ")[0], message.substring(message.indexOf(message.split("\\ ")[1])));
+		else
+			server.getCommandHandler().execute(this, message, "");
 		/* Leaving this here so you can reference the old commands
 		 * List<String> list = new ArrayList<String>();
 		Collections.addAll(list, message.split(" "));
@@ -926,8 +938,6 @@ public class Player extends IOClient {
 
 	protected void finishLevel() {
 		levelsender = null;
-		PlayerJoinedLevel event = new PlayerJoinedLevel(this, this.level);
-		server.getEventSystem().callEvent(event);
 	}
 
 	protected class Ping implements Tick {

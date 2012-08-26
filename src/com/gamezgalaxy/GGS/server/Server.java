@@ -196,6 +196,19 @@ public class Server implements LogInterface {
 			e.printStackTrace();
 		}
 	}
+	
+	public Player findPlayer(String name) {
+		Player toreturn = null;
+		for (int i = 0; i < players.size(); i++) {
+			if (name.equals(players.get(i).username))
+				return players.get(i);
+			else if (players.get(i).username.indexOf(name) != -1 && toreturn == null)
+				toreturn = players.get(i);
+			else if (players.get(i).username.indexOf(name) != -1 && toreturn != null)
+				return null;
+		}
+		return toreturn;
+	}
 
 	public void addCommands() throws IOException
 	{
