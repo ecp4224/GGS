@@ -21,9 +21,5 @@ public abstract class Game extends Plugin implements Tick {
 		super(server);
 	}
 	
-	public abstract void Start();
-	
-	public abstract void Stop();
-	
 	public abstract void Tick();
 }
