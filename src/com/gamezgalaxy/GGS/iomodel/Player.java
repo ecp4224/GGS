@@ -248,7 +248,7 @@ public class Player extends IOClient {
 		if (size == 0)
 			server.getSQL().ExecuteQuery("INSERT INTO " + server.getSQL().getPrefix() + "_extra (name, setting, value) VALUES ('" + username + "', '" + key + "', '" + extra.get(key).toString() + "')");
 		else
-			server.getSQL().ExecuteQuery("UPDATE " + server.getSQL().getPrefix() + "_extra SET value='" + extra.get(key).toString() + "'");
+			server.getSQL().ExecuteQuery("UPDATE " + server.getSQL().getPrefix() + "_extra SET value='" + extra.get(key).toString() + "' WHERE name='" + username + "' AND setting='" + key + "'");
 	}
 	
 	/**
@@ -334,22 +334,6 @@ public class Player extends IOClient {
 			GlobalBlockChange(X, Y, Z, place, level, pm.server);
 		else if (type == PlaceMode.BREAK)
 			GlobalBlockChange(X, Y, Z, Block.getBlock((byte)0), level, pm.server);
-	}
-	
-	/**
-	 * Send a block update to this player
-	 * @param X The X pos of the update
-	 * @param Y The Y pos of the update
-	 * @param Z The Z pos of the update
-	 * @param block The block to send
-	 */
-	public void SendBlock(short X, short Y, short Z, Block block) {
-		SetBlock sb = (SetBlock)(pm.getPacket((byte)0x06));
-		sb.X = X;
-		sb.Y = Y;
-		sb.Z = Z;
-		sb.block = block.getVisableBlock();
-		sb.Write(this, pm.server);
 	}
 	
 	/**
@@ -877,7 +861,6 @@ public class Player extends IOClient {
 			pm.server.getEventSystem().callEvent(event);
 			if (event.isCancelled())
 				return;
-			
 			processCommand(message);
 		}else{
 			String m = message;
