@@ -42,11 +42,24 @@ public class Group {
 	private ArrayList<String> members = new ArrayList<String>();
 	private ArrayList<Player> online = new ArrayList<Player>();
 	private static Group defaultgroup;
+	/**
+	 * The permission level of this group
+	 */
 	public int permissionlevel;
+	/**
+	 * If this group is an OP group
+	 */
 	public boolean isOP = false;
+	/**
+	 * The name of this group
+	 */
 	public String name;
+	/**
+	 * The parent group
+	 */
 	public Group parent;
-	public ArrayList<String> exceptions = new ArrayList<String>(); //Commands this group can use despite permission level
+	private ArrayList<String> exceptions = new ArrayList<String>(); //Commands this group can use despite permission level
+	
 	public Group(String name, int permission, boolean isOP, Group parent, Server server) {
 		this.name = name;
 		this.permissionlevel = permission;
@@ -54,12 +67,22 @@ public class Group {
 		this.parent = parent;
 		server.getEventSystem().registerEvents(new Listen());
 	}
+	
 	public Group(String name, int permission, boolean isOP, Server server) {
 		this(name, permission, isOP, null, server);
 	}
+	
 	public Group(String name, Group parent, Server server) {
 		this(name, parent.permissionlevel, parent.isOP, parent, server);
 	}
+	
+	/**
+	 * Can this group execute the command <b>c</b>
+	 * This method will check the {@link #parent} group as well
+	 * if this group can't execute the command
+	 * @param c The command to check
+	 * @return Returns true if the group can execute the command
+	 */
 	public boolean canExecute(Command c) {
 		if (c.isOpCommand() && isOP)
 			return true;
@@ -73,12 +96,24 @@ public class Group {
 			}
 		return (parent != null) ? parent.canExecute(c) : false;
 	}
+	/**
+	 * Remove a member from this group
+	 * If you want to remove a player to this group, 
+	 * use {@link #removePlayer(Player)}
+	 * @param name The member's name name
+	 */
 	public void removeMember(String name) {
 		if (!members.contains(name))
 			return;
 		members.remove(name);
 		saveMembers();
 	}
+	/**
+	 * Add a member to this group
+	 * If you want to add a player to this group, 
+	 * use {@link #addPlayer(Player)}
+	 * @param name The member's name to add
+	 */
 	public void addMember(String name) {
 		if (members.contains(name))
 			return;
@@ -86,18 +121,31 @@ public class Group {
 		saveMembers();
 	}
 	
+	/**
+	 * Add a player to this group
+	 * @param p The player to add
+	 */
 	public void addPlayer(Player p) {
 		addMember(p.username);
 		if (!online.contains(p))
 			online.add(p);
 	}
 	
+	/**
+	 * Remove a player from this group
+	 * @param p The player to remove
+	 */
 	public void removePlayer(Player p) {
 		removeMember(p.username);
 		if (online.contains(p))
 			online.remove(p);
 	}
 	
+	/**
+	 * Load the members in this group
+	 * @throws IOException
+	 *                    An IOException will be thrown if there is a problem loading the member list file
+	 */
 	public void loadMembers() throws IOException {
 		if (!new File("ranks").exists())
 			new File("ranks").mkdir();
@@ -115,6 +163,9 @@ public class Group {
 		in.close();
 		
 	}
+	/**
+	 * Save the members in this group
+	 */
 	public void saveMembers() {
 		if (!new File("ranks").exists())
 			new File("ranks").mkdir();
@@ -137,8 +188,8 @@ public class Group {
 		out.flush();
 		out.close();
 	}
+	
 	private class Listen implements Listener {
-		
 		@EventHandler
 		public void connect(PlayerLoginEvent event) {
 			for (String member : members) {
@@ -150,6 +201,11 @@ public class Group {
 		}
 	}
 	
+	/**
+	 * Find a group
+	 * @param name The name of the gorup
+	 * @return The group object
+	 */
 	public static Group find(String name) {
 		for (Group g : groups) {
 			if (g.name.equals(name))
@@ -158,6 +214,11 @@ public class Group {
 		return null;
 	}
 	
+	/**
+	 * Get the group the player <b>p</b> is assigned to
+	 * @param p The player to search for
+	 * @return The group player <b>p</b> is in
+	 */
 	public static Group getGroup(Player p) {
 		for (Group g : groups) {
 			for (Player pp : g.online) {
@@ -168,14 +229,20 @@ public class Group {
 		return null;
 	}
 	
+	/**
+	 * Get the default group the player is assigned to if the player is not assiged
+	 * to any group
+	 * @return The default group
+	 */
 	public static Group getDefault() {
 		return defaultgroup;
 	}
 
+	/**
+	 * Load the groups for the server
+	 * @param server The server the groups will be loaded into
+	 */
 	public static void Load(Server server) {
-		
-		
-		
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		try {
 			FileUtils.CreateIfNotExist(FileUtils.PROPS_DIR, "groups.xml", DEFAULT_XML);

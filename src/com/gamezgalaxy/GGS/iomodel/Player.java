@@ -24,6 +24,7 @@ import com.gamezgalaxy.GGS.API.player.PlayerBlockChangeEvent;
 import com.gamezgalaxy.GGS.API.player.PlayerChatEvent;
 import com.gamezgalaxy.GGS.API.player.PlayerCommandEvent;
 import com.gamezgalaxy.GGS.API.player.PlayerDisconnectEvent;
+import com.gamezgalaxy.GGS.chat.ChatColor;
 import com.gamezgalaxy.GGS.chat.Messages;
 import com.gamezgalaxy.GGS.groups.Group;
 import com.gamezgalaxy.GGS.networking.IOClient;
@@ -51,6 +52,7 @@ public class Player extends IOClient {
 	protected Messages chat;
 	protected ArrayList<Player> seeable = new ArrayList<Player>();
 	protected Ping tick = new Ping(this);
+	protected ChatColor color = ChatColor.White;
 	private HashMap extra = new HashMap();
 	/**
 	 * Weather or not the player is logged in
@@ -181,6 +183,33 @@ public class Player extends IOClient {
 
 		Listen();
 		pm.server.Add(tick);
+	}
+	
+	/**
+	 * Get the username the client will see above the player's head
+	 * @return 
+	 *        The username with the color at the beginning.
+	 */
+	public String getDisplayName() {
+		return color + username;
+	}
+	
+	/**
+	 * Get the color of the player's username
+	 * @return
+	 *        The color
+	 */
+	public ChatColor getDisplayColor() {
+		return color;
+	}
+	
+	/**
+	 * Set the color for this player
+	 * @param color 
+	 *             The color
+	 */
+	public void setDisplayColor(ChatColor color) {
+		this.color = color;
 	}
 	
 	/**
@@ -877,10 +906,15 @@ public class Player extends IOClient {
 			if (event.isCancelled())
 				return;
 			pm.server.Log("User "+ this.username + " sent: " + message);
-			chat.serverBroadcast(this.username + ": " + m);
+			chat.serverBroadcast(this.getDisplayName() + ": " + m);
 		}
 	}
 	
+	/**
+	 * Get the current server object the player is in
+	 * @return
+	 *        The server
+	 */
 	public Server getServer() {
 		return server;
 	}
