@@ -61,5 +61,23 @@ public class EventList {
 		}
 		events = entries.toArray(new RegisteredListener[entries.size()]);
 	}
+	
+    /**
+     * Remove a specific listener from this handler
+     *
+     * @param listener listener to remove
+     */
+    public synchronized void unregister(Listener listener) {
+        boolean changed = false;
+        for (List<RegisteredListener> list : muffinbag.values()) {
+            for (ListIterator<RegisteredListener> i = list.listIterator(); i.hasNext();) {
+                if (i.next().getListen().equals(listener)) {
+                    i.remove();
+                    changed = true;
+                }
+            }
+        }
+        if (changed) events = null;
+    }
 
 }

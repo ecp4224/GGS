@@ -191,7 +191,7 @@ public class Player extends IOClient {
 	 *        The username with the color at the beginning.
 	 */
 	public String getDisplayName() {
-		return color + username;
+		return color.toString() + username;
 	}
 	
 	/**
@@ -210,6 +210,10 @@ public class Player extends IOClient {
 	 */
 	public void setDisplayColor(ChatColor color) {
 		this.color = color;
+		for (Player p : getServer().players) {
+			p.Despawn(this);
+			p.spawnPlayer(this);
+		}
 	}
 	
 	/**
@@ -906,7 +910,7 @@ public class Player extends IOClient {
 			if (event.isCancelled())
 				return;
 			pm.server.Log("User "+ this.username + " sent: " + message);
-			chat.serverBroadcast(this.getDisplayName() + ": " + m);
+			chat.serverBroadcast(this.getDisplayName() + ChatColor.White + ": " + m);
 		}
 	}
 	

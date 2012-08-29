@@ -33,5 +33,55 @@ public enum ChatColor {
 	public String toString() {
 		return "" + id + type;
 	}
+	
+	/**
+	 * Parse the String <b>color</b> to a ChatColor object
+	 * @param color The String to parse
+	 * @return The ChatColor object that equals the String
+	 */
+	public static ChatColor parse(String color) {
+		return parse(color.toCharArray()[1]);
+	}
+	
+	/**
+	 * Parse the char <b>color</b> to a ChatColor object.
+	 * @param color The char to parse
+	 * @return The ChatColor object that equals the char
+	 */
+	public static ChatColor parse(char color) {
+		if (color == '0')
+			return ChatColor.Black;
+		else if (color == '1')
+			return ChatColor.Dark_Blue;
+		else if (color == '2')
+			return ChatColor.Dark_Green;
+		else if (color == '3')
+			return ChatColor.Dark_Aqua;
+		else if (color == '4')
+			return ChatColor.Dark_Red;
+		else if (color == '5')
+			return ChatColor.Purple;
+		else if (color == '6')
+			return ChatColor.Orange;
+		else if (color == '7')
+			return ChatColor.Grey;
+		else if (color == '8')
+			return ChatColor.Dark_Grey;
+		else if (color == '9')
+			return ChatColor.Indigo;
+		else if (color == 'a')
+			return ChatColor.Bright_Green;
+		else if (color == 'b')
+			return ChatColor.Aqua;
+		else if (color == 'c')
+			return ChatColor.Red;
+		else if (color == 'd')
+			return ChatColor.Pink;
+		else if (color == 'e')
+			return ChatColor.Yellow;
+		else if (color == 'f')
+			return ChatColor.White;
+		throw ColorFormatException.forInputString("" + color);
+	}
 
 }

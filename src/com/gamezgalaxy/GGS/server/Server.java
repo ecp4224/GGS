@@ -15,6 +15,7 @@ import java.util.*;
 import com.gamezgalaxy.GGS.API.EventSystem;
 import com.gamezgalaxy.GGS.API.plugin.CommandHandler;
 import com.gamezgalaxy.GGS.API.plugin.PluginHandler;
+import com.gamezgalaxy.GGS.chat.ChatColor;
 import com.gamezgalaxy.GGS.defaults.commands.*;
 import com.gamezgalaxy.GGS.groups.Group;
 import com.gamezgalaxy.GGS.iomodel.Player;
