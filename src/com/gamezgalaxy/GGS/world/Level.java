@@ -8,6 +8,7 @@
 package com.gamezgalaxy.GGS.world;
 
 import java.io.*;
+import java.rmi.server.ServerCloneException;
 import java.util.ArrayList;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
@@ -28,24 +29,56 @@ public class Level implements Serializable {
 	
 	private boolean run;
 	
-	public ArrayList<Tick> ticks = new ArrayList<Tick>();
+	ArrayList<Tick> ticks = new ArrayList<Tick>();
 	
 	Block[] blocks;
 	
+	/**
+	 * The width of the level (max X)
+	 */
 	public short width;
 	
+	/**
+	 * The height of the level (max Y)
+	 */
 	public short height;
 	
+	/**
+	 * The depth of the level (max Z)
+	 */
 	public short depth;
 	
+	/**
+	 * The X position (in blocks) where the player spawns.
+	 */
 	public int spawnx;
 	
+	/**
+	 * The Y position (in blocks) where the player spawns.
+	 */
 	public int spawny;
 	
+	/**
+	 * The Z position (in blocks) where the player spawns.
+	 */
 	public int spawnz;
 	
+	/**
+	 * The name of the level
+	 */
 	public String name;
 	
+	/**
+	 * The constructor for Level.
+	 * The constructor wont generate a flat world, you need to
+	 * call {@link #FlatGrass()}
+	 * @param width
+	 *             The width (X) of the level
+	 * @param height
+	 *             The height (Y) of the level
+	 * @param depth
+	 *             The depth (Z) of the level
+	 */
 	public Level(short width, short height, short depth) {
 		this();
 		this.width = width;
@@ -57,6 +90,13 @@ public class Level implements Serializable {
 		blocks = new Block[width*height*depth];
 	}
 	
+	/**
+	 * The constructor for the level
+	 * This constructor starts the physics ticks
+	 * This constructor wont generate a level, nor will it set a default
+	 * width, height, and depth. To set a width, height, and depth and
+	 * initialize the blocks, use must use {@link #Level(short, short, short)}
+	 */
 	public Level() {
 		this.ticks = new ArrayList<Tick>();
 		physics = new Ticker();
@@ -64,6 +104,9 @@ public class Level implements Serializable {
 		physics.start();
 	}
 	
+	/**
+	 * This will generate a flat world
+	 */
 	public void FlatGrass() {
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
@@ -79,6 +122,19 @@ public class Level implements Serializable {
 		}
 	}
 	
+	/**
+	 * Set a block in this world.
+	 * If the block is a physicsblock, it will be added
+	 * to the physics tick.
+	 * This method wont send out a change to the clients.
+	 * To do this, use {@link Player#GlobalBlockChange(short, short, short, Block, Level, Server)} instead
+	 * @param b
+	 *         The block to add
+	 * @param index
+	 *             Where to add the block
+	 * @param server
+	 *              The server this blockchange is happening in
+	 */
 	public void setTile(Block b, int index, Server server) {
 		if (index < 0) index = 0;
 		if (index >= blocks.length) index = blocks.length - 1;
@@ -99,6 +155,13 @@ public class Level implements Serializable {
 		b.onPlace(this, index);
 	}
 	
+	/**
+	 * Get a block in this level
+	 * @param index
+	 *            Which block to get
+	 * @return
+	 *        The block at that index
+	 */
 	public Block getTile(int index) {
 		if (index < 0) index = 0;
 		if (index >= blocks.length) index = blocks.length - 1;
@@ -109,18 +172,65 @@ public class Level implements Serializable {
 		return blocks[index];
 	}
 	
+	/**
+	 * Get a block at the X, Y, Z coordinates
+	 * @param x
+	 *        The X coordinate
+	 * @param y
+	 *        The Y coordinate
+	 * @param z
+	 *        The Z coordinate
+	 * @return
+	 *        The block at those coordinates
+	 */
 	public Block getTile(int x, int y, int z) {
 		return getTile(PosToInt(x, y, z));
 	}
 	
+	/**
+	 * Get how big the block array is
+	 * @return
+	 *       The size of the block array
+	 */
 	public int getLength() {
 		return blocks.length;
 	}
 	
+	/**
+	 * Set a block in this world.
+	 * If the block is a physicsblock, it will be added
+	 * to the physics tick.
+	 * This method wont send out a change to the clients.
+	 * To do this, use {@link Player#GlobalBlockChange(short, short, short, Block, Level, Server)} instead
+	 * @param b
+	 *         The block to add
+	 * @param x
+	 *        The X coordinate
+	 * @param y
+	 *        The Y coordinate
+	 * @param z
+	 *        The Z coordinate
+	 * @param server
+	 *              The server this blockchange is happening in
+	 */
 	public void setTile(Block b, int x, int y, int z, Server server) {
 		setTile(b, PosToInt(x, y, z), server);
 	}
 	
+	/**
+	 * Convert coordinates to a number that will
+	 * correspond to where the coordinates are in the
+	 * block array
+     * @param x
+	 *        The X coordinate
+	 * @param y
+	 *        The Y coordinate
+	 * @param z
+	 *        The Z coordinate
+	 * @return
+	 *        The number that will correspond to where the coordinates
+	 *        are in the block array
+	 */
 	public int PosToInt(int x, int y, int z) {
         if (x < 0) { return -1; }
         if (x >= width) { return -1; }
@@ -131,7 +241,7 @@ public class Level implements Serializable {
         return x + z * width + y * width * depth;
     }
 	
-	public int[] IntToPos(int index) {
+	private int[] IntToPos(int index) {
 		int[] toreturn = new int[3];
 		toreturn[1] = (index / width / height);
 		index -= toreturn[1]*width*height;
@@ -141,6 +251,11 @@ public class Level implements Serializable {
 		return toreturn;
 	}
 	
+	/**
+	 * Save the level
+	 * @throws IOException
+	 *                   An IOExceptoin is thrown if there is a problem writing to the file
+	 */
 	public void Save() throws IOException {
 		if (!new File("levels").exists())
 			new File("levels").mkdir();
@@ -154,9 +269,27 @@ public class Level implements Serializable {
 		fos.close();
 	}
 	
+	/**
+	 * Unload this level.
+	 * All players who are in this level will be sent to the {@link Server#MainLevel}
+	 * @param server
+	 *             The server thats unloading the level
+	 * @throws IOException
+	 *                   An IOException will occur if there is a problem saving the level
+	 */
 	public void Unload(Server server) throws IOException {
 		Unload(server, true);
 	}
+	/**
+	 * Unload this level.
+	 * All players who are in this level will be sent to the {@link Server#MainLevel}
+	 * @param server
+	 *             The server thats unloading the level
+	 * @param save
+	 *           Weather the level should save before unloading
+	 * @throws IOException
+	 *                   An IOException will occur if there is a problem saving the level
+	 */
 	public void Unload(Server server, boolean save) throws IOException {
 		if (save)
 			Save();
@@ -174,6 +307,17 @@ public class Level implements Serializable {
 		blocks = null;
 	}
 	
+	/**
+	 * Load a level and return the level
+	 * @param filename
+	 *               The file to load and read
+	 * @return
+	 *        The level object
+	 * @throws IOException
+	 *                   An IOException is thrown if there is a problem reading the level
+	 * @throws ClassNotFoundException
+	 *                              This exception is thrown if a block that was saved with the level is not loaded or cant be found.
+	 */
 	public static Level Load(String filename) throws IOException, ClassNotFoundException {
 		Level l = null;
 		if (filename.endsWith(".dat"))
@@ -199,6 +343,15 @@ public class Level implements Serializable {
 		return l;
 	}
 	
+	/**
+	 * Convert a .dat file to a .ggs file
+	 * @param file
+	 *           The file to load and convert
+	 * @return
+	 *        The converted level object
+	 * @throws IOException
+	 *                   An IOException is thrown if there is a problem reading the file
+	 */
 	public static Level Convert(String file) throws IOException {
 		String name = new File(file).getName().split("\\.")[0];
 		DatToGGS newlvl = new DatToGGS();

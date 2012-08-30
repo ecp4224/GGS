@@ -18,7 +18,6 @@ import com.gamezgalaxy.GGS.server.Server;
 import com.gamezgalaxy.GGS.server.Tick;
 
 public class LevelHandler {
-	// TODO: System of detected unloaded. Someone else do that please.
 
 	public List<Level> levels = new CopyOnWriteArrayList<Level>();
 	

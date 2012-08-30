@@ -76,8 +76,14 @@ public abstract class Block implements Serializable {
 	
 	private static ArrayList<Block> custom = new ArrayList<Block>();
 	
+	/**
+	 * The ID of the block
+	 */
 	public byte ID;
 	
+	/**
+	 * The name of the block
+	 */
 	public String name;
 	
 	/**
