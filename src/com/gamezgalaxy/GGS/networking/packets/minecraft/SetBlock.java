@@ -25,10 +25,6 @@ import com.gamezgalaxy.GGS.world.PlaceMode;
  *
  */
 public class SetBlock extends Packet {
-	public short X;
-	public short Y;
-	public short Z;
-	public byte block;
 	public SetBlock(String name, byte ID, PacketManager parent, PacketType packetType) {
 		super(name, ID, parent, packetType);
 	}
@@ -37,11 +33,15 @@ public class SetBlock extends Packet {
 		this.length = 8;
 	}
 	@Override
-	public void Write(IOClient player, Server server) {
+	public void Write(IOClient player, Server server, Object...parma) {
 		PacketPrepareEvent event = new PacketPrepareEvent(player, this, server);
 		server.getEventSystem().callEvent(event);
 		if (event.isCancelled())
 			return;
+		short X = ((Short)parma[0]).shortValue();
+		short Y = ((Short)parma[1]).shortValue();
+		short Z = ((Short)parma[2]).shortValue();
+		byte block = ((Byte)parma[3]).byteValue();
 		ByteBuffer bb = ByteBuffer.allocate(8);
 		bb.put((byte)0x06);
 		bb.putShort(X);
@@ -70,6 +70,9 @@ public class SetBlock extends Packet {
 		PlaceMode pm = PlaceMode.getType(bb.get(6));
 		byte block = bb.get(7);
 		p.HandleBlockChange(X, Y, Z, pm, block);
+	}
+	@Override
+	public void Write(IOClient player, Server servers) {
 	}
 
 }

@@ -21,8 +21,6 @@ import com.gamezgalaxy.GGS.networking.packets.PacketType;
 import com.gamezgalaxy.GGS.server.Server;
 
 public class TP extends Packet {
-	public byte pID;
-	public Player tp;
 	public TP(String name, byte ID, PacketManager parent, PacketType packetType) {
 		super(name, ID, parent, packetType);
 		// TODO Auto-generated constructor stub
@@ -51,12 +49,14 @@ public class TP extends Packet {
 	}
 
 	@Override
-	public void Write(IOClient p, Server server) { //PLAYER IS THE PLAYER RECIEVING THE DATA, TP IS THE PERSON TP'ING
+	public void Write(IOClient p, Server server, Object...parma) { //PLAYER IS THE PLAYER RECIEVING THE DATA, TP IS THE PERSON TP'ING
 		PacketPrepareEvent event = new PacketPrepareEvent(p, this, server);
 		server.getEventSystem().callEvent(event);
 		if (event.isCancelled())
 			return;
 		Player player;
+		Player tp = (Player)parma[0];
+		byte pID = ((Byte)parma[1]).byteValue();
 		if (p instanceof Player) {
 			player = (Player)p;
 		}
@@ -83,6 +83,10 @@ public class TP extends Packet {
 		dos.writeShort(x);
 		dos.flush();
 		return baos.toByteArray();
+	}
+
+	@Override
+	public void Write(IOClient player, Server servers) {
 	}
 
 }

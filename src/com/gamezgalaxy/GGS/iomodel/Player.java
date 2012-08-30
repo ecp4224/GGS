@@ -383,14 +383,10 @@ public class Player extends IOClient {
 		if (updateLevel)
 			l.setTile(block, X, Y, Z, s);
 		//Do this way to save on packet overhead
-		SetBlock sb = (SetBlock)(s.getPacketManager().getPacket((byte) 0x05));
-		sb.X = X;
-		sb.Y = Y;
-		sb.Z = Z;
-		sb.block = block.getVisableBlock();
+		Packet sb = s.getPacketManager().getPacket((byte)0x05);
 		for (Player p : s.players)
 			if (p.level == l)
-				sb.Write(p, s);
+				sb.Write(p, s, X, Y, Z, block.getVisableBlock());
 	}
 	
 	/**
@@ -401,12 +397,7 @@ public class Player extends IOClient {
  	 * @param block The block to send
 	 */
 	public void SendBlockChange(short X, short Y, short Z, Block block) {
-		SetBlock sb = (SetBlock)(server.getPacketManager().getPacket((byte) 0x05));
-		sb.X = X;
-		sb.Y = Y;
-		sb.Z = Z;
-		sb.block = block.getVisableBlock();
-		sb.Write(this, server);
+		server.getPacketManager().getPacket((byte)0x05).Write(this, server, X, Y, Z, block.getVisableBlock());
 	}
 	
 	/**
@@ -437,10 +428,7 @@ public class Player extends IOClient {
 	 * @param bottomline The bottom line of the MoTD screen
 	 */
 	public void sendMoTD(String topline, String bottomline) {
-		MOTD m = (MOTD)(pm.getPacket("MOTD"));
-		m.topLine = topline;
-		m.bottomLine = bottomline;
-		m.Write(this, pm.server);
+		pm.getPacket("MOTD").Write(this, pm.server, topline, bottomline);
 	}
 	
 	public void UpdatePos() throws IOException {
@@ -469,9 +457,7 @@ public class Player extends IOClient {
 	public void spawnPlayer(Player p) {
 		if (seeable.contains(p))
 			return;
-		SpawnPlayer sp = (SpawnPlayer)(pm.getPacket((byte)0x07));
-		sp.spawn = p;
-		sp.Write(this, p.pm.server);
+		pm.getPacket((byte)0x07).Write(this, server, p);
 		seeable.add(p);
 	}
 
@@ -668,13 +654,10 @@ public class Player extends IOClient {
 	}
 	
 	protected void TP() {
-		TP t = (TP)(pm.getPacket("TP"));
-		t.pID = ID;
-		t.tp = this; //This player is teleporting
-		t.Write(this, pm.server); //Tell him that
-		for (Player p : pm.server.players) {
-			if (p.level == level && p != this)
-				t.Write(p, p.pm.server); //Tell all the other players as well...
+		Packet p = pm.getPacket("TP");
+		for (Player pp : pm.server.players) {
+			if (pp.level == level)
+				p.Write(pp, pp.pm.server, this, ID); //Tell all the other players as well...
 		}
 	}
 	
@@ -930,9 +913,7 @@ public class Player extends IOClient {
 	public void Despawn(Player p) {
 		if (!seeable.contains(p))
 			return;
-		DespawnPlayer pa = (DespawnPlayer)(pm.getPacket((byte)0x0c));
-		pa.pID = p.ID;
-		pa.Write(this, pm.server);
+		pm.getPacket((byte)0x0c).Write(this, pm.server, p.ID);
 		seeable.remove(p);
 	}
 	

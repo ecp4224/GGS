@@ -19,8 +19,6 @@ import com.gamezgalaxy.GGS.server.Server;
 
 public class MOTD extends Packet {
 
-	public String topLine;
-	public String bottomLine;
 	public MOTD(String name, byte ID, PacketManager parent,
 			PacketType packetType) {
 		super(name, ID, parent, packetType);
@@ -32,12 +30,14 @@ public class MOTD extends Packet {
 	}
 
 	@Override
-	public void Write(IOClient player, Server server) {
+	public void Write(IOClient player, Server server, Object...parma) {
 		PacketPrepareEvent event = new PacketPrepareEvent(player, this, server);
 		server.getEventSystem().callEvent(event);
 		if (event.isCancelled())
 			return;
 		try {
+			String topLine = (String)parma[0];
+			String bottomLine = (String)parma[1];
 			byte[] finals = new byte[131];
 			finals[0] = ID;
 			finals[1] = 0x07;
@@ -65,6 +65,10 @@ public class MOTD extends Packet {
 	public void Handle(byte[] message, Server server, IOClient player) {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public void Write(IOClient player, Server servers) {
 	}
 
 }

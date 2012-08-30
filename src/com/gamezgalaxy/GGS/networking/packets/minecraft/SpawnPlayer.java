@@ -22,7 +22,6 @@ import com.gamezgalaxy.GGS.server.Server;
 
 public class SpawnPlayer extends Packet {
 
-	public Player spawn;
 	public SpawnPlayer(String name, byte ID, PacketManager parent,
 			PacketType packetType) {
 		super(name, ID, parent, packetType);
@@ -40,7 +39,7 @@ public class SpawnPlayer extends Packet {
 	}
 
 	@Override
-	public void Write(IOClient p, Server server) {
+	public void Write(IOClient p, Server server, Object...parma) {
 		PacketPrepareEvent event = new PacketPrepareEvent(p, this, server);
 		server.getEventSystem().callEvent(event);
 		if (event.isCancelled())
@@ -52,6 +51,7 @@ public class SpawnPlayer extends Packet {
 		else
 			return;
 		try {
+			Player spawn = (Player)parma[0];
 			byte[] send = new byte[74];
 			send[0] = ID;
 			send[1] = (spawn == player) ? (byte)0xFF : spawn.getID();
@@ -80,6 +80,10 @@ public class SpawnPlayer extends Packet {
 		dos.writeShort(x);
 		dos.flush();
 		return baos.toByteArray();
+	}
+
+	@Override
+	public void Write(IOClient player, Server servers) {
 	}
 
 }

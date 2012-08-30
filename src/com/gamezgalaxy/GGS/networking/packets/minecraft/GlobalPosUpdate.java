@@ -19,7 +19,6 @@ import com.gamezgalaxy.GGS.server.Server;
 
 public class GlobalPosUpdate extends Packet {
 
-	public Player toupdate;
 	public GlobalPosUpdate(String name, byte ID, PacketManager parent,
 			PacketType packetType) {
 		super(name, ID, parent, packetType);
@@ -69,7 +68,7 @@ public class GlobalPosUpdate extends Packet {
 	}
 
 	@Override
-	public void Write(IOClient p, Server server) {
+	public void Write(IOClient p, Server server, Object...parma) {
 		PacketPrepareEvent event = new PacketPrepareEvent(p, this, server);
 		server.getEventSystem().callEvent(event);
 		if (event.isCancelled())
@@ -81,6 +80,7 @@ public class GlobalPosUpdate extends Packet {
 		else
 			return;
 		byte[] finals;
+		Player toupdate = (Player)parma[0];
 		if (posUpdate(toupdate) && rotUpdate(toupdate)) {
 			finals = new byte[7];
 			finals[0] = ID;
@@ -129,6 +129,10 @@ public class GlobalPosUpdate extends Packet {
 	
 	public boolean rotUpdate(Player toupdate) {
 		return toupdate.yaw - toupdate.oldyaw != 0 || toupdate.pitch - toupdate.oldpitch != 0;
+	}
+
+	@Override
+	public void Write(IOClient player, Server servers) {
 	}
 
 }

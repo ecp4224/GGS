@@ -18,7 +18,6 @@ import com.gamezgalaxy.GGS.server.Server;
 
 public class DespawnPlayer extends Packet {
 
-	public byte pID;
 	public DespawnPlayer(String name, byte ID, PacketManager parent,
 			PacketType packetType) {
 		super(name, ID, parent, packetType);
@@ -36,20 +35,24 @@ public class DespawnPlayer extends Packet {
 	}
 
 	@Override
-	public void Write(IOClient player, Server server) {
+	public void Write(IOClient player, Server server, Object...parrams) {
 		PacketPrepareEvent event = new PacketPrepareEvent(player, this, server);
 		server.getEventSystem().callEvent(event);
 		if (event.isCancelled())
 			return;
 		byte[] finals = new byte[2];
 		finals[0] = ID;
-		finals[1] = pID;
+		finals[1] = ((Byte)parrams[0]).byteValue();
 		try {
 			player.WriteData(finals);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public void Write(IOClient player, Server servers) {
 	}
 
 }

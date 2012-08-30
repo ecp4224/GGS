@@ -24,7 +24,11 @@ public abstract class Packet {
 	
 	public abstract void Handle(byte[] message, Server server, IOClient player);
 	
-	public abstract void Write(IOClient player, Server server);
+	public abstract void Write(IOClient player, Server servers);
+	
+	public void Write(IOClient player, Server servers, Object...parrams) {
+		Write(player, servers);
+	}
 	
 	public Packet(String name, byte ID, PacketManager parent, PacketType packetType) {
 		this.name = name;
@@ -32,5 +36,7 @@ public abstract class Packet {
 		this.parent = parent;
 		this.packetType = packetType;
 	}
+	
+	
 
 }
