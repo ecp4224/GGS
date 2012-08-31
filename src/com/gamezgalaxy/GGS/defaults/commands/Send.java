@@ -41,20 +41,23 @@ public class Send extends Command
 	{
 		if(player.lastCommunication == null)
 		{
-			if(args.length == 3)
+			if(player.getServer().getPlayer(args[0]) != null)
 			{
-				Player to = player.getServer().getPlayer(args[1]);
-
+				Player to = player.getServer().getPlayer(args[0]);
+				String s = "";
+				for (int i = 1; i < args.length; i++) {
+					s += args[i] + " ";
+				}
 				if(to != null)
 				{
-					to.sendMessage("PM FROM " + player.username + ": " + args[2]);
+					to.sendMessage("PM FROM " + player.username + ": " + s);
 					to.sendMessage("Use /send (message) to reply.");
 					to.sendMessage("Use /send (username) (message) to start a new chat.");
 
 					to.lastCommunication = player;
 					player.lastCommunication = to;
 				} else {
-					player.sendMessage(to.username + " is not online.");
+					player.sendMessage(args[0] + " is not online.");
 				}
 			} else {
 				player.sendMessage("No chat session exists. Please define the user you are trying to chat with.");
@@ -63,11 +66,13 @@ public class Send extends Command
 			if(args.length >= 2)
 			{
 				Player to = player.lastCommunication;
-
-				if(to != null)
+				String s = "";
+				for (int i = 0; i < args.length; i++) {
+					s += args[i] + " ";
+				}
+				if(player.getServer().getPlayer(to.username) != null)
 				{
-					to.sendMessage("PM FROM " + player.username + ": " + args[1]);
-
+					to.sendMessage("PM FROM " + player.username + ": " + s);
 					to.lastCommunication = player;
 				} else {
 					player.sendMessage(to.username + " is not online.");

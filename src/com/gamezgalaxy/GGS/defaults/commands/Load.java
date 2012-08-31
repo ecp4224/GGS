@@ -43,10 +43,10 @@ public class Load extends Command
 	@Override
 	public void execute(Player player, String[] args)
 	{
-		if(args.length == 2)
+		if(args.length == 1)
 		{
 			LevelHandler handler = player.getServer().getLevelHandler();
-			File levelFile = new File("levels/" + args[1] + ".ggs");
+			File levelFile = new File("levels/" + args[0] + ".ggs");
 
 			if(levelFile.exists())
 			{

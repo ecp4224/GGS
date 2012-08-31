@@ -39,24 +39,24 @@ public class TP extends Command
 	@Override
 	public void execute(Player player, String[] args)
 	{
-		if(args.length == 2)
+		if(args.length == 1)
 		{
-			Player other = player.getServer().getPlayer(args[1]);
+			Player other = player.getServer().getPlayer(args[0]);
 			if(other != null)
 			{
 				player.setPos(other.getX(), other.getY(), other.getZ());
 			} else {
 				player.sendMessage(args[1] + " is not online.");
 			}
-		} else if(args.length == 3) {
-			Player otherTPing = player.getServer().getPlayer(args[1]);
-			Player otherTPto = player.getServer().getPlayer(args[2]);
+		} else if(args.length == 2) {
+			Player otherTPing = player.getServer().getPlayer(args[0]);
+			Player otherTPto = player.getServer().getPlayer(args[1]);
 
 			if(otherTPing != null && otherTPto != null)
 			{
 				otherTPing.setPos(otherTPto.getX(), otherTPto.getY(), otherTPto.getZ());
 			} else {
-				player.sendMessage("Either " + args[1] + " or " + args[2] + " is not online.");
+				player.sendMessage("Either " + args[0] + " or " + args[1] + " is not online.");
 			}
 		} else {
 			player.sendMessage("Correct format: /tp (player) or /tp (player) (to player)");

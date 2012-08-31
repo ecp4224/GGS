@@ -73,6 +73,16 @@ public class BanHandler {
 		}
 	}
 	
+	public static void unban(String username) {
+		if (banned.contains(username))
+			banned.remove(username);
+		try {
+			save();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public static void ban(String username) {
 		ban(username, "null");
 	}

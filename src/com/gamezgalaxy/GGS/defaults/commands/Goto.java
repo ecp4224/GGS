@@ -41,10 +41,10 @@ public class Goto extends Command
 	@Override
 	public void execute(Player player, String[] args)
 	{
-		if(args.length == 2)
+		if(args.length == 1)
 		{
 			LevelHandler handler = player.getServer().getLevelHandler();
-			Level level = handler.findLevel(args[1]);
+			Level level = handler.findLevel(args[0]);
 
 			if(level != null)
 			{
