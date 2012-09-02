@@ -14,11 +14,13 @@ import java.util.*;
 
 import com.gamezgalaxy.GGS.API.EventSystem;
 import com.gamezgalaxy.GGS.API.plugin.CommandHandler;
+import com.gamezgalaxy.GGS.API.plugin.Plugin;
 import com.gamezgalaxy.GGS.API.plugin.PluginHandler;
 import com.gamezgalaxy.GGS.chat.ChatColor;
 import com.gamezgalaxy.GGS.defaults.commands.*;
 import com.gamezgalaxy.GGS.groups.Group;
 import com.gamezgalaxy.GGS.iomodel.Player;
+import com.gamezgalaxy.GGS.networking.IOClient;
 import com.gamezgalaxy.GGS.networking.packets.PacketManager;
 import com.gamezgalaxy.GGS.util.logger.LogInterface;
 import com.gamezgalaxy.GGS.util.logger.Logger;
@@ -27,12 +29,13 @@ import com.gamezgalaxy.GGS.sql.ISQL;
 import com.gamezgalaxy.GGS.sql.MySQL;
 import com.gamezgalaxy.GGS.system.BanHandler;
 import com.gamezgalaxy.GGS.system.heartbeat.Beat;
+import com.gamezgalaxy.GGS.system.heartbeat.Heart;
 import com.gamezgalaxy.GGS.system.heartbeat.MBeat;
 import com.gamezgalaxy.GGS.system.heartbeat.WBeat;
 import com.gamezgalaxy.GGS.world.Level;
 import com.gamezgalaxy.GGS.world.LevelHandler;
 
-public class Server implements LogInterface {
+public final class Server implements LogInterface {
 	private boolean startPlugins;
 	private PacketManager pm;
 	private LevelHandler lm;
@@ -44,19 +47,55 @@ public class Server implements LogInterface {
 	private Thread tick;
 	private Beat heartbeater;
 	private EventSystem es;
+	private String Salt;
 	private ISQL sql;
+	/**
+	 * The players currently on the server
+	 */
 	public ArrayList<Player> players = new ArrayList<Player>();
+	/**
+	 * Weather the server is running or not
+	 */
 	public boolean Running;
+	/**
+	 * The port of the server
+	 */
 	public int Port;
+	/**
+	 * How many players are allowed on the server
+	 */
 	public int MaxPlayers;
+	/**
+	 * The name of the server
+	 */
 	public String Name;
+	/**
+	 * The name of the server that will appear on the WoM list
+	 */
 	public String altName;
+	/**
+	 * The description of the server
+	 */
 	public String description;
+	/**
+	 * WoM Flags
+	 */
 	public String flags;
+	/**
+	 * The MoTD of the server (The message the player sees when first joining the server)
+	 */
 	public String MOTD;
-	public String Salt;
+	/**
+	 * The main level (The level the user first joins when the player joins the server)
+	 */
 	public Level MainLevel;
+	/**
+	 * Weather or not the server is public
+	 */
 	public boolean Public;
+	/**
+	 * The default filename for the system properties
+	 */
 	public final String configpath = "system.config";
 	public final LevelHandler getLevelHandler() {
 		return lm;
@@ -84,6 +123,34 @@ public class Server implements LogInterface {
 		this.Name = Name;
 		this.MOTD = MOTD;
 		tick = new Ticker();
+	}
+	
+	/**
+	 * Get the salt.
+	 * <b>This method can only be called by heartbeaters and the Connect Packet.
+	 * If this method is called anywhere else, then a {@link IllegalAccessException} is thrown</b>
+	 * @return
+	 *        The server Salt
+	 * @throws IllegalAccessException
+	 *                               This is thrown when an attempt to call this method
+	 *                               is invalid.
+	 */
+	public final String getSalt() throws IllegalAccessException {
+		StackTraceElement[] stacks = Thread.currentThread().getStackTrace();
+		try {
+			StackTraceElement e = stacks[2]; //The heartbeat class will always be the 3rd in the stacktrace if the heartbeat is being sent correctly
+			Class<?> class_ = Class.forName(e.getClassName());
+			Class<? extends Heart> runClass = class_.asSubclass(Heart.class);
+			return Salt;
+		} catch (ClassNotFoundException e1) { }
+		catch (ClassCastException e2) { }
+		catch (ArrayIndexOutOfBoundsException e3) { }
+		try {
+			if (stacks[4].getClassName().equals("com.gamezgalaxy.GGS.networking.packets.minecraft.Connect"))
+				return Salt;
+		}
+		catch (ArrayIndexOutOfBoundsException e3) { }
+		throw new IllegalAccessException("The salt can only be accessed by the heartbeaters and the Connect packet!");
 	}
 	
 	public void loadSystemProperties() {
@@ -306,7 +373,7 @@ public class Server implements LogInterface {
 		}
 	}
 
-	public class Ticker extends Thread {
+	private class Ticker extends Thread {
 
 		@Override
 		public void run() {

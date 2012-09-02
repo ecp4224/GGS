@@ -225,7 +225,11 @@ public class Player extends IOClient {
 	}
 	
 	public String getRealmppass() {
-		digest.update((String.valueOf(server.Salt) + username).getBytes());
+		try {
+			digest.update((String.valueOf(server.getSalt()) + username).getBytes());
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		}
 		return new BigInteger(1, digest.digest()).toString(16);
 	}
 	

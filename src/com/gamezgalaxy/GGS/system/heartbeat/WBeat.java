@@ -19,11 +19,16 @@ public class WBeat extends Heart {
 
 	@Override
 	public String Prepare(Server server) {
-		return "salt=" + server.Salt +
-				"&users=" + server.players.size() +
-				"&alt=" + server.altName +
-				"&desc=" + server.description +
-				"&flags=" + server.flags;
+		try {
+			return "salt=" + server.getSalt() +
+					"&users=" + server.players.size() +
+					"&alt=" + server.altName +
+					"&desc=" + server.description +
+					"&flags=" + server.flags;
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+			return "";
+		}
 	}
 	
 	@Override

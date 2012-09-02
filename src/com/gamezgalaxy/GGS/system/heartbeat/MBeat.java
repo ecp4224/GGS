@@ -16,13 +16,18 @@ public class MBeat extends Heart {
 	private boolean show = false;
 	@Override
 	public String Prepare(Server server) {
-		return "port=" + server.Port +
-				"&max=" + server.MaxPlayers +
-				"&name=" + server.Name.trim().replace(" ", "%20") +
-				"&public=" + server.Public +
-				"&version=7" +
-				"&salt=" + server.Salt +
-				"&users=" + server.players.size();
+		try {
+			return "port=" + server.Port +
+					"&max=" + server.MaxPlayers +
+					"&name=" + server.Name.trim().replace(" ", "%20") +
+					"&public=" + server.Public +
+					"&version=7" +
+					"&salt=" + server.getSalt() +
+					"&users=" + server.players.size();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+			return "";
+		}
 	}
 	
 	@Override
