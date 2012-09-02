@@ -38,6 +38,7 @@ public class Server implements LogInterface {
 	private LevelHandler lm;
 	private Logger logger;
 	private CommandHandler ch;
+	private Properties p;
 	private PluginHandler ph;
 	private ArrayList<Tick> ticks = new ArrayList<Tick>();
 	private Thread tick;
@@ -75,6 +76,9 @@ public class Server implements LogInterface {
 	public final ISQL getSQL() {
 		return sql;
 	}
+	public final Properties getSystemProperties() {
+		return p;
+	}
 	public Server(String Name, int Port, String MOTD) {
 		this.Port = Port;
 		this.Name = Name;
@@ -82,17 +86,17 @@ public class Server implements LogInterface {
 		tick = new Ticker();
 	}
 	
-	public void Load() {
-		Name = Properties.getValue("Server-Name");
-		altName = Properties.getValue("WOM-Alternate-Name");
-		MOTD = Properties.getValue("MOTD");
-		Port = Properties.getInt("Port");
-		MaxPlayers = Properties.getInt("Max-Players");
-		Public = Properties.getBool("Public");
-		description = Properties.getValue("WOM-Server-description");
-		flags = Properties.getValue("WOM-Server-Flags");
+	public void loadSystemProperties() {
+		Name = getSystemProperties().getValue("Server-Name");
+		altName = getSystemProperties().getValue("WOM-Alternate-Name");
+		MOTD = getSystemProperties().getValue("MOTD");
+		Port = getSystemProperties().getInt("Port");
+		MaxPlayers = getSystemProperties().getInt("Max-Players");
+		Public = getSystemProperties().getBool("Public");
+		description = getSystemProperties().getValue("WOM-Server-description");
+		flags = getSystemProperties().getValue("WOM-Server-Flags");
 		try {
-			sql = (ISQL)Class.forName(Properties.getValue("SQL-Driver")).newInstance();
+			sql = (ISQL)Class.forName(getSystemProperties().getValue("SQL-Driver")).newInstance();
 		} catch (InstantiationException e) {
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {
@@ -100,16 +104,18 @@ public class Server implements LogInterface {
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
-		sql.setPrefix(Properties.getValue("SQL-table-prefix"));
+		sql.setPrefix(getSystemProperties().getValue("SQL-table-prefix"));
 		if (sql instanceof MySQL) {
 			final MySQL mysql = (MySQL)sql;
-			mysql.setUsername(Properties.getValue("MySQL-username"));
-			mysql.setPassword(Properties.getValue("MySQL-password"));
-			mysql.setDatabase(Properties.getValue("MySQL-database-name"));
+			mysql.setUsername(getSystemProperties().getValue("MySQL-username"));
+			mysql.setPassword(getSystemProperties().getValue("MySQL-password"));
+			mysql.setDatabase(getSystemProperties().getValue("MySQL-database-name"));
 		}
 	}
 
 	public void Start() {
+		if (Running)
+			return;
 		Running = true;
 		BanHandler.init();
 		es = new EventSystem(this);
@@ -136,13 +142,13 @@ public class Server implements LogInterface {
 		Log("Starting..");
 		ch = new CommandHandler(this);
 		Group.Load(this);
-		Properties.init(this);
-		Load();
+		p = Properties.init(this);
+		loadSystemProperties();
 		pm = new PacketManager(this);
 		pm.StartReading();
 		Log("Loading main level..");
 		lm = new LevelHandler(this);
-		if (!new File(Properties.getValue("MainLevel")).exists()) {
+		if (!new File(getSystemProperties().getValue("MainLevel")).exists()) {
 			Level l = new Level((short)64, (short)64, (short)64);
 			l.name = "Main";
 			l.FlatGrass();
@@ -152,7 +158,7 @@ public class Server implements LogInterface {
 				e.printStackTrace();
 			}
 		}
-		MainLevel = lm.loadLevel(Properties.getValue("MainLevel"));
+		MainLevel = lm.loadLevel(getSystemProperties().getValue("MainLevel"));
 		lm.loadLevels();
 		tick.start();
 		Log("Done!");
@@ -188,9 +194,6 @@ public class Server implements LogInterface {
 		Log("Done!");
 		ph = new PluginHandler();
 		ph.loadplugins(this);
-		//ConsoleCommands consoleCommands = new ConsoleCommands(this);
-		//consoleCommands.start();
-
 		try {
 			addCommands();
 		} catch (IOException e) {
@@ -227,7 +230,7 @@ public class Server implements LogInterface {
 		ch.addCommand(new Load());
 	}
 	
-	public static String LetterOrNumber(String string) {
+	private static String LetterOrNumber(String string) {
 		final String works = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890";
 		String finals = "";
 		boolean change = true;
@@ -248,6 +251,8 @@ public class Server implements LogInterface {
 	}
 
 	public void Stop() throws InterruptedException, IOException {
+		if (!Running)
+			return;
 		Running = false;
 		Log("Stopping server...");
 		for(Player p : players)
@@ -339,65 +344,6 @@ public class Server implements LogInterface {
 
 	public Player getPlayer(String name)
 	{
-		for(Player p : players)
-		{
-			if(p.username.equals(name))
-			{
-				return p;
-			}
-		}
-
-		return null;
-	}
-
-	public void removeLineFromFile(String file, String lineToRemove)
-	{
-		try {
-
-			File inFile = new File(file);
-
-			if (!inFile.isFile()) {
-				System.out.println("Parameter is not an existing file");
-				return;
-			}
-
-			//Construct the new file that will later be renamed to the original filename.
-			File tempFile = new File(inFile.getAbsolutePath() + ".tmp");
-
-			BufferedReader br = new BufferedReader(new FileReader(file));
-			PrintWriter pw = new PrintWriter(new FileWriter(tempFile));
-
-			String line = null;
-
-			//Read from the original file and write to the new
-			//unless content matches data to be removed.
-			while ((line = br.readLine()) != null) {
-
-				if (!line.trim().equals(lineToRemove)) {
-
-					pw.println(line);
-					pw.flush();
-				}
-			}
-			pw.close();
-			br.close();
-
-			//Delete the original file
-			if (!inFile.delete()) {
-				System.out.println("Could not delete file");
-				return;
-			}
-
-			//Rename the new file to the filename the original file had.
-			if (!tempFile.renameTo(inFile))
-				System.out.println("Could not rename file");
-
-		}
-		catch (FileNotFoundException ex) {
-			ex.printStackTrace();
-		}
-		catch (IOException ex) {
-			ex.printStackTrace();
-		}
+		return findPlayer(name);
 	}
 }

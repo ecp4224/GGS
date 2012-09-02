@@ -100,7 +100,6 @@ public class LevelHandler {
 		try {
 			level.Unload(server, save);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		levels.remove(level);

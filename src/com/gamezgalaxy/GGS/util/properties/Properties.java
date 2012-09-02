@@ -20,53 +20,58 @@ import java.util.ArrayList;
 import com.gamezgalaxy.GGS.server.Server;
 
 public class Properties {
-	private static ArrayList<String> settings = new ArrayList<String>();
+	private ArrayList<String> settings = new ArrayList<String>();
+	private static boolean init = false;
 	
-	public static void init(Server server) {
+	public static Properties init(Server server) {
+		if (init)
+			return null;
+		Properties p = new Properties();
 		if (!new File("properties").exists())
 			new File("properties").mkdir();
 		if (!new File("properties/" + server.configpath).exists())
-			makeDefaults(server.configpath, server);
+			makeDefaults(server.configpath, server, p);
 		else {
 			try {
-				load(server.configpath);
+				p.load(server.configpath);
+				init = true;
 			} catch (IOException e) {
 				server.Log("ERROR LOADING CONFIG!");
 				e.printStackTrace();
 			}
 		}
+		return p;
 		
 	}
 	
-	public static void makeDefaults(String filename, Server server) {
+	private static void makeDefaults(String filename, Server server, Properties p) {
 		//TODO Fill in all defaults
 		server.Log("System config not found..creating..");
-		addSetting("Server-Name", "[GGS] Default Server");
-		addSetting("WOM-Alternate-Name", "[GGS] Default Server");
-		addSetting("MOTD", "Welcome!");
-		addSetting("Port", 25565);
-		addSetting("Max-Players", 30);
-		addSetting("Public", true);
-		addSetting("WOM-Server-description", "A server");
-		addSetting("WOM-Server-Flags", "[GGS]");
-		addSetting("MainLevel", "levels/Main.ggs");
-		addSetting("SQL-Driver", "com.gamezgalaxy.GGS.sql.SQLite");
-		addSetting("SQL-table-prefix", "ggs");
-		addSetting("MySQL-username", "root");
-		addSetting("MySQL-password", "password");
-		addSetting("MySQL-database-name", "ggsdb");
+		p.addSetting("Server-Name", "[GGS] Default Server");
+		p.addSetting("WOM-Alternate-Name", "[GGS] Default Server");
+		p.addSetting("MOTD", "Welcome!");
+		p.addSetting("Port", 25565);
+		p.addSetting("Max-Players", 30);
+		p.addSetting("Public", true);
+		p.addSetting("WOM-Server-description", "A server");
+		p.addSetting("WOM-Server-Flags", "[GGS]");
+		p.addSetting("MainLevel", "levels/Main.ggs");
+		p.addSetting("SQL-Driver", "com.gamezgalaxy.GGS.sql.SQLite");
+		p.addSetting("SQL-table-prefix", "ggs");
+		p.addSetting("MySQL-username", "root");
+		p.addSetting("MySQL-password", "password");
+		p.addSetting("MySQL-database-name", "ggsdb");
 		try {
-			save(filename);
+			p.save(filename);
+			init = true;
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	
-	public static void save(String filename) throws IOException {
+	public void save(String filename) throws IOException {
 		if (new File("properties/" + filename).exists())
 			new File("properties/" + filename).delete();
 		new File("properties/" + filename).createNewFile();
@@ -77,7 +82,9 @@ public class Properties {
 		out.close();
 	}
 	
-	public static void load(String filename) throws IOException {
+	public void load(String filename) throws IOException {
+		if (settings.size() > 0)
+			settings.clear();
 		FileInputStream fstream = new FileInputStream("properties/" + filename);
 		DataInputStream in = new DataInputStream(fstream);
 		BufferedReader br = new BufferedReader(new InputStreamReader(in));
@@ -90,19 +97,46 @@ public class Properties {
 		in.close();
 	}
 	
-	public static boolean getBool(String key) {
+	/**
+	 * Get the boolean value of the setting <b>key</b>
+	 * @param key
+	 *           The setting to lookup
+	 * @return
+	 *         returns true if the setting equals "true" (regardless of casing)
+	 *         returns false if <b>any other value</b> is found
+	 */
+	public boolean getBool(String key) {
 		return getValue(key).equalsIgnoreCase("true");
 	}
 	
-	public static int getInt(String key) {
+	/**
+	 * Get the int value of the setting <b>key</b>
+	 * @param key
+	 *           The setting to lookup
+	 * @return
+	 *         The int value of that setting
+	 * @throws NumberFormatException
+	 *                              If the setting does not contain a number,
+	 *                              then a {@link NumberFormatException} is thrown
+	 */
+	public int getInt(String key) throws NumberFormatException {
 		int toreturn = -1;
-		try {
-			toreturn = Integer.parseInt(getValue(key));
-		} catch (Exception e) { }
+		toreturn = Integer.parseInt(getValue(key));
 		return toreturn;
 	}
 	
-	public static String getValue(String key) {
+	/**
+	 * Get the value of the setting <b>key</b>
+	 * If no setting is found, then <b>"null"</b> will be
+	 * returned, however, the string value returned <b>WONT</b>
+	 * be null, the string value returned will equal "null"
+	 * @param 
+	 *        key The setting to get
+	 * @return 
+	 *        The value of that setting, if no value is found, then it will return
+	 *        "null"
+	 */
+	public String getValue(String key) {
 		synchronized(settings) {
 			for (String k : settings) {
 				String finalk = k.split("=")[0].trim();
@@ -113,34 +147,90 @@ public class Properties {
 		}
 	}
 	
-	public static void updateSetting(String key, boolean value) {
+	/**
+	 * Change a setting in the properties file
+	 * This can also be used to add a setting, but its
+	 * recommended you use {@link #addSetting(String, boolean)}
+	 * to add a setting.
+	 * @param 
+	 *       key The name of the setting
+	 * @param 
+	 *       value The new value for this setting
+	 */
+	public void updateSetting(String key, boolean value) {
 		updateSetting(key, (value) ? "true" : "false");
 	}
 	
-	public static void updateSetting(String key, int value) {
+	/**
+	 * Change a setting in the properties file
+	 * This can also be used to add a setting, but its
+	 * recommended you use {@link #addSetting(String, int)}
+	 * to add a setting.
+	 * @param 
+	 *       key The name of the setting
+	 * @param
+	 *       value The new value for this setting
+	 */
+	public void updateSetting(String key, int value) {
 		updateSetting(key, "" + value);
 	}
 	
-	public static void updateSetting(String key, String value) {
+	/**
+	 * Change a setting in the properties file
+	 * This can also be used to add a setting, but its
+	 * recommended you use {@link #addSetting(String, String)}
+	 * to add a setting.
+	 * @param 
+	 *        key The name of the setting
+	 * @param 
+	 *        value The new value for this setting
+	 */
+	public void updateSetting(String key, String value) {
 		removeSetting(key);
 		addSetting(key, value);
 	}
 	
-	public static void addSetting(String key, boolean value) {
+	/**
+	 * Add a setting to the properties file
+	 * @param 
+	 *       key The name of the setting
+	 * @param 
+	 *       value The default value for this setting
+	 */
+	public void addSetting(String key, boolean value) {
 		addSetting(key, (value) ? "true" : "false");
 	}
 	
-	public static void addSetting(String key, int value) {
+	/**
+	 * Add a setting to the properties file
+	 * @param 
+	 *        key The name of the setting
+	 * @param 
+	 *        value The default value for this setting
+	 */
+	public void addSetting(String key, int value) {
 		addSetting(key, "" + value);
 	}
 	
-	public static void addSetting(String key, String value) {
+	/**
+	 * Add a setting to the properties file
+	 * @param 
+	 *        key The name of the setting
+	 * @param 
+	 *        value The default value for this setting
+	 */
+	public void addSetting(String key, String value) {
 		synchronized(settings) {
 			settings.add(key + " = " + value);
 		}
 	}
 	
-	public static void removeSetting(String key) {
+	/**
+	 * Remove a setting from the properties file
+	 * @param 
+	 *       key The key of the setting
+	 */
+	public void removeSetting(String key) {
 		if (getValue(key).equals("null"))
 			return;
 		synchronized(settings) {
