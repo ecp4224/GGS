@@ -10,12 +10,15 @@ package com.gamezgalaxy.test.console;
 import java.io.IOException;
 import java.util.Scanner;
 
+import com.gamezgalaxy.GGS.chat.ChatColor;
+import com.gamezgalaxy.GGS.chat.Messages;
 import com.gamezgalaxy.GGS.server.Server;
 
 public class Main {
 	
 	public static void main(String[] args) {
 		Server s = new Server("Test", 25565, "Test");
+		Messages m = new Messages(s);
 		s.Start();
 		while (true) {
 			String line = new Scanner(System.in).nextLine();
@@ -24,14 +27,15 @@ public class Main {
 					s.Stop();
 					break;
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
 			}
-			else
-				s.Log(line);
+			else {
+				m.serverBroadcast(ChatColor.Purple + "[Server] " + ChatColor.White + line);
+				s.Log("[Server] " + line);
+			}
 		}
 		System.out.println("Server stopped..");
 		System.exit(0);
