@@ -45,12 +45,9 @@ public class Newlvl extends Command
 		{
 			LevelHandler handler = player.getServer().getLevelHandler();
 			handler.loadLevels();
-			Level[] levels = handler.levels.toArray(new Level[handler.levels.size()]);
-
 			if(handler.findLevel(args[0]) == null)
 			{
 				handler.newLevel(args[0], Short.valueOf(args[1]), Short.valueOf(args[2]), Short.valueOf(args[3]));
-
 				player.sendMessage("Created new level: " + args[0] + ".");
 			} else {
 				player.sendMessage("Level already exists...");

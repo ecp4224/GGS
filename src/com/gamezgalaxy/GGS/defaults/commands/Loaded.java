@@ -44,7 +44,7 @@ public class Loaded extends Command
 		LevelHandler handler = player.getServer().getLevelHandler();
 		StringBuilder finalStr = new StringBuilder();
 
-		for(Level l : handler.levels)
+		for(Level l : handler.getLevelList())
 		{
 			finalStr.append(l.name);
 			finalStr.append(", ");

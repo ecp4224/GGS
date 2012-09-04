@@ -9,6 +9,10 @@ package com.gamezgalaxy.GGS.server;
 
 public interface Tick {
 	
+	/**
+	 * When added to the server tick, this method
+	 * gets called every 10 milliseconds.
+	 */
 	void Tick();
 
 }

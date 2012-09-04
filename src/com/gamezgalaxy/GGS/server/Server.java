@@ -97,27 +97,84 @@ public final class Server implements LogInterface {
 	 * The default filename for the system properties
 	 */
 	public final String configpath = "system.config";
+	/**
+	 * The handler that handles level loading,
+	 * level unloading and finding loaded
+	 * levels
+	 * @return
+	 *        The {@link LevelHandler}
+	 */
 	public final LevelHandler getLevelHandler() {
 		return lm;
 	}
+	/**
+	 * The handler that handles events.
+	 * Use the EventSystem to register event or
+	 * call events
+	 * @return
+	 *        The {@link EventSystem}
+	 */
 	public final EventSystem getEventSystem() {
 		return es;
 	}
+	/**
+	 * Get the handler that handles the packets
+	 * @return
+	 *        The {@link PacketManager}
+	 */
 	public final PacketManager getPacketManager() {
 		return pm;
 	}
+	/**
+	 * Get the handler that handles the player
+	 * commands. Use this to add/remove commands
+	 * or excute commands
+	 * @return
+	 *        The {@link CommandHandler}
+	 */
 	public final CommandHandler getCommandHandler() {
 		return ch;
 	}
+	/**
+	 * Get the handler that handles the plugins
+	 * @return
+	 *        The {@link PluginHandler}
+	 */
 	public final PluginHandler getPluginHandler() {
 		return ph;
 	}
+	/**
+	 * The SQL object where you can execute
+	 * Queries
+	 * @return
+	 *        The {@link ISQL} object
+	 */
 	public final ISQL getSQL() {
 		return sql;
 	}
+	/**
+	 * Get the properties for {@link Server#configpath} file
+	 * @return
+	 *        The {@link Properties} object
+	 */
 	public final Properties getSystemProperties() {
 		return p;
 	}
+	/**
+	 * The contructor to make a new {@link Server} object
+	 * @param Name
+	 *            The default name of the server.
+	 *            This will be changed if the properties
+	 *            file has something different.
+	 * @param Port
+	 *            The default port of the server.
+	 *            This will be changed if the properties
+	 *            file has something different.
+	 * @param MOTD
+	 *            The MoTD message for the server.
+	 *            This will be changed if the properties
+	 *            file has something different.
+	 */
 	public Server(String Name, int Port, String MOTD) {
 		this.Port = Port;
 		this.Name = Name;
@@ -153,6 +210,10 @@ public final class Server implements LogInterface {
 		throw new IllegalAccessException("The salt can only be accessed by the heartbeaters and the Connect packet!");
 	}
 	
+	/**
+	 * Load the server properties such as the server {@link Server#Name}.
+	 * These properties will always load from the {@link Server#configpath}
+	 */
 	public void loadSystemProperties() {
 		Name = getSystemProperties().getValue("Server-Name");
 		altName = getSystemProperties().getValue("WOM-Alternate-Name");
@@ -179,7 +240,9 @@ public final class Server implements LogInterface {
 			mysql.setDatabase(getSystemProperties().getValue("MySQL-database-name"));
 		}
 	}
-
+	/**
+	 * Start the server
+	 */
 	public void Start() {
 		if (Running)
 			return;
@@ -218,7 +281,7 @@ public final class Server implements LogInterface {
 		if (!new File(getSystemProperties().getValue("MainLevel")).exists()) {
 			Level l = new Level((short)64, (short)64, (short)64);
 			l.name = "Main";
-			l.FlatGrass();
+			l.FlatGrass(this);
 			try {
 				l.Save();
 			} catch (IOException e) {
@@ -268,6 +331,17 @@ public final class Server implements LogInterface {
 		}
 	}
 	
+	/**
+	 * Search for a player based on the name given.
+	 * A part of the name will be given and will find
+	 * the full name and player. If part of the name is given, and
+	 * more than 1 player is found, then it will return null.
+	 * @param name
+	 *            The full/part name of the player
+	 * @return
+	 *        The player found. If more than 1 player is found,
+	 *        then it will return null.
+	 */
 	public Player findPlayer(String name) {
 		Player toreturn = null;
 		for (int i = 0; i < players.size(); i++) {
@@ -281,7 +355,7 @@ public final class Server implements LogInterface {
 		return toreturn;
 	}
 
-	public void addCommands() throws IOException
+	private void addCommands() throws IOException
 	{
 		ch.addCommand(new Afk());
 		ch.addCommand(new Ban());
@@ -317,6 +391,14 @@ public final class Server implements LogInterface {
 		return finals;
 	}
 
+	/**
+	 * Stop the server, this will kick all the players on the server
+	 * and stop all server services.
+	 * @throws InterruptedException
+	 *                             If something intrerruptes the process of stopping the server
+	 * @throws IOException
+	 *                    If there is a problem saving the levels that are loaded
+	 */
 	public void Stop() throws InterruptedException, IOException {
 		if (!Running)
 			return;
@@ -326,9 +408,11 @@ public final class Server implements LogInterface {
 		{
 			p.sendMessage("Stopping server...");
 		}
-
+		for (Level l : this.getLevelHandler().getLevelList()) {
+			if (l != MainLevel)
+				l.Unload(this);
+		}
 		MainLevel.Save();
-
 		tick.join();
 		logger.Stop();
 		heartbeater.stop();
@@ -339,33 +423,42 @@ public final class Server implements LogInterface {
 
 		}
 		pm.StopReading();
-
-		System.exit(0);
 	}
 	
+	/**
+	 * Log something to the logs
+	 * @param log
+	 */
 	public void Log(String log) {
 		logger.Log(log);
 	}
-
-	public boolean isStartPlugins() {
-		return startPlugins;
-	}
-
-	public void setStartPlugins(boolean startPlugins) {
-		this.startPlugins = startPlugins;
-	}
-
+	
+	/**
+	 * Get the logger object
+	 * @return
+	 *        The {@link Logger} object
+	 */
 	public Logger getLogger() {
 		return logger;
 	}
 
+	/**
+	 * Add a task to be called every 10 milliseconds
+	 * @param t
+	 *         The {@link Tick} object to call
+	 */
 	public  void Add(Tick t) {
 		synchronized(ticks) {
 			if (!ticks.contains(t))
 				ticks.add(t);
 		}
 	}
-
+	
+	/**
+	 * Remove a task from the Tick list
+	 * @param t
+	 *         The {@link Tick} object to remove
+	 */
 	public void Remove(Tick t) {
 		synchronized(ticks) {
 			if (ticks.contains(t))
@@ -396,6 +489,7 @@ public final class Server implements LogInterface {
 			}
 		}
 	}
+	
 	@Override
 	public void onLog(String message) {
 		//TODO ..colors?
@@ -408,9 +502,12 @@ public final class Server implements LogInterface {
 		System.out.println(message);
 		System.out.println("==!ERROR!==");
 	}
-
-	public Player getPlayer(String name)
-	{
+	
+	/**
+	 * Calls {@link Server#findPlayer(String)}
+	*/
+	@SuppressWarnings("deprecation")
+	public Player getPlayer(String name) {
 		return findPlayer(name);
 	}
 }

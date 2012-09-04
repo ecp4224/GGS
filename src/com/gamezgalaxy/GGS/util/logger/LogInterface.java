@@ -8,7 +8,19 @@
 package com.gamezgalaxy.GGS.util.logger;
 
 public interface LogInterface {
+	/**
+	 * This method is called when a line is written
+	 * to the log file
+	 * @param message
+	 *               The line that was written
+	 */
 	public void onLog(String message);
 	
+	/**
+	 * This method is called when a line is written
+	 * to the error log file
+	 * @param message
+	 *               The line that was written
+	 */
 	public void onError(String message);
 }

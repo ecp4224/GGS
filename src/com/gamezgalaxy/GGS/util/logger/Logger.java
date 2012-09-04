@@ -69,13 +69,13 @@ public class Logger {
 	/**
 	 * Start writing logs
 	 * @throws FileNotFoundException
+	 *                              If the file to log to cant be found
 	 */
 	public void Start(boolean changefilename) throws FileNotFoundException {
 		if (changefilename) {
 			try {
 				ChangeFilePath(filepath);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -84,7 +84,7 @@ public class Logger {
 		runner.start();
 	}
 	
-	public String getCurrentDate(Calendar cal) {
+	private String getCurrentDate(Calendar cal) {
 		return dateFormat.format(cal.getTime());
 	}
 
@@ -102,7 +102,6 @@ public class Logger {
 	/**
 	 * Add a log to the logger
 	 * @param message The message to add
-	 * @throws Exception
 	 */
 	public void Log(String message) {
 		synchronized(queue) {
@@ -138,7 +137,7 @@ public class Logger {
 		@Override
 		public void run() {
 			Calendar cal = Calendar.getInstance();
-			Iterator it = null;
+			Iterator<String> it = null;
 			while (Running) {
 				synchronized(queue) {
 					it=queue.iterator();
@@ -163,10 +162,7 @@ public class Logger {
 				}
 				try {
 					Thread.sleep(100);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				} catch (InterruptedException e) { }
 			}
 		}
 	}

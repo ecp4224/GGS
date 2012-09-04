@@ -8,7 +8,6 @@
 package com.gamezgalaxy.GGS.world;
 
 import java.io.*;
-import java.rmi.server.ServerCloneException;
 import java.util.ArrayList;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
@@ -17,6 +16,7 @@ import com.gamezgalaxy.GGS.iomodel.Player;
 import com.gamezgalaxy.GGS.server.Server;
 import com.gamezgalaxy.GGS.server.Tick;
 import com.gamezgalaxy.GGS.world.convert.DatToGGS;
+import com.gamezgalaxy.GGS.world.generator.*;
 
 public class Level implements Serializable {
 	
@@ -31,7 +31,7 @@ public class Level implements Serializable {
 	
 	ArrayList<Tick> ticks = new ArrayList<Tick>();
 	
-	Block[] blocks;
+	private Block[] blocks;
 	
 	/**
 	 * The width of the level (max X)
@@ -69,7 +69,7 @@ public class Level implements Serializable {
 	public String name;
 	
 	/**
-	 * The constructor for Level.
+	 * The constructor for {@link Level}
 	 * The constructor wont generate a flat world, you need to
 	 * call {@link #FlatGrass()}
 	 * @param width
@@ -105,21 +105,23 @@ public class Level implements Serializable {
 	}
 	
 	/**
-	 * This will generate a flat world
+	 * Generate a flat world
 	 */
-	public void FlatGrass() {
-		for (int x = 0; x < width; x++) {
-			for (int y = 0; y < height; y++) {
-				for (int z = 0; z < depth; z++) {
-					if (y < height / 2)
-						blocks[PosToInt(x, y, z)] = Block.getBlock("dirt");
-					else if (y == height / 2)
-						blocks[PosToInt(x, y, z)] = Block.getBlock("grass");
-					else
-						blocks[PosToInt(x, y, z)] = Block.getBlock("air");
-				}
-			}
-		}
+	public void FlatGrass(Server s) {
+		FlatGrass g = new FlatGrass(s);
+		generateWorld(g);
+	}
+	
+	/**
+	 * Generate a world
+	 * @param g
+	 *         The {@link Generator} object that will
+	 *         generate the world.
+	 */
+	public void generateWorld(Generator g) {
+		if (blocks == null)
+			blocks = new Block[width*height*depth];
+		g.generate(this);
 	}
 	
 	/**

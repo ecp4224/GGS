@@ -19,29 +19,48 @@ import com.gamezgalaxy.GGS.server.Tick;
 
 public class LevelHandler {
 
-	public List<Level> levels = new CopyOnWriteArrayList<Level>();
+	private List<Level> levels = new CopyOnWriteArrayList<Level>();
 	
 	private Server server;
 	
+	/**
+	 * The constructor for a new level handler
+	 * @param server
+	 *              The server that requires a level handler
+	 */
 	public LevelHandler(Server server) {
 		this.server = server;
 		server.Add(new Saver());
 	}
+	
+	/**
+	 * Get a list of levels
+	 * @return
+	 *        A list of levels
+	 */
+	public final List<Level> getLevelList() {
+		return levels;
+	}
 
+	/**
+	 * Create a new level
+	 * @param name
+	 * @param width
+	 * @param height
+	 * @param length
+	 */
 	public void newLevel(String name, short width, short height, short length)
 	{
-		if(!new File("levels/" + name).exists())
+		if(!new File("levels/" + name + ".ggs").exists())
 		{
 			Level level = new Level(width, height, length);
-
 			level.name = name;
-			level.FlatGrass();
+			level.FlatGrass(server);
 			try {
 				level.Save();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-
 			levels.add(level);
 		}
 	}
