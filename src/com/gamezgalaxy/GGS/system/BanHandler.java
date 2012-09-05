@@ -73,8 +73,17 @@ public class BanHandler {
 	}
 	
 	public static void unban(String username) {
-		if (banned.contains(username))
-			banned.remove(username);
+		
+		for(int i=0; i<banned.size() ;i++)
+		{
+			String[] ban = banned.get(i).split(":");
+			if(ban[0].equalsIgnoreCase(username))
+			{
+				banned.remove(i);
+				break;
+			}
+		}
+		
 		try {
 			save();
 		} catch (FileNotFoundException e) {
