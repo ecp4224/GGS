@@ -12,6 +12,11 @@ import java.text.DateFormat;
 import java.util.zip.GZIPOutputStream;
 import java.util.zip.GZIPInputStream;
 
+/**
+ * This class was taken from the Minecraft Wiki
+ * and was slightly modified
+ *
+ */
 public class DatToGGS {
 	public com.mojang.minecraft.level.Level level = null;
 	private int width;
@@ -20,7 +25,6 @@ public class DatToGGS {
 	public DatToGGS() {
 	}
 
-	// load from file called filename
 	public void load(String filename) {
 		FileInputStream fis = null;
 		GZIPInputStream gzis = null;

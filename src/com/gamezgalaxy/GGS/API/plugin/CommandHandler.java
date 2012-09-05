@@ -17,7 +17,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 
-import com.gamezgalaxy.GGS.iomodel.Player;
+import com.gamezgalaxy.GGS.API.CommandExecutor;
 import com.gamezgalaxy.GGS.server.Server;
 
 public class CommandHandler {
@@ -29,7 +29,7 @@ public class CommandHandler {
 		this._server = server;
 	}
 	
-	public void execute(Player player, String name, String message) {
+	public void execute(CommandExecutor player, String name, String message) {
 		execute(player, name, message.split(" "));
 	}
 	
@@ -47,7 +47,7 @@ public class CommandHandler {
 		return null;
 	}
 
-	public void execute(Player player, String command, String[] args) {
+	public void execute(CommandExecutor player, String command, String[] args) {
 		if (find(command) == null) {
 			if (player != null)
 				player.sendMessage("Command not found!");
@@ -62,7 +62,7 @@ public class CommandHandler {
 			if (player != null && !player.getGroup().canExecute(c))
 				player.sendMessage("Sorry, you dont have permission to execute this command!");
 			else {
-				_server.Log(player.username + " used /" + c.getName() + arrayToString(args));
+				_server.Log(player.getName() + " used /" + c.getName() + arrayToString(args));
 				c.execute(player, args);
 			}
 		}

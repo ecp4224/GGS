@@ -45,9 +45,13 @@ public class LevelHandler {
 	/**
 	 * Create a new level
 	 * @param name
+	 *            The name of the level
 	 * @param width
+	 *             The width (Max X)
 	 * @param height
-	 * @param length
+	 *              The height (Max Y)
+	 * @param depth
+	 *              The depth (Max Z) 
 	 */
 	public void newLevel(String name, short width, short height, short length)
 	{
@@ -65,6 +69,16 @@ public class LevelHandler {
 		}
 	}
 	
+	/**
+	 * Find a level with the given name.
+	 * If part of a name is given, then it will try to find the
+	 * full name
+	 * @param name
+	 *            The name of the level
+	 * @return
+	 *         The level found. If more than 1 level is found, then
+	 *         it will return null
+	 */
 	public Level findLevel(String name) {
 		Level temp = null;
 		for (int i = 0; i < levels.size(); i++) {
@@ -78,6 +92,13 @@ public class LevelHandler {
 		return temp;
 	}
 	
+	/**
+	 * Get the players in a particular level
+	 * @param level
+	 *             The level to check
+	 * @return
+	 *        A list of players in that level.
+	 */
 	public ArrayList<Player> getPlayers(Level level) {
 		ArrayList<Player> temp = new ArrayList<Player>();
 		for (int i = 0; i < server.players.size(); i++)
@@ -85,7 +106,10 @@ public class LevelHandler {
 				temp.add(server.players.get(i));
 		return temp;
 	}
-
+	/**
+	 * Load all the levels in the 
+	 * "levels" folder
+	 */
 	public void loadLevels()
 	{
 		levels.clear();
@@ -95,6 +119,16 @@ public class LevelHandler {
 			loadLevel(levelsFolder.getPath() + "/" + f.getName());
 	}
 	
+	/**
+	 * Load a level and have it return the loaded
+	 * level
+	 * @param filename
+	 *                The .ggs file to load.
+	 *                If a .dat file is presented, then it will
+	 *                be converted to a .ggs
+	 * @return
+	 *         The loaded level.
+	 */
 	public Level loadLevel(String filename) {
 		Level l = null;
 		try {
@@ -110,9 +144,23 @@ public class LevelHandler {
 			levels.add(l);
 		return l;
 	}
+	/**
+	 * Unload a level
+	 * This method will call {@link Level#Unload(Server, boolean)} with save
+	 * as <b>true</b>.
+	 * @param level
+	 *             The level will unload
+	 */
 	public void unloadLevel(Level level) {
 		unloadLevel(level, true);
 	}
+	/**
+	 * Unload a level
+	 * @param level
+	 *             The level to unload
+	 * @param save
+	 *            Weather the level should save before unloading
+	 */
 	public void unloadLevel(Level level, boolean save) {
 		if (!levels.contains(level))
 			return;

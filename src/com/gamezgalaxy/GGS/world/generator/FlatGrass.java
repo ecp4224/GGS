@@ -9,6 +9,11 @@ public class FlatGrass implements Generator {
 
 	private Server _server;
 	
+	/**
+	 * The constructor for the flatgrass generator
+	 * @param server
+	 *              The server the level is in
+	 */
 	public FlatGrass(Server server) {
 		this._server = server;
 	}
@@ -26,6 +31,10 @@ public class FlatGrass implements Generator {
 				}
 			}
 		}
+	}
+	@Override
+	public void generate(Level l, int x, int y, int z) {
+		generate(l);
 	}
 
 }

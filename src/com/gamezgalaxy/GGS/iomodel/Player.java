@@ -1007,4 +1007,8 @@ public class Player extends IOClient implements CommandExecutor {
 	{
 		this.afk = afk;
 	}
+	@Override
+	public String getName() {
+		return username;
+	}
 }

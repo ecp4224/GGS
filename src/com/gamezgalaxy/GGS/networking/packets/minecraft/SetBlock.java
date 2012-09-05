@@ -67,7 +67,7 @@ public class SetBlock extends Packet {
 		short X = bb.getShort(0);
 		short Y = bb.getShort(2);
 		short Z = bb.getShort(4);
-		PlaceMode pm = PlaceMode.getType(bb.get(6));
+		PlaceMode pm = PlaceMode.parse(bb.get(6));
 		byte block = bb.get(7);
 		p.HandleBlockChange(X, Y, Z, pm, block);
 	}

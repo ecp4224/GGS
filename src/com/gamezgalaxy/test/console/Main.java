@@ -13,6 +13,7 @@ import com.gamezgalaxy.GGS.API.CommandExecutor;
 import com.gamezgalaxy.GGS.API.plugin.Command;
 import com.gamezgalaxy.GGS.chat.ChatColor;
 import com.gamezgalaxy.GGS.chat.Messages;
+import com.gamezgalaxy.GGS.groups.Group;
 import com.gamezgalaxy.GGS.server.Server;
 
 public class Main implements CommandExecutor {
@@ -32,9 +33,12 @@ public class Main implements CommandExecutor {
 		s.Start();
 		while (s.Running) {
 			String line = new Scanner(System.in).nextLine();
-			if (s.getCommandHandler().find(line.split("\\ ")[0]) != null) {
-				Command c = s.getCommandHandler().find(line.split("\\ ")[0]);
-				c.execute(this, line.substring(line.indexOf(" ") + 1).split("\\ "));
+			if (line.startsWith("/")) {
+				line = line.substring(1); //Get rid of the / at the beginning
+				if (line.split("\\ ").length > 1)
+					s.getCommandHandler().execute(this, line.split("\\ ")[0], line.substring(line.indexOf(line.split("\\ ")[1])));
+				else
+					s.getCommandHandler().execute(this, line, "");
 			}
 			else {
 				m.serverBroadcast(ChatColor.Purple + "[Server] " + ChatColor.White + line);
@@ -48,5 +52,15 @@ public class Main implements CommandExecutor {
 	@Override
 	public Server getServer() {
 		return s;
+	}
+
+	@Override
+	public Group getGroup() {
+		return Group.getGroupList().get(Group.getGroupList().size() - 1);
+	}
+
+	@Override
+	public String getName() {
+		return "Console";
 	}
 }

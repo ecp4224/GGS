@@ -82,6 +82,12 @@ public class Properties {
 		out.close();
 	}
 	
+	/**
+	 * Load the properties file
+	 * @param filename
+	 *                The name of the file
+	 * @throws IOException
+	 */
 	public void load(String filename) throws IOException {
 		if (settings.size() > 0)
 			settings.clear();

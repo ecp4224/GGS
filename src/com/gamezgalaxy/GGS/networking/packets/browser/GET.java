@@ -33,7 +33,6 @@ public class GET extends Packet {
 			try {
 				full = new String(message, "US-ASCII");
 			} catch (UnsupportedEncodingException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			String url = full.split("\\ ")[1];

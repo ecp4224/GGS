@@ -57,6 +57,7 @@ public class Beater extends Thread {
 								}
 							} catch (Exception e) {
 								e.printStackTrace();
+								beat.getServer().Log("Error pumping " + h.getURL() + " heart!");
 							}
 						}
 					} catch (MalformedURLException e) {

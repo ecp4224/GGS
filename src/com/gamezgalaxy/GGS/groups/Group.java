@@ -189,6 +189,14 @@ public class Group {
 		out.close();
 	}
 	
+	/**
+	 * Get a list of groups
+	 * @return
+	 */
+	public static final ArrayList<Group> getGroupList() {
+		return groups;
+	}
+	
 	private class Listen implements Listener {
 		@SuppressWarnings("unused")
 		@EventHandler
