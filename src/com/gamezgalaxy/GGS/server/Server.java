@@ -94,6 +94,10 @@ public final class Server implements LogInterface {
 	 */
 	public final String configpath = "system.config";
 	/**
+	 * The version of GGS this server runs
+	 */
+	public final String VERSION = "1.0.0";
+	/**
 	 * The handler that handles level loading,
 	 * level unloading and finding loaded
 	 * levels
