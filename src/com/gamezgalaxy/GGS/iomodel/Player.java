@@ -880,12 +880,14 @@ public class Player extends IOClient implements CommandExecutor {
 			processCommand(message);
 		}else{
 			String m = message;
-			if(m.matches(".*%([0-9]|[a-f]|[k-r])(.+?).*") && this.cc){
-				Pattern pattern = Pattern.compile("%([0-9]|[a-f]|[k-r])(.+?)");
-				Matcher matcher = pattern.matcher(m);
-				while (matcher.find()) {
-				  String code = Character.toString(matcher.group().charAt(1));
-				  m = m.replaceAll("%"+code, "&"+code);
+			if(!m.matches(".*%([0-9]|[a-f]|[k-r])%([0-9]|[a-f]|[k-r])%([0-9]|[a-f]|[k-r])")){
+				if(m.matches(".*%([0-9]|[a-f]|[k-r])(.+?).*") && this.cc){
+					Pattern pattern = Pattern.compile("%([0-9]|[a-f]|[k-r])(.+?)");
+					Matcher matcher = pattern.matcher(m);
+					while (matcher.find()) {
+					  String code = matcher.group().substring(1);
+					  m = m.replaceAll("%"+code, "&"+code);
+					}
 				}
 			}
 			PlayerChatEvent event = new PlayerChatEvent(this, message);
