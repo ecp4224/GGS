@@ -18,7 +18,7 @@ import com.gamezgalaxy.GGS.server.Server;
 public class Main implements CommandExecutor {
 	Server s;
 	public static void main(String[] args) {
-
+		new Main().start();
 	}
 
 	@Override
