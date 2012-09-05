@@ -7,7 +7,7 @@
  ******************************************************************************/
 package com.gamezgalaxy.GGS.API.plugin;
 
-import com.gamezgalaxy.GGS.iomodel.Player;
+import com.gamezgalaxy.GGS.API.CommandExecutor;
 
 public abstract class Command {
 	
@@ -21,7 +21,7 @@ public abstract class Command {
 	
 	public abstract int getDefaultPermissionLevel();
 	
-	public abstract void execute(Player player, String[] args);
+	public abstract void execute(CommandExecutor player, String[] args);
 	
 	public int getPermissionLevel() {
 		return permission;

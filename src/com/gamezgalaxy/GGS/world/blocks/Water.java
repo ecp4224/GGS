@@ -37,7 +37,7 @@ public class Water extends PhysicsBlock {
 	}
 
 	@Override
-	public void Tick() {
+	public void tick() {
 		//TODO Add physics for water
 	}
 

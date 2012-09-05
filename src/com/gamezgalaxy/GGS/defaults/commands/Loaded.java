@@ -7,8 +7,8 @@
  ******************************************************************************/
 package com.gamezgalaxy.GGS.defaults.commands;
 
+import com.gamezgalaxy.GGS.API.CommandExecutor;
 import com.gamezgalaxy.GGS.API.plugin.Command;
-import com.gamezgalaxy.GGS.iomodel.Player;
 import com.gamezgalaxy.GGS.world.Level;
 import com.gamezgalaxy.GGS.world.LevelHandler;
 
@@ -39,7 +39,7 @@ public class Loaded extends Command
 	}
 
 	@Override
-	public void execute(Player player, String[] args)
+	public void execute(CommandExecutor player, String[] args)
 	{
 		LevelHandler handler = player.getServer().getLevelHandler();
 		StringBuilder finalStr = new StringBuilder();

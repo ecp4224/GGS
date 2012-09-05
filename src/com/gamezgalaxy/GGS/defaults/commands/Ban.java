@@ -1,17 +1,10 @@
 package com.gamezgalaxy.GGS.defaults.commands;
 
-import com.gamezgalaxy.GGS.API.plugin.Command;
+import com.gamezgalaxy.GGS.API.plugin.PlayerCommand;
 import com.gamezgalaxy.GGS.iomodel.Player;
 import com.gamezgalaxy.GGS.system.BanHandler;
 
-/**
- * Created with IntelliJ IDEA.
- * User: Oliver Yasuna
- * Date: 8/2/12
- * Time: 11:56 PM
- * To change this template use File | Settings | File Templates.
- */
-public class Ban extends Command {
+public class Ban extends PlayerCommand {
 
 	@Override
 	public String[] getShortcuts() {

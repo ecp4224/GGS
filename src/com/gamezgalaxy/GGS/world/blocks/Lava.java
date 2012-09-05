@@ -48,7 +48,7 @@ public class Lava extends PhysicsBlock {
 	}
 
 	@Override
-	public void Tick() {
+	public void tick() {
 		if (!nearSponge(getLevel().PosToInt(getX(), getY(), getZ()))) {
 			if (time < random.nextInt(6)) {
 				if (type == 2 && check(getLevel().PosToInt(getX(), getY() - 1, getZ())))

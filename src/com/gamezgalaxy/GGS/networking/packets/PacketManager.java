@@ -94,6 +94,7 @@ public class PacketManager {
 		server.Log("Listening on port " + server.Port);
 	}
 	
+	@SuppressWarnings("deprecation")
 	public void StopReading() {
 		reader.stop();
 		try {

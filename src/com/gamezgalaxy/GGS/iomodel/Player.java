@@ -30,19 +30,16 @@ import com.gamezgalaxy.GGS.groups.Group;
 import com.gamezgalaxy.GGS.networking.IOClient;
 import com.gamezgalaxy.GGS.networking.packets.Packet;
 import com.gamezgalaxy.GGS.networking.packets.PacketManager;
-import com.gamezgalaxy.GGS.networking.packets.minecraft.DespawnPlayer;
 import com.gamezgalaxy.GGS.networking.packets.minecraft.GlobalPosUpdate;
-import com.gamezgalaxy.GGS.networking.packets.minecraft.MOTD;
-import com.gamezgalaxy.GGS.networking.packets.minecraft.SetBlock;
-import com.gamezgalaxy.GGS.networking.packets.minecraft.SpawnPlayer;
 import com.gamezgalaxy.GGS.networking.packets.minecraft.TP;
 import com.gamezgalaxy.GGS.server.Server;
 import com.gamezgalaxy.GGS.server.Tick;
 import com.gamezgalaxy.GGS.world.Block;
 import com.gamezgalaxy.GGS.world.Level;
 import com.gamezgalaxy.GGS.world.PlaceMode;
+import com.gamezgalaxy.GGS.API.CommandExecutor;
 
-public class Player extends IOClient {
+public class Player extends IOClient implements CommandExecutor {
 	protected short X;
 	protected short Y;
 	protected short Z;
@@ -53,7 +50,7 @@ public class Player extends IOClient {
 	protected ArrayList<Player> seeable = new ArrayList<Player>();
 	protected Ping tick = new Ping(this);
 	protected ChatColor color = ChatColor.White;
-	private HashMap extra = new HashMap();
+	private HashMap<String, Object> extra = new HashMap<String, Object>();
 	/**
 	 * Weather or not the player is logged in
 	 */
@@ -666,20 +663,19 @@ public class Player extends IOClient {
 	}
 	
 	/**
-	 * Sends a message to the player if the message is less than 64 characters
+	 * Sends a message to the player.
+	 * If the message is longer than 64 chars, then it will not send.
 	 * 
 	 * @param message
-	 * @return boolean true on sent, false on not sent.
+	 *               The message to send
 	 */
-	public boolean sendMessage(String message){
+	@Override
+	public void sendMessage(String message){
 		Packet p = pm.getPacket("Message");
-		if(message.length() < 64){
+		if (message.length() <= 64) {
 			this.message = message;
 			p.Write(this, pm.server);
-		}else{
-			return false; //Message is longer than permitted
 		}
-		return true; //Message was sent successfully
 	}
 	/**
 	 * Change the level the player is currently in. This method will
@@ -906,6 +902,7 @@ public class Player extends IOClient {
 	 * @return
 	 *        The server
 	 */
+	@Override
 	public Server getServer() {
 		return server;
 	}
@@ -951,7 +948,7 @@ public class Player extends IOClient {
 		Player p;
 		public Ping(Player p) { this.p = p; }
 		@Override
-		public void Tick() {
+		public void tick() {
 			Packet pa;
 			pa = pm.getPacket((byte)0x01);
 			pa.Write(p, pm.server);

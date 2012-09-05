@@ -84,10 +84,6 @@ public class Logger {
 		runner.start();
 	}
 	
-	private String getCurrentDate(Calendar cal) {
-		return dateFormat.format(cal.getTime());
-	}
-
 	/**
 	 * Stop writing logs
 	 * This code will block until all logs have been written to the file

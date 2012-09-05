@@ -127,7 +127,7 @@ public class LevelHandler {
 	private class Saver implements Tick {
 		int temp = 6000;
 		@Override
-		public void Tick() {
+		public void tick() {
 			if (temp > 0) {
 				temp--;
 				return;

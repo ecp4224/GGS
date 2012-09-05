@@ -374,14 +374,15 @@ public class Level implements Serializable {
 	}
 	
 	private class Ticker extends Thread implements Serializable {
-		
+		private static final long serialVersionUID = 1609185967611447514L;
+
 		@Override
 		public void run() {
 			while (run) {
 				if (ticks == null)
 					ticks = new ArrayList<Tick>();
 				for (int i = 0; i < ticks.size(); i++) {
-					ticks.get(i).Tick();
+					ticks.get(i).tick();
 				}
 				try {
 					Thread.sleep(100);

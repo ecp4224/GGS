@@ -25,8 +25,6 @@ public class PlayerBlockChangeEvent extends PlayerEvent implements Cancelable {
 	
 	private Block block;
 	
-	private Player who;
-	
 	private short X;
 	private short Y;
 	private short Z;
@@ -36,7 +34,6 @@ public class PlayerBlockChangeEvent extends PlayerEvent implements Cancelable {
 	
 	public PlayerBlockChangeEvent(Player who, short X, short Y, short Z, Block id, Level level, Server server, PlaceMode place) {
 		super(who);
-		this.who = who;
 		this.block = id;
 		this.X = X;
 		this.Y = Y;

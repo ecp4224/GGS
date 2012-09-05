@@ -7,9 +7,8 @@
  ******************************************************************************/
 package com.gamezgalaxy.GGS.defaults.commands;
 
+import com.gamezgalaxy.GGS.API.CommandExecutor;
 import com.gamezgalaxy.GGS.API.plugin.Command;
-import com.gamezgalaxy.GGS.iomodel.Player;
-
 import java.io.IOException;
 
 public class Stop extends Command
@@ -39,7 +38,7 @@ public class Stop extends Command
 	}
 
 	@Override
-	public void execute(Player player, String[] args)
+	public void execute(CommandExecutor player, String[] args)
 	{
 		try {
 			player.getServer().Stop();

@@ -18,7 +18,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -38,7 +38,7 @@ import com.gamezgalaxy.GGS.util.FileUtils;
 
 public class Group {
 	static ArrayList<Group> groups = new ArrayList<Group>();
-	static HashMap temp = new HashMap();
+	static HashMap<Group, String> temp = new HashMap<Group, String>();
 	private ArrayList<String> members = new ArrayList<String>();
 	private ArrayList<Player> online = new ArrayList<Player>();
 	private static Group defaultgroup;
@@ -190,6 +190,7 @@ public class Group {
 	}
 	
 	private class Listen implements Listener {
+		@SuppressWarnings("unused")
 		@EventHandler
 		public void connect(PlayerLoginEvent event) {
 			for (String member : members) {
@@ -268,12 +269,12 @@ public class Group {
 		}catch(IOException ioe) {
 			ioe.printStackTrace();
 		}
-		Set set = temp.entrySet(); 
+		Set<Entry<Group, String>> set = temp.entrySet(); 
 		// Get an iterator 
-		Iterator i = set.iterator(); 
+		Iterator<Entry<Group, String>> i = set.iterator(); 
 		// Display elements 
 		while(i.hasNext()) { 
-			Map.Entry me = (Map.Entry)i.next();
+			Entry<Group, String> me = i.next();
 			Group g = (Group) me.getKey();
 			Group parent = find((String) me.getValue());
 			if (parent != null)

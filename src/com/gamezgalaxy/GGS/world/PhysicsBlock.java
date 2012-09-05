@@ -12,7 +12,8 @@ import com.gamezgalaxy.GGS.server.Server;
 import com.gamezgalaxy.GGS.server.Tick;
 
 public abstract class PhysicsBlock extends Block implements Tick {
-
+	private static final long serialVersionUID = 3223381644534019388L;
+	
 	private int _x;
 	private int _y;
 	private int _z;
@@ -43,7 +44,7 @@ public abstract class PhysicsBlock extends Block implements Tick {
 	/**
 	 * Occurs whenever the server ticks (every 500 ms)
 	 */
-	public abstract void Tick();
+	public abstract void tick();
 	
 	/**
 	 * Change the pos of the physics block.

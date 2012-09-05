@@ -39,7 +39,7 @@ public class Sand extends PhysicsBlock {
 	}
 
 	@Override
-	public void Tick() {
+	public void tick() {
 		if (wait <= 3) {
 			wait++;
 			return;

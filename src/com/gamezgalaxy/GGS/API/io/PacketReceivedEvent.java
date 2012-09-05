@@ -1,6 +1,5 @@
 package com.gamezgalaxy.GGS.API.io;
 
-import java.io.DataInput;
 import java.io.DataInputStream;
 
 import com.gamezgalaxy.GGS.API.Cancelable;

@@ -7,10 +7,10 @@
  ******************************************************************************/
 package com.gamezgalaxy.GGS.defaults.commands;
 
-import com.gamezgalaxy.GGS.API.plugin.Command;
+import com.gamezgalaxy.GGS.API.plugin.PlayerCommand;
 import com.gamezgalaxy.GGS.iomodel.Player;
 
-public class Spawn extends Command
+public class Spawn extends PlayerCommand
 {
 	@Override
 	public String[] getShortcuts()

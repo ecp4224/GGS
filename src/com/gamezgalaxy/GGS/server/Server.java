@@ -14,13 +14,10 @@ import java.util.*;
 
 import com.gamezgalaxy.GGS.API.EventSystem;
 import com.gamezgalaxy.GGS.API.plugin.CommandHandler;
-import com.gamezgalaxy.GGS.API.plugin.Plugin;
 import com.gamezgalaxy.GGS.API.plugin.PluginHandler;
-import com.gamezgalaxy.GGS.chat.ChatColor;
 import com.gamezgalaxy.GGS.defaults.commands.*;
 import com.gamezgalaxy.GGS.groups.Group;
 import com.gamezgalaxy.GGS.iomodel.Player;
-import com.gamezgalaxy.GGS.networking.IOClient;
 import com.gamezgalaxy.GGS.networking.packets.PacketManager;
 import com.gamezgalaxy.GGS.util.logger.LogInterface;
 import com.gamezgalaxy.GGS.util.logger.Logger;
@@ -36,7 +33,6 @@ import com.gamezgalaxy.GGS.world.Level;
 import com.gamezgalaxy.GGS.world.LevelHandler;
 
 public final class Server implements LogInterface {
-	private boolean startPlugins;
 	private PacketManager pm;
 	private LevelHandler lm;
 	private Logger logger;
@@ -197,7 +193,7 @@ public final class Server implements LogInterface {
 		try {
 			StackTraceElement e = stacks[2]; //The heartbeat class will always be the 3rd in the stacktrace if the heartbeat is being sent correctly
 			Class<?> class_ = Class.forName(e.getClassName());
-			Class<? extends Heart> runClass = class_.asSubclass(Heart.class);
+			class_.asSubclass(Heart.class);
 			return Salt;
 		} catch (ClassNotFoundException e1) { }
 		catch (ClassCastException e2) { }
@@ -474,7 +470,7 @@ public final class Server implements LogInterface {
 				for (int i = 0; i < ticks.size(); i++) {
 					Tick t = ticks.get(i);
 					try {
-						t.Tick();
+						t.tick();
 					} catch (Exception e) {
 						Log("ERROR TICKING!");
 						e.printStackTrace();
@@ -506,7 +502,6 @@ public final class Server implements LogInterface {
 	/**
 	 * Calls {@link Server#findPlayer(String)}
 	*/
-	@SuppressWarnings("deprecation")
 	public Player getPlayer(String name) {
 		return findPlayer(name);
 	}

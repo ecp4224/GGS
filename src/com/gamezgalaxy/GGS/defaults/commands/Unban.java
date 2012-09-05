@@ -7,8 +7,8 @@
  ******************************************************************************/
 package com.gamezgalaxy.GGS.defaults.commands;
 
+import com.gamezgalaxy.GGS.API.CommandExecutor;
 import com.gamezgalaxy.GGS.API.plugin.Command;
-import com.gamezgalaxy.GGS.iomodel.Player;
 import com.gamezgalaxy.GGS.system.BanHandler;
 
 public class Unban extends Command
@@ -39,7 +39,7 @@ public class Unban extends Command
 	}
 
 	@Override
-	public void execute(Player player, String[] args)
+	public void execute(CommandExecutor player, String[] args)
 	{
 		if(args.length == 1)
 			BanHandler.unban(args[0]);

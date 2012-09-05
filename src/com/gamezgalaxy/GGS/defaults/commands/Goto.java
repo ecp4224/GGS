@@ -7,12 +7,12 @@
  ******************************************************************************/
 package com.gamezgalaxy.GGS.defaults.commands;
 
-import com.gamezgalaxy.GGS.API.plugin.Command;
+import com.gamezgalaxy.GGS.API.plugin.PlayerCommand;
 import com.gamezgalaxy.GGS.iomodel.Player;
 import com.gamezgalaxy.GGS.world.Level;
 import com.gamezgalaxy.GGS.world.LevelHandler;
 
-public class Goto extends Command
+public class Goto extends PlayerCommand
 {
 	@Override
 	public String[] getShortcuts()

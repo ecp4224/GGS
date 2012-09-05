@@ -9,7 +9,6 @@ package com.gamezgalaxy.GGS.system;
 
 import java.io.BufferedReader;
 import java.io.DataInputStream;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -96,6 +95,7 @@ public class BanHandler {
 		if (date.equals("null"))
 			return false;
 		Date now = new Date();
+		@SuppressWarnings("deprecation")
 		Date then = new Date(date);
 		return then.before(now);
 	}

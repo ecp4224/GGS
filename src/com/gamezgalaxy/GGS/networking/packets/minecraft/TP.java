@@ -56,7 +56,6 @@ public class TP extends Packet {
 			return;
 		Player player;
 		Player tp = (Player)parma[0];
-		byte pID = ((Byte)parma[1]).byteValue();
 		if (p instanceof Player) {
 			player = (Player)p;
 		}

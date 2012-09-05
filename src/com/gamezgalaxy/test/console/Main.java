@@ -7,30 +7,34 @@
  ******************************************************************************/
 package com.gamezgalaxy.test.console;
 
-import java.io.IOException;
 import java.util.Scanner;
 
+import com.gamezgalaxy.GGS.API.CommandExecutor;
+import com.gamezgalaxy.GGS.API.plugin.Command;
 import com.gamezgalaxy.GGS.chat.ChatColor;
 import com.gamezgalaxy.GGS.chat.Messages;
 import com.gamezgalaxy.GGS.server.Server;
 
-public class Main {
-	
+public class Main implements CommandExecutor {
+	Server s;
 	public static void main(String[] args) {
-		Server s = new Server("Test", 25565, "Test");
+
+	}
+
+	@Override
+	public void sendMessage(String message) {
+		s.Log(message);
+	}
+	
+	public void start() {
+		s = new Server("Test", 25565, "Test");
 		Messages m = new Messages(s);
 		s.Start();
-		while (true) {
+		while (s.Running) {
 			String line = new Scanner(System.in).nextLine();
-			if (line.equals("stop")) {
-				try {
-					s.Stop();
-					break;
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+			if (s.getCommandHandler().find(line.split("\\ ")[0]) != null) {
+				Command c = s.getCommandHandler().find(line.split("\\ ")[0]);
+				c.execute(this, line.substring(line.indexOf(" ") + 1).split("\\ "));
 			}
 			else {
 				m.serverBroadcast(ChatColor.Purple + "[Server] " + ChatColor.White + line);
@@ -39,5 +43,10 @@ public class Main {
 		}
 		System.out.println("Server stopped..");
 		System.exit(0);
+	}
+
+	@Override
+	public Server getServer() {
+		return s;
 	}
 }

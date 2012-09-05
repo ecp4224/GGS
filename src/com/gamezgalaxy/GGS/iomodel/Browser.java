@@ -9,7 +9,6 @@ package com.gamezgalaxy.GGS.iomodel;
 
 import java.io.IOException;
 import java.io.PrintStream;
-import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.Socket;
 import java.util.Date;
@@ -55,6 +54,7 @@ public class Browser extends IOClient {
 		}
 	}
 	
+	@SuppressWarnings("deprecation")
 	public void GET(String request, String full, Server server) {
 		BrowserGETRequestEvent bgre = new BrowserGETRequestEvent(this, request, full);
 		server.getEventSystem().callEvent(bgre);

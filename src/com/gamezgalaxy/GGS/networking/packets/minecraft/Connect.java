@@ -55,6 +55,10 @@ public class Connect extends Packet {
 			name = null;
 			PlayerConnectEvent connect = new PlayerConnectEvent(player);
 			server.getEventSystem().callEvent(connect);
+			if (version != 0x07) {
+				player.Kick("Invalid protocol version!");
+				return;
+			}
 			if (player.VerifyLogin() && !connect.isCancelled()) {
 				if (BanHandler.isBanned(player.username))
 				{

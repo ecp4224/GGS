@@ -1,17 +1,10 @@
 package com.gamezgalaxy.GGS.defaults.commands;
 
+import com.gamezgalaxy.GGS.API.CommandExecutor;
 import com.gamezgalaxy.GGS.API.plugin.Command;
-import com.gamezgalaxy.GGS.iomodel.Player;
-import com.gamezgalaxy.GGS.world.Level;
 import com.gamezgalaxy.GGS.world.LevelHandler;
 
-/**
- * Created with IntelliJ IDEA.
- * User: Oliver Yasuna
- * Date: 8/2/12
- * Time: 11:55 PM
- * To change this template use File | Settings | File Templates.
- */
+
 public class Newlvl extends Command
 {
 	@Override
@@ -39,7 +32,7 @@ public class Newlvl extends Command
 	}
 
 	@Override
-	public void execute(Player player, String[] args)
+	public void execute(CommandExecutor player, String[] args)
 	{
 		if(args.length == 4)
 		{
