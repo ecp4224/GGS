@@ -190,7 +190,6 @@ public class Group {
 	}
 	
 	private class Listen implements Listener {
-		@SuppressWarnings("unused")
 		@EventHandler
 		public void connect(PlayerLoginEvent event) {
 			for (String member : members) {
