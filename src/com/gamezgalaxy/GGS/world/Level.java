@@ -153,7 +153,9 @@ public class Level implements Serializable {
 		}
 		else
 			blocks[index] = b;
-		wasthere.onDelete(this, index);
+		if(wasthere != null){
+			wasthere.onDelete(this, index);
+		}
 		b.onPlace(this, index);
 	}
 	
@@ -329,10 +331,12 @@ public class Level implements Serializable {
 			GZIPInputStream gis = new GZIPInputStream(fis);
 			ObjectInputStream obj = new ObjectInputStream(gis);
 			long version = obj.readLong();
-			if (version == serialVersionUID)
+			if (version == serialVersionUID){
 				l = (Level)obj.readObject();
-			else
+			}else{
+				obj.close();
 				throw new IOException("The level version does not match the current");
+			}
 			l.ticks = new ArrayList<Tick>();
 			l.physics = l.new Ticker();
 			l.name = new File(filename).getName().split("\\.")[0];

@@ -28,7 +28,13 @@ public class Ban extends PlayerCommand {
 
 	@Override
 	public void execute(Player player, String[] args) {
-		BanHandler.ban(args[0]);
+		if(args.length != 0)
+				if(!args[0].equalsIgnoreCase(player.username))
+					BanHandler.ban(args[0]);
+				else
+					player.sendMessage("You cannot ban your self.");
+			else 
+				player.sendMessage("/ban <playername>");
 		//TODO Add expire date
 	}
 
