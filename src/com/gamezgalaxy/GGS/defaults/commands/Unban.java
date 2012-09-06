@@ -41,10 +41,16 @@ public class Unban extends Command
 	@Override
 	public void execute(CommandExecutor player, String[] args)
 	{
-		if(args.length == 1)
-			BanHandler.unban(args[0]);
-		else {
-			player.sendMessage("Correct format: /unban (player)");
+		if(args.length == 1){
+			if(BanHandler.isBanned(args[0]))
+			{
+				BanHandler.unban(args[0]);
+				player.sendMessage("You unbanned " + args[0]);
+			}else{
+				player.sendMessage(args[0] + " is not banned.");
+			}
+		}else{
+			player.sendMessage("Correct format: /unban <player>");
 		}
 	}
 }
