@@ -6,6 +6,12 @@ GGS
 GamezGalaxy Classic Server Software
 [gamezgalaxy.com][1]
 
+##What is GGS
+GGS is the offical Classic Server Software built from the ground up. GGS is built to be as cpu and memory friendly as possible. 
+We kept customization in mind when creating GGS so it can be formed and extended to do anything you want. With its easy to
+use API, its possible to create plugins and commands for GGS to fit your needs. GGS does not come with any useless commands
+or features built into it, so you control the features you put into GGS.
+
 ##Offical GamezGalaxy Plugins
 - [Lavasurvival][3]
 - [Zombiesurvival][4]

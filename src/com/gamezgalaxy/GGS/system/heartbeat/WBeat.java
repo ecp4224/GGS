@@ -7,23 +7,7 @@
  ******************************************************************************/
 package com.gamezgalaxy.GGS.system.heartbeat;
 
-import com.gamezgalaxy.GGS.server.Server;
-
-public class WBeat extends Heart {
-
-	@Override
-	public String Prepare(Server server) {
-		try {
-			return "salt=" + server.getSalt() +
-					"&users=" + server.players.size() +
-					"&alt=" + server.altName +
-					"&desc=" + server.description +
-					"&flags=" + server.flags;
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-			return "";
-		}
-	}
+public class WBeat extends MBeat {
 	
 	@Override
 	public String getURL() {

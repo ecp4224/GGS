@@ -10,7 +10,6 @@ package com.gamezgalaxy.test.console;
 import java.util.Scanner;
 
 import com.gamezgalaxy.GGS.API.CommandExecutor;
-import com.gamezgalaxy.GGS.API.plugin.Command;
 import com.gamezgalaxy.GGS.chat.ChatColor;
 import com.gamezgalaxy.GGS.chat.Messages;
 import com.gamezgalaxy.GGS.groups.Group;

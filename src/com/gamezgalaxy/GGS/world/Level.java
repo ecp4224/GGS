@@ -31,6 +31,10 @@ public class Level implements Serializable {
 	
 	ArrayList<Tick> ticks = new ArrayList<Tick>();
 	
+	private long tickThreadID;
+	
+	private boolean ticking = false;
+	
 	private Block[] blocks;
 	
 	/**
@@ -154,9 +158,9 @@ public class Level implements Serializable {
 		else
 			blocks[index] = b;
 		if(wasthere != null){
-			wasthere.onDelete(this, index);
+			wasthere.onDelete(this, index, server);
 		}
-		b.onPlace(this, index);
+		b.onPlace(this, index, server);
 	}
 	
 	/**
@@ -245,7 +249,7 @@ public class Level implements Serializable {
         return x + z * width + y * width * depth;
     }
 	
-	private int[] IntToPos(int index) {
+	public int[] IntToPos(int index) {
 		int[] toreturn = new int[3];
 		toreturn[1] = (index / width / height);
 		index -= toreturn[1]*width*height;
@@ -382,19 +386,45 @@ public class Level implements Serializable {
 
 		@Override
 		public void run() {
+			tickThreadID = Thread.currentThread().getId();
 			while (run) {
+				ticking = true;
 				if (ticks == null)
 					ticks = new ArrayList<Tick>();
-				for (int i = 0; i < ticks.size(); i++) {
-					ticks.get(i).tick();
+				@SuppressWarnings("unchecked")
+				ArrayList<Tick> temp = (ArrayList<Tick>)ticks.clone();
+				for (int i = 0; i < temp.size(); i++) {
+					if (temp.get(i) instanceof PhysicsBlock) {
+						PhysicsBlock pb = (PhysicsBlock)temp.get(i);
+						if (pb.runInSeperateThread()) {
+							Thread t = new Ticker2(pb);
+							t.start();
+							continue;
+						}
+					}
+					Tick t = temp.get(i);
+					if (t != null)
+						t.tick();
 				}
+				ticking = false;
+				temp.clear();
 				try {
 					Thread.sleep(100);
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
+		}
+	}
+	
+	private class Ticker2 extends Thread implements Serializable {
+		private static final long serialVersionUID = 1L;
+		
+		PhysicsBlock pb;
+		public Ticker2(PhysicsBlock pb) { this.pb = pb; }
+		@Override
+		public void run() {
+			pb.tick();
 		}
 	}
 }

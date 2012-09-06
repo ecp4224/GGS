@@ -10,6 +10,7 @@ package com.gamezgalaxy.GGS.world;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import com.gamezgalaxy.GGS.server.Server;
 import com.gamezgalaxy.GGS.world.blocks.*;
 
 
@@ -88,7 +89,7 @@ public abstract class Block implements Serializable {
 	 *          The level the block was placed in
 	 * @param index 
 	 */
-	public void onPlace(Level l, int index) {
+	public void onPlace(Level l, int index, Server server) {
 		
 	}
 	
@@ -107,7 +108,7 @@ public abstract class Block implements Serializable {
 	 *          The level the block was deleted in
 	 * @param index 
 	 */
-	public void onDelete(Level l, int index) {
+	public void onDelete(Level l, int index, Server server) {
 		
 	}
 	

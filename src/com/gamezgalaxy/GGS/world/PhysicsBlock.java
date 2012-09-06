@@ -19,6 +19,7 @@ public abstract class PhysicsBlock extends Block implements Tick {
 	private int _z;
 	private Level _level;
 	private Server _server;
+	private boolean _waiting;
 	public PhysicsBlock(byte ID, String name) {
 		super(ID, name);
 	}
@@ -28,7 +29,7 @@ public abstract class PhysicsBlock extends Block implements Tick {
 	}
 	
 	@Override
-	public void onDelete(Level l, int index) {
+	public void onDelete(Level l, int index, Server server) {
 		if (_level != l)
 			return;
 		_level.ticks.remove(this);
@@ -40,6 +41,17 @@ public abstract class PhysicsBlock extends Block implements Tick {
 	 * @return
 	 */
 	public abstract PhysicsBlock clone(Server s);
+	
+	/**
+	 * Weather this physics block should tick
+	 * outside the physics thread.
+	 * @return
+	 *        True if it should tick outside the physics
+	 *        thread, otherwise false.
+	 */
+	public boolean runInSeperateThread() {
+		return false;
+	}
 	
 	/**
 	 * Occurs whenever the server ticks (every 500 ms)
@@ -114,6 +126,14 @@ public abstract class PhysicsBlock extends Block implements Tick {
 	}
 	
 	/**
+	 * Stop this block from ticking
+	 */
+	public void stopTick() {
+		if (_level.ticks.contains(this))
+			_level.ticks.remove(this);
+	}
+	
+	/**
 	 * Remove THIS physics block
 	 */
 	public void remove() {
@@ -150,6 +170,40 @@ public abstract class PhysicsBlock extends Block implements Tick {
 	 */
 	public Level getLevel() {
 		return _level;
+	}
+	
+	/**
+	 * Weather a physicsblock is active. When a physicsblock
+	 * is inactive, it wont tick.
+	 * @param pb
+	 *          The block to check
+	 * @return
+	 *        True if the block is active, false if its not
+	 */
+	public boolean isBlockActive(PhysicsBlock pb) {
+		if (pb == null)
+			return false;
+		return _level.ticks.contains(pb);
+	}
+	
+	/**
+	 * Weather this block is active. If this block is
+	 * inactive, it wont tick
+	 * @return
+	 *        True if this block is active, false if its not
+	 */
+	public boolean isBlockActive() {
+		return isBlockActive(this);
+	}
+	
+	/**
+	 * Get the server this block belongs
+	 * to
+	 * @return
+	 *        The server object
+	 */
+	public Server getServer() {
+		return _server;
 	}
 
 }
