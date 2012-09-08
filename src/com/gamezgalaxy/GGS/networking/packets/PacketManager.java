@@ -116,7 +116,7 @@ public class PacketManager {
 	 * on the port provided by the {@link PacketManager#server}
 	 */
 	public void StartReading() {
-		reader = new Read(this);
+		reader = new Read();
 		reader.start();
 		server.Log("Listening on port " + server.Port);
 	}
@@ -163,10 +163,6 @@ public class PacketManager {
     }
 	
 	private class Read extends Thread {
-		
-		PacketManager pm;
-		
-		public Read(PacketManager pm) { this.pm = pm; }
 		
 		@Override
 		public void run() {
