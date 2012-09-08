@@ -19,7 +19,6 @@ public abstract class PhysicsBlock extends Block implements Tick {
 	private int _z;
 	private Level _level;
 	private Server _server;
-	private boolean _waiting;
 	public PhysicsBlock(byte ID, String name) {
 		super(ID, name);
 	}

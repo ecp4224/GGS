@@ -31,10 +31,6 @@ public class Level implements Serializable {
 	
 	ArrayList<Tick> ticks = new ArrayList<Tick>();
 	
-	private long tickThreadID;
-	
-	private boolean ticking = false;
-	
 	private Block[] blocks;
 	
 	/**
@@ -386,9 +382,8 @@ public class Level implements Serializable {
 
 		@Override
 		public void run() {
-			tickThreadID = Thread.currentThread().getId();
+			Thread.currentThread().getId();
 			while (run) {
-				ticking = true;
 				if (ticks == null)
 					ticks = new ArrayList<Tick>();
 				@SuppressWarnings("unchecked")
@@ -406,7 +401,6 @@ public class Level implements Serializable {
 					if (t != null)
 						t.tick();
 				}
-				ticking = false;
 				temp.clear();
 				try {
 					Thread.sleep(100);

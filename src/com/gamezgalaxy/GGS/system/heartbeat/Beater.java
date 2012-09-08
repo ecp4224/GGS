@@ -14,7 +14,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-public class Beater extends Thread {
+final class Beater extends Thread {
 
 	public Beater(Beat beat)
 	{

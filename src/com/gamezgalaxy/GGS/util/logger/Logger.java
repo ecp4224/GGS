@@ -120,6 +120,14 @@ public class Logger {
 		out = new PrintWriter(filepath);
 	}
 	
+	/**
+	 * Change the file that the log will be written to.
+	 * If the logger is already running, then that logger will stop writing
+	 * and write what's left in queuing in the new file.
+	 * @param directory
+	 * @param filename
+	 * @throws IOException
+	 */
 	public void ChangeFilePath(String directory, String filename) throws IOException {
 		this.filepath = directory + File.separator + filename;
 		if (out != null)
@@ -136,6 +144,12 @@ public class Logger {
 			Iterator<String> it = null;
 			while (Running) {
 				synchronized(queue) {
+					if (out == null) {
+						try {
+							Thread.sleep(10);
+						} catch (InterruptedException e) { }
+						continue;
+					}
 					it=queue.iterator();
 					if (it == null)
 						continue;

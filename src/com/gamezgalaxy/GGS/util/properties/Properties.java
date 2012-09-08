@@ -23,6 +23,14 @@ public class Properties {
 	private ArrayList<String> settings = new ArrayList<String>();
 	private static boolean init = false;
 	
+	/**
+	 * Load server settings
+	 * <b>This method can only be called once</b>
+	 * @param server
+	 *              The server to load for
+	 * @return
+	 *        The {@link Properties} object
+	 */
 	public static Properties init(Server server) {
 		if (init)
 			return null;
@@ -71,6 +79,13 @@ public class Properties {
 		}
 	}
 	
+	/**
+	 * Save the properties file
+	 * @param filename
+	 *                The file to save it as
+	 * @throws IOException
+	 *                    This is thrown if there's an error saving the file
+	 */
 	public void save(String filename) throws IOException {
 		if (new File("properties/" + filename).exists())
 			new File("properties/" + filename).delete();
@@ -83,10 +98,12 @@ public class Properties {
 	}
 	
 	/**
-	 * Load the properties file
+	 * Load the properties file. 
+	 * This will reload the settings in memory.
 	 * @param filename
 	 *                The name of the file
 	 * @throws IOException
+	 *                     This is thrown if there's an error reading the file
 	 */
 	public void load(String filename) throws IOException {
 		if (settings.size() > 0)
