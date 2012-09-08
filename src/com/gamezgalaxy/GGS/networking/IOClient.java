@@ -29,6 +29,13 @@ public class IOClient {
 	
 	protected PacketManager pm;
 	
+	/**
+	 * The constructor for IOClient
+	 * @param client
+	 *              The socket that connected to the server
+	 * @param pm
+	 *          The PacketManager that recieved the connection
+	 */
 	public IOClient(Socket client, PacketManager pm) {
 		if (client == null)
 			return;
@@ -44,6 +51,10 @@ public class IOClient {
 		}
 	}
 	
+	/**
+	 * Start listening and receiving packet from this
+	 * client.
+	 */
 	public void Listen() {
 		if (reader == null)
 			return;
@@ -52,6 +63,9 @@ public class IOClient {
 		pm.server.Log("Listening..");
 	}
 	
+	/**
+	 * Disconnect this client from the server
+	 */
 	public void CloseConnection() {
 		try {
 			pm.server.Log("Closing connection");
@@ -63,6 +77,15 @@ public class IOClient {
 		}
 	}
 	
+	/**
+	 * Send this client some data
+	 * (MMmmm...yummy data)
+	 * @param data
+	 *            The data in a byte array
+	 * @throws IOException
+	 *                    If there's an error sending the data to
+	 *                    the client.
+	 */
 	public void WriteData(byte[] data) throws IOException {
 		Packet p = pm.getPacket(data[0]);
 		if (p != null) {
@@ -73,7 +96,7 @@ public class IOClient {
 		writer.flush();
 	}
 	
-	public class Reader extends Thread {
+	private class Reader extends Thread {
 		IOClient client;
 		
 		public Reader(IOClient client) { this.client = client; }

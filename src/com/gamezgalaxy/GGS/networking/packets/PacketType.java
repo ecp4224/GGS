@@ -8,6 +8,14 @@
 package com.gamezgalaxy.GGS.networking.packets;
 
 public enum PacketType {
+	/**
+	 * Weather the packet only sends from the Server to the Client
+	 */
 	Server_to_Client,
+	/**
+	 * Weather the packet is only received from the Client 
+	 * <b>or</b>
+	 * is both sent and received.
+	 */
 	Client_to_Server
 }

@@ -54,6 +54,13 @@ public class Browser extends IOClient {
 		}
 	}
 	
+	/**
+	 * Handle a GET request. 
+	 * Once the GET request is handled, the client is then disconnected
+	 * @param request
+	 * @param full
+	 * @param server
+	 */
 	@SuppressWarnings("deprecation")
 	public void GET(String request, String full, Server server) {
 		BrowserGETRequestEvent bgre = new BrowserGETRequestEvent(this, request, full);

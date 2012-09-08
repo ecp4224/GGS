@@ -60,18 +60,33 @@ public class PacketManager {
 	
 	protected Thread reader;
 	
+	/**
+	 * The server this PacketManager belongs to
+	 */
 	public Server server;
 	
+	/**
+	 * The constructor for the PacketManager
+	 * @param instance
+	 *                The server that this PacketManager will belong to
+	 */
 	public PacketManager(Server instance) {
 		this.server = instance;
 		try {
 			serverSocket = new ServerSocket(this.server.Port);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	
+	/**
+	 * Get a packet this PacketManager handles.
+	 * @param opCode
+	 *              The OpCode for the packet
+	 * @return
+	 *        The packet found, if no packet is found, then it will
+	 *        return null.
+	 */
 	public Packet getPacket(byte opCode) {
 		for (Packet p : packets) {
 			if (p.ID == opCode)
@@ -80,6 +95,14 @@ public class PacketManager {
 		return null;
 	}
 	
+	/**
+	 * Get a packet this PacketManager handles.
+	 * @param name
+	 *            The name of the packet
+	 * @return
+	 *        The packet found, if no packet is found, then it will
+	 *        return null.
+	 */
 	public Packet getPacket(String name) {
 		for (Packet p : packets) {
 			if (p.name.equalsIgnoreCase(name))
@@ -88,12 +111,19 @@ public class PacketManager {
 		return null;
 	}
 	
+	/**
+	 * Have the PacketManager start listening for clients
+	 * on the port provided by the {@link PacketManager#server}
+	 */
 	public void StartReading() {
 		reader = new Read(this);
 		reader.start();
 		server.Log("Listening on port " + server.Port);
 	}
 	
+	/**
+	 * Stop listening for clients.
+	 */
 	@SuppressWarnings("deprecation")
 	public void StopReading() {
 		reader.stop();
@@ -110,41 +140,8 @@ public class PacketManager {
 			e.printStackTrace();
 		}
 	}
-	
-	public static long ConvertToInt32(byte[] array) {
-		long toreturn = 0;
-		for (int i = 0; i < array.length; i++) {
-			toreturn += ((long) array[i] & 0xffL) << (8 * i);
-		}
-		return toreturn;
-	}
-	public static short INT_little_endian_TO_big_endian(short i)
-	{
-		return(short)(((i&0xff)<<24)+((i&0xff00)<<8)+((i&0xff0000)>>8)+((i>>24)&0xff));
-	}
-	/**
-     * Encodes an integer into up to 4 bytes in network byte order in the 
-     * supplied buffer starting at <code>start</code> offset and writing
-     * <code>count</code> bytes.
-     * 
-     * @param num the int to convert to a byte array
-     * @param buf the buffer to write the bytes to
-     * @param start the offset from beginning for the write operation
-     * @param count the number of reserved bytes for the write operation
-     */
-    public static void intToNetworkByteOrder(int num, byte[] buf, int start, int count) {
-        if (count > 4) {
-            throw new IllegalArgumentException(
-                    "Cannot handle more than 4 bytes");
-        }
-
-        for (int i = count - 1; i >= 0; i--) {
-            buf[start + i] = (byte) (num & 0xff);
-            num >>>= 8;
-        }
-    }
     
-    public void Accept(Socket connection) throws IOException {
+    private void Accept(Socket connection) throws IOException {
     	DataInputStream reader = new DataInputStream(connection.getInputStream());
     	byte firstsend = reader.readByte();
     	switch (firstsend) {
@@ -165,7 +162,7 @@ public class PacketManager {
     	}
     }
 	
-	public class Read extends Thread {
+	private class Read extends Thread {
 		
 		PacketManager pm;
 		

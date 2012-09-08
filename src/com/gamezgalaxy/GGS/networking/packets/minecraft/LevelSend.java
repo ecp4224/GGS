@@ -46,7 +46,7 @@ public class LevelSend extends Packet {
 			return;
 		try {
 			byte[] levelbuff = new byte[player.getLevel().getLength() + 4];
-			PacketManager.intToNetworkByteOrder(player.getLevel().getLength(), levelbuff, 0, 4);
+			intToNetworkByteOrder(player.getLevel().getLength(), levelbuff, 0, 4);
 			for (int i = 0; i < player.getLevel().getLength(); i++)
 				levelbuff[i + 4] = player.getLevel().getTile(i).getVisableBlock();
 			byte[] gzip = compressBytes(levelbuff);
@@ -84,14 +84,14 @@ public class LevelSend extends Packet {
 		// TODO Auto-generated method stub
 
 	}
-	public byte[] HTNO(short x) throws IOException {
+	private byte[] HTNO(short x) throws IOException {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		DataOutputStream dos = new DataOutputStream(baos);
 		dos.writeShort(x);
 		dos.flush();
 		return baos.toByteArray();
 	}
-	public byte[] compressBytes(byte[] orginal) {
+	private byte[] compressBytes(byte[] orginal) {
 		ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
 		try {
 			GZIPOutputStream gzip = new GZIPOutputStream(byteStream);
@@ -103,6 +103,18 @@ public class LevelSend extends Packet {
 			return null;
 		}
 		return byteStream.toByteArray();
+	}
+
+	private static void intToNetworkByteOrder(int num, byte[] buf, int start, int count) {
+		if (count > 4) {
+			throw new IllegalArgumentException(
+					"Cannot handle more than 4 bytes");
+		}
+
+		for (int i = count - 1; i >= 0; i--) {
+			buf[start + i] = (byte) (num & 0xff);
+			num >>>= 8;
+		}
 	}
 
 }
