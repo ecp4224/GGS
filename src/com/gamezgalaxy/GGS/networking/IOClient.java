@@ -29,6 +29,18 @@ public class IOClient {
 	
 	protected PacketManager pm;
 	
+	protected long readID;
+	
+	
+	/**
+	 * Get the thread ID for the thread thats currently
+	 * reading packets.
+	 * @return
+	 *        The Thread ID as a long
+	 */
+	public long getReaderThreadID() {
+		return readID;
+	}
 	/**
 	 * The constructor for IOClient
 	 * @param client
@@ -102,6 +114,7 @@ public class IOClient {
 		public Reader(IOClient client) { this.client = client; }
 		@Override
 		public void run() {
+			readID = Thread.currentThread().getId();
 			while (pm.server.Running && client.client.isConnected()) {
 				try {
 					byte opCode = reader.readByte();

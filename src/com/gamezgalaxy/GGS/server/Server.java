@@ -366,7 +366,7 @@ public final class Server implements LogInterface {
 		ch.addCommand(new Stop());
 		ch.addCommand(new Unban());
 		ch.addCommand(new TP());
-		ch.addCommand(new Send());
+		ch.addCommand(new ActionExample());
 		ch.addCommand(new Maps());
 		ch.addCommand(new Load());
 	}
@@ -395,7 +395,7 @@ public final class Server implements LogInterface {
 	 * Stop the server, this will kick all the players on the server
 	 * and stop all server services.
 	 * @throws InterruptedException
-	 *                             If something intrerruptes the process of stopping the server
+	 *                             if any thread has interrupted the current thread. The interrupted status of the current thread is cleared when this exception is thrown.
 	 * @throws IOException
 	 *                    If there is a problem saving the levels that are loaded
 	 */
