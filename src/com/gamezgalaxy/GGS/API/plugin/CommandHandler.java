@@ -29,10 +29,28 @@ public class CommandHandler {
 		this._server = server;
 	}
 	
+	/**
+	 * Execute a command. This will check permissions to see if <b>player</b>
+	 * can execute the command based on the group the <b>player</b> is in.
+	 * @param player
+	 *              The client that is executing the command
+	 * @param name
+	 *            The name of the command
+	 * @param message
+	 *               The append arguments as a String
+	 */
 	public void execute(CommandExecutor player, String name, String message) {
 		execute(player, name, message.split(" "));
 	}
 	
+	/**
+	 * Find a command based on the name.
+	 * This will also look for shortcuts
+	 * @param name
+	 *           The name/shortcut of the command
+	 * @return
+	 *        The {@link Command} object
+	 */
 	public Command find(String name) {
 		for (Command c : commands) {
 			if (name.equalsIgnoreCase(c.getName()))
@@ -47,6 +65,17 @@ public class CommandHandler {
 		return null;
 	}
 
+	/**
+	 * Have <b>player</b> execute a command. This method will
+	 * check for group permissions, if the <b>player</b> can't
+	 * execute the command, the player will be notified. 
+	 * @param player
+	 *              The player executing the command
+	 * @param command
+	 *               The command the player will use
+	 * @param args
+	 *            Any arguments that will be passed to this command
+	 */
 	public void execute(CommandExecutor player, String command, String[] args) {
 		if (find(command) == null) {
 			if (player != null)
@@ -68,13 +97,21 @@ public class CommandHandler {
 		}
 	}
 	
-	public String arrayToString(String[] args) {
+	private String arrayToString(String[] args) {
 		String finals = "";
 		for (String s : args) {
 			finals += " " + s;
 		}
 		return finals;
 	}
+	
+	/**
+	 * Add a command to the command list. This will load permissions
+	 * for this command, if no permissions are found for it, it will
+	 * save the default permissions for it.
+	 * @param cmd
+	 *           The command to add.
+	 */
 	public void addCommand(Command cmd) {
 		if (commands.contains(cmd))
 			return;
@@ -87,12 +124,22 @@ public class CommandHandler {
 		}
 	}
 	
+	/**
+	 * Remove a command from the list
+	 * @param cmd
+	 *           The command to remove
+	 */
 	public void removeCommand(Command cmd) {
 		if (!commands.contains(cmd))
 			return;
 		commands.remove(cmd);
 	}
 	
+	/**
+	 * Remove a command from the list.
+	 * @param name
+	 *            The command name.
+	 */
 	public void removeCommand(String name) {
 		Command c = find(name);
 		if (c == null)
@@ -100,7 +147,7 @@ public class CommandHandler {
 		removeCommand(c);
 	}
 	
-	public void loadPermissions() throws IOException {
+	private void loadPermissions() throws IOException {
 		if (!new File("properties").exists())
 			new File("properties").mkdir();
 		if (!new File("properties/commands.config").exists())
@@ -123,7 +170,7 @@ public class CommandHandler {
 		in.close();
 	}
 	
-	public void makeDefault() {
+	private void makeDefault() {
 		PrintWriter out = null;
 		try {
 			new File("properties/commands.config").createNewFile();
@@ -144,7 +191,7 @@ public class CommandHandler {
 		out.close();
 	}
 	
-	public void savePermissions() throws IOException {
+	private void savePermissions() throws IOException {
 		if (new File("properties/commands.config").exists())
 			new File("properties/commands.config").delete();
 		new File("properties/commands.config").createNewFile();

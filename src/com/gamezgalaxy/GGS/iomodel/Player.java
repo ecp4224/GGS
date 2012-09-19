@@ -672,8 +672,9 @@ public class Player extends IOClient implements CommandExecutor {
 	@Override
 	public void sendMessage(String message){
 		Packet p = pm.getPacket("Message");
-		if (message.length() <= 64) {
-			this.message = message;
+		String[] messages = chat.split(message);
+		for (String m : messages) {
+			this.message = m;
 			p.Write(this, pm.server);
 		}
 	}

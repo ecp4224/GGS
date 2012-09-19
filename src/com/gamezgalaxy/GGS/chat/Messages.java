@@ -7,6 +7,8 @@
  ******************************************************************************/
 package com.gamezgalaxy.GGS.chat;
 
+import java.util.ArrayList;
+
 import com.gamezgalaxy.GGS.iomodel.Player;
 import com.gamezgalaxy.GGS.server.Server;
 
@@ -52,5 +54,21 @@ public class Messages {
 		for (Player p : server.players)
 			if(p.username == playerName)
 				p.sendMessage(message);
+	}
+	
+	public String[] split(String message) {
+		char[] array = message.toCharArray();
+		String toadd = "";
+		ArrayList<String> temp = new ArrayList<String>();
+		for (int i = 0; i < array.length; i++) {
+			toadd += "" + array[i];
+			if (i % 64 == 0) {
+				temp.add(toadd);
+				toadd = "";
+			}
+		}
+		if (!toadd.equals(""))
+			temp.add(toadd);
+		return (String[])temp.toArray();
 	}
 }
