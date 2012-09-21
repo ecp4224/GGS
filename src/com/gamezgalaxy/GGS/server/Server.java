@@ -241,14 +241,11 @@ public final class Server implements LogInterface {
 		}
 	}
 	/**
-	 * Start the server
+	 * Start the logger.
+	 * The logger can be started before the server is started, but
+	 * this method is called in {@link Server#Start()}
 	 */
-	public void Start() {
-		if (Running)
-			return;
-		Running = true;
-		BanHandler.init();
-		es = new EventSystem(this);
+	public void startLogger() {
 		Calendar cal = Calendar.getInstance();
 		cal.clear(Calendar.HOUR);
 		cal.clear(Calendar.MINUTE);
@@ -266,9 +263,19 @@ public final class Server implements LogInterface {
 		try {
 			logger.Start(false);
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	/**
+	 * Start the server
+	 */
+	public void Start() {
+		if (Running)
+			return;
+		Running = true;
+		BanHandler.init();
+		es = new EventSystem(this);
+		startLogger();
 		Log("Starting..");
 		ch = new CommandHandler(this);
 		Group.Load(this);

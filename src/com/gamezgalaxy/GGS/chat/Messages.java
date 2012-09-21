@@ -69,6 +69,6 @@ public class Messages {
 		}
 		if (!toadd.equals(""))
 			temp.add(toadd);
-		return (String[])temp.toArray();
+		return temp.toArray(new String[temp.size()]);
 	}
 }
