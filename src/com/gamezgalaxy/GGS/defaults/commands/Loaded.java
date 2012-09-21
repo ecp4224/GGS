@@ -17,7 +17,7 @@ public class Loaded extends Command
 	@Override
 	public String[] getShortcuts()
 	{
-		return new String[0];
+		return new String[] { "levels" };
 	}
 
 	@Override
@@ -51,5 +51,9 @@ public class Loaded extends Command
 		}
 
 		player.sendMessage(finalStr.toString());
+	}
+	@Override
+	public void help(CommandExecutor player) {
+		player.sendMessage("/loaded - shows the loaded levels");	
 	}
 }

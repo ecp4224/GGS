@@ -8,53 +8,44 @@
 package com.gamezgalaxy.GGS.defaults.commands;
 
 import com.gamezgalaxy.GGS.API.CommandExecutor;
-import com.gamezgalaxy.GGS.API.plugin.PlayerCommand;
-import com.gamezgalaxy.GGS.iomodel.Player;
+import com.gamezgalaxy.GGS.API.plugin.Command;
 
-public class Afk extends PlayerCommand
+public class Help extends Command
 {
 	@Override
-	public String[] getShortcuts()
-	{
+	public String[] getShortcuts() {
 		return new String[0];
 	}
 
 	@Override
-	public String getName()
-	{
-		return "afk";
+	public String getName() {
+		return "help";
 	}
 
 	@Override
-	public boolean isOpCommand()
-	{
+	public boolean isOpCommand() {
 		return false;
 	}
 
 	@Override
-	public int getDefaultPermissionLevel()
-	{
+	public int getDefaultPermissionLevel() {
 		return 0;
 	}
-
 	@Override
-	public void execute(Player player, String[] args)
-	{
-		if(player.isAfk())
-		{
-			player.setAfk(false);
-
-			player.getChat().serverBroadcast(player.username + " is no longer afk.");
-		} else {
-			player.setAfk(true);
-
-			player.getChat().serverBroadcast(player.username + " is now afk...");
+	public void execute(CommandExecutor player, String[] args) {
+		if (args.length == 0) { 
+			help(player); 
+			return; 
 		}
+		Command cmd = player.getServer().getCommandHandler().find(args[0]);
+		if (cmd == null) { 
+			player.sendMessage("The specified command wasn't found!"); 
+			return;
+		}
+		cmd.help(player);
 	}
-
 	@Override
 	public void help(CommandExecutor player) {
-		player.sendMessage("/afk - marks you as afk, or back if you were previously afk");
-		
+		player.sendMessage("/help <commandname> - shows help for the specified command");
 	}
 }

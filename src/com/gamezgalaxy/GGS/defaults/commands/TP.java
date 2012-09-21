@@ -7,6 +7,7 @@
  ******************************************************************************/
 package com.gamezgalaxy.GGS.defaults.commands;
 
+import com.gamezgalaxy.GGS.API.CommandExecutor;
 import com.gamezgalaxy.GGS.API.plugin.PlayerCommand;
 import com.gamezgalaxy.GGS.iomodel.Player;
 
@@ -59,7 +60,12 @@ public class TP extends PlayerCommand
 				player.sendMessage("Either " + args[0] + " or " + args[1] + " is not online.");
 			}
 		} else {
-			player.sendMessage("Correct format: /tp (player) or /tp (player) (to player)");
+			help(player);
 		}
+	}
+	@Override
+	public void help(CommandExecutor player) {
+		player.sendMessage("/help <player> - teleports you to the specified player");
+		player.sendMessage("/help <player1> <player2> - teleports player1 to player2");	
 	}
 }

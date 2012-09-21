@@ -7,6 +7,7 @@
  ******************************************************************************/
 package com.gamezgalaxy.GGS.defaults.commands;
 
+import com.gamezgalaxy.GGS.API.CommandExecutor;
 import com.gamezgalaxy.GGS.API.plugin.PlayerCommand;
 import com.gamezgalaxy.GGS.iomodel.Player;
 import com.gamezgalaxy.GGS.world.Level;
@@ -17,7 +18,7 @@ public class Goto extends PlayerCommand
 	@Override
 	public String[] getShortcuts()
 	{
-		return new String[0];
+		return new String[] { "g" };
 	}
 
 	@Override
@@ -53,7 +54,11 @@ public class Goto extends PlayerCommand
 				player.sendMessage("Level doesn't exist...");
 			}
 		} else {
-			player.sendMessage("Correct format: /goto (level name)");
+			help(player);
 		}
+	}
+	@Override
+	public void help(CommandExecutor player) {
+		player.sendMessage("/goto <levelname> - moves you to the specified level");	
 	}
 }
