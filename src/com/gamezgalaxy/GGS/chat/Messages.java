@@ -62,7 +62,7 @@ public class Messages {
 		ArrayList<String> temp = new ArrayList<String>();
 		for (int i = 0; i < array.length; i++) {
 			toadd += "" + array[i];
-			if (i % 64 == 0) {
+			if (i % 64 == 0 && i != 0) {
 				temp.add(toadd);
 				toadd = "";
 			}
