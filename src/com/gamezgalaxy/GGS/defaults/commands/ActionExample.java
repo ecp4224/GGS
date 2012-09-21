@@ -7,6 +7,7 @@
  ******************************************************************************/
 package com.gamezgalaxy.GGS.defaults.commands;
 
+import com.gamezgalaxy.GGS.API.CommandExecutor;
 import com.gamezgalaxy.GGS.API.action.Action;
 import com.gamezgalaxy.GGS.API.action.ChatAction;
 import com.gamezgalaxy.GGS.API.plugin.PlayerCommand;
@@ -61,5 +62,9 @@ public class ActionExample extends PlayerCommand
 		t.player = player;
 		t.start();
 		player.sendMessage("Say something!");
+	}
+	@Override
+	public void help(CommandExecutor player) {
+		player.sendMessage("/actiontest - a test command");	
 	}
 }

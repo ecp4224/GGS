@@ -50,7 +50,11 @@ public class Unban extends Command
 				player.sendMessage(args[0] + " is not banned.");
 			}
 		}else{
-			player.sendMessage("Correct format: /unban <player>");
+			help(player);
 		}
+	}
+	@Override
+	public void help(CommandExecutor player) {
+		player.sendMessage("/unban <player> - unbans the specified player");
 	}
 }

@@ -82,4 +82,11 @@ public abstract class Command {
 	public void setPermissionLevel(int permission) {
 		this.permission = permission;
 	}
+	
+	/**
+	 * Sets the help for this command.
+	 * Help will appear when the CommandExecutor uses /help command
+	 * @param executor - the command's executor
+	 */
+	public abstract void help(CommandExecutor executor);
 }

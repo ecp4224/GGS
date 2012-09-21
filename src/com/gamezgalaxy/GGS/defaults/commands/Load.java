@@ -13,8 +13,7 @@ import com.gamezgalaxy.GGS.world.LevelHandler;
 
 import java.io.File;
 
-public class Load extends Command
-{
+public class Load extends Command {
 	@Override
 	public String[] getShortcuts()
 	{
@@ -54,5 +53,11 @@ public class Load extends Command
 				player.sendMessage("Level does not exist.");
 			}
 		}
+		else
+			help(player);
+	}
+	@Override
+	public void help(CommandExecutor player) {
+		player.sendMessage("/load <levelname> - loads the specified level");	
 	}
 }

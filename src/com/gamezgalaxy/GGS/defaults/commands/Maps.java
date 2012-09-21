@@ -55,4 +55,8 @@ public class Maps extends Command
 
 		player.sendMessage(finalStr.toString());
 	}
+	@Override
+	public void help(CommandExecutor player) {
+		player.sendMessage("/maps - shows the maps the server has");	
+	}
 }

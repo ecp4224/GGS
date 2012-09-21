@@ -1,5 +1,6 @@
 package com.gamezgalaxy.GGS.defaults.commands;
 
+import com.gamezgalaxy.GGS.API.CommandExecutor;
 import com.gamezgalaxy.GGS.API.plugin.PlayerCommand;
 import com.gamezgalaxy.GGS.iomodel.Player;
 import com.gamezgalaxy.GGS.system.BanHandler;
@@ -41,8 +42,11 @@ public class Ban extends PlayerCommand {
 				}
 		}
 			else 
-				player.sendMessage("Correct Format: /ban <playername>");
+				help(player);
 		//TODO Add expire date
 	}
-
+	@Override
+	public void help(CommandExecutor player) {
+		player.sendMessage("/ban <player> - bans the specified player");	
+	}
 }
