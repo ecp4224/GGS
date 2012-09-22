@@ -364,18 +364,20 @@ public final class Server implements LogInterface {
 
 	private void addCommands() throws IOException
 	{
+		ch.addCommand(new ActionExample());
 		ch.addCommand(new Afk());
 		ch.addCommand(new Ban());
 		ch.addCommand(new Goto());
+		ch.addCommand(new Help());
+		ch.addCommand(new Load());
 		ch.addCommand(new Loaded());
+		ch.addCommand(new Maps());
 		ch.addCommand(new Newlvl());
 		ch.addCommand(new Spawn());
 		ch.addCommand(new Stop());
-		ch.addCommand(new Unban());
 		ch.addCommand(new TP());
-		ch.addCommand(new ActionExample());
-		ch.addCommand(new Maps());
-		ch.addCommand(new Load());
+		ch.addCommand(new Unban());
+
 	}
 	
 	private static String LetterOrNumber(String string) {

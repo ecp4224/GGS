@@ -48,4 +48,8 @@ public class Stop extends Command
 			e.printStackTrace();
 		}
 	}
+	@Override
+	public void help(CommandExecutor player) {
+		player.sendMessage("/stop - shuts the server down");	
+	}
 }

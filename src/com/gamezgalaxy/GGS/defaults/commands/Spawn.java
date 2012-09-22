@@ -7,6 +7,7 @@
  ******************************************************************************/
 package com.gamezgalaxy.GGS.defaults.commands;
 
+import com.gamezgalaxy.GGS.API.CommandExecutor;
 import com.gamezgalaxy.GGS.API.plugin.PlayerCommand;
 import com.gamezgalaxy.GGS.iomodel.Player;
 
@@ -40,5 +41,9 @@ public class Spawn extends PlayerCommand
 	public void execute(Player player, String[] args)
 	{
 		player.setPos((short)((0.5 + player.getLevel().spawnx) * 32), (short)((1 + player.getLevel().spawny) * 32), (short)((0.5 + player.getLevel().spawnz) * 32));
+	}
+	@Override
+	public void help(CommandExecutor player) {
+		player.sendMessage("/spawn - sends you to the spawn of the level you're in");	
 	}
 }
