@@ -1,12 +1,12 @@
 [submodule "MCForge-Expansion"]
 	path = MCForge-Expansion
 	url = https://github.com/MCForge/MCForge-Core.git
-[submodule "Lavasurvival_Plugin"]
-	path = Lavasurvival_Plugin
+[submodule "Lavasurvival-Plugin"]
+	path = Lavasurvival-Plugin
 	url = https://github.com/GamezGalaxy/Lavasurvival-Plugin.git
-[submodule "Zombiesurvival_Plugin"]
-	path = Zombiesurvival_Plugin
-	url = https://github.com/GamezGalaxy/Zombiesurvival-Plugin.git
-[submodule "CTF"]
-	path = CTF
+[submodule "CTF-Plugin"]
+	path = CTF-Plugin
 	url = https://github.com/GamezGalaxy/CTF.git
+[submodule "Zombiesurvival-Plugin"]
+	path = Zombiesurvival-Plugin
+	url = https://github.com/GamezGalaxy/Zombiesurvival-Plugin.git
