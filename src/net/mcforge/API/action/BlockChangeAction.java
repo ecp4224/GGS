@@ -119,7 +119,7 @@ public class BlockChangeAction extends Action<BlockChangeAction> implements List
 			holding = event.getBlock();
 			mode = event.getPlaceType();
 			super.wakeUp();
-			event.Cancel(true);
+			event.setCancel(true);
 		}
 	}
 }

@@ -98,7 +98,7 @@ public abstract class Action<T> implements Cancelable {
 	}
 	
 	@Override
-	public void Cancel(boolean cancel) {
+	public void setCancel(boolean cancel) {
 		this._cancel = cancel;
 		super.notify();
 	}

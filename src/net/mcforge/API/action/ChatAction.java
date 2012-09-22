@@ -57,7 +57,7 @@ public class ChatAction extends Action<ChatAction> implements Listener {
 			found = true;
 			message = event.getMessage();
 			super.wakeUp();
-			event.Cancel(true);
+			event.setCancel(true);
 		}
 	}
 

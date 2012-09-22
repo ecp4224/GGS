@@ -100,7 +100,7 @@ public class BrowserGETRequestEvent extends BrowserEvent implements Cancelable {
 	}
 
 	@Override
-	public void Cancel(boolean cancel) {
+	public void setCancel(boolean cancel) {
 		_canceled = cancel;
 	}
 

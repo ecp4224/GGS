@@ -41,7 +41,7 @@ public class PlayerConnectEvent extends PlayerEvent implements Cancelable {
 	}
 
 	@Override
-	public void Cancel(boolean cancel) {
+	public void setCancel(boolean cancel) {
 		_canceled = cancel;
 	}
 	

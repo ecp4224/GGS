@@ -31,7 +31,7 @@ public class PacketReceivedEvent extends IOEvent implements Cancelable {
 	}
 
 	@Override
-	public void Cancel(boolean cancel) {
+	public void setCancel(boolean cancel) {
 		this._cancel = cancel;
 	}
 

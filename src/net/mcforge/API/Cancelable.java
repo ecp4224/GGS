@@ -21,6 +21,6 @@ public interface Cancelable {
 	 * doing the default action it would normally do.
 	 * @param cancel If set to true, the event will cancel. If set to false, the event will not cancel
 	 */
-	public void Cancel(boolean cancel);
+	public void setCancel(boolean cancel);
 
 }
