@@ -709,6 +709,8 @@ public class Player extends IOClient implements CommandExecutor {
 	{
 		if (!threading) {
 			setLevel(level);
+			if (levelsender == null)
+				return;
 			try {
 				levelsender.join(); //Wait for finish
 			} catch (InterruptedException e) { } 

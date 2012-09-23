@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -30,52 +31,57 @@ public class PluginHandler {
 	public void loadplugins(Server server)
 	{
 		File pluginFolder = new File("plugins/");
-
 		if(!pluginFolder.exists())
 		{
 			System.out.println("Mods folder does not exist.");
-
+			pluginFolder.mkdir();
 			return;
 		}
-
 		File[] pluginFiles = pluginFolder.listFiles();
-
 		for(int i = 0; i < pluginFiles.length; i++)
 		{
 			if(pluginFiles[i].isFile() && pluginFiles[i].getName().endsWith(".jar"))
 			{
 				JarFile file = null;
-
 				try {
 					file = new JarFile(pluginFiles[i]);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-
 				if(file != null)
 				{
 					Enumeration<JarEntry> entries = file.entries();
-
 					if(entries != null)
 					{
 						while(entries.hasMoreElements())
 						{
 							JarEntry fileName = entries.nextElement();
-
 							if(fileName.getName().endsWith(".config"))
 							{
 								Properties properties = new Properties();
-
 								try {
 									properties.load(file.getInputStream(fileName));
 								} catch (IOException e) {
 									e.printStackTrace();
 								}
-
 								File pluginFile = new File("plugins/" + pluginFiles[i].getName());
 								String[] args = new String[] { "-normal" };
-
 								loadplugin(pluginFile, properties.getProperty("main-class"), args, server, properties);
+								try {
+									addPath(pluginFile);
+								} catch (MalformedURLException e) {
+									e.printStackTrace();
+								} catch (NoSuchMethodException e) {
+									e.printStackTrace();
+								} catch (SecurityException e) {
+									e.printStackTrace();
+								} catch (IllegalAccessException e) {
+									e.printStackTrace();
+								} catch (IllegalArgumentException e) {
+									e.printStackTrace();
+								} catch (InvocationTargetException e) {
+									e.printStackTrace();
+								}
 							}
 						}
 					}
@@ -116,5 +122,33 @@ public class PluginHandler {
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	/**
+	 * Adds a jar file to the System Classpath at runtime
+	 * @param f
+	 *         The file to add
+	 * @throws MalformedURLException
+	 *                              If the file path is not in the correct format
+	 * @throws NoSuchMethodException
+	 *                              If there was a problem adding the jar to the classpath
+	 * @throws SecurityException
+	 *                           If there was a problem adding the jar to the classpath
+	 * @throws IllegalAccessException
+	 *                                If there was a problem adding the jar to the classpath
+	 * @throws IllegalArgumentException
+	 *                                  If there was a problem adding the jar to the classpath
+	 * @throws InvocationTargetException
+	 *                                    If there was a problem adding the jar to the classpath
+	 */
+	@SuppressWarnings({ "rawtypes", "unchecked", "deprecation" })
+	public void addPath(File f) throws MalformedURLException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+		URL u = f.toURL();
+		URLClassLoader urlClassLoader = (URLClassLoader) ClassLoader.getSystemClassLoader();
+		Class urlClass = URLClassLoader.class;
+		Method method = urlClass.getDeclaredMethod("addURL", new Class[]{URL.class});
+		method.setAccessible(true);
+		method.invoke(urlClassLoader, new Object[]{u});
+
 	}
 }
