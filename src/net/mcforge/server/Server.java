@@ -15,6 +15,7 @@ import java.util.*;
 import net.mcforge.API.EventSystem;
 import net.mcforge.API.plugin.CommandHandler;
 import net.mcforge.API.plugin.PluginHandler;
+import net.mcforge.chat.Messages;
 import net.mcforge.defaults.commands.*;
 import net.mcforge.groups.Group;
 import net.mcforge.iomodel.Player;
@@ -45,6 +46,8 @@ public final class Server implements LogInterface {
 	private EventSystem es;
 	private String Salt;
 	private ISQL sql;
+	private Messages m; //Pls lets make everything in messages static this is just stupid
+	public static final List<String> devs = Arrays.asList( "Dmitchell", "501st_commander", "Lavoaster", "Alem_Zupa", "bemacized", "Shade2010", "edh649", "hypereddie10", "Gamemakergm", "Serado", "Wouto1997", "cazzar", "givo");
 	/**
 	 * The players currently on the server
 	 */
@@ -159,6 +162,13 @@ public final class Server implements LogInterface {
 	 */
 	public final Properties getSystemProperties() {
 		return p;
+	}
+	/**
+	 * Gets the class that handles messages
+	 * @return The Message class
+	 */
+	public final Messages getMessages() {
+		return m;
 	}
 	/**
 	 * The contructor to make a new {@link Server} object
@@ -281,6 +291,7 @@ public final class Server implements LogInterface {
 		Group.Load(this);
 		p = Properties.init(this);
 		loadSystemProperties();
+		m = new Messages(this);
 		pm = new PacketManager(this);
 		pm.StartReading();
 		Log("Loading main level..");
@@ -304,7 +315,6 @@ public final class Server implements LogInterface {
 		try {
 			sr = SecureRandom.getInstance("SHA1PRNG");
 		} catch (NoSuchAlgorithmException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		for (int i = 0; i < 100; i++) {
@@ -352,30 +362,33 @@ public final class Server implements LogInterface {
 	public Player findPlayer(String name) {
 		Player toreturn = null;
 		for (int i = 0; i < players.size(); i++) {
-			if (name.equals(players.get(i).username))
+			if (name.equalsIgnoreCase(players.get(i).username))
 				return players.get(i);
-			else if (players.get(i).username.indexOf(name) != -1 && toreturn == null)
+			else if (players.get(i).username.toLowerCase().indexOf(name.toLowerCase()) != -1 && toreturn == null)
 				toreturn = players.get(i);
-			else if (players.get(i).username.indexOf(name) != -1 && toreturn != null)
+			else if (players.get(i).username.toLowerCase().indexOf(name.toLowerCase()) != -1 && toreturn != null)
 				return null;
 		}
 		return toreturn;
 	}
 
-	private void addCommands() throws IOException
-	{
+	private void addCommands() throws IOException {
+		ch.addCommand(new ActionExample());
 		ch.addCommand(new Afk());
 		ch.addCommand(new Ban());
 		ch.addCommand(new Goto());
+		ch.addCommand(new Help());
+		ch.addCommand(new Kick());
+		ch.addCommand(new Load());
 		ch.addCommand(new Loaded());
+		ch.addCommand(new Maps());
 		ch.addCommand(new Newlvl());
+		ch.addCommand(new Players());
 		ch.addCommand(new Spawn());
 		ch.addCommand(new Stop());
-		ch.addCommand(new Unban());
 		ch.addCommand(new TP());
-		ch.addCommand(new ActionExample());
-		ch.addCommand(new Maps());
-		ch.addCommand(new Load());
+		ch.addCommand(new Unban());
+
 	}
 	
 	private static String LetterOrNumber(String string) {
@@ -426,7 +439,7 @@ public final class Server implements LogInterface {
 		for(Player p : players) // Implementing this again because I want to stop everything first.
 		{						// The idea is that at the begining of the "stopping" session, the player receives that the server is stopping.
 								// Then after everything has stopped but the server itself, the player is kicked from the server before actually shutdown.
-			p.Kick("Server shut down. Thanks for playing!"); // Kicking so we can place a message that the server was stopped.
+			p.kick("Server shut down. Thanks for playing!"); // Kicking so we can place a message that the server was stopped.
 
 		}
 		pm.StopReading();
@@ -490,7 +503,6 @@ public final class Server implements LogInterface {
 				try {
 					Thread.sleep(10);
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}

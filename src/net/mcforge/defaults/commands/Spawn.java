@@ -45,7 +45,6 @@ public class Spawn extends PlayerCommand
 
 	@Override
 	public void help(CommandExecutor executor) {
-		// TODO Auto-generated method stub
-		
+		executor.sendMessage("/spawn - sends you to the spawn of the current map");
 	}
 }

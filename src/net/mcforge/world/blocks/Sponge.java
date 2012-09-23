@@ -18,7 +18,6 @@ public class Sponge extends Block {
 
 	public Sponge(byte ID, String name) {
 		super(ID, name);
-		// TODO Auto-generated constructor stub
 	}
 	
 	public Sponge() {

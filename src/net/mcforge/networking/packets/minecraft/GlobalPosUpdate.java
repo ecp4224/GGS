@@ -22,7 +22,6 @@ public class GlobalPosUpdate extends Packet {
 	public GlobalPosUpdate(String name, byte ID, PacketManager parent,
 			PacketType packetType) {
 		super(name, ID, parent, packetType);
-		// TODO Auto-generated constructor stub
 	}
 	
 	public GlobalPosUpdate(PacketManager pm) {
@@ -113,7 +112,6 @@ public class GlobalPosUpdate extends Packet {
 		try {
 			player.WriteData(finals);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		toupdate.oldX = toupdate.getX();

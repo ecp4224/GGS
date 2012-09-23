@@ -25,7 +25,6 @@ public class LevelSend extends Packet {
 	public LevelSend(String name, byte ID, PacketManager parent,
 			PacketType packetType) {
 		super(name, ID, parent, packetType);
-		// TODO Auto-generated constructor stub
 	}
 
 	public LevelSend(PacketManager pm) {
@@ -71,10 +70,8 @@ public class LevelSend extends Packet {
 				Thread.sleep(10);
 			}
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

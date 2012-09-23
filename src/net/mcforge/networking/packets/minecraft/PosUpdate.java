@@ -23,7 +23,6 @@ public class PosUpdate extends Packet {
 	public PosUpdate(String name, byte ID, PacketManager parent,
 			PacketType packetType) {
 		super(name, ID, parent, packetType);
-		// TODO Auto-generated constructor stub
 	}
 	
 	public PosUpdate(PacketManager pm) {
@@ -63,7 +62,6 @@ public class PosUpdate extends Packet {
 		try {
 			player.UpdatePos();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		

@@ -55,14 +55,14 @@ public class Properties {
 	private static void makeDefaults(String filename, Server server, Properties p) {
 		//TODO Fill in all defaults
 		server.Log("System config not found..creating..");
-		p.addSetting("Server-Name", "[GGS] Default Server");
-		p.addSetting("WOM-Alternate-Name", "[GGS] Default Server");
+		p.addSetting("Server-Name", "[MCForge] Default Server");
+		p.addSetting("WOM-Alternate-Name", "[MCForge] Default Server");
 		p.addSetting("MOTD", "Welcome!");
 		p.addSetting("Port", 25565);
 		p.addSetting("Max-Players", 30);
 		p.addSetting("Public", true);
 		p.addSetting("WOM-Server-description", "A server");
-		p.addSetting("WOM-Server-Flags", "[GGS]");
+		p.addSetting("WOM-Server-Flags", "[MCForge]");
 		p.addSetting("MainLevel", "levels/Main.ggs");
 		p.addSetting("SQL-Driver", "net.mcforge.sql.SQLite");
 		p.addSetting("SQL-table-prefix", "ggs");

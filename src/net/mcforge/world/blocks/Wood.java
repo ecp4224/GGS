@@ -18,7 +18,6 @@ public class Wood extends Block {
 
 	public Wood(byte ID, String name) {
 		super(ID, name);
-		// TODO Auto-generated constructor stub
 	}
 	
 	public Wood() {

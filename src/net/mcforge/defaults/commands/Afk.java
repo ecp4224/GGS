@@ -54,7 +54,6 @@ public class Afk extends PlayerCommand
 
 	@Override
 	public void help(CommandExecutor executor) {
-		// TODO Auto-generated method stub
-		
+		executor.sendMessage("/afk - marks you as afk or back");
 	}
 }

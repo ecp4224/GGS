@@ -56,13 +56,13 @@ public class Connect extends Packet {
 			PlayerConnectEvent connect = new PlayerConnectEvent(player);
 			server.getEventSystem().callEvent(connect);
 			if (version != 0x07) {
-				player.Kick("Invalid protocol version!");
+				player.kick("Invalid protocol version!");
 				return;
 			}
 			if (player.VerifyLogin() && !connect.isCancelled()) {
 				if (BanHandler.isBanned(player.username))
 				{
-					player.Kick("You are banned!");
+					player.kick("You are banned!");
 				} else {
 					server.players.add(player);
 
@@ -74,16 +74,14 @@ public class Connect extends Packet {
 			}
 			else {
 				if (connect.getKickMessage().equals(""))
-					player.Kick("Invalid Login!");
+					player.kick("Invalid Login!");
 				else
-					player.Kick(connect.getKickMessage());
+					player.kick(connect.getKickMessage());
 				return;
 			}
 		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

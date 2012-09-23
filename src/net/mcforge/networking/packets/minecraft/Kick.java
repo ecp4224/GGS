@@ -23,7 +23,6 @@ public class Kick extends Packet {
 	public Kick(String name, byte ID, PacketManager parent,
 			PacketType packetType) {
 		super(name, ID, parent, packetType);
-		// TODO Auto-generated constructor stub
 	}
 	
 	public Kick(PacketManager pm) {
@@ -56,10 +55,8 @@ public class Kick extends Packet {
 			System.arraycopy(temp, 0, finals, 1, temp.length);
 			player.WriteData(finals);
 		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

@@ -20,7 +20,6 @@ public class Gravel extends PhysicsBlock {
 
 	public Gravel(byte ID, String name) {
 		super(ID, name);
-		// TODO Auto-generated constructor stub
 	}
 
 	public Gravel() {

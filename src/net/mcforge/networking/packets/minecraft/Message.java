@@ -23,7 +23,6 @@ public class Message extends Packet {
 	public Message(String name, byte ID, PacketManager parent,
 			PacketType packetType) {
 		super(name, ID, parent, packetType);
-		// TODO Auto-generated constructor stub
 	}
 	
 	public Message(PacketManager pm) {
@@ -53,10 +52,8 @@ public class Message extends Packet {
 			System.arraycopy(temp, 0, finals, 2, temp.length);
 			player.WriteData(finals);
 		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -74,7 +71,6 @@ public class Message extends Packet {
 			String m = new String(name, "US-ASCII").trim();
 			p.recieveMessage(m);
 		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

@@ -18,7 +18,6 @@ public class Aqua extends Block {
 
 	public Aqua(byte ID, String name) {
 		super(ID, name);
-		// TODO Auto-generated constructor stub
 	}
 	
 	public Aqua() {

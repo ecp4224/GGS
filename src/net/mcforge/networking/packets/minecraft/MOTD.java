@@ -22,7 +22,6 @@ public class MOTD extends Packet {
 	public MOTD(String name, byte ID, PacketManager parent,
 			PacketType packetType) {
 		super(name, ID, parent, packetType);
-		// TODO Auto-generated constructor stub
 	}
 
 	public MOTD(PacketManager pm) {
@@ -53,10 +52,8 @@ public class MOTD extends Packet {
 			player.WriteData(finals);
 			
 		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

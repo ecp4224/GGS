@@ -154,7 +154,6 @@ public class Player extends IOClient implements CommandExecutor {
 			try {
 				digest = MessageDigest.getInstance("MD5");
 			} catch (NoSuchAlgorithmException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 		}
@@ -171,7 +170,6 @@ public class Player extends IOClient implements CommandExecutor {
 				try {
 					reader.read(message);
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				if (message.length < packet.length) {
@@ -244,7 +242,7 @@ public class Player extends IOClient implements CommandExecutor {
 	public String getValue(String key) {
 		if (!extra.containsKey(key)) {
 			Object value = null;
-			ResultSet r = server.getSQL().fillData("SElECT count(*) FROM " + server.getSQL().getPrefix() + "_extra WHERE name='" + username + "' AND setting='" + key + "'");
+			ResultSet r = server.getSQL().fillData("SELECT count(*) FROM " + server.getSQL().getPrefix() + "_extra WHERE name='" + username + "' AND setting='" + key + "'");
 			int size = 0;
 			try {
 				size = r.getInt(1);
@@ -255,7 +253,7 @@ public class Player extends IOClient implements CommandExecutor {
 			if (size == 0)
 				return null;
 			else {
-				r = server.getSQL().fillData("SElECT * FROM " + server.getSQL().getPrefix() + "_extra WHERE name='" + username + "' AND setting='" + key + "'");
+				r = server.getSQL().fillData("SELECT * FROM " + server.getSQL().getPrefix() + "_extra WHERE name='" + username + "' AND setting='" + key + "'");
 				try {
 					value = r.getObject("value");
 				} catch (SQLException e) {
@@ -298,6 +296,12 @@ public class Player extends IOClient implements CommandExecutor {
 	public void Login() throws InterruptedException {
 		if (isLoggedin)
 			return;
+		for (int i = 0; i < getServer().players.size(); i++) {
+			Player p = getServer().players.get(i);
+			if ((username.equals(p.username)) && (!p.equals(this))) {
+				p.kick("Someone logged in as you!");
+			}
+		}
 		if (Group.getGroup(this) == null)
 			setGroup(Group.getDefault());
 		SendWelcome();
@@ -330,7 +334,6 @@ public class Player extends IOClient implements CommandExecutor {
 	public Group getGroup() {
 		return Group.getGroup(this);
 	}
-	
 	/**
 	 * Change the group the player is in
 	 */
@@ -360,7 +363,7 @@ public class Player extends IOClient implements CommandExecutor {
 		//TODO Call event
 		//TODO Check other stuff
 		if (holding > 49) {
-			Kick("Hack Client detected!");
+			kick("Hack Client detected!");
 			return;
 		}
 		PlayerBlockChangeEvent event = new PlayerBlockChangeEvent(this, X, Y, Z, Block.getBlock(holding), level, pm.server, type);
@@ -518,9 +521,11 @@ public class Player extends IOClient implements CommandExecutor {
 	 * Kick the player from the server
 	 * @param reason The reason why he was kicked
 	 */
-	public void Kick(String reason) {
+	public void kick(String reason) {
 		if (reason.equals(""))
-			reason = "No reason given";
+			reason = "You have been kicked!";
+		else
+			chat.serverBroadcast(username + " has been kicked (" + reason + ")");
 		Packet p = pm.getPacket("Kick");
 		this.kickreason = reason;
 		server.players.remove(this);
@@ -929,7 +934,7 @@ public class Player extends IOClient implements CommandExecutor {
 	
 	/**
 	 * Close the connection of this client
-	 * If you want to kick the player, use {@link #Kick(String)}
+	 * If you want to kick the player, use {@link #kick(String)}
 	 */
 	@Override
 	public void CloseConnection() {
@@ -965,7 +970,6 @@ public class Player extends IOClient implements CommandExecutor {
 			try {
 				Thread.sleep(500);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}

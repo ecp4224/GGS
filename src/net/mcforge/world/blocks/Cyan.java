@@ -18,7 +18,6 @@ public class Cyan extends Block {
 
 	public Cyan(byte ID, String name) {
 		super(ID, name);
-		// TODO Auto-generated constructor stub
 	}
 	
 	public Cyan() {

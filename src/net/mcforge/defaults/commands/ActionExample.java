@@ -66,7 +66,6 @@ public class ActionExample extends PlayerCommand
 
 	@Override
 	public void help(CommandExecutor executor) {
-		// TODO Auto-generated method stub
-		
+		executor.sendMessage("/actionexample - a test command");	
 	}
 }

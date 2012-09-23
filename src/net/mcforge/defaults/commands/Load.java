@@ -13,52 +13,47 @@ import net.mcforge.world.LevelHandler;
 
 import java.io.File;
 
-public class Load extends Command
-{
+public class Load extends Command {
 	@Override
-	public String[] getShortcuts()
-	{
+	public String[] getShortcuts() {
 		return new String[0];
 	}
 
 	@Override
-	public String getName()
-	{
+	public String getName() {
 		return "load";
 	}
 
 	@Override
-	public boolean isOpCommand()
-	{
+	public boolean isOpCommand() {
 		return true;
 	}
 
 	@Override
-	public int getDefaultPermissionLevel()
-	{
+	public int getDefaultPermissionLevel() {
 		return 100;
 	}
 
 	@Override
-	public void execute(CommandExecutor player, String[] args)
-	{
-		if(args.length == 1)
-		{
+	public void execute(CommandExecutor player, String[] args) {
+		if (args.length == 1) {
 			LevelHandler handler = player.getServer().getLevelHandler();
 			File levelFile = new File("levels/" + args[0] + ".ggs");
 
-			if(levelFile.exists())
-			{
+			if (levelFile.exists()) {
 				handler.loadLevel(levelFile.getPath());
-			} else {
+			}
+			else {
 				player.sendMessage("Level does not exist.");
 			}
+		}
+		else {
+			help(player);
 		}
 	}
 
 	@Override
 	public void help(CommandExecutor executor) {
-		// TODO Auto-generated method stub
-		
+		executor.sendMessage("/load - Loads an existing level");
 	}
 }
