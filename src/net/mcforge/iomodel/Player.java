@@ -689,6 +689,19 @@ public class Player extends IOClient implements CommandExecutor {
 			p.Write(this, pm.server);
 		}
 	}
+        /**
+         * Sends a wom message to the client if it uses wom.
+         * 
+         * @param message
+         *              The message to put in detail spot.
+         */
+        public void sendWoMMessage(String message)
+        {
+            if (ClientType.equals(ClientType.WoM))
+            {
+                sendMessage("^detail.user=" + message);
+            }
+        }
 	/**
 	 * Change the level the player is currently in. This method will
 	 * call {@link #changeLevel(Level, boolean)} with threading being false.
