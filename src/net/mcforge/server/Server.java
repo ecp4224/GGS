@@ -16,7 +16,6 @@ import net.mcforge.API.EventSystem;
 import net.mcforge.API.plugin.CommandHandler;
 import net.mcforge.API.plugin.PluginHandler;
 import net.mcforge.chat.Messages;
-import net.mcforge.defaults.commands.*;
 import net.mcforge.groups.Group;
 import net.mcforge.iomodel.Player;
 import net.mcforge.networking.packets.PacketManager;
@@ -343,11 +342,7 @@ public final class Server implements LogInterface {
 		heartbeater.addHeart(new WBeat());
 		heartbeater.start();
 		Log("Done!");
-		try {
-			addCommands();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		
 	}
 	
 	/**
@@ -373,26 +368,6 @@ public final class Server implements LogInterface {
 		}
 		return toreturn;
 	}
-
-	private void addCommands() throws IOException {
-		ch.addCommand(new ActionExample());
-		ch.addCommand(new Afk());
-		ch.addCommand(new Ban());
-		ch.addCommand(new Goto());
-		ch.addCommand(new Help());
-		ch.addCommand(new Kick());
-		ch.addCommand(new Load());
-		ch.addCommand(new Loaded());
-		ch.addCommand(new Maps());
-		ch.addCommand(new Newlvl());
-		ch.addCommand(new Players());
-		ch.addCommand(new Spawn());
-		ch.addCommand(new Stop());
-		ch.addCommand(new TP());
-		ch.addCommand(new Unban());
-
-	}
-	
 	private static String LetterOrNumber(String string) {
 		final String works = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890";
 		String finals = "";
