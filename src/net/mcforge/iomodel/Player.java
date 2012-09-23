@@ -697,7 +697,7 @@ public class Player extends IOClient implements CommandExecutor {
          */
         public void sendWoMMessage(String message)
         {
-            if (ClientType.equals(ClientType.WoM))
+            if (ClientType.equals(net.mcforge.iomodel.ClientType.WoM)) //happy eclipse? (FU)
             {
                 sendMessage("^detail.user=" + message);
             }
