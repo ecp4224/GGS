@@ -85,9 +85,8 @@ public class Player extends IOClient implements CommandExecutor {
 	public boolean cc = true; //Can Player use color codes
 	/**
 	 * What type of client the player is using.
-	 * On WoM and minecraft.net, this value should be 0
 	 */
-	public byte ClientType; //This might be used for custom clients *hint hint*
+	public ClientType ClientType;
 	/**
 	 * The last X pos of the player
 	 */
@@ -133,6 +132,13 @@ public class Player extends IOClient implements CommandExecutor {
 	 * The activity of the player.
 	 */
 	private boolean afk;
+	
+	/**
+	 * This is the last byte in the Connect Packet
+	 * sent by the client.
+	 * This value should be 0 if on a normal client.
+	 */
+	public byte opID;
 
 	/**
 	 * Most recent player this player has pm'd with.
