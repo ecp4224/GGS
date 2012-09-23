@@ -27,10 +27,8 @@ public class Browser extends IOClient {
 		try {
 			writer = new PrintStream(client.getOutputStream(), false, "US-ASCII");
 		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		if (opcode != 255) {

@@ -21,14 +21,14 @@ public class SQLite implements ISQL {
 	protected Connection connection;
 	private Server server;
 	private String prefix;
-	private final String PATH = "jdbc:sqlite:ggs.db";
+	private final String PATH = "jdbc:sqlite:MCForge.db";
 	private final String DRIVER = "org.sqlite.JDBC";
 	@Override
 	public void ExecuteQuery(String command) {
 		try {
 			if (connection.isClosed())
 				Connect(server);
-		} catch (SQLException e) {
+		} catch (SQLException e) {//
 			Connect(server);
 		}
 		try {
@@ -86,8 +86,8 @@ public class SQLite implements ISQL {
 	public void Connect(Server server) {
 		this.server = server;
 		try {
-			if (!new File("ggs.db").exists())
-				new File("ggs.db").createNewFile();
+			if (!new File("MCForge.db").exists())
+				new File("MCForge.db").createNewFile();
 			Class.forName(DRIVER);
 			connection = DriverManager.getConnection(PATH);
 		} catch (Exception e) {

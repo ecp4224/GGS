@@ -19,7 +19,6 @@ public class Water extends PhysicsBlock {
 
 	public Water(byte ID, String name) {
 		super(ID, name);
-		// TODO Auto-generated constructor stub
 	}
 	
 	public Water() {

@@ -11,43 +11,35 @@ import net.mcforge.API.CommandExecutor;
 import net.mcforge.API.plugin.Command;
 import java.io.File;
 
-public class Maps extends Command
-{
+public class Maps extends Command {
 	@Override
-	public String[] getShortcuts()
-	{
+	public String[] getShortcuts() {
 		return new String[0];
 	}
 
 	@Override
-	public String getName()
-	{
+	public String getName() {
 		return "maps";
 	}
 
 	@Override
-	public boolean isOpCommand()
-	{
+	public boolean isOpCommand() {
 		return false;
 	}
 
 	@Override
-	public int getDefaultPermissionLevel()
-	{
+	public int getDefaultPermissionLevel() {
 		return 0;
 	}
 
 	@Override
-	public void execute(CommandExecutor player, String[] args)
-	{
+	public void execute(CommandExecutor player, String[] args) {
 		File levelsFolder = new File("levels");
 		File[] levelFiles = levelsFolder.listFiles();
 		StringBuilder finalStr = new StringBuilder();
 
-		for(File f : levelFiles)
-		{
-			if(f.getName().split("\\.")[1].equals("ggs"))
-			{
+		for (File f : levelFiles) {
+			if (f.getName().split("\\.")[1].equals("ggs")) {
 				finalStr.append(f.getName().split("\\.")[0]);
 				finalStr.append(", ");
 			}
@@ -58,7 +50,6 @@ public class Maps extends Command
 
 	@Override
 	public void help(CommandExecutor executor) {
-		// TODO Auto-generated method stub
-		
+		executor.sendMessage("/maps - shows all the maps the server has");
 	}
 }

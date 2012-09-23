@@ -51,7 +51,6 @@ public class SetBlock extends Packet {
 		try {
 			player.WriteData(bb.array());
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

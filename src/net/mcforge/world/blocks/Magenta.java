@@ -18,7 +18,6 @@ public class Magenta extends Block {
 
 	public Magenta(byte ID, String name) {
 		super(ID, name);
-		// TODO Auto-generated constructor stub
 	}
 	
 	public Magenta() {

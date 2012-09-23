@@ -18,7 +18,6 @@ public class Glass extends Block {
 
 	public Glass(byte ID, String name) {
 		super(ID, name);
-		// TODO Auto-generated constructor stub
 	}
 	
 	public Glass() {

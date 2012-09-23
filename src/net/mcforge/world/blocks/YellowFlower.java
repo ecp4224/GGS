@@ -18,7 +18,6 @@ public class YellowFlower extends Block {
 
 	public YellowFlower(byte ID, String name) {
 		super(ID, name);
-		// TODO Auto-generated constructor stub
 	}
 	
 	public YellowFlower() {

@@ -23,7 +23,6 @@ public class LevelStartSend extends Packet {
 	public LevelStartSend(String name, byte ID, PacketManager parent,
 			PacketType packetType) {
 		super(name, ID, parent, packetType);
-		// TODO Auto-generated constructor stub
 	}
 	
 	public LevelStartSend(PacketManager pm) {
@@ -39,7 +38,6 @@ public class LevelStartSend extends Packet {
 		try {
 			player.WriteData(new byte[] { ID });
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

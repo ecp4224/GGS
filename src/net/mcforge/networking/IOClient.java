@@ -142,7 +142,7 @@ public class IOClient {
 				catch (Exception e) {
 					e.printStackTrace();
 					if (client instanceof Player)
-						((Player)client).Kick("ERROR!");
+						((Player)client).kick("ERROR!");
 					CloseConnection();
 					break;
 				}

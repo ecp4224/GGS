@@ -21,7 +21,6 @@ public class Ping extends Packet {
 	public Ping(String name, byte ID, PacketManager parent,
 			PacketType packetType) {
 		super(name, ID, parent, packetType);
-		// TODO Auto-generated constructor stub
 	}
 	
 	public Ping(PacketManager pm) {
@@ -37,7 +36,6 @@ public class Ping extends Packet {
 		try {
 			player.WriteData(new byte[] { ID });
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

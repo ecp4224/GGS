@@ -185,7 +185,6 @@ public class LevelHandler {
 				try {
 					levels.get(i).Save();
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}

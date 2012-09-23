@@ -23,7 +23,6 @@ import net.mcforge.server.Server;
 public class TP extends Packet {
 	public TP(String name, byte ID, PacketManager parent, PacketType packetType) {
 		super(name, ID, parent, packetType);
-		// TODO Auto-generated constructor stub
 	}
 
 	public TP(PacketManager pm) {
@@ -72,7 +71,6 @@ public class TP extends Packet {
 			bb.put(tp.pitch);
 			player.WriteData(bb.array());
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

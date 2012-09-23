@@ -24,7 +24,6 @@ public class FinishLevelSend extends Packet {
 	public FinishLevelSend(String name, byte ID, PacketManager parent,
 			PacketType packetType) {
 		super(name, ID, parent, packetType);
-		// TODO Auto-generated constructor stub
 	}
 
 	public FinishLevelSend(PacketManager pm) {

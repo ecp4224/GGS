@@ -71,4 +71,23 @@ public class Messages {
 			temp.add(toadd);
 		return temp.toArray(new String[temp.size()]);
 	}
+	/**
+	 * Joins the elements of the specified array using the specified separator as a separator
+	 * @param separator - The string to separate the joined elements of the array
+	 * @param array - The string array to join
+	 */
+	public static String join(String[] array, String separator) {
+		String ret = "";
+		for (int i = 0; i < array.length; i++) {
+			ret += array[i] + separator;
+		}
+		return ret.substring(0, ret.length() - separator.length());
+	}
+	/**
+	 * Joins the elements of the specified array using ", " as a separator
+	 * @param array - The string array to join
+	 */
+	public static String join(String[] array) {
+		return join(array, ", ");
+	}
 }

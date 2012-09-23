@@ -12,40 +12,33 @@ import net.mcforge.API.plugin.Command;
 import net.mcforge.world.Level;
 import net.mcforge.world.LevelHandler;
 
-public class Loaded extends Command
-{
+public class Loaded extends Command {
 	@Override
-	public String[] getShortcuts()
-	{
+	public String[] getShortcuts() {
 		return new String[0];
 	}
 
 	@Override
-	public String getName()
-	{
+	public String getName() {
 		return "loaded";
 	}
 
 	@Override
-	public boolean isOpCommand()
-	{
+	public boolean isOpCommand() {
 		return false;
 	}
 
 	@Override
-	public int getDefaultPermissionLevel()
-	{
+	public int getDefaultPermissionLevel() {
 		return 0;
 	}
 
 	@Override
-	public void execute(CommandExecutor player, String[] args)
-	{
+	public void execute(CommandExecutor player, String[] args) {
 		LevelHandler handler = player.getServer().getLevelHandler();
 		StringBuilder finalStr = new StringBuilder();
 
-		for(Level l : handler.getLevelList())
-		{
+		for (Level l : handler.getLevelList()) {
 			finalStr.append(l.name);
 			finalStr.append(", ");
 		}
@@ -55,7 +48,6 @@ public class Loaded extends Command
 
 	@Override
 	public void help(CommandExecutor executor) {
-		// TODO Auto-generated method stub
-		
+		executor.sendMessage("/loaded - shows the currently loaded levels");
 	}
 }

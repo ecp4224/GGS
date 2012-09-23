@@ -23,7 +23,6 @@ public class Welcome extends Packet {
 	public Welcome(String name, byte ID, PacketManager parent,
 			PacketType packetType) {
 		super(name, ID, parent, packetType);
-		// TODO Auto-generated constructor stub
 	}
 
 	public Welcome(PacketManager pm) {
@@ -56,10 +55,8 @@ public class Welcome extends Packet {
 			player.WriteData(finals);
 			
 		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

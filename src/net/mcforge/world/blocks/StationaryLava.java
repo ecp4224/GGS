@@ -18,7 +18,6 @@ public class StationaryLava extends Block {
 
 	public StationaryLava(byte ID, String name) {
 		super(ID, name);
-		// TODO Auto-generated constructor stub
 	}
 	
 	public StationaryLava() {

@@ -18,7 +18,6 @@ public class Yellow extends Block {
 
 	public Yellow(byte ID, String name) {
 		super(ID, name);
-		// TODO Auto-generated constructor stub
 	}
 	
 	public Yellow() {

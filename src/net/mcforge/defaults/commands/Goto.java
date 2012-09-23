@@ -13,54 +13,48 @@ import net.mcforge.iomodel.Player;
 import net.mcforge.world.Level;
 import net.mcforge.world.LevelHandler;
 
-public class Goto extends PlayerCommand
-{
+public class Goto extends PlayerCommand {
 	@Override
-	public String[] getShortcuts()
-	{
-		return new String[0];
+	public String[] getShortcuts() {
+		return new String[] { "g" };
 	}
 
 	@Override
-	public String getName()
-	{
+	public String getName() {
 		return "goto";
 	}
 
 	@Override
-	public boolean isOpCommand()
-	{
+	public boolean isOpCommand() {
 		return false;
 	}
 
 	@Override
-	public int getDefaultPermissionLevel()
-	{
+	public int getDefaultPermissionLevel() {
 		return 0;
 	}
 
 	@Override
-	public void execute(Player player, String[] args)
-	{
-		if(args.length == 1)
-		{
+	public void execute(Player player, String[] args) {
+		if (args.length == 1) {
 			LevelHandler handler = player.getServer().getLevelHandler();
 			Level level = handler.findLevel(args[0]);
 
-			if(level != null)
-			{
+			if (level != null) {
 				player.changeLevel(level);
-			} else {
+			}
+			else {
 				player.sendMessage("Level doesn't exist...");
 			}
-		} else {
+		}
+		else {
 			player.sendMessage("Correct format: /goto (level name)");
 		}
 	}
 
 	@Override
 	public void help(CommandExecutor executor) {
-		// TODO Auto-generated method stub
-		
+		executor.sendMessage("/goto <level name> - sends you to the specified level");
+		executor.sendMessage("Shortcut: /g");
 	}
 }

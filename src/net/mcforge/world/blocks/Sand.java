@@ -20,7 +20,6 @@ public class Sand extends PhysicsBlock {
 
 	public Sand(byte ID, String name) {
 		super(ID, name);
-		// TODO Auto-generated constructor stub
 	}
 	
 	public Sand() {

@@ -11,47 +11,42 @@ import net.mcforge.API.CommandExecutor;
 import net.mcforge.API.plugin.Command;
 import java.io.IOException;
 
-public class Stop extends Command
-{
+public class Stop extends Command {
 	@Override
-	public String[] getShortcuts()
-	{
+	public String getName() {
+		return "stop";
+	}
+	
+	@Override
+	public String[] getShortcuts() {
 		return new String[0];
 	}
 
 	@Override
-	public String getName()
-	{
-		return "stop";
-	}
-
-	@Override
-	public boolean isOpCommand()
-	{
+	public boolean isOpCommand() {
 		return true;
 	}
 
 	@Override
-	public int getDefaultPermissionLevel()
-	{
+	public int getDefaultPermissionLevel() {
 		return 100;
 	}
 
 	@Override
-	public void execute(CommandExecutor player, String[] args)
-	{
+	public void execute(CommandExecutor player, String[] args) {
 		try {
 			player.getServer().Stop();
-		} catch (InterruptedException e) {
+		}
+		catch (InterruptedException e) {
 			e.printStackTrace();
-		} catch (IOException e) {
+		}
+		catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
 	@Override
 	public void help(CommandExecutor executor) {
-		// TODO Auto-generated method stub
-		
+		executor.sendMessage("/stop - shuts the server down");
 	}
 }

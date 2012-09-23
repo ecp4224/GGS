@@ -25,7 +25,6 @@ public class SpawnPlayer extends Packet {
 	public SpawnPlayer(String name, byte ID, PacketManager parent,
 			PacketType packetType) {
 		super(name, ID, parent, packetType);
-		// TODO Auto-generated constructor stub
 	}
 
 	public SpawnPlayer(PacketManager pm) {
@@ -67,10 +66,8 @@ public class SpawnPlayer extends Packet {
 			send[73] = spawn.pitch;
 			player.WriteData(send);
 		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

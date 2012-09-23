@@ -29,27 +29,35 @@ public class Ban extends PlayerCommand {
 
 	@Override
 	public void execute(Player player, String[] args) {
-		if(args.length != 0){
-				if(BanHandler.isBanned(args[0])){
-					player.sendMessage(args[0]+ " is already banned");
-					return;
+		if (args.length != 0) {
+			if (BanHandler.isBanned(args[0])) {
+				player.sendMessage(args[0] + " is already banned");
+				return;
+			}
+			if (!args[0].equalsIgnoreCase(player.username)) {
+				Player who = player.getServer().getPlayer(args[0]);
+				if (who != null) {
+					BanHandler.ban(who.username);
+					player.getServer().getMessages().serverBroadcast(who.username + " has been banned by " + player.username);
 				}
-				if(!args[0].equalsIgnoreCase(player.username)){
+				else {
 					BanHandler.ban(args[0]);
-					player.sendMessage("You successfully banned " + args[0]);
-				}else{
-					player.sendMessage("You cannot ban your self.");
+					player.getServer().getMessages().serverBroadcast(args[0] + " has been banned by " + player.username);
 				}
+			}
+			else {
+				player.sendMessage("You cannot ban yourself.");
+			}
 		}
-			else 
-				player.sendMessage("Correct Format: /ban <playername>");
-		//TODO Add expire date
+		else {
+			help(player);
+		}
+		// TODO Add expire date
 	}
 
 	@Override
 	public void help(CommandExecutor executor) {
-		// TODO Auto-generated method stub
-		
+		executor.sendMessage("/ban <player> - bans the specified player!");
 	}
 
 }

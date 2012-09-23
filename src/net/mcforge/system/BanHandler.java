@@ -94,7 +94,6 @@ public class BanHandler {
 		try {
 			save();
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

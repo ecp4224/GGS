@@ -21,7 +21,6 @@ public class DespawnPlayer extends Packet {
 	public DespawnPlayer(String name, byte ID, PacketManager parent,
 			PacketType packetType) {
 		super(name, ID, parent, packetType);
-		// TODO Auto-generated constructor stub
 	}
 	
 	public DespawnPlayer(PacketManager pm) {
@@ -30,8 +29,7 @@ public class DespawnPlayer extends Packet {
 
 	@Override
 	public void Handle(byte[] message, Server server, IOClient player) {
-		// TODO Auto-generated method stub
-		
+		// TODO Auto-generated method stub		
 	}
 
 	@Override
@@ -46,7 +44,6 @@ public class DespawnPlayer extends Packet {
 		try {
 			player.WriteData(finals);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

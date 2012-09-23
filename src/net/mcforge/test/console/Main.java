@@ -30,8 +30,9 @@ public class Main implements CommandExecutor {
 		s = new Server("Test", 25565, "Test");
 		Messages m = new Messages(s);
 		s.Start();
+		Scanner scanner = new Scanner(System.in);
 		while (s.Running) {
-			String line = new Scanner(System.in).nextLine();
+			String line = scanner.nextLine();
 			if (line.startsWith("/")) {
 				line = line.substring(1); //Get rid of the / at the beginning
 				if (line.split("\\ ").length > 1)
@@ -45,6 +46,7 @@ public class Main implements CommandExecutor {
 			}
 		}
 		System.out.println("Server stopped..");
+		scanner.close(); //happy eclipse?
 		System.exit(0);
 	}
 

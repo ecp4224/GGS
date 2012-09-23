@@ -18,7 +18,6 @@ public class Green extends Block {
 
 	public Green(byte ID, String name) {
 		super(ID, name);
-		// TODO Auto-generated constructor stub
 	}
 	
 	public Green() {
