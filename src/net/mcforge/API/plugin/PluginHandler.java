@@ -33,7 +33,7 @@ public class PluginHandler {
 		File pluginFolder = new File("plugins/");
 		if(!pluginFolder.exists())
 		{
-			System.out.println("Mods folder does not exist.");
+			System.out.println("Plugins folder does not exist.");
 			pluginFolder.mkdir();
 			return;
 		}
@@ -111,7 +111,7 @@ public class PluginHandler {
 			}
                         String logstr = "";
                         if (plugin.getName() != "") { logstr = "[" + plugin.getName() + "]"; }
-                        if (logstr != "" && plugin.getVersion() != "") { logstr += " version " + plugin.getVersion(); }
+                        if (logstr != "" && plugin.getVersion() != "") { logstr += " version " + plugin.getVersion() + " loaded!"; }
                         if (logstr != "") { server.Log(logstr); }
 		} catch (NoSuchMethodException e) {
 			e.printStackTrace();
