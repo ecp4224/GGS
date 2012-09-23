@@ -23,13 +23,13 @@ public class Level implements Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 6250572320060286713L;
-	
+	private static final long serialVersionUID = -7297498370800056856L;
+
 	private Thread physics;
 	
 	private boolean run;
 	
-	ArrayList<Tick> ticks = new ArrayList<Tick>();
+	transient ArrayList<Tick> ticks = new ArrayList<Tick>();
 	
 	private Block[] blocks;
 	
