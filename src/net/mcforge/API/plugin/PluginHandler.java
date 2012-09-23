@@ -109,6 +109,10 @@ public class PluginHandler {
 			} else {
 				plugins.add(plugin);
 			}
+                        String logstr = "";
+                        if (plugin.getName() != "") { logstr = "[" + plugin.getName() + "]"; }
+                        if (logstr != "" && plugin.getVersion() != "") { logstr += " version " + plugin.getVersion(); }
+                        if (logstr != "") { server.Log(logstr); }
 		} catch (NoSuchMethodException e) {
 			e.printStackTrace();
 		} catch (InvocationTargetException e) {
