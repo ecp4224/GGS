@@ -31,6 +31,11 @@ Please follow these rules when making pull requests
 
 5. Follow Oracle Code Convention [10.5.1][4], [10.5.2][5], and [10.5.3][6]
 
+##Required Dependencies
+- [Minecraft Classic Server][9]
+- [MySQL Driver][7]
+- [SQLite Driver][8]
+
 ##Copyright/License
 
 Unless otherwise noted, this software and its source code is
@@ -58,3 +63,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 [4]: http://www.oracle.com/technetwork/java/javase/documentation/codeconventions-137265.html#331
 [5]: http://www.oracle.com/technetwork/java/javase/documentation/codeconventions-137265.html#333
 [6]: http://www.oracle.com/technetwork/java/javase/documentation/codeconventions-137265.html#353
+[7]: http://www.mysql.com/downloads/connector/j/
+[8]: http://mirror.nexua.org/Dependencies/sqlite-jdbc.jar
+[9]: http://www.minecraft.net/classic/list
