@@ -44,3 +44,8 @@ plugins/*
 *.project
 .project
 .classpath
+
+#NetBeans
+build/
+dist/
+nbproject/
