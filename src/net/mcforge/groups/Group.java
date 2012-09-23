@@ -212,7 +212,7 @@ public class Group {
 	
 	/**
 	 * Find a group
-	 * @param name The name of the gorup
+	 * @param name The name of the group
 	 * @return The group object
 	 */
 	public static Group find(String name) {
