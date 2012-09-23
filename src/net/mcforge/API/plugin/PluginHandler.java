@@ -7,8 +7,12 @@
  ******************************************************************************/
 package net.mcforge.API.plugin;
 
+import java.io.BufferedReader;
+import java.io.DataInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -66,7 +70,38 @@ public class PluginHandler {
 								}
 								File pluginFile = new File("plugins/" + pluginFiles[i].getName());
 								String[] args = new String[] { "-normal" };
-								loadplugin(pluginFile, properties.getProperty("main-class"), args, server, properties);
+								DataInputStream in = null;
+								try {
+									in = new DataInputStream(file.getInputStream(fileName));
+								} catch (IOException e2) {
+									e2.printStackTrace();
+								}
+								BufferedReader br = new BufferedReader(new InputStreamReader(in));
+								String strLine;
+								try {
+									while ((strLine = br.readLine()) != null) {
+										String key = strLine.split("\\=")[0].trim();
+										String value = strLine.split("\\=")[1].trim();
+										if (key.equals("main-class")) {
+											Plugin plugin = getType(pluginFile, value, Plugin.class, server);
+											plugin.setProperties(properties);
+											plugin.onLoad(args);
+											if(plugin instanceof Game)
+											{
+												games.add((Game)plugin);
+												server.Add((Game)plugin);
+											} else {
+												plugins.add(plugin);
+											}
+										}
+										if (key.equals("command-path")) {
+											Command c = getType(pluginFile, value, Command.class);
+											server.getCommandHandler().addCommand(c);
+										}
+									}
+								} catch (IOException e1) {
+									e1.printStackTrace();
+								}
 								try {
 									addPath(pluginFile);
 								} catch (MalformedURLException e) {
@@ -82,6 +117,11 @@ public class PluginHandler {
 								} catch (InvocationTargetException e) {
 									e.printStackTrace();
 								}
+								try {
+									in.close();
+								} catch (IOException e) {
+									e.printStackTrace();
+								}
 							}
 						}
 					}
@@ -91,37 +131,23 @@ public class PluginHandler {
 	}
 
 	@SuppressWarnings("deprecation")
-	public void loadplugin(File file, String classpath, String[] args, Server server, Properties properties)
-	{
+	public <T> T getType(File file, String classpath, Class<? extends T> type, Object...parma) {
 		try {
 			URL[] urls = new URL[] { file.toURL() };
 			ClassLoader loader = URLClassLoader.newInstance(urls, getClass().getClassLoader());
 			Class<?> class_ = Class.forName(classpath, true, loader);
-			Class<? extends Plugin> runClass = class_.asSubclass(Plugin.class);
-			Constructor<? extends Plugin> constructor = runClass.getConstructor(Server.class);
-			Plugin plugin = constructor.newInstance(server);
-			plugin.setProperties(properties);
-			plugin.onLoad(args);
-			if(plugin instanceof Game)
-			{
-				games.add((Game)plugin);
-				server.Add((Game)plugin);
-			} else {
-				plugins.add(plugin);
+			Class<? extends T> runclass = class_.asSubclass(type);
+			Class<?>[] constructparma = new Class<?>[parma.length];
+			for (int i = 0; i < parma.length; i++) {
+				constructparma[i] = parma[i].getClass();
 			}
-		} catch (NoSuchMethodException e) {
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			e.printStackTrace();
-		} catch (InstantiationException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
+			Constructor<? extends T> construct = runclass.getConstructor(constructparma);
+			T toreturn = construct.newInstance(parma);
+			return toreturn;
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		return null;
 	}
 	
 	/**
