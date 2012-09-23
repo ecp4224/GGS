@@ -30,6 +30,7 @@ Please follow these rules when making pull requests
 4. All public facing methods must raise exceptions if something is wrong. Its better to catch a bug that may happen than let it grow.
 
 5. Follow Oracle Code Convention [10.5.1][4], [10.5.2][5], and [10.5.3][6]
+
 ##Copyright/License
 
 Unless otherwise noted, this software and its source code is
