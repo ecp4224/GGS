@@ -46,10 +46,15 @@ public class MBeat extends Heart {
 		} finally {
 			rdr.close();
 		}
+		boolean flag = true;
+		if (url.equals("</html>")) { url = "minecraft.net is down!"; flag = false; }
 		if (!show) {
+					if (flag)
+					{
                         FileWriter fw = new FileWriter("url.txt", false);
                         fw.write(url);
                         fw.close();
+					}
 			show = true;
 		}
 		return url;
