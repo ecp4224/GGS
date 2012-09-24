@@ -46,6 +46,7 @@ public final class Server implements LogInterface {
 	private String Salt;
 	private ISQL sql;
 	private Messages m; //Pls lets make everything in messages static this is just stupid
+        private static Server theserver;
 	public static final List<String> devs = Arrays.asList( "Dmitchell", "501st_commander", "Lavoaster", "Alem_Zupa", "bemacized", "Shade2010", "edh649", "hypereddie10", "Gamemakergm", "Serado", "Wouto1997", "cazzar", "givo");
 	/**
 	 * The players currently on the server
@@ -162,6 +163,13 @@ public final class Server implements LogInterface {
 	public final Properties getSystemProperties() {
 		return p;
 	}
+        /**
+         * gives latest Server object created.
+         * @return the server object currently in use
+         */
+         public static Server getServer() {
+            return theserver;
+        }
 	/**
 	 * Gets the class that handles messages
 	 * @return The Message class
@@ -189,6 +197,7 @@ public final class Server implements LogInterface {
 		this.Name = Name;
 		this.MOTD = MOTD;
 		tick = new Ticker();
+                theserver = this;
 	}
 	
 	/**
@@ -285,7 +294,7 @@ public final class Server implements LogInterface {
 		BanHandler.init();
 		es = new EventSystem(this);
 		startLogger();
-		Log("Starting..");
+		Log("Starting MCForge v" + VERSION);
 		ch = new CommandHandler(this);
 		Group.Load(this);
 		p = Properties.init(this);
@@ -293,11 +302,9 @@ public final class Server implements LogInterface {
 		m = new Messages(this);
 		pm = new PacketManager(this);
 		pm.StartReading();
-		Log("Loading plugins..");
 		ph = new PluginHandler();
 		ph.loadplugins(this);
-		Log("Done!");
-		Log("Loading levels..");
+		Log("Loaded plugins");
 		lm = new LevelHandler(this);
 		if (!new File(getSystemProperties().getValue("MainLevel")).exists()) {
 			Level l = new Level((short)64, (short)64, (short)64);
@@ -312,8 +319,7 @@ public final class Server implements LogInterface {
 		MainLevel = lm.loadLevel(getSystemProperties().getValue("MainLevel"));
 		lm.loadLevels();
 		tick.start();
-		Log("Done!");
-		Log("Generating salt");
+		Log("Loaded levels");
 		SecureRandom sr = null;
 		try {
 			sr = SecureRandom.getInstance("SHA1PRNG");
@@ -329,20 +335,18 @@ public final class Server implements LogInterface {
 		}
 		Salt = LetterOrNumber(Salt);
 		Log("SALT: " + Salt);
-		Log("Setting up SQL");
 		sql.Connect(this);
 		final String[] commands = new String[] {
-				"CREATE TABLE if not exists " + sql.getPrefix() + "_extra (name VARCHAR(20), setting TEXT, value varbinary);",
+				"CREATE TABLE if not exists " + sql.getPrefix() + "_extra (name VARCHAR(20), setting TEXT, value TEXT);",
 		};
 		sql.ExecuteQuery(commands);
-		Log("Done!");
-		Log("Create heartbeat..");
+		Log("Set up SQL");
 		heartbeater = new Beat(this);
 		heartbeater.addHeart(new MBeat());
 		heartbeater.addHeart(new WBeat());
 		heartbeater.start();
-		Log("Done!");
-		
+		Log("Created heartbeat");
+		Log("Server url can be found in 'url.txt'");
 	}
 	
 	/**

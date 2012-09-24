@@ -5,9 +5,11 @@
  * which accompanies this distribution, and is available at
  * http://www.gnu.org/licenses/gpl.html
  ******************************************************************************/
+
 package net.mcforge.system.heartbeat;
 
 import java.io.BufferedReader;
+import java.io.FileWriter;
 import java.io.IOException;
 
 import net.mcforge.server.Server;
@@ -45,9 +47,15 @@ public class MBeat extends Heart {
 		} finally {
 			rdr.close();
 		}
+		boolean flag = true;
+		if (url.equals("</html>")) { url = "minecraft.net is down!"; flag = false; }
 		if (!show) {
-			server.Log("URL: " + url);
-
+					if (flag)
+					{
+                        FileWriter fw = new FileWriter("url.txt", false);
+                        fw.write(url);
+                        fw.close();
+					}
 			show = true;
 		}
 		return url;
