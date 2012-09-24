@@ -285,7 +285,7 @@ public final class Server implements LogInterface {
 		BanHandler.init();
 		es = new EventSystem(this);
 		startLogger();
-		Log("Starting..");
+		Log("Starting MCForge v" + VERSION);
 		ch = new CommandHandler(this);
 		Group.Load(this);
 		p = Properties.init(this);
@@ -293,11 +293,9 @@ public final class Server implements LogInterface {
 		m = new Messages(this);
 		pm = new PacketManager(this);
 		pm.StartReading();
-		Log("Loading plugins..");
 		ph = new PluginHandler();
 		ph.loadplugins(this);
-		Log("Done!");
-		Log("Loading levels..");
+		Log("Loaded plugins");
 		lm = new LevelHandler(this);
 		if (!new File(getSystemProperties().getValue("MainLevel")).exists()) {
 			Level l = new Level((short)64, (short)64, (short)64);
@@ -312,8 +310,7 @@ public final class Server implements LogInterface {
 		MainLevel = lm.loadLevel(getSystemProperties().getValue("MainLevel"));
 		lm.loadLevels();
 		tick.start();
-		Log("Done!");
-		Log("Generating salt");
+		Log("Loaded levels");
 		SecureRandom sr = null;
 		try {
 			sr = SecureRandom.getInstance("SHA1PRNG");
@@ -329,20 +326,18 @@ public final class Server implements LogInterface {
 		}
 		Salt = LetterOrNumber(Salt);
 		Log("SALT: " + Salt);
-		Log("Setting up SQL");
 		sql.Connect(this);
 		final String[] commands = new String[] {
 				"CREATE TABLE if not exists " + sql.getPrefix() + "_extra (name VARCHAR(20), setting TEXT, value TEXT);",
 		};
 		sql.ExecuteQuery(commands);
-		Log("Done!");
-		Log("Create heartbeat..");
+		Log("Set up SQL");
 		heartbeater = new Beat(this);
 		heartbeater.addHeart(new MBeat());
 		heartbeater.addHeart(new WBeat());
 		heartbeater.start();
-		Log("Done!");
-		
+		Log("Created heartbeat");
+		Log("Server url can be found in 'url.txt'");
 	}
 	
 	/**

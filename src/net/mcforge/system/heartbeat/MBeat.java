@@ -8,6 +8,7 @@
 package net.mcforge.system.heartbeat;
 
 import java.io.BufferedReader;
+import java.io.FileWriter;
 import java.io.IOException;
 
 import net.mcforge.server.Server;
@@ -46,8 +47,9 @@ public class MBeat extends Heart {
 			rdr.close();
 		}
 		if (!show) {
-			server.Log("URL: " + url);
-
+                        FileWriter fw = new FileWriter("url.txt", false);
+                        fw.write(url);
+                        fw.close();
 			show = true;
 		}
 		return url;
