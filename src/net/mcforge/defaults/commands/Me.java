@@ -2,7 +2,9 @@ package net.mcforge.defaults.commands;
 
 import net.mcforge.API.CommandExecutor;
 import net.mcforge.API.plugin.PlayerCommand;
+import net.mcforge.groups.Group;
 import net.mcforge.iomodel.Player;
+import net.mcforge.server.Server;
 
 public class Me extends PlayerCommand
 {

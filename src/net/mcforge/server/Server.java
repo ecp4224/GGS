@@ -46,6 +46,7 @@ public final class Server implements LogInterface {
 	private String Salt;
 	private ISQL sql;
 	private Messages m; //Pls lets make everything in messages static this is just stupid
+        private static Server theserver;
 	public static final List<String> devs = Arrays.asList( "Dmitchell", "501st_commander", "Lavoaster", "Alem_Zupa", "bemacized", "Shade2010", "edh649", "hypereddie10", "Gamemakergm", "Serado", "Wouto1997", "cazzar", "givo");
 	/**
 	 * The players currently on the server
@@ -162,6 +163,13 @@ public final class Server implements LogInterface {
 	public final Properties getSystemProperties() {
 		return p;
 	}
+        /**
+         * gives latest Server object created.
+         * @return the server object currently in use
+         */
+         public static Server getServer() {
+            return theserver;
+        }
 	/**
 	 * Gets the class that handles messages
 	 * @return The Message class
@@ -189,6 +197,7 @@ public final class Server implements LogInterface {
 		this.Name = Name;
 		this.MOTD = MOTD;
 		tick = new Ticker();
+                theserver = this;
 	}
 	
 	/**
