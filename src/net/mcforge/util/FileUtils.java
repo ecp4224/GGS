@@ -29,11 +29,18 @@ public class FileUtils {
 	 * The directory for the properties file
 	 */
 	public static final String PROPS_DIR = "properties" + File.separator;
-
+	/**
+	 * The directory of the folder for misc text stuff 
+	 */
+	public static final String TEXT_DIR = "text" + File.separator;
 	/**
 	 * The file name for the banned file
 	 */
 	public static final String BANNED_FILE = "banned.txt";
+	/**
+	 * The file name for the rules file
+	 */
+	public static final String RULES_FILE = "rules.txt";
 
 	private static Scanner scanner;
 	private static Formatter formatter;
