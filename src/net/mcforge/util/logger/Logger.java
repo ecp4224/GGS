@@ -116,7 +116,7 @@ public class Logger {
 		this.filepath = filename;
 		if (out != null)
 			out.close();
-		FileUtils.CreateIfNotExist(filepath);
+		FileUtils.createIfNotExist(filepath);
 		out = new PrintWriter(filepath);
 	}
 	
@@ -132,7 +132,7 @@ public class Logger {
 		this.filepath = directory + File.separator + filename;
 		if (out != null)
 			out.close();
-		FileUtils.CreateIfNotExist(directory, filename);
+		FileUtils.createIfNotExist(directory, filename);
 		out = new PrintWriter(filepath);
 	}
 	

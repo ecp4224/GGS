@@ -267,7 +267,7 @@ public class Group {
 	public static void Load(Server server) {
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		try {
-			FileUtils.CreateIfNotExist(FileUtils.PROPS_DIR, "groups.xml", DEFAULT_XML);
+			FileUtils.createIfNotExist(FileUtils.PROPS_DIR, "groups.xml", DEFAULT_XML);
 			
 			DocumentBuilder db = dbf.newDocumentBuilder();
 			Document dom = db.parse(FileUtils.PROPS_DIR + "groups.xml");

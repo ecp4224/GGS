@@ -10,6 +10,10 @@ package net.mcforge.util;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Formatter;
+import java.util.List;
+import java.util.Scanner;
 
 /**
  * The Class FileUtils.
@@ -31,6 +35,8 @@ public class FileUtils {
 	 */
 	public static final String BANNED_FILE = "banned.txt";
 
+	private static Scanner scanner;
+	private static Formatter formatter;
 	/**
 	 * Creates the directory/file if it doesn't exist.
 	 * 
@@ -39,7 +45,7 @@ public class FileUtils {
 	 * @throws IOException
 	 *             Signals that an I/O exception has occurred.
 	 */
-	public static void CreateIfNotExist(String path, String fileName, String contents) throws IOException {
+	public static void createIfNotExist(String path, String fileName, String contents) throws IOException {
 		File filePath = new File(path);
 		File fileFile = new File(path, fileName);
 
@@ -71,8 +77,8 @@ public class FileUtils {
 	 * @throws IOException
 	 *                    This is thrown if there's a problem writing the file
 	 */
-	public static void CreateIfNotExist(String path, String fileName) throws IOException {
-		CreateIfNotExist(path, fileName, "");
+	public static void createIfNotExist(String path, String fileName) throws IOException {
+		createIfNotExist(path, fileName, "");
 	}
 
 	/**
@@ -83,7 +89,7 @@ public class FileUtils {
 	 * @throws IOException
 	 *                    This is thrown if there's a problem writing the file
 	 */
-	public static void CreateIfNotExist(String fileName) throws IOException {
+	public static void createIfNotExist(String fileName) throws IOException {
 		File file = new File(fileName);
 		if (!file.exists()) {
 			file.createNewFile();
@@ -96,11 +102,30 @@ public class FileUtils {
 	 * @param element
 	 *              the element
 	 */
-	public static void DeleteIfExist(String element) {
+	public static void deleteIfExist(String element) {
 		File file = new File(element);
 		if (file.exists()) {
 			file.delete();
 		}
+	}
+	public static void appendText(String filePath, String text, boolean newLine) throws IOException {
+		formatter = new Formatter(new File(filePath)); //TODO: add a good jdocs for these 
+		formatter.out().append(String.format("%s%s", text, newLine ? "\n" : ""));
+		formatter.close();
+	}
+	public static void appendText(String filePath, String text) throws IOException {
+		appendText(filePath, text, false);
+	}
+	public static String[] readAllLines(String filePath) throws IOException {
+		scanner = new Scanner(new File(filePath));
+		List<String> lines = new ArrayList<String>();
+		while (scanner.hasNext()) {
+			lines.add(scanner.nextLine());
+		}
+		return lines.toArray(new String[lines.size()]);
+	}
+	public static boolean exists(String filePath) {
+		return new File(filePath).exists();
 	}
 
 }

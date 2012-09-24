@@ -30,7 +30,7 @@ public class BanHandler {
 		banned.clear();
 
 		try {
-			FileUtils.CreateIfNotExist(FileUtils.PROPS_DIR , FileUtils.BANNED_FILE);
+			FileUtils.createIfNotExist(FileUtils.PROPS_DIR , FileUtils.BANNED_FILE);
 			FileInputStream fstream = new FileInputStream(FileUtils.PROPS_DIR + FileUtils.BANNED_FILE);
 			DataInputStream in = new DataInputStream(fstream);
 			BufferedReader br = new BufferedReader(new InputStreamReader(in));
@@ -55,7 +55,7 @@ public class BanHandler {
 	 *                              This is thrown the banned.txt file cant be found.
 	 */
 	public static void save() throws FileNotFoundException {
-		FileUtils.DeleteIfExist(FileUtils.PROPS_DIR + FileUtils.BANNED_FILE);
+		FileUtils.deleteIfExist(FileUtils.PROPS_DIR + FileUtils.BANNED_FILE);
 		PrintWriter out = new PrintWriter(FileUtils.PROPS_DIR + FileUtils.BANNED_FILE);
 		for (String s : banned) {
 			out.println(s);
