@@ -8,18 +8,26 @@
 package net.mcforge.groups;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map.Entry;
+import java.util.Scanner;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -254,11 +262,73 @@ public class Group {
         {
             for (Group g : groups)
             {
-                if (g.name == group.name) { return false; }
+                if (g.name.equals(group.name)) { return false; }
             }
-            groups.add(group);
+            String[] lines = new String[0];
+
+             try {            
+            // trying to somehow add group to xml...
+            lines = readAllLines(FileUtils.PROPS_DIR + "groups.xml");
+                } catch (IOException ex) {
+             return false;
+             }
+             
+            String[] newlines = new String[lines.length + 5];
+            for (int i=0;i<lines.length;i++)
+            {
+                newlines[i] = lines[i];
+            }
+            newlines[newlines.length - 6] = "<Group>";
+            newlines[newlines.length - 5] = "<name>" + group.name + "</name>";
+            newlines[newlines.length - 4] = group.isOP ? "<isop>true</isop>" : "<isop>false</isop>";
+            newlines[newlines.length - 3] = "<permission>" + Integer.toString(group.permissionlevel) + "</permission>";
+            newlines[newlines.length - 2] = "</Group>";
+            newlines[newlines.length - 1] = "</Groups>";
+            
+            
+            
+            BufferedWriter bw = null;
+        try {
+            bw = new BufferedWriter(new FileWriter(new File(
+                         FileUtils.PROPS_DIR + "groups.xml"), false));
+        } catch (IOException ex) {
+            Logger.getLogger(Group.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        for (int i=0;i<newlines.length;i++)
+        {
+                try {
+                    bw.write(newlines[i]);
+                } catch (IOException ex) {
+                    Logger.getLogger(Group.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                try {
+                    bw.newLine();
+                } catch (IOException ex) {
+                    Logger.getLogger(Group.class.getName()).log(Level.SEVERE, null, ex);
+                }
+        }
+        try {
+            bw.close();
+        } catch (IOException ex) {
+            Logger.getLogger(Group.class.getName()).log(Level.SEVERE, null, ex);
+        }
+                        
+            groups.add(group);            
             return true;
         }
+        
+        public static String[] readAllLines(String filePath) throws IOException {
+		Scanner scanner = new Scanner(new File(filePath));
+		List<String> lines = new ArrayList<String>();
+		while (scanner.hasNext()) {
+                    String line = scanner.nextLine();
+                    if (!line.equals(""))
+                    {
+			lines.add(line);
+                    }
+		}
+		return lines.toArray(new String[lines.size()]);
+	}
         
 	/**
 	 * Load the groups for the server
