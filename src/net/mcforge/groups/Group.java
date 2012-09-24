@@ -246,6 +246,20 @@ public class Group {
 		return defaultgroup;
 	}
 
+        /**
+         * Adds a group to the group list
+         *          @param group The group to be added
+         */
+        public static boolean Add(Group group)
+        {
+            for (Group g : groups)
+            {
+                if (g.name == group.name) { return false; }
+            }
+            groups.add(group);
+            return true;
+        }
+        
 	/**
 	 * Load the groups for the server
 	 * @param server The server the groups will be loaded into
