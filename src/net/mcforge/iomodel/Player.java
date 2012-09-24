@@ -12,6 +12,7 @@ import java.math.BigInteger;
 import java.net.Socket;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -236,12 +237,22 @@ public class Player extends IOClient implements CommandExecutor {
 	
 	/**
 	 * Returns extra data stored in the player
-	 * @param key The name of the data
-	 * @return The data that was stored. The data will most likely be a string, you need to convert the String to the proper object
+	 * @param key 
+	 *           The name of the data
+	 * @return 
+	 *        The data that was stored. 
+	 * @throws SQLException
+	 *                     If there was a problem executing the SQL statement to retieve the object
+	 *                     from the Database. 
+	 * @throws IOException 
+	 *                    If there was a problem reading the object from the SQL Database.
+	 * @throws ClassNotFoundException 
+	 *                               If there was a problem casting the object.
 	 */
-	public String getValue(String key) {
+	@SuppressWarnings("unchecked")
+	public <T> T getValue(String key) throws SQLException, IOException, ClassNotFoundException {
 		if (!extra.containsKey(key)) {
-			Object value = null;
+			T value = null;
 			ResultSet r = server.getSQL().fillData("SELECT count(*) FROM " + server.getSQL().getPrefix() + "_extra WHERE name='" + username + "' AND setting='" + key + "'");
 			int size = 0;
 			try {
@@ -254,23 +265,40 @@ public class Player extends IOClient implements CommandExecutor {
 				return null;
 			else {
 				r = server.getSQL().fillData("SELECT * FROM " + server.getSQL().getPrefix() + "_extra WHERE name='" + username + "' AND setting='" + key + "'");
-				try {
-					value = r.getObject("value");
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
+				value = (T)r.getObject("value");
 				extra.put(key, value);
-				return "" + value;
+				r.close();
+				return value;
 			}
 		}
-		return "" + extra.get(key);
+		return (T)extra.get(key);
+	}
+	
+	public boolean hasValue(String key) {
+		if (extra.containsKey(key))
+			return true;
+		else {
+			ResultSet r = server.getSQL().fillData("SELECT count(*) FROM " + server.getSQL().getPrefix() + "_extra WHERE name='" + username + "' AND setting='" + key + "'");
+			int size = 0;
+			try {
+				size = r.getInt(1);
+			} catch (SQLException e) {
+				e.printStackTrace();
+				return false;
+			}
+			if (size == 0)
+				return false;
+			return true;
+		}
 	}
 	
 	/**
 	 * Store extra data into the player, you can get this data back by
-	 * using the getObject method
-	 * @param key The name of the data
-	 * @param object The object to save
+	 * using the {@link Player#getValue(String)} method
+	 * @param key 
+	 *           The name of the data
+	 * @param object 
+	 *              The object to save
 	 */
 	public void setValue(String key, Object object) {
 		if (extra.containsKey(key))
@@ -278,15 +306,43 @@ public class Player extends IOClient implements CommandExecutor {
 		extra.put(key, object);
 	}
 	
-	public void saveValue(String key) throws SQLException {
+	/**
+	 * Save the value <b>key</b> to the database.
+	 * The object <b>key</b> represents will be stored as a string
+	 * using the {@link Object#toString()} method.
+	 * @param key
+	 *           The name of the data to save
+	 * @throws SQLException
+	 *                     If there was a problem executing the SQL statement to update/insert
+	 *                     the object
+	 * @throws IOException 
+	 *                    If there was a problem writing the object to the SQL server.
+	 */
+	public void saveValue(String key) throws SQLException, IOException {
 		if (!extra.containsKey(key))
 			return;
-		ResultSet r = server.getSQL().fillData("SElECT count(*) FROM " + server.getSQL().getPrefix() + "_extra WHERE name='" + username + "' AND setting='" + key + "'");
-		int size = r.getInt(1);
-		if (size == 0)
-			server.getSQL().ExecuteQuery("INSERT INTO " + server.getSQL().getPrefix() + "_extra (name, setting, value) VALUES ('" + username + "', '" + key + "', '" + extra.get(key).toString() + "')");
+		if (extra.get(key) instanceof Serializable) {
+			ResultSet r = server.getSQL().fillData("SElECT count(*) FROM " + server.getSQL().getPrefix() + "_extra WHERE name='" + username + "' AND setting='" + key + "'");
+			int size = r.getInt(1);
+			PreparedStatement pstmt = null;
+			if (size == 0) {
+				pstmt = server.getSQL().getConnection().prepareStatement("INSERT INTO " + server.getSQL().getPrefix() + "_extra(name, setting, value) VALUES (?, ?, ?)");
+				pstmt.setString(1, username);
+				pstmt.setString(2, key);
+				pstmt.setObject(3, extra.get(key));
+				pstmt.executeUpdate();
+			}
+			else {
+				pstmt = server.getSQL().getConnection().prepareStatement("UPDATE " + server.getSQL().getPrefix() + "_extra SET value = ? WHERE name = ? AND setting = ?");
+				pstmt.setObject(1, extra.get(key));
+				pstmt.setString(2, username);
+				pstmt.setString(3, key);
+				pstmt.executeUpdate();
+			}
+			pstmt.close();
+		}
 		else
-			server.getSQL().ExecuteQuery("UPDATE " + server.getSQL().getPrefix() + "_extra SET value='" + extra.get(key).toString() + "' WHERE name='" + username + "' AND setting='" + key + "'");
+			throw new NotSerializableException("The object that was stored in ExtraData cant be saved because it doesnt implement Serializable!");
 	}
 	
 	/**

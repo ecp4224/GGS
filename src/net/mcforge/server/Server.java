@@ -332,7 +332,7 @@ public final class Server implements LogInterface {
 		Log("Setting up SQL");
 		sql.Connect(this);
 		final String[] commands = new String[] {
-				"CREATE TABLE if not exists " + sql.getPrefix() + "_extra (name VARCHAR(20), setting TEXT, value TEXT);",
+				"CREATE TABLE if not exists " + sql.getPrefix() + "_extra (name VARCHAR(20), setting TEXT, value varbinary);",
 		};
 		sql.ExecuteQuery(commands);
 		Log("Done!");
