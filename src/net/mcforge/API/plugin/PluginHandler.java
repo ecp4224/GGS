@@ -77,7 +77,7 @@ public class PluginHandler {
 									while ((strLine = br.readLine()) != null) {
 										String key = strLine.split("\\=")[0].trim();
 										String value = strLine.split("\\=")[1].trim();
-										if (key.equals("plugin-name")) {
+										if (key.equals("name")) {
                                                                                     pluginnames.add(value.trim().toLowerCase());
 										}
 									}
