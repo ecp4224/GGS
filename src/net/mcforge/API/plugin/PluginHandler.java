@@ -31,8 +31,133 @@ public class PluginHandler {
 	
 	private ArrayList<Game> games = new ArrayList<Game>();
 
+        private File[] checkrequires(Server server)
+        {
+            ArrayList<File> correctfiles = new ArrayList<>();
+            ArrayList<String> pluginnames = new ArrayList<>();
+            File pluginFolder = new File("plugins/");
+            File[] pluginFiles = pluginFolder.listFiles();
+            for(int i = 0; i < pluginFiles.length; i++)
+		{
+			if(pluginFiles[i].isFile() && pluginFiles[i].getName().endsWith(".jar"))
+			{
+				JarFile file = null;
+				try {
+					file = new JarFile(pluginFiles[i]);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				if(file != null)
+				{
+					Enumeration<JarEntry> entries = file.entries();
+					if(entries != null)
+					{
+						while(entries.hasMoreElements())
+						{
+							JarEntry fileName = entries.nextElement();
+							if(fileName.getName().endsWith(".config"))
+							{
+								Properties properties = new Properties();
+								try {
+									properties.load(file.getInputStream(fileName));
+								} catch (IOException e) {
+									e.printStackTrace();
+								}
+								File pluginFile = new File("plugins/" + pluginFiles[i].getName());
+								String[] args = new String[] { "-normal" };
+								DataInputStream in = null;
+								try {
+									in = new DataInputStream(file.getInputStream(fileName));
+								} catch (IOException e2) {
+									e2.printStackTrace();
+								}
+								BufferedReader br = new BufferedReader(new InputStreamReader(in));
+								String strLine;
+								try {
+									while ((strLine = br.readLine()) != null) {
+										String key = strLine.split("\\=")[0].trim();
+										String value = strLine.split("\\=")[1].trim();
+										if (key.equals("plugin-name")) {
+                                                                                    pluginnames.add(value.trim().toLowerCase());
+										}
+									}
+								} catch (IOException e1) {
+									e1.printStackTrace();
+								}
+                                                        }
+                                                }
+                                        }
+                                }
+                        }
+                }
+                for(int i = 0; i < pluginFiles.length; i++)
+		{
+			if(pluginFiles[i].isFile() && pluginFiles[i].getName().endsWith(".jar"))
+			{
+				JarFile file = null;
+				try {
+					file = new JarFile(pluginFiles[i]);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				if(file != null)
+				{
+					Enumeration<JarEntry> entries = file.entries();
+					if(entries != null)
+					{
+						while(entries.hasMoreElements())
+						{
+							JarEntry fileName = entries.nextElement();
+							if(fileName.getName().endsWith(".config"))
+							{
+								Properties properties = new Properties();
+								try {
+									properties.load(file.getInputStream(fileName));
+								} catch (IOException e) {
+									e.printStackTrace();
+								}
+								File pluginFile = new File("plugins/" + pluginFiles[i].getName());
+								String[] args = new String[] { "-normal" };
+								DataInputStream in = null;
+								try {
+									in = new DataInputStream(file.getInputStream(fileName));
+								} catch (IOException e2) {
+									e2.printStackTrace();
+								}
+								BufferedReader br = new BufferedReader(new InputStreamReader(in));
+								String strLine;
+								try {
+									while ((strLine = br.readLine()) != null) {
+										String key = strLine.split("\\=")[0].trim();
+										String value = strLine.split("\\=")[1].trim();
+										if (key.equals("required-plugins")) {
+                                                                                    String[] required = value.split(",");
+                                                                                    boolean canadd = true;
+                                                                                    for (int z=0;z<required.length;z++)
+                                                                                    {
+                                                                                        if (!pluginnames.contains(required[z].trim().toLowerCase()))
+                                                                                        {
+                                                                                            canadd = false;
+                                                                                        }
+                                                                                    }
+                                                                                    if (canadd) { correctfiles.add(pluginFiles[i]); }
+										}
+									}
+								} catch (IOException e1) {
+									e1.printStackTrace();
+								}
+                                                        }
+                                                }
+                                        }
+                                }
+                        }
+                }
+                return correctfiles.toArray(new File[correctfiles.size()]);
+        }
+        
 	public void loadplugins(Server server)
 	{
+            
 		File pluginFolder = new File("plugins/");
 		if(!pluginFolder.exists())
 		{
@@ -40,7 +165,7 @@ public class PluginHandler {
 			pluginFolder.mkdir();
 			return;
 		}
-		File[] pluginFiles = pluginFolder.listFiles();
+                File[] pluginFiles = checkrequires(server);
 		for(int i = 0; i < pluginFiles.length; i++)
 		{
 			if(pluginFiles[i].isFile() && pluginFiles[i].getName().endsWith(".jar"))

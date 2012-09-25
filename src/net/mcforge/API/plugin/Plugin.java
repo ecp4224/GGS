@@ -26,6 +26,20 @@ public abstract class Plugin
 	private Server _server;
 	private Properties properties;
 	
+        private String internalName = "";
+        
+        public final void setInternalName(String name)
+        {
+            if (internalName == "")
+            {
+                internalName = name;
+            }
+        }
+        public final String getInternalName()
+        {
+            return internalName;
+        }
+        
 	public Plugin(Server server, Properties properties)
 	{
 		this._server = server;
@@ -103,4 +117,8 @@ public abstract class Plugin
 	{
 		return properties;
 	}
+        public String[] getRequiredPlugins()
+        {
+            return new String[0];
+        }
 }
