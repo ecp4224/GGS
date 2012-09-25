@@ -479,6 +479,11 @@ public class Player extends IOClient implements CommandExecutor {
 		GlobalBlockChange(X, Y, Z, block, l, s, true);
 	}
 	
+        public static Player find(String name)
+        {
+            return Server.getServer().findPlayer(name);
+        }
+        
 	/**
 	 * Get a list of who the player can see
 	 * @return An ArrayList of players
