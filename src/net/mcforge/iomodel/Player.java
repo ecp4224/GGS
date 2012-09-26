@@ -479,9 +479,9 @@ public class Player extends IOClient implements CommandExecutor {
 		GlobalBlockChange(X, Y, Z, block, l, s, true);
 	}
 	
-        public static Player find(String name)
+        public static Player find(Server server, String name)
         {
-            return Server.getServer().findPlayer(name);
+            return server.findPlayer(name);
         }
         
 	/**

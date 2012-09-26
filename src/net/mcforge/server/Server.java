@@ -163,13 +163,6 @@ public final class Server implements LogInterface {
 	public final Properties getSystemProperties() {
 		return p;
 	}
-        /**
-         * gives latest Server object created.
-         * @return the server object currently in use
-         */
-         public static Server getServer() {
-            return theserver;
-        }
 	/**
 	 * Gets the class that handles messages
 	 * @return The Message class
