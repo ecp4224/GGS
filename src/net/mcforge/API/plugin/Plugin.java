@@ -117,8 +117,4 @@ public abstract class Plugin
 	{
 		return properties;
 	}
-        public String[] getRequiredPlugins()
-        {
-            return new String[0];
-        }
 }
