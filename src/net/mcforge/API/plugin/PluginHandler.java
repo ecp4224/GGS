@@ -33,8 +33,8 @@ public class PluginHandler {
 
         private File[] checkrequires(Server server)
         {
-            ArrayList<File> correctfiles = new ArrayList<>();
-            ArrayList<String> pluginnames = new ArrayList<>();
+            ArrayList<File> correctfiles = new ArrayList<File>();
+            ArrayList<String> pluginnames = new ArrayList<String>();
             File pluginFolder = new File("plugins/");
             File[] pluginFiles = pluginFolder.listFiles();
             for(int i = 0; i < pluginFiles.length; i++)

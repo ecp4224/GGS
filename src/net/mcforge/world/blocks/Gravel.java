@@ -10,7 +10,7 @@ package net.mcforge.world.blocks;
 import net.mcforge.server.Server;
 import net.mcforge.world.PhysicsBlock;
 
-public class Gravel extends PhysicsBlock {
+public class Gravel extends Sand {
 
 	int wait = 0;
 	/**
@@ -35,16 +35,6 @@ public class Gravel extends PhysicsBlock {
 		Gravel ss = new Gravel((byte)12, "Gravel", s);
 		ss.wait = wait;
 		return ss;
-	}
-
-	@Override
-	public void tick() {
-		if (wait <= 3) {
-			wait++;
-			return;
-		}
-		if (getLevel().getTile(getX(), getY() - 1, getZ()).getVisableBlock() == 0)
-			move(getX(), getY() - 1, getZ());
 	}
 
 }
