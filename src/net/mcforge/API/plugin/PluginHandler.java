@@ -142,6 +142,10 @@ public class PluginHandler {
                                                                                     }
                                                                                     if (canadd) { correctfiles.add(pluginFiles[i]); }
 										}
+										else
+										{
+										    correctfiles.add(pluginFiles[i]);
+										}
 									}
 								} catch (IOException e1) {
 									e1.printStackTrace();
