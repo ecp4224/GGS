@@ -25,21 +25,21 @@ public abstract class Plugin
 {
 	private Server _server;
 	private Properties properties;
-	
-        private String internalName = "";
-        
-        public final void setInternalName(String name)
-        {
-            if (internalName == "")
-            {
-                internalName = name;
-            }
-        }
-        public final String getInternalName()
-        {
-            return internalName;
-        }
-        
+
+	private String internalName = "";
+
+	public final void setInternalName(String name)
+	{
+		if (internalName == "")
+		{
+			internalName = name;
+		}
+	}
+	public final String getInternalName()
+	{
+		return internalName;
+	}
+
 	public Plugin(Server server, Properties properties)
 	{
 		this._server = server;
@@ -116,5 +116,14 @@ public abstract class Plugin
 	public Properties getProperties()
 	{
 		return properties;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof Plugin) {
+			Plugin p = (Plugin)obj;
+			return p.getName().equals(getName()) && p.getVersion().equals(getVersion());
+		}
+		return false;
 	}
 }

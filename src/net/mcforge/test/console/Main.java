@@ -14,6 +14,8 @@ import net.mcforge.chat.ChatColor;
 import net.mcforge.chat.Messages;
 import net.mcforge.groups.Group;
 import net.mcforge.server.Server;
+import net.mcforge.system.updater.Updatable;
+import net.mcforge.system.updater.UpdateType;
 
 public class Main implements CommandExecutor {
 	Server s;

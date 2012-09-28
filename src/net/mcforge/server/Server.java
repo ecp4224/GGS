@@ -29,6 +29,7 @@ import net.mcforge.system.heartbeat.Beat;
 import net.mcforge.system.heartbeat.Heart;
 import net.mcforge.system.heartbeat.MBeat;
 import net.mcforge.system.heartbeat.WBeat;
+import net.mcforge.system.updater.UpdateService;
 import net.mcforge.world.Level;
 import net.mcforge.world.LevelHandler;
 
@@ -37,6 +38,7 @@ public final class Server implements LogInterface {
 	private LevelHandler lm;
 	private Logger logger;
 	private CommandHandler ch;
+	private UpdateService us;
 	private Properties p;
 	private PluginHandler ph;
 	private ArrayList<Tick> ticks = new ArrayList<Tick>();
@@ -46,7 +48,6 @@ public final class Server implements LogInterface {
 	private String Salt;
 	private ISQL sql;
 	private Messages m; //Pls lets make everything in messages static this is just stupid
-        private static Server theserver;
 	public static final List<String> devs = Arrays.asList( "Dmitchell", "501st_commander", "Lavoaster", "Alem_Zupa", "bemacized", "Shade2010", "edh649", "hypereddie10", "Gamemakergm", "Serado", "Wouto1997", "cazzar", "givo");
 	/**
 	 * The players currently on the server
@@ -163,6 +164,17 @@ public final class Server implements LogInterface {
 	public final Properties getSystemProperties() {
 		return p;
 	}
+	
+	/**
+	 * Get the object that controls the updating of plugins
+	 * and other {@link Updatable} objects.
+	 * @return
+	 *       The {@link UpdateService} object
+	 */
+	public final UpdateService getUpdateService() {
+		return us;
+	}
+	
 	/**
 	 * Gets the class that handles messages
 	 * @return The Message class
@@ -190,7 +202,6 @@ public final class Server implements LogInterface {
 		this.Name = Name;
 		this.MOTD = MOTD;
 		tick = new Ticker();
-                theserver = this;
 	}
 	
 	/**
@@ -292,6 +303,7 @@ public final class Server implements LogInterface {
 		Group.Load(this);
 		p = Properties.init(this);
 		loadSystemProperties();
+		us = new UpdateService(this);
 		m = new Messages(this);
 		pm = new PacketManager(this);
 		pm.StartReading();
