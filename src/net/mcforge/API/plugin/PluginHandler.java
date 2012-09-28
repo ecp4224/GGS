@@ -153,6 +153,10 @@ public class PluginHandler {
 													canadd = false;
 											}
 										}
+										else
+										{
+										    correctfiles.add(pluginFiles[i]);
+										}
 									}
 									if (canadd) { correctfiles.add(pluginFiles[i]); }
 								} catch (IOException e1) {
