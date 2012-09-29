@@ -80,6 +80,10 @@ public class Connect extends Packet {
 					player.kick(connect.getKickMessage());
 				return;
                             }
+                            else
+                            {
+                                server.Log("plugin granted " + player.username + " verification bypass!");
+                            }
 			}
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
