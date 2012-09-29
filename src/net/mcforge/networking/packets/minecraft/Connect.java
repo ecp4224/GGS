@@ -59,7 +59,7 @@ public class Connect extends Packet {
 				player.kick("Invalid protocol version!");
 				return;
 			}
-			if (player.VerifyLogin() && !connect.isCancelled()) {
+			if (player.VerifyLogin() && !connect.isCancelled() && !connect.getAutologin()) {
 				if (BanHandler.isBanned(player.username))
 				{
 					player.kick("You are banned!");
