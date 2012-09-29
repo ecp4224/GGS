@@ -73,11 +73,13 @@ public class Connect extends Packet {
 				}
 			}
 			else {
+                            if (!connect.getAutologin()) {
 				if (connect.getKickMessage().equals(""))
 					player.kick("Invalid Login!");
 				else
 					player.kick(connect.getKickMessage());
 				return;
+                            }
 			}
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
