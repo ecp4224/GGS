@@ -225,7 +225,7 @@ public class Group {
 	 */
 	public static Group find(String name) {
 		for (Group g : groups) {
-			if (g.name.equals(name))
+			if (g.name.equalsIgnoreCase(name))
 				return g;
 		}
 		return null;
@@ -337,56 +337,46 @@ public class Group {
          */
         public boolean Delete()
         {
-            String[] lines = null;
+            String[] lines;
+            ArrayList<String> writelines = new ArrayList<String>();
             groups.remove(this);
             try {
                 lines = readAllLines(FileUtils.PROPS_DIR + "groups.xml");
             } catch (IOException ex) {
                 return false;
             }
-            int start = -1;
-            int end = -1;
+            boolean ingroup = false;
             for (int i=0;i<lines.length;i++)
             {
                 if (lines[i].toLowerCase().indexOf("<name>" + this.name.toLowerCase() + "</name>") != -1)
                 {
-                    start = i-1;
+                    ingroup = true;
+                    writelines.remove(writelines.size() - 1);
                 }
-                if (start != -1)
+                if (!ingroup)
                 {
-                    if (lines[i].toLowerCase().indexOf("</Group>") != -1)
+                    writelines.add(lines[i]);
+                }
+                if (ingroup)
+                {
+                    if (lines[i].toLowerCase().indexOf("</group>") != -1)
                     {
-                        end = i;
+                        ingroup = false;
                     }
                 }
             }
-            String[] newlines = new String[lines.length - (end - start)];
-            for (int i=0;i<lines.length;i++)
-            {
-                if (i < start)
-                {
-                    newlines[i] = lines[i];
-                }
-                else
-                {
-                    newlines[i - (end-start)] = lines[i];
-                }
-            }
-            BufferedWriter bw = null;
+            BufferedWriter bw;
 		try {
 			bw = new BufferedWriter(new FileWriter(new File(
 					FileUtils.PROPS_DIR + "groups.xml"), false));
 		} catch (IOException ex) {
 			return false;
 		}
+                String[] newlines = writelines.toArray(new String[writelines.size()]);
 		for (int i=0;i<newlines.length;i++)
 		{
 			try {
 				bw.write(newlines[i]);
-			} catch (IOException ex) {
-				return false;
-			}
-			try {
 				bw.newLine();
 			} catch (IOException ex) {
 				return false;
@@ -407,7 +397,7 @@ public class Group {
          */
         public boolean SetName(String name)
         {
-            String[] lines = null;
+            String[] lines;
             try {
                 lines = readAllLines(FileUtils.PROPS_DIR + "groups.xml");
             } catch (IOException ex) {
