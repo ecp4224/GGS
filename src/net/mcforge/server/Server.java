@@ -24,7 +24,6 @@ import net.mcforge.util.logger.Logger;
 import net.mcforge.util.properties.Properties;
 import net.mcforge.sql.ISQL;
 import net.mcforge.sql.MySQL;
-import net.mcforge.system.BanHandler;
 import net.mcforge.system.heartbeat.Beat;
 import net.mcforge.system.heartbeat.Heart;
 import net.mcforge.system.heartbeat.MBeat;
@@ -295,7 +294,6 @@ public final class Server implements LogInterface {
 		if (Running)
 			return;
 		Running = true;
-		BanHandler.init();
 		es = new EventSystem(this);
 		startLogger();
 		Log("Starting MCForge v" + VERSION);

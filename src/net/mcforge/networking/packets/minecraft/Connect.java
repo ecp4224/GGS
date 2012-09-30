@@ -17,8 +17,6 @@ import net.mcforge.networking.packets.Packet;
 import net.mcforge.networking.packets.PacketManager;
 import net.mcforge.networking.packets.PacketType;
 import net.mcforge.server.Server;
-import net.mcforge.system.BanHandler;
-
 public class Connect extends Packet {
 
 	public Connect(String name, byte ID, PacketManager parent, PacketType packetType) {
@@ -60,17 +58,12 @@ public class Connect extends Packet {
 				return;
 			}
 			if (player.VerifyLogin() && !connect.isCancelled() && !connect.getAutologin()) {
-				if (BanHandler.isBanned(player.username))
-				{
-					player.kick("You are banned!");
-				} else {
-					server.players.add(player);
+				server.players.add(player);
 
-					player.Login();
-					PlayerLoginEvent login = new PlayerLoginEvent(player);
-					server.getEventSystem().callEvent(login);
-					player.opID = message[129];
-				}
+				player.Login();
+				PlayerLoginEvent login = new PlayerLoginEvent(player);
+				server.getEventSystem().callEvent(login);
+				player.opID = message[129];
 			}
 			else {
                             if (!connect.getAutologin()) {

@@ -169,15 +169,11 @@ public class Player extends IOClient implements CommandExecutor {
 			} else {
 				byte[] message = new byte[packet.length];
 				try {
-					reader.read(message);
+					if(reader.read(message) != message.length) pm.server.Log("Bad packet: "+opCode);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-				if (message.length < packet.length) {
-					pm.server.Log("Bad packet..");
-				}
-				else
-					packet.Handle(message, pm.server, this);
+				packet.Handle(message, pm.server, this);
 			}
 		}
 
