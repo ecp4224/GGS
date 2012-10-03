@@ -9,16 +9,15 @@ package net.mcforge.test.console;
 
 import java.util.Scanner;
 
-import net.mcforge.API.CommandExecutor;
 import net.mcforge.chat.ChatColor;
 import net.mcforge.chat.Messages;
 import net.mcforge.groups.Group;
 import net.mcforge.server.Server;
-import net.mcforge.system.updater.Updatable;
-import net.mcforge.system.updater.UpdateType;
+import net.mcforge.system.Console;
 
-public class Main implements CommandExecutor {
+public class Main extends Console {
 	Server s;
+	final Scanner scan = new Scanner(System.in);
 	public static void main(String[] args) {
 		new Main().start();
 	}
@@ -31,7 +30,7 @@ public class Main implements CommandExecutor {
 	public void start() {
 		s = new Server("Test", 25565, "Test");
 		Messages m = new Messages(s);
-		s.Start();
+		s.Start((Console)this);
 		Scanner scanner = new Scanner(System.in);
 		while (s.Running) {
 			String line = scanner.nextLine();
@@ -65,5 +64,10 @@ public class Main implements CommandExecutor {
 	@Override
 	public String getName() {
 		return "Console";
+	}
+
+	@Override
+	public String next() {
+		return scan.next();
 	}
 }

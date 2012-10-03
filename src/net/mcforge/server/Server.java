@@ -7,12 +7,19 @@
  ******************************************************************************/
 package net.mcforge.server;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Random;
 
 import net.mcforge.API.EventSystem;
+import net.mcforge.API.io.ServerLogEvent;
 import net.mcforge.API.plugin.CommandHandler;
 import net.mcforge.API.plugin.PluginHandler;
 import net.mcforge.chat.Messages;
@@ -24,6 +31,7 @@ import net.mcforge.util.logger.Logger;
 import net.mcforge.util.properties.Properties;
 import net.mcforge.sql.ISQL;
 import net.mcforge.sql.MySQL;
+import net.mcforge.system.Console;
 import net.mcforge.system.heartbeat.Beat;
 import net.mcforge.system.heartbeat.Heart;
 import net.mcforge.system.heartbeat.MBeat;
@@ -46,6 +54,7 @@ public final class Server implements LogInterface {
 	private EventSystem es;
 	private String Salt;
 	private ISQL sql;
+	private Console console;
 	private Messages m; //Pls lets make everything in messages static this is just stupid
 	public static final List<String> devs = Arrays.asList( "Dmitchell", "501st_commander", "Lavoaster", "Alem_Zupa", "bemacized", "Shade2010", "edh649", "hypereddie10", "Gamemakergm", "Serado", "Wouto1997", "cazzar", "givo");
 	/**
@@ -145,6 +154,15 @@ public final class Server implements LogInterface {
 	 */
 	public final PluginHandler getPluginHandler() {
 		return ph;
+	}
+	
+	/**
+	 * Get the console object that is controlling the server
+	 * @return
+	 *        The {@link Console} object
+	 */
+	public final Console getConsole() {
+		return console;
 	}
 	/**
 	 * The SQL object where you can execute
@@ -290,10 +308,12 @@ public final class Server implements LogInterface {
 	/**
 	 * Start the server
 	 */
-	public void Start() {
+	public void Start(Console console) {
 		if (Running)
 			return;
 		Running = true;
+		this.console = console;
+		console.setServer(this);
 		es = new EventSystem(this);
 		startLogger();
 		Log("Starting MCForge v" + VERSION);
@@ -499,11 +519,15 @@ public final class Server implements LogInterface {
 	@Override
 	public void onLog(String message) {
 		//TODO ..colors?
+		ServerLogEvent sle = new ServerLogEvent(this, message, message.split("\\]")[1].trim());
+		this.es.callEvent(sle);
 		System.out.println(message);
 	}
 	@Override
 	public void onError(String message) {
 		//TODO ..colors?
+		ServerLogEvent sle = new ServerLogEvent(this, message, message.split("\\]")[1].trim());
+		this.es.callEvent(sle);
 		System.out.println("==!ERROR!==");
 		System.out.println(message);
 		System.out.println("==!ERROR!==");

@@ -151,7 +151,6 @@ public class PluginHandler {
 	public void loadplugins(Server server) {
 		File pluginFolder = new File("plugins/");
 		if (!pluginFolder.exists()) {
-			System.out.println("Mods folder does not exist.");
 			pluginFolder.mkdir();
 			return;
 		}
