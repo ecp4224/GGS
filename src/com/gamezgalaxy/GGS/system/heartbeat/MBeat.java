@@ -55,6 +55,6 @@ public class MBeat extends Heart {
 
 	@Override
 	public String getURL() {
-		return "http://www.minecraft.net/heartbeat.jsp";
+		return "https://minecraft.net/heartbeat.jsp";
 	}
 }

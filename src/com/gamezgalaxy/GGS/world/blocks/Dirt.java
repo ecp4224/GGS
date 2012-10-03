@@ -17,7 +17,6 @@ public class Dirt extends Block {
 	private static final long serialVersionUID = 1L;
 	public Dirt(byte ID, String name) {
 		super(ID, name);
-		// TODO Auto-generated constructor stub
 	}
 	
 	public Dirt() {

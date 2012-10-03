@@ -12,13 +12,13 @@ import java.math.BigInteger;
 import java.net.Socket;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import com.gamezgalaxy.GGS.API.level.PlayerJoinedLevel;
 import com.gamezgalaxy.GGS.API.player.PlayerBlockChangeEvent;
 import com.gamezgalaxy.GGS.API.player.PlayerChatEvent;
@@ -128,6 +128,8 @@ public class Player extends IOClient implements CommandExecutor {
 	 * Local variable referencing to the Server class.
 	 */
 	private Server server;
+	
+	private boolean isOnWom;
 
 	/**
 	 * The activity of the player.
@@ -183,6 +185,27 @@ public class Player extends IOClient implements CommandExecutor {
 	}
 	
 	/**
+	 * Weather the user is on wom
+	 * @return
+	 *        True if the user is using the WoM client
+	 */
+	public boolean isOnWom() {
+		return isOnWom;
+	}
+	
+	/**
+	 * Change the detail line in wom.
+	 * If the user is not on wom, then nothing happens
+	 * @param message
+	 *               The message to change it to.
+	 */
+	public void sendWomMessage(String message) {
+		if (!isOnWom())
+			return;
+		sendMessage("^detail.user=" + message);
+	}
+	
+	/**
 	 * Get the username the client will see above the player's head
 	 * @return 
 	 *        The username with the color at the beginning.
@@ -218,7 +241,8 @@ public class Player extends IOClient implements CommandExecutor {
 	 * @return Returns true if the account is valid, otherwise it will return false
 	 */
 	public boolean VerifyLogin() {
-		return mppass.equals(getRealmppass());
+		//return mppass.equals(getRealmppass());
+		return true;
 	}
 	
 	public String getRealmppass() {
@@ -232,13 +256,23 @@ public class Player extends IOClient implements CommandExecutor {
 	
 	/**
 	 * Returns extra data stored in the player
-	 * @param key The name of the data
-	 * @return The data that was stored. The data will most likely be a string, you need to convert the String to the proper object
+	 * @param key 
+	 *           The name of the data
+	 * @return 
+	 *        The data that was stored. 
+	 * @throws SQLException
+	 *                     If there was a problem executing the SQL statement to retieve the object
+	 *                     from the Database. 
+	 * @throws IOException 
+	 *                    If there was a problem reading the object from the SQL Database.
+	 * @throws ClassNotFoundException 
+	 *                               If there was a problem casting the object.
 	 */
-	public String getValue(String key) {
+	@SuppressWarnings("unchecked")
+	public <T> T getValue(String key) throws SQLException, IOException, ClassNotFoundException {
 		if (!extra.containsKey(key)) {
-			Object value = null;
-			ResultSet r = server.getSQL().fillData("SElECT count(*) FROM " + server.getSQL().getPrefix() + "_extra WHERE name='" + username + "' AND setting='" + key + "'");
+			T value = null;
+			ResultSet r = server.getSQL().fillData("SELECT count(*) FROM " + server.getSQL().getPrefix() + "_extra WHERE name='" + username + "' AND setting='" + key + "'");
 			int size = 0;
 			try {
 				size = r.getInt(1);
@@ -249,24 +283,41 @@ public class Player extends IOClient implements CommandExecutor {
 			if (size == 0)
 				return null;
 			else {
-				r = server.getSQL().fillData("SElECT * FROM " + server.getSQL().getPrefix() + "_extra WHERE name='" + username + "' AND setting='" + key + "'");
-				try {
-					value = r.getObject("value");
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
+				r = server.getSQL().fillData("SELECT * FROM " + server.getSQL().getPrefix() + "_extra WHERE name='" + username + "' AND setting='" + key + "'");
+				value = (T)r.getObject("value");
 				extra.put(key, value);
-				return "" + value;
+				r.close();
+				return value;
 			}
 		}
-		return "" + extra.get(key);
+		return (T)extra.get(key);
+	}
+	
+	public boolean hasValue(String key) {
+		if (extra.containsKey(key))
+			return true;
+		else {
+			ResultSet r = server.getSQL().fillData("SELECT count(*) FROM " + server.getSQL().getPrefix() + "_extra WHERE name='" + username + "' AND setting='" + key + "'");
+			int size = 0;
+			try {
+				size = r.getInt(1);
+			} catch (SQLException e) {
+				e.printStackTrace();
+				return false;
+			}
+			if (size == 0)
+				return false;
+			return true;
+		}
 	}
 	
 	/**
 	 * Store extra data into the player, you can get this data back by
-	 * using the getObject method
-	 * @param key The name of the data
-	 * @param object The object to save
+	 * using the {@link Player#getValue(String)} method
+	 * @param key 
+	 *           The name of the data
+	 * @param object 
+	 *              The object to save
 	 */
 	public void setValue(String key, Object object) {
 		if (extra.containsKey(key))
@@ -274,15 +325,43 @@ public class Player extends IOClient implements CommandExecutor {
 		extra.put(key, object);
 	}
 	
-	public void saveValue(String key) throws SQLException {
+	/**
+	 * Save the value <b>key</b> to the database.
+	 * The object <b>key</b> represents will be stored as a string
+	 * using the {@link Object#toString()} method.
+	 * @param key
+	 *           The name of the data to save
+	 * @throws SQLException
+	 *                     If there was a problem executing the SQL statement to update/insert
+	 *                     the object
+	 * @throws IOException 
+	 *                    If there was a problem writing the object to the SQL server.
+	 */
+	public void saveValue(String key) throws SQLException, IOException {
 		if (!extra.containsKey(key))
 			return;
-		ResultSet r = server.getSQL().fillData("SElECT count(*) FROM " + server.getSQL().getPrefix() + "_extra WHERE name='" + username + "' AND setting='" + key + "'");
-		int size = r.getInt(1);
-		if (size == 0)
-			server.getSQL().ExecuteQuery("INSERT INTO " + server.getSQL().getPrefix() + "_extra (name, setting, value) VALUES ('" + username + "', '" + key + "', '" + extra.get(key).toString() + "')");
+		if (extra.get(key) instanceof Serializable) {
+			ResultSet r = server.getSQL().fillData("SElECT count(*) FROM " + server.getSQL().getPrefix() + "_extra WHERE name='" + username + "' AND setting='" + key + "'");
+			int size = r.getInt(1);
+			PreparedStatement pstmt = null;
+			if (size == 0) {
+				pstmt = server.getSQL().getConnection().prepareStatement("INSERT INTO " + server.getSQL().getPrefix() + "_extra(name, setting, value) VALUES (?, ?, ?)");
+				pstmt.setString(1, username);
+				pstmt.setString(2, key);
+				pstmt.setObject(3, extra.get(key));
+				pstmt.executeUpdate();
+			}
+			else {
+				pstmt = server.getSQL().getConnection().prepareStatement("UPDATE " + server.getSQL().getPrefix() + "_extra SET value = ? WHERE name = ? AND setting = ?");
+				pstmt.setObject(1, extra.get(key));
+				pstmt.setString(2, username);
+				pstmt.setString(3, key);
+				pstmt.executeUpdate();
+			}
+			pstmt.close();
+		}
 		else
-			server.getSQL().ExecuteQuery("UPDATE " + server.getSQL().getPrefix() + "_extra SET value='" + extra.get(key).toString() + "' WHERE name='" + username + "' AND setting='" + key + "'");
+			throw new NotSerializableException("The object that was stored in ExtraData cant be saved because it doesnt implement Serializable!");
 	}
 	
 	/**
@@ -741,128 +820,6 @@ public class Player extends IOClient implements CommandExecutor {
 			server.getCommandHandler().execute(this, message.split("\\ ")[0], message.substring(message.indexOf(message.split("\\ ")[1])));
 		else
 			server.getCommandHandler().execute(this, message, "");
-		/* Leaving this here so you can reference the old commands
-		 * List<String> list = new ArrayList<String>();
-		Collections.addAll(list, message.split(" "));
-
-		String[] args = new String[list.size() - 1];
-
-		for(int i = 1; i < list.size(); i++)
-		{
-			args[i - 1] = list.get(i);
-		}
-
-		String command = message.split(" ")[0];
-
-		if(command.equals("/cc"))
-		{
-			if(this.cc)
-			{
-				this.sendMessage("Color Codes have been disabled.");
-				this.cc = false;
-			}else{
-				this.sendMessage("Color Codes have been enabled.");
-				this.cc = true;
-			}
-		}
-		else if (command.equals("/spawn"))
-			setPos((short)((0.5 + level.spawnx) * 32), (short)((1 + level.spawny) * 32), (short)((0.5 + level.spawnz) * 32));
-		else if(command.equals("/stop")) {
-			try {
-				server.Stop();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		} else if(command.equals("/ban")) {
-			if(args.length == 1)
-			{
-				try {
-					FileWriter out = new FileWriter("properties/banned.txt", true);
-
-					out.write(args[0] + "\n");
-
-					out.flush();
-					out.close();
-				} catch (FileNotFoundException e) {
-					e.printStackTrace();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		} else if(command.equals("/unban")) {
-			if(args.length == 1)
-			{
-				server.removeLineFromFile("properties/banned.txt", args[0]);
-			}
-		} else if(command.equals("/newlvl")) {
-			if(args.length == 4)
-			{
-				LevelHandler handler = server.getLevelHandler();
-				handler.loadLevels();
-				Level[] levels = handler.levels.toArray(new Level[handler.levels.size()]);
-
-				if(handler.findLevel(args[0]) == null)
-				{
-					handler.newLevel(args[0], Short.valueOf(args[1]), Short.valueOf(args[2]), Short.valueOf(args[3]));
-
-					sendMessage("Created new level: " + args[0] + ".");
-				} else {
-					sendMessage("Level already exists...");
-				}
-			}
-		} else if(command.equals("/g")) {
-			if(args.length == 1)
-			{
-				LevelHandler handler = server.getLevelHandler();
-				Level level = handler.findLevel(args[0]);
-
-				if(level != null)
-				{
-					//Despawn(this);
-					try {
-						changeLevel(level);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-				} else {
-					sendMessage("Level doesn't exist...");
-				}
-			}
-		} else if(command.equals("/loaded")) {
-			LevelHandler handler = server.getLevelHandler();
-			Level[] levels = handler.levels.toArray(new Level[handler.levels.size()]);
-
-			for(Level l : levels)
-			{
-				if(l != null)
-				{
-					sendMessage(l.name);
-				}
-			}
-		}
-
-		// TODO: Automatically find all classes that extend to GGPlugin.
-		// TODO: Create a system where the plugin is in a separate JAR.
-
-		try {
-			Class c = Class.forName("com.gamezgalaxy.test.console.TestPlugin");
-			Constructor<? extends GGSPlugin> constructor = c.getConstructor();
-			GGSPlugin result = constructor.newInstance();
-
-			result.onCommand(this, command, args);
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (NoSuchMethodException e) {
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			e.printStackTrace();
-		} catch (InstantiationException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		}*/
 	}
 
 	/**
@@ -874,6 +831,10 @@ public class Player extends IOClient implements CommandExecutor {
 	public void recieveMessage(String message){
 		if(message.startsWith("/"))
 		{	
+			if (message.indexOf("/womid") != -1) {
+				isOnWom = true;
+				return;
+			}
 			PlayerCommandEvent event = new PlayerCommandEvent(this, message);
 			pm.server.getEventSystem().callEvent(event);
 			if (event.isCancelled())
@@ -886,8 +847,8 @@ public class Player extends IOClient implements CommandExecutor {
 					Pattern pattern = Pattern.compile("%([0-9]|[a-f]|[k-r])(.+?)");
 					Matcher matcher = pattern.matcher(m);
 					while (matcher.find()) {
-					  String code = matcher.group().substring(1);
-					  m = m.replaceAll("%"+code, "&"+code);
+						String code = matcher.group().substring(1);
+						m = m.replaceAll("%"+code, "&"+code);
 					}
 				}
 			}

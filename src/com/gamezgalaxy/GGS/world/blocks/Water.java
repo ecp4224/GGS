@@ -10,7 +10,7 @@ package com.gamezgalaxy.GGS.world.blocks;
 import com.gamezgalaxy.GGS.server.Server;
 import com.gamezgalaxy.GGS.world.PhysicsBlock;
 
-public class Water extends PhysicsBlock {
+public class Water extends Lava {
 
 	/**
 	 * 
@@ -34,11 +34,6 @@ public class Water extends PhysicsBlock {
 	public PhysicsBlock clone(Server s) {
 		Water w = new Water((byte)8, "Water", s);
 		return w;
-	}
-
-	@Override
-	public void tick() {
-		//TODO Add physics for water
 	}
 
 }

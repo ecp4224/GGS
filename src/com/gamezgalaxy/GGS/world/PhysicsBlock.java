@@ -37,7 +37,7 @@ public abstract class PhysicsBlock extends Block implements Tick {
 	/**
 	 * Create a clone of the Physics Block.
 	 * @param s
-	 * @return
+	 * @returncode
 	 */
 	public abstract PhysicsBlock clone(Server s);
 	
@@ -193,6 +193,11 @@ public abstract class PhysicsBlock extends Block implements Tick {
 	 */
 	public boolean isBlockActive() {
 		return isBlockActive(this);
+	}
+	
+	public void stopTicking() {
+		if (_level.ticks.contains(this))
+			_level.ticks.remove(this);
 	}
 	
 	/**
