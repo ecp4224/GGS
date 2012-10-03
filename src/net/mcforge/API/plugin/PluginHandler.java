@@ -55,7 +55,7 @@ public class PluginHandler {
 							String fullName = fileName.getName();
 							int lastSlash = fullName.lastIndexOf('/');
 							String path = fullName.substring(0, lastSlash + 1);
-							System.out.println(fullName.length() + "-" + path.length() + "-" + ".class".length());
+							//System.out.println(fullName.length() + "-" + path.length() + "-" + ".class".length());
 							String name = fullName.substring(path.length(), fullName.length() - ".class".length());
 
 							URL[] urls = new URL[]{arg0.toURI().toURL()};
@@ -118,6 +118,7 @@ public class PluginHandler {
 								} else {
 									plugins.add(plugin);
 								}
+								server.Log(plugin.getName() + " loaded!");
 							} else {
 								if (!Command.class.isAssignableFrom(class_)) {
 									continue;
@@ -127,6 +128,7 @@ public class PluginHandler {
 									Constructor<? extends Command> construct = commandClass.getConstructor();
 									Command c = construct.newInstance();
 									server.getCommandHandler().addCommand(c);
+									server.Log("/" + c.getName() + " loaded!");
 								} catch (Exception ex) {
 									ex.printStackTrace();
 								}
