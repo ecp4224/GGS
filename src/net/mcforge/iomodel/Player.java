@@ -304,8 +304,8 @@ public class Player extends IOClient implements CommandExecutor {
 	
 	/**
 	 * Save the value <b>key</b> to the database.
-	 * The object <b>key</b> represents will be stored as a string
-	 * using the {@link Object#toString()} method.
+	 * The object <b>key</b> represents will be serialized to the
+	 * database.
 	 * @param key
 	 *           The name of the data to save
 	 * @throws SQLException
@@ -313,8 +313,10 @@ public class Player extends IOClient implements CommandExecutor {
 	 *                     the object
 	 * @throws IOException 
 	 *                    If there was a problem writing the object to the SQL server.
+	 * @throw NotSerializableException
+	 *                                
 	 */
-	public void saveValue(String key) throws SQLException, IOException {
+	public void saveValue(String key) throws SQLException, IOException, NotSerializableException {
 		if (!extra.containsKey(key))
 			return;
 		if (extra.get(key) instanceof Serializable) {
