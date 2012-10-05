@@ -19,6 +19,8 @@ public abstract class PlayerCommand extends Command {
 			Player player = (Player)e;
 			execute(player, args0);
 		}
+		else
+			e.sendMessage("This command can only be used ingame!");
 	}
 	
 	/**

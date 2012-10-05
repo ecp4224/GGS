@@ -49,6 +49,7 @@ public class Lava extends PhysicsBlock {
 
 	@Override
 	public void tick() {
+		//TODO Add better physics system.
 		if (!nearSponge(getLevel().PosToInt(getX(), getY(), getZ()))) {
 			if (time < random.nextInt(6)) {
 				if (type == 2 && check(getLevel().PosToInt(getX(), getY() - 1, getZ())))
@@ -60,41 +61,54 @@ public class Lava extends PhysicsBlock {
 			int x2 = random.nextInt(3);
 			int z1 = random.nextInt(3);
 			int z2 = random.nextInt(3);
+			boolean a = false;
+			boolean b = false;
+			boolean c = false;
+			boolean d = false;
 			int i = 0;
 			while (i != x1 && (getLevel().getTile(getX() + i + 1, getY(), getZ()).getVisableBlock() == 0 || getLevel().getTile(getX() + i + 1, getY(), getZ()).getVisableBlock() == this.getVisableBlock())) {
 				i++;
 				if (!check(getLevel().PosToInt(getX() + i, getY(), getZ())))
 					break;
-				else
+				else {
 					add(getX() + i, getY(), getZ());
+					a = true;
+				}
 			}
 			i = 0;
 			while (i != x2 && (getLevel().getTile(getX() - i - 1, getY(), getZ()).getVisableBlock() == 0 || getLevel().getTile(getX() - i - 1, getY(), getZ()).getVisableBlock() == this.getVisableBlock())) {
 				i++;
 				if (!check(getLevel().PosToInt(getX() - i, getY(), getZ())))
 					break;
-				else
+				else {
 					add(getX() - i, getY(), getZ());
+					b = true;
+				}
 			}
 			i = 0;
 			while (i != z1 && (getLevel().getTile(getX(), getY(), getZ() + i + 1).getVisableBlock() == 0 || getLevel().getTile(getX(), getY(), getZ() + i + 1).getVisableBlock() == this.getVisableBlock())) {
 				i++;
 				if (!check(getLevel().PosToInt(getX(), getY(), getZ() + i)))
 					break;
-				else
+				else {
 					add(getX(), getY(), getZ() + i);
+					c = true;
+				}
 			}
 			i = 0;
 			while (i != z2 && (getLevel().getTile(getX(), getY(), getZ() - i - 1).getVisableBlock() == 0 || getLevel().getTile(getX(), getY(), getZ() - i - 1).getVisableBlock() == this.getVisableBlock())) {
 				i++;
 				if (!check(getLevel().PosToInt(getX(), getY(), getZ() - i)))
 					break;
-				else
+				else {
+					d = true;
 					add(getX(), getY(), getZ() - i);
+				}
 			}
 			if (check(getLevel().PosToInt(getX(), getY() - 1, getZ())))
 				add(getX(), getY() - 1, getZ());
-			//TODO Add other kinds of physics
+			if (!a && !b && !c && !d)
+				super.stopTick();
 		}
 	}
 	public boolean check(int x, int y, int z) {

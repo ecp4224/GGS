@@ -226,6 +226,11 @@ public class Player extends IOClient implements CommandExecutor {
 		return mppass.equals(getRealmppass());
 	}
 	
+	/**
+	 * Get the mppass the user <b>SHOULD</b> have.
+	 * @return
+	 *        The mppass the user should have
+	 */
 	public String getRealmppass() {
 		try {
 			digest.update((String.valueOf(server.getSalt()) + username).getBytes());

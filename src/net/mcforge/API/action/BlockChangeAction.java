@@ -100,7 +100,7 @@ public class BlockChangeAction extends Action<BlockChangeAction> implements List
 	@Override
 	protected BlockChangeAction getResponse() {
 		BlockChangeAction c = new BlockChangeAction(getPlayer(), X, Y, Z, holding, mode);
-		PlayerChatEvent.getEventList().unregister(this);
+		PlayerBlockChangeEvent.getEventList().unregister(this);
 		return c;
 	}
 
