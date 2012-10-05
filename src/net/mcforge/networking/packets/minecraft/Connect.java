@@ -17,8 +17,6 @@ import net.mcforge.networking.packets.Packet;
 import net.mcforge.networking.packets.PacketManager;
 import net.mcforge.networking.packets.PacketType;
 import net.mcforge.server.Server;
-import net.mcforge.system.BanHandler;
-
 public class Connect extends Packet {
 
 	public Connect(String name, byte ID, PacketManager parent, PacketType packetType) {
@@ -59,25 +57,26 @@ public class Connect extends Packet {
 				player.kick("Invalid protocol version!");
 				return;
 			}
-			if (player.VerifyLogin() && !connect.isCancelled()) {
-				if (BanHandler.isBanned(player.username))
-				{
-					player.kick("You are banned!");
-				} else {
-					server.players.add(player);
+			if (player.VerifyLogin() && !connect.isCancelled() && !connect.getAutologin()) {
+				server.players.add(player);
 
-					player.Login();
-					PlayerLoginEvent login = new PlayerLoginEvent(player);
-					server.getEventSystem().callEvent(login);
-					player.opID = message[129];
-				}
+				player.Login();
+				PlayerLoginEvent login = new PlayerLoginEvent(player);
+				server.getEventSystem().callEvent(login);
+				player.opID = message[129];
 			}
 			else {
+                            if (!connect.getAutologin()) {
 				if (connect.getKickMessage().equals(""))
 					player.kick("Invalid Login!");
 				else
 					player.kick(connect.getKickMessage());
 				return;
+                            }
+                            else
+                            {
+                                server.Log("plugin granted " + player.username + " verification bypass!");
+                            }
 			}
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();

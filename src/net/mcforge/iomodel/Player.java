@@ -169,15 +169,11 @@ public class Player extends IOClient implements CommandExecutor {
 			} else {
 				byte[] message = new byte[packet.length];
 				try {
-					reader.read(message);
+					if(reader.read(message) != message.length) pm.server.Log("Bad packet: "+opCode);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-				if (message.length < packet.length) {
-					pm.server.Log("Bad packet..");
-				}
-				else
-					packet.Handle(message, pm.server, this);
+				packet.Handle(message, pm.server, this);
 			}
 		}
 
@@ -313,8 +309,8 @@ public class Player extends IOClient implements CommandExecutor {
 	
 	/**
 	 * Save the value <b>key</b> to the database.
-	 * The object <b>key</b> represents will be stored as a string
-	 * using the {@link Object#toString()} method.
+	 * The object <b>key</b> represents will be serialized to the
+	 * database.
 	 * @param key
 	 *           The name of the data to save
 	 * @throws SQLException
@@ -322,8 +318,10 @@ public class Player extends IOClient implements CommandExecutor {
 	 *                     the object
 	 * @throws IOException 
 	 *                    If there was a problem writing the object to the SQL server.
+	 * @throw NotSerializableException
+	 *                                
 	 */
-	public void saveValue(String key) throws SQLException, IOException {
+	public void saveValue(String key) throws SQLException, IOException, NotSerializableException {
 		if (!extra.containsKey(key))
 			return;
 		if (extra.get(key) instanceof Serializable) {

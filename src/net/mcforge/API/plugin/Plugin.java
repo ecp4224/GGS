@@ -70,7 +70,7 @@ public abstract class Plugin
 	 */
 	public String getName()
 	{
-		return properties.getProperty("name");
+		return (properties.getProperty("name") != null ? properties.getProperty("name") : getClass().getSimpleName());
 	}
 	
 	

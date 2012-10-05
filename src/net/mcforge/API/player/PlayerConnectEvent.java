@@ -18,6 +18,8 @@ public class PlayerConnectEvent extends PlayerEvent implements Cancelable {
 	private boolean _canceled = false;
 	
 	private String kickmsg = "";
+        
+        private boolean autologin = false;
 	
 	public PlayerConnectEvent(Player who) {
 		super(who);
@@ -52,5 +54,11 @@ public class PlayerConnectEvent extends PlayerEvent implements Cancelable {
 	public String getKickMessage() {
 		return kickmsg;
 	}
-
+        
+        public boolean getAutologin() {
+            return autologin;
+        }
+        public void setAutologin(boolean value) {
+            autologin = value;
+        }
 }
