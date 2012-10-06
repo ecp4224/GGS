@@ -57,6 +57,8 @@ public class Messages {
 	}
 	
 	public String[] split(String message) {
+		if (message == "")
+			return new String[] { "" };
 		char[] array = message.toCharArray();
 		String toadd = "";
 		ArrayList<String> temp = new ArrayList<String>();

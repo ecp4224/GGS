@@ -29,6 +29,8 @@ public class Level implements Serializable {
 	
 	private boolean run;
 	
+	private boolean autosave;
+	
 	ArrayList<Tick> ticks = new ArrayList<Tick>();
 	
 	private Block[] blocks;
@@ -177,6 +179,28 @@ public class Level implements Serializable {
 	}
 	
 	/**
+	 * Weather or not this level will autosave.
+	 * AutoSave will save the level every minute and save
+	 * when the level is unloaded.
+	 * @return
+	 *        True if the level will autosave, false if it will not.
+	 */
+	public boolean isAutoSaveEnabled() {
+		return autosave;
+	}
+	
+	/**
+	 * Set weather the level will autosave or not.
+	 * AutoSave will save the level every minute and save
+	 * when the level is unloaded.
+	 * @param set
+	 *           True if the level will autosave, false if it will not.
+	 */
+	public void setAutoSave(boolean set) {
+		autosave = set;
+	}
+	
+	/**
 	 * Get a block in this level
 	 * @param index
 	 *            Which block to get
@@ -299,7 +323,7 @@ public class Level implements Serializable {
 	 *                   An IOException will occur if there is a problem saving the level
 	 */
 	public void Unload(Server server) throws IOException {
-		Unload(server, true);
+		Unload(server, autosave);
 	}
 	/**
 	 * Unload this level.

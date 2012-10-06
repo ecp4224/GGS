@@ -11,6 +11,6 @@ public class WBeat extends MBeat {
 	
 	@Override
 	public String getURL() {
-		return "http://direct.worldofminecraft.com/hb.php";
+		return "https://direct.worldofminecraft.com/hb.php";
 	}
 }

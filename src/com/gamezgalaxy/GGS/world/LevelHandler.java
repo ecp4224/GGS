@@ -182,11 +182,12 @@ public class LevelHandler {
 			}
 			temp = 6000;
 			for (int i = 0; i < levels.size(); i++) {
-				try {
-					levels.get(i).Save();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+				if (levels.get(i).isAutoSaveEnabled()) {
+					try {
+						levels.get(i).Save();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
 				}
 			}
 		}

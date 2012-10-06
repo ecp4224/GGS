@@ -16,7 +16,7 @@ public class Beat {
 
 	private ArrayList<Heart> hearts = new ArrayList<Heart>();
 
-	private Thread beater;
+	private Beater beater;
 	
 	private boolean running;
 
@@ -40,6 +40,18 @@ public class Beat {
 			if (!hearts.contains(h))
 				hearts.add(h);
 		}
+	}
+	
+	/**
+	 * Set how long to wait before heartbeating to the server again
+	 * @param milliseconds
+	 *                   How long to wait in milliseconds.
+	 */
+	public void setWait(int milliseconds) {
+		if (milliseconds >= 0)
+			beater.wait = milliseconds;
+		else
+			throw new NumberFormatException("The time to wait must be greater-than or equal to 0");
 	}
 	
 	/**

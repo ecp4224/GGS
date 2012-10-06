@@ -16,6 +16,7 @@ import java.net.URL;
 
 final class Beater extends Thread {
 
+	protected int wait = 50000;
 	public Beater(Beat beat)
 	{
 		this.beat = beat;
@@ -71,9 +72,8 @@ final class Beater extends Thread {
 				}
 			}
 			try {
-				Thread.sleep(30000);
+				Thread.sleep(wait);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}

@@ -194,6 +194,9 @@ public class CommandHandler {
 	private void savePermissions() throws IOException {
 		if (new File("properties/commands.config").exists())
 			new File("properties/commands.config").delete();
+		try {
+			Thread.sleep(100);
+		} catch (InterruptedException e1) { }
 		new File("properties/commands.config").createNewFile();
 		PrintWriter out = null;
 		try {

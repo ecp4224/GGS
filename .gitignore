@@ -44,3 +44,8 @@ plugins/*
 *.project
 .project
 .classpath
+ctf/*
+ctf2/*
+
+#Documentation files
+doc/*
