@@ -419,7 +419,7 @@ public final class Server implements LogInterface {
 		}
 		for (Level l : this.getLevelHandler().getLevelList()) {
 			if (l != MainLevel)
-				l.Unload(this);
+				l.unload(this);
 		}
 		MainLevel.Save();
 		tick.join();

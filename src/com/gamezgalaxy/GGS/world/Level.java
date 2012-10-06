@@ -322,8 +322,8 @@ public class Level implements Serializable {
 	 * @throws IOException
 	 *                   An IOException will occur if there is a problem saving the level
 	 */
-	public void Unload(Server server) throws IOException {
-		Unload(server, autosave);
+	public void unload(Server server) throws IOException {
+		unload(server, autosave);
 	}
 	/**
 	 * Unload this level.
@@ -335,7 +335,7 @@ public class Level implements Serializable {
 	 * @throws IOException
 	 *                   An IOException will occur if there is a problem saving the level
 	 */
-	public void Unload(Server server, boolean save) throws IOException {
+	public void unload(Server server, boolean save) throws IOException {
 		if (save)
 			Save();
 		run = false;

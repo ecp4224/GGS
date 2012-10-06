@@ -10,7 +10,6 @@ package com.gamezgalaxy.GGS.API.action;
 import com.gamezgalaxy.GGS.API.EventHandler;
 import com.gamezgalaxy.GGS.API.Listener;
 import com.gamezgalaxy.GGS.API.player.PlayerBlockChangeEvent;
-import com.gamezgalaxy.GGS.API.player.PlayerChatEvent;
 import com.gamezgalaxy.GGS.iomodel.Player;
 import com.gamezgalaxy.GGS.world.Block;
 import com.gamezgalaxy.GGS.world.PlaceMode;

@@ -165,7 +165,7 @@ public class LevelHandler {
 		if (!levels.contains(level))
 			return;
 		try {
-			level.Unload(server, save);
+			level.unload(server, save);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
