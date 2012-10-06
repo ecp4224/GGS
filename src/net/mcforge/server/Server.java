@@ -357,6 +357,7 @@ public final class Server implements LogInterface {
 				break;
 		}
 		Salt = LetterOrNumber(Salt);
+		Salt = Salt.substring(0, 16);
 		Log("SALT: " + Salt);
 		sql.Connect(this);
 		final String[] commands = new String[] {
