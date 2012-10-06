@@ -334,7 +334,7 @@ public final class Server implements LogInterface {
 			l.name = "Main";
 			l.FlatGrass(this);
 			try {
-				l.Save();
+				l.save();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -434,9 +434,9 @@ public final class Server implements LogInterface {
 		}
 		for (Level l : this.getLevelHandler().getLevelList()) {
 			if (l != MainLevel)
-				l.Unload(this);
+				l.unload(this);
 		}
-		MainLevel.Save();
+		MainLevel.save();
 		tick.join();
 		logger.Stop();
 		heartbeater.stop();

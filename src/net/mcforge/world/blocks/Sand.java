@@ -113,13 +113,5 @@ public class Sand extends PhysicsBlock {
 			this.x = x;
 			this.z = z;
 		}
-		
-		public int getX() {
-			return x;
-		}
-		
-		public int getZ() {
-			return z;
-		}
 	}
 }

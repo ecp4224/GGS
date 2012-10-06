@@ -50,9 +50,9 @@ public class Lava extends PhysicsBlock {
 	@Override
 	public void tick() {
 		//TODO Add better physics system.
-		if (!nearSponge(getLevel().PosToInt(getX(), getY(), getZ()))) {
+		if (!nearSponge(getLevel().posToInt(getX(), getY(), getZ()))) {
 			if (time < random.nextInt(6)) {
-				if (type == 2 && check(getLevel().PosToInt(getX(), getY() - 1, getZ())))
+				if (type == 2 && check(getLevel().posToInt(getX(), getY() - 1, getZ())))
 					add(getX(), getY() - 1, getZ());
 				time++;
 				return;
@@ -68,7 +68,7 @@ public class Lava extends PhysicsBlock {
 			int i = 0;
 			while (i != x1 && (getLevel().getTile(getX() + i + 1, getY(), getZ()).getVisableBlock() == 0 || getLevel().getTile(getX() + i + 1, getY(), getZ()).getVisableBlock() == this.getVisableBlock())) {
 				i++;
-				if (!check(getLevel().PosToInt(getX() + i, getY(), getZ())))
+				if (!check(getLevel().posToInt(getX() + i, getY(), getZ())))
 					break;
 				else {
 					add(getX() + i, getY(), getZ());
@@ -78,7 +78,7 @@ public class Lava extends PhysicsBlock {
 			i = 0;
 			while (i != x2 && (getLevel().getTile(getX() - i - 1, getY(), getZ()).getVisableBlock() == 0 || getLevel().getTile(getX() - i - 1, getY(), getZ()).getVisableBlock() == this.getVisableBlock())) {
 				i++;
-				if (!check(getLevel().PosToInt(getX() - i, getY(), getZ())))
+				if (!check(getLevel().posToInt(getX() - i, getY(), getZ())))
 					break;
 				else {
 					add(getX() - i, getY(), getZ());
@@ -88,7 +88,7 @@ public class Lava extends PhysicsBlock {
 			i = 0;
 			while (i != z1 && (getLevel().getTile(getX(), getY(), getZ() + i + 1).getVisableBlock() == 0 || getLevel().getTile(getX(), getY(), getZ() + i + 1).getVisableBlock() == this.getVisableBlock())) {
 				i++;
-				if (!check(getLevel().PosToInt(getX(), getY(), getZ() + i)))
+				if (!check(getLevel().posToInt(getX(), getY(), getZ() + i)))
 					break;
 				else {
 					add(getX(), getY(), getZ() + i);
@@ -98,21 +98,21 @@ public class Lava extends PhysicsBlock {
 			i = 0;
 			while (i != z2 && (getLevel().getTile(getX(), getY(), getZ() - i - 1).getVisableBlock() == 0 || getLevel().getTile(getX(), getY(), getZ() - i - 1).getVisableBlock() == this.getVisableBlock())) {
 				i++;
-				if (!check(getLevel().PosToInt(getX(), getY(), getZ() - i)))
+				if (!check(getLevel().posToInt(getX(), getY(), getZ() - i)))
 					break;
 				else {
 					d = true;
 					add(getX(), getY(), getZ() - i);
 				}
 			}
-			if (check(getLevel().PosToInt(getX(), getY() - 1, getZ())))
+			if (check(getLevel().posToInt(getX(), getY() - 1, getZ())))
 				add(getX(), getY() - 1, getZ());
 			if (!a && !b && !c && !d)
 				super.stopTick();
 		}
 	}
 	public boolean check(int x, int y, int z) {
-		return check(getLevel().PosToInt(x, y, z));
+		return check(getLevel().posToInt(x, y, z));
 	}
 	public boolean check(int b) {
 		if (b < 0 || b >= getLevel().getLength())

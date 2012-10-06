@@ -31,6 +31,8 @@ public class Level implements Serializable {
 	
 	transient ArrayList<Tick> ticks = new ArrayList<Tick>();
 	
+	private boolean autosave;
+	
 	private Block[] blocks;
 	
 	/**
@@ -125,6 +127,28 @@ public class Level implements Serializable {
 	}
 	
 	/**
+	 * Weather or not this level will autosave.
+	 * AutoSave will save the level every minute and save
+	 * when the level is unloaded.
+	 * @return
+	 *        True if the level will autosave, false if it will not.
+	 */
+	public boolean isAutoSaveEnabled() {
+		return autosave;
+	}
+	
+	/**
+	 * Set weather the level will autosave or not.
+	 * AutoSave will save the level every minute and save
+	 * when the level is unloaded.
+	 * @param set
+	 *           True if the level will autosave, false if it will not.
+	 */
+	public void setAutoSave(boolean set) {
+		autosave = set;
+	}
+	
+	/**
 	 * Set a block in this world.
 	 * If the block is a physicsblock, it will be added
 	 * to the physics tick.
@@ -154,9 +178,9 @@ public class Level implements Serializable {
 		else
 			blocks[index] = b;
 		if(wasthere != null){
-			wasthere.onDelete(this, index, server);
+			wasthere.onDelete(this, pos[0], pos[1], pos[2], server);
 		}
-		b.onPlace(this, index, server);
+		b.onPlace(this, pos[0], pos[1], pos[2], server);
 		
 		if (getTile(pos[0] + 1, pos[1], pos[2]) instanceof PhysicsBlock && ticks.contains(getTile(pos[0] + 1, pos[1], pos[2])))
 			ticks.add((PhysicsBlock)getTile(pos[0] + 1, pos[1], pos[2]));
@@ -206,7 +230,7 @@ public class Level implements Serializable {
 	 *        The block at those coordinates
 	 */
 	public Block getTile(int x, int y, int z) {
-		return getTile(PosToInt(x, y, z));
+		return getTile(posToInt(x, y, z));
 	}
 	
 	/**
@@ -236,7 +260,7 @@ public class Level implements Serializable {
 	 *              The server this blockchange is happening in
 	 */
 	public void setTile(Block b, int x, int y, int z, Server server) {
-		setTile(b, PosToInt(x, y, z), server);
+		setTile(b, posToInt(x, y, z), server);
 	}
 	
 	/**
@@ -253,7 +277,7 @@ public class Level implements Serializable {
 	 *        The number that will correspond to where the coordinates
 	 *        are in the block array
 	 */
-	public int PosToInt(int x, int y, int z) {
+	public int posToInt(int x, int y, int z) {
         if (x < 0) { return -1; }
         if (x >= width) { return -1; }
         if (y < 0) { return -1; }
@@ -263,7 +287,7 @@ public class Level implements Serializable {
         return x + z * width + y * width * depth;
     }
 	
-	public int[] IntToPos(int index) {
+	private int[] IntToPos(int index) {
 		int[] toreturn = new int[3];
 		toreturn[1] = (index / width / height);
 		index -= toreturn[1]*width*height;
@@ -278,7 +302,7 @@ public class Level implements Serializable {
 	 * @throws IOException
 	 *                   An IOExceptoin is thrown if there is a problem writing to the file
 	 */
-	public void Save() throws IOException {
+	public void save() throws IOException {
 		if (!new File("levels").exists())
 			new File("levels").mkdir();
 		FileOutputStream fos = new FileOutputStream("levels/" + name + ".ggs");
@@ -299,8 +323,8 @@ public class Level implements Serializable {
 	 * @throws IOException
 	 *                   An IOException will occur if there is a problem saving the level
 	 */
-	public void Unload(Server server) throws IOException {
-		Unload(server, true);
+	public void unload(Server server) throws IOException {
+		unload(server, autosave);
 	}
 	/**
 	 * Unload this level.
@@ -312,9 +336,9 @@ public class Level implements Serializable {
 	 * @throws IOException
 	 *                   An IOException will occur if there is a problem saving the level
 	 */
-	public void Unload(Server server, boolean save) throws IOException {
+	public void unload(Server server, boolean save) throws IOException {
 		if (save)
-			Save();
+			save();
 		run = false;
 		try {
 			physics.join();
@@ -385,13 +409,13 @@ public class Level implements Serializable {
 		for (int i = 0; i < newlvl.level.blocks.length; i++) {
 			cords = newlvl.getCoords(i);
 			try {
-				lvl.blocks[lvl.PosToInt(cords[0], cords[1], cords[2])] = Block.getBlock(newlvl.level.blocks[i]);
+				lvl.blocks[lvl.posToInt(cords[0], cords[1], cords[2])] = Block.getBlock(newlvl.level.blocks[i]);
 			} catch (Exception e) {
 				System.out.println(i + "= " + cords[0] + ":" + cords[1] + ":" + cords[2]);
 			}
 		}
 		lvl.name = name;
-		lvl.Save();
+		lvl.save();
 		return lvl;
 	}
 	

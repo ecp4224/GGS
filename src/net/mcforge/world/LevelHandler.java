@@ -61,7 +61,7 @@ public class LevelHandler {
 			level.name = name;
 			level.FlatGrass(server);
 			try {
-				level.Save();
+				level.save();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -165,7 +165,7 @@ public class LevelHandler {
 		if (!levels.contains(level))
 			return;
 		try {
-			level.Unload(server, save);
+			level.unload(server, save);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -182,10 +182,12 @@ public class LevelHandler {
 			}
 			temp = 6000;
 			for (int i = 0; i < levels.size(); i++) {
-				try {
-					levels.get(i).Save();
-				} catch (IOException e) {
-					e.printStackTrace();
+				if (levels.get(i).isAutoSaveEnabled()) {
+					try {
+						levels.get(i).save();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
 				}
 			}
 		}

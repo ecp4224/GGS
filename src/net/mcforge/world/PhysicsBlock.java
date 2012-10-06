@@ -28,7 +28,7 @@ public abstract class PhysicsBlock extends Block implements Tick {
 	}
 	
 	@Override
-	public void onDelete(Level l, int index, Server server) {
+	public void onDelete(Level l, int x, int y, int z, Server server) {
 		if (_level != l)
 			return;
 		_level.ticks.remove(this);

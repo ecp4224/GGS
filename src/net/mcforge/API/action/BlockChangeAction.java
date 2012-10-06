@@ -10,7 +10,6 @@ package net.mcforge.API.action;
 import net.mcforge.API.EventHandler;
 import net.mcforge.API.Listener;
 import net.mcforge.API.player.PlayerBlockChangeEvent;
-import net.mcforge.API.player.PlayerChatEvent;
 import net.mcforge.iomodel.Player;
 import net.mcforge.world.Block;
 import net.mcforge.world.PlaceMode;
