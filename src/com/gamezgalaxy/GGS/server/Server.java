@@ -318,7 +318,7 @@ public final class Server implements LogInterface {
 		Log("SALT: " + Salt);
 		sql.Connect(this);
 		final String[] commands = new String[] {
-				"CREATE TABLE if not exists " + sql.getPrefix() + "_extra (name VARCHAR(20), setting TEXT, value TEXT);",
+				"CREATE TABLE if not exists " + sql.getPrefix() + "_extra (name VARCHAR(20), setting TEXT, value VARBINARY);",
 		};
 		try {
 			addCommands();
