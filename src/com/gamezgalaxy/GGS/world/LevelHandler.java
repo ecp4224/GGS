@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import com.gamezgalaxy.GGS.API.level.AllLevelLoadedEvent;
 import com.gamezgalaxy.GGS.iomodel.Player;
 import com.gamezgalaxy.GGS.server.Server;
 import com.gamezgalaxy.GGS.server.Tick;
@@ -115,8 +116,11 @@ public class LevelHandler {
 		levels.clear();
 		File levelsFolder = new File("levels");
 		File[] levelFiles = levelsFolder.listFiles();
-		for(File f : levelFiles)
+		for(File f : levelFiles) {
 			loadLevel(levelsFolder.getPath() + "/" + f.getName());
+		}
+		AllLevelLoadedEvent alle = new AllLevelLoadedEvent(server, this);
+		server.getEventSystem().callEvent(alle);
 	}
 	
 	/**
@@ -125,7 +129,8 @@ public class LevelHandler {
 	 * @param filename
 	 *                The .ggs file to load.
 	 *                If a .dat file is presented, then it will
-	 *                be converted to a .ggs
+	 *                be converted to a .ggs and the .dat will
+	 *                be deleted
 	 * @return
 	 *         The loaded level.
 	 */

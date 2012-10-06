@@ -415,6 +415,7 @@ public class Level implements Serializable {
 		}
 		lvl.name = name;
 		lvl.Save();
+		new File(file).delete();
 		return lvl;
 	}
 	

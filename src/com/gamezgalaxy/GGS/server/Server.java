@@ -24,7 +24,6 @@ import com.gamezgalaxy.GGS.util.logger.Logger;
 import com.gamezgalaxy.GGS.util.properties.Properties;
 import com.gamezgalaxy.GGS.sql.ISQL;
 import com.gamezgalaxy.GGS.sql.MySQL;
-import com.gamezgalaxy.GGS.system.BanHandler;
 import com.gamezgalaxy.GGS.system.heartbeat.Beat;
 import com.gamezgalaxy.GGS.system.heartbeat.Heart;
 import com.gamezgalaxy.GGS.system.heartbeat.MBeat;
@@ -273,18 +272,20 @@ public final class Server implements LogInterface {
 		if (Running)
 			return;
 		Running = true;
-		BanHandler.init();
 		es = new EventSystem(this);
 		startLogger();
-		Log("Starting..");
+		Log("Starting GGS v" + VERSION);
 		ch = new CommandHandler(this);
 		Group.Load(this);
 		p = Properties.init(this);
 		loadSystemProperties();
 		pm = new PacketManager(this);
 		pm.StartReading();
-		Log("Loading main level..");
+		ph = new PluginHandler();
 		lm = new LevelHandler(this);
+		Log("Loaded Level Handler");
+		ph.loadplugins(this);
+		Log("Loaded plugins");
 		if (!new File(getSystemProperties().getValue("MainLevel")).exists()) {
 			Level l = new Level((short)64, (short)64, (short)64);
 			l.name = "Main";
@@ -298,13 +299,11 @@ public final class Server implements LogInterface {
 		MainLevel = lm.loadLevel(getSystemProperties().getValue("MainLevel"));
 		lm.loadLevels();
 		tick.start();
-		Log("Done!");
-		Log("Generating salt");
+		Log("Loaded levels");
 		SecureRandom sr = null;
 		try {
 			sr = SecureRandom.getInstance("SHA1PRNG");
 		} catch (NoSuchAlgorithmException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		for (int i = 0; i < 100; i++) {
@@ -315,27 +314,26 @@ public final class Server implements LogInterface {
 				break;
 		}
 		Salt = LetterOrNumber(Salt);
+		Salt = Salt.substring(0, 16);
 		Log("SALT: " + Salt);
-		Log("Setting up SQL");
 		sql.Connect(this);
 		final String[] commands = new String[] {
-				"CREATE TABLE if not exists " + sql.getPrefix() + "_extra (name VARCHAR(20), setting TEXT, value VARBINARY);",
+				"CREATE TABLE if not exists " + sql.getPrefix() + "_extra (name VARCHAR(20), setting TEXT, value TEXT);",
 		};
-		sql.ExecuteQuery(commands);
-		Log("Done!");
-		Log("Create heartbeat..");
-		heartbeater = new Beat(this);
-		heartbeater.addHeart(new MBeat());
-		heartbeater.addHeart(new WBeat());
-		heartbeater.start();
-		Log("Done!");
-		ph = new PluginHandler();
-		ph.loadplugins(this);
 		try {
 			addCommands();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		Log("Added default commands");
+		sql.ExecuteQuery(commands);
+		Log("Set up SQL");
+		heartbeater = new Beat(this);
+		heartbeater.addHeart(new MBeat());
+		heartbeater.addHeart(new WBeat());
+		heartbeater.start();
+		Log("Created heartbeat");
+		Log("Server url can be found in 'url.txt'");
 	}
 	
 	/**
@@ -421,7 +419,8 @@ public final class Server implements LogInterface {
 			if (l != MainLevel)
 				l.unload(this);
 		}
-		MainLevel.Save();
+		if (MainLevel.isAutoSaveEnabled())
+			MainLevel.Save();
 		tick.join();
 		logger.Stop();
 		heartbeater.stop();
