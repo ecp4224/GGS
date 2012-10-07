@@ -22,7 +22,6 @@ public class SQLite implements ISQL {
 	private Server server;
 	private String prefix;
 	private final String PATH = "jdbc:sqlite:MCForge.db";
-	private final String DRIVER = "org.sqlite.JDBC";
 	@Override
 	public void ExecuteQuery(String command) {
 		try {
@@ -88,7 +87,7 @@ public class SQLite implements ISQL {
 		try {
 			if (!new File("MCForge.db").exists())
 				new File("MCForge.db").createNewFile();
-			Class.forName(DRIVER);
+			DriverManager.registerDriver(new org.sqlite.JDBC());
 			connection = DriverManager.getConnection(PATH);
 		} catch (Exception e) {
 			e.printStackTrace();

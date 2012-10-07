@@ -262,22 +262,6 @@ public final class Server implements LogInterface {
 		Public = getSystemProperties().getBool("Public");
 		description = getSystemProperties().getValue("WOM-Server-description");
 		flags = getSystemProperties().getValue("WOM-Server-Flags");
-		try {
-			sql = (ISQL)Class.forName(getSystemProperties().getValue("SQL-Driver")).newInstance();
-		} catch (InstantiationException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-		sql.setPrefix(getSystemProperties().getValue("SQL-table-prefix"));
-		if (sql instanceof MySQL) {
-			final MySQL mysql = (MySQL)sql;
-			mysql.setUsername(getSystemProperties().getValue("MySQL-username"));
-			mysql.setPassword(getSystemProperties().getValue("MySQL-password"));
-			mysql.setDatabase(getSystemProperties().getValue("MySQL-database-name"));
-		}
 	}
 	/**
 	 * Start the logger.
@@ -305,10 +289,44 @@ public final class Server implements LogInterface {
 			e.printStackTrace();
 		}
 	}
+	
+	public void startSQL(ISQL set) {
+		if (set == null) {
+			try {
+				sql = (ISQL)Class.forName(getSystemProperties().getValue("SQL-Driver")).newInstance();
+			} catch (InstantiationException e) {
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			}
+			sql.setPrefix(getSystemProperties().getValue("SQL-table-prefix"));
+			if (sql instanceof MySQL) {
+				final MySQL mysql = (MySQL)sql;
+				mysql.setUsername(getSystemProperties().getValue("MySQL-username"));
+				mysql.setPassword(getSystemProperties().getValue("MySQL-password"));
+				mysql.setDatabase(getSystemProperties().getValue("MySQL-database-name"));
+			}
+		}
+		else
+			sql = set;
+		sql.Connect(this);
+		final String[] commands = new String[] {
+				"CREATE TABLE if not exists " + sql.getPrefix() + "_extra (name VARCHAR(20), setting TEXT, value VARBINARY);",
+		};
+		sql.ExecuteQuery(commands);
+		Log("Set up SQL");
+	}
+	
+	public void startSQL() {
+		startSQL(null);
+	}
+	
 	/**
 	 * Start the server
 	 */
-	public void Start(Console console) {
+	public void Start(Console console, boolean startSQL) {
 		if (Running)
 			return;
 		Running = true;
@@ -359,12 +377,8 @@ public final class Server implements LogInterface {
 		Salt = LetterOrNumber(Salt);
 		Salt = Salt.substring(0, 16);
 		Log("SALT: " + Salt);
-		sql.Connect(this);
-		final String[] commands = new String[] {
-				"CREATE TABLE if not exists " + sql.getPrefix() + "_extra (name VARCHAR(20), setting TEXT, value VARBINARY);",
-		};
-		sql.ExecuteQuery(commands);
-		Log("Set up SQL");
+		if (startSQL)
+			startSQL();
 		heartbeater = new Beat(this);
 		heartbeater.addHeart(new MBeat());
 		heartbeater.addHeart(new WBeat());

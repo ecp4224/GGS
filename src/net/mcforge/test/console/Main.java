@@ -30,7 +30,7 @@ public class Main extends Console {
 	public void start() {
 		s = new Server("Test", 25565, "Test");
 		Messages m = new Messages(s);
-		s.Start((Console)this);
+		s.Start((Console)this, true);
 		Scanner scanner = new Scanner(System.in);
 		while (s.Running) {
 			String line = scanner.nextLine();

@@ -25,7 +25,6 @@ public class MySQL implements ISQL {
 	protected String prefix;
 	protected String username;
 	protected String pass;
-	private final String DRIVER = "com.mysql.jdbc.Driver";
 	private Server server;
 	@Override
 	public void ExecuteQuery(String command) {
@@ -89,7 +88,7 @@ public class MySQL implements ISQL {
 	public void Connect(Server server) {
 		this.server = server;
 		try {
-			Class.forName(DRIVER).newInstance();
+			DriverManager.registerDriver(new com.mysql.jdbc.Driver());
 			connection = DriverManager.getConnection(getURL() + DB, username, pass);
 		} catch (Exception e) {
 			e.printStackTrace();
