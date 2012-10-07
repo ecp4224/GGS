@@ -120,7 +120,7 @@ public class PluginHandler {
 								} else {
 									plugins.add(plugin);
 								}
-								server.Log(plugin.getName() + " loaded!");
+								//server.Log(plugin.getName() + " loaded!");
 							} else {
 								if (!Command.class.isAssignableFrom(class_)) {
 									continue;
@@ -130,7 +130,7 @@ public class PluginHandler {
 									Constructor<? extends Command> construct = commandClass.getConstructor();
 									Command c = construct.newInstance();
 									server.getCommandHandler().addCommand(c);
-									server.Log("/" + c.getName() + " loaded!");
+									//server.Log("/" + c.getName() + " loaded!");
 								} catch (Exception ex) {
 									ex.printStackTrace();
 								}
