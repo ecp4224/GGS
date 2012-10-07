@@ -361,12 +361,14 @@ public class Level implements Serializable {
 	 * @throws IOException
 	 *                   An IOException is thrown if there is a problem reading the level
 	 * @throws ClassNotFoundException
-	 *                              This exception is thrown if a block that was saved with the level is not loaded or cant be found.
+	 *                              This exception is thrown if a block that was saved with the level is not loaded or can't be found.
 	 */
 	public static Level Load(String filename) throws IOException, ClassNotFoundException {
 		Level l = null;
 		if (filename.endsWith(".dat"))
-			l = Convert(filename);
+			l = convertDAT(filename);
+		else if (filename.endsWith(".lvl"))
+			l = convertLVL(filename);
 		else {
 			FileInputStream fis = new FileInputStream(filename);
 			GZIPInputStream gis = new GZIPInputStream(fis);
@@ -399,7 +401,7 @@ public class Level implements Serializable {
 	 * @throws IOException
 	 *                   An IOException is thrown if there is a problem reading the file
 	 */
-	public static Level Convert(String file) throws IOException {
+	public static Level convertDAT(String file) throws IOException {
 		String name = new File(file).getName().split("\\.")[0];
 		DatToGGS newlvl = new DatToGGS();
 		newlvl.load(file);
@@ -417,6 +419,72 @@ public class Level implements Serializable {
 		lvl.Save();
 		new File(file).delete();
 		return lvl;
+	}
+	
+	/**
+	 * Convert a .lvl file to a .ggs file
+	 * @param file
+	 *           The file to load and convert
+	 * @return
+	 *        The converted level object
+	 * @throws IOException
+	 *                   An IOException is thrown if there is a problem reading the file
+	 */
+	public static Level convertLVL(String file) throws IOException {
+		String name = new File(file).getName().split("\\.")[0];
+		File f = new File(file);
+		FileInputStream in = new FileInputStream(f);
+		GZIPInputStream decompressor = new GZIPInputStream(in);
+		DataInputStream data = new DataInputStream(decompressor);
+		int magic = convert(data.readShort());
+		
+		if (magic != 1874) {
+			System.out.println("INVALID .lvl FILE!");
+			return null;
+		}
+		//data.read(new byte[16]);
+		short width = convert(data.readShort());
+		short height = convert(data.readShort());
+		short depth = convert(data.readShort());
+		Level level = new Level(width, height, depth);
+		level.spawnx = convert(data.readShort());
+		level.spawnz = convert(data.readShort());
+		level.spawny = convert(data.readShort());
+		//Ignore these bytes
+		data.readUnsignedByte();
+		data.readUnsignedByte();
+
+		level.blocks = new Block[width * depth * height];
+		for (int i = 0; i < level.blocks.length; i++) {
+			level.blocks[i] = translateBlock(data.readByte());
+		}
+		data.close();
+		try {
+			f.delete();
+		} catch(SecurityException e) {
+			e.printStackTrace();
+		}
+		level.name = name;
+		level.Save();
+		return level;
+	}
+	
+	private static short convert(int convert) {
+		return (short) (((convert >> 8) & 0xff) + ((convert << 8) & 0xff00));
+	}
+
+	private static Block translateBlock(byte id) {
+		if (id >= 0 && id <= 49)
+			return Block.getBlock(id);
+		//TODO Convert more blocks
+		if (id == 106)
+			return Block.getBlock("Water");
+		if (id == 105)
+			return Block.getBlock("Air");
+		if (id == 111)
+			return Block.getBlock("Log");
+
+		return Block.getBlock("Air");
 	}
 	
 	private class Ticker extends Thread implements Serializable {

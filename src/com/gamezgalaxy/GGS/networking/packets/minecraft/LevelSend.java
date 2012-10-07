@@ -48,7 +48,7 @@ public class LevelSend extends Packet {
 			byte[] levelbuff = new byte[player.getLevel().getLength() + 4];
 			intToNetworkByteOrder(player.getLevel().getLength(), levelbuff, 0, 4);
 			for (int i = 0; i < player.getLevel().getLength(); i++)
-				levelbuff[i + 4] = player.getLevel().getTile(i).getVisableBlock();
+				levelbuff[i + 4] = (player.getLevel().getTile(i).getVisableBlock() <= 49 ? player.getLevel().getTile(i).getVisableBlock() : 0);
 			byte[] gzip = compressBytes(levelbuff);
 			levelbuff = null;
 			if (gzip == null)
