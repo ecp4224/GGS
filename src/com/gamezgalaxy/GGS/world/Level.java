@@ -208,12 +208,10 @@ public class Level implements Serializable {
 	 *        The block at that index
 	 */
 	public Block getTile(int index) {
-		if (index < 0) index = 0;
-		if (index >= blocks.length) index = blocks.length - 1;
+		if (index < 0) return Block.getBlock("NULL");
+		if (index >= blocks.length) return Block.getBlock("NULL");
 		if (blocks[index] == null)
 			return Block.getBlock((byte)0);
-		if (blocks[index].name.equals("NULL"))
-			System.out.println("" + blocks[index].getVisableBlock());
 		return blocks[index];
 	}
 	
