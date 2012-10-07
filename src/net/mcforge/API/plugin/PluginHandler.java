@@ -121,6 +121,8 @@ public class PluginHandler {
 									plugins.add(plugin);
 								}
 								//server.Log(plugin.getName() + " loaded!");
+								PluginLoadEvent ple = new PluginLoadEvent(plugin, server);
+								server.getEventSystem().callEvent(ple);
 							} else {
 								if (!Command.class.isAssignableFrom(class_)) {
 									continue;
@@ -131,6 +133,8 @@ public class PluginHandler {
 									Command c = construct.newInstance();
 									server.getCommandHandler().addCommand(c);
 									//server.Log("/" + c.getName() + " loaded!");
+									CommandLoadEvent cle = new CommandLoadEvent(c, server);
+									server.getEventSystem().callEvent(cle);
 								} catch (Exception ex) {
 									ex.printStackTrace();
 								}

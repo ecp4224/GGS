@@ -9,13 +9,16 @@ package net.mcforge.test.console;
 
 import java.util.Scanner;
 
+import net.mcforge.API.EventHandler;
+import net.mcforge.API.Listener;
+import net.mcforge.API.io.ServerLogEvent;
 import net.mcforge.chat.ChatColor;
 import net.mcforge.chat.Messages;
 import net.mcforge.groups.Group;
 import net.mcforge.server.Server;
 import net.mcforge.system.Console;
 
-public class Main extends Console {
+public class Main extends Console implements Listener {
 	Server s;
 	final Scanner scan = new Scanner(System.in);
 	public static void main(String[] args) {
@@ -69,5 +72,10 @@ public class Main extends Console {
 	@Override
 	public String next() {
 		return scan.next();
+	}
+	
+	@EventHandler
+	public void onLog(ServerLogEvent event) {
+		
 	}
 }
