@@ -13,13 +13,22 @@ public class PluginLoadEvent extends Event {
 	private static EventList events = new EventList();
 	
 	public PluginLoadEvent(Plugin plugin, Server server) {
-		this.plugin = plugin;
 		this.server = server;
+		this.plugin = plugin;
 	}
 
 	@Override
 	public EventList getEvents() {
 		return events;
+	}
+	
+	/**
+	 * Get the server this event took place in
+	 * @return
+	 *        The {@link Server} object
+	 */
+	public Server getServer() {
+		return server;
 	}
 	
 	/**
@@ -37,15 +46,6 @@ public class PluginLoadEvent extends Event {
 	 */
 	public Plugin getPlugin() {
 		return plugin;
-	}
-	
-	/**
-	 * Get the server the plugin was loaded into
-	 * @return
-	 *         The {@link Server} object
-	 */
-	public Server getServer() {
-		return server;
 	}
 
 }

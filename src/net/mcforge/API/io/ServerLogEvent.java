@@ -1,12 +1,10 @@
 package net.mcforge.API.io;
 
-import net.mcforge.API.Event;
 import net.mcforge.API.EventList;
+import net.mcforge.API.server.ServerEvent;
 import net.mcforge.server.Server;
 
-public class ServerLogEvent extends Event {
-	
-	private Server server;
+public class ServerLogEvent extends ServerEvent {
 	
 	private String message;
 	
@@ -15,16 +13,9 @@ public class ServerLogEvent extends Event {
 	private static EventList events = new EventList();
 	
 	public ServerLogEvent(Server server, String message, String full) {
-		this.server = server;
-	}
-	
-	/**
-	 * The server that logged the event
-	 * @return
-	 *        The server
-	 */
-	public Server getServer() {
-		return server;
+		super(server);
+		this.message = full;
+		this.raw = message;
 	}
 	
 	/**

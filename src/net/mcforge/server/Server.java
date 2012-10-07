@@ -22,6 +22,7 @@ import net.mcforge.API.EventSystem;
 import net.mcforge.API.io.ServerLogEvent;
 import net.mcforge.API.plugin.CommandHandler;
 import net.mcforge.API.plugin.PluginHandler;
+import net.mcforge.API.server.ServerStartedEvent;
 import net.mcforge.chat.Messages;
 import net.mcforge.groups.Group;
 import net.mcforge.iomodel.Player;
@@ -385,6 +386,8 @@ public final class Server implements LogInterface {
 		heartbeater.start();
 		Log("Created heartbeat");
 		Log("Server url can be found in 'url.txt'");
+		ServerStartedEvent sse = new ServerStartedEvent(this);
+		es.callEvent(sse);
 	}
 	
 	/**

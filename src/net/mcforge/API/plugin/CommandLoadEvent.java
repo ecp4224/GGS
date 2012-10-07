@@ -12,8 +12,18 @@ public class CommandLoadEvent extends Event {
 	private static EventList events = new EventList();
 	
 	public CommandLoadEvent(Command plugin, Server server) {
-		this.plugin = plugin;
 		this.server = server;
+		this.plugin = plugin;
+	}
+	
+	
+	/**
+	 * Get the server this event took place in
+	 * @return
+	 *        The {@link Server} object
+	 */
+	public Server getServer() {
+		return server;
 	}
 
 	@Override
@@ -36,14 +46,5 @@ public class CommandLoadEvent extends Event {
 	 */
 	public Command getCommand() {
 		return plugin;
-	}
-	
-	/**
-	 * Get the server the command was loaded into
-	 * @return
-	 *         The {@link Server} object
-	 */
-	public Server getServer() {
-		return server;
 	}
 }
