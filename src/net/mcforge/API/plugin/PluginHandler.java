@@ -10,6 +10,9 @@ package net.mcforge.API.plugin;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
@@ -141,6 +144,7 @@ public class PluginHandler {
 						}
 					}
 				}
+				addPath(arg0);
 				try {
 					file.close();
 				} catch (IOException e) {
@@ -161,6 +165,30 @@ public class PluginHandler {
 			if (pluginFiles[i].isFile() && pluginFiles[i].getName().endsWith(".jar")) {
 				loadPlugin(server, pluginFiles[i]);
 			}
+		}
+	}
+	
+	@SuppressWarnings("deprecation")
+	private void addPath(File f) {
+		try {
+			URL u = f.toURL();
+		URLClassLoader urlClassLoader = (URLClassLoader)ClassLoader.getSystemClassLoader();
+		Class<URLClassLoader> urlClass = URLClassLoader.class;
+		Method method = urlClass.getDeclaredMethod("addURL", new Class[] {URL.class });
+		method.setAccessible(true);
+		method.invoke(urlClassLoader, u);
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		} catch (NoSuchMethodException e) {
+			e.printStackTrace();
+		} catch (SecurityException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
 		}
 	}
 }
