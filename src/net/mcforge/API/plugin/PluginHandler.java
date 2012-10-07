@@ -28,6 +28,7 @@ public class PluginHandler {
 
 	private ArrayList<Game> games = new ArrayList<Game>();
 
+	private final ClassLoader loader = URLClassLoader.newInstance(new URL[]{}, getClass().getClassLoader());
 	/**
 	 * Unload a plugin from memory.
 	 * @param p
@@ -49,7 +50,7 @@ public class PluginHandler {
 		}
 		if (file != null) {
 			Enumeration<JarEntry> entries = file.entries();
-
+			addPath(arg0);
 			if (entries != null) {
 				while (entries.hasMoreElements()) {
 					JarEntry fileName = entries.nextElement();
@@ -61,8 +62,6 @@ public class PluginHandler {
 							//System.out.println(fullName.length() + "-" + path.length() + "-" + ".class".length());
 							String name = fullName.substring(path.length(), fullName.length() - ".class".length());
 
-							URL[] urls = new URL[]{arg0.toURI().toURL()};
-							ClassLoader loader = URLClassLoader.newInstance(urls, getClass().getClassLoader());
 							Class<?> class_ = Class.forName(path.replace('/', '.') + name, true, loader);
 							if (Plugin.class.isAssignableFrom(class_)) {
 								Class<? extends Plugin> pluginClass = class_.asSubclass(Plugin.class);
@@ -139,12 +138,9 @@ public class PluginHandler {
 
 						} catch (ClassNotFoundException ex) {
 							ex.printStackTrace();
-						} catch (IOException ex) {
-							ex.printStackTrace();
-						}
+						} 
 					}
 				}
-				addPath(arg0);
 				try {
 					file.close();
 				} catch (IOException e) {
@@ -172,11 +168,9 @@ public class PluginHandler {
 	private void addPath(File f) {
 		try {
 			URL u = f.toURL();
-		URLClassLoader urlClassLoader = (URLClassLoader)ClassLoader.getSystemClassLoader();
-		Class<URLClassLoader> urlClass = URLClassLoader.class;
-		Method method = urlClass.getDeclaredMethod("addURL", new Class[] {URL.class });
+		Method method = URLClassLoader.class.getDeclaredMethod("addURL", new Class[] {URL.class });
 		method.setAccessible(true);
-		method.invoke(urlClassLoader, u);
+		method.invoke(loader, u);
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		} catch (NoSuchMethodException e) {
