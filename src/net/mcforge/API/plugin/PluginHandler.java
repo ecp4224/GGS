@@ -42,7 +42,7 @@ public class PluginHandler {
 		}
 	}
 
-	public void loadPlugin(Server server, File arg0) {
+	public void loadFile(Server server, File arg0) {
 		JarFile file = null;
 		try {
 			file = new JarFile(arg0);
@@ -115,16 +115,8 @@ public class PluginHandler {
 								}
 								if (plugin instanceof ManualLoad) //Ignore manual loading plugins
 									continue;
-								plugin.onLoad(new String[]{"-normal"});
-								if (plugin instanceof Game) {
-									games.add((Game) plugin);
-									server.Add((Game) plugin);
-								} else {
-									plugins.add(plugin);
-								}
-								//server.Log(plugin.getName() + " loaded!");
-								PluginLoadEvent ple = new PluginLoadEvent(plugin, server);
-								server.getEventSystem().callEvent(ple);
+								loadPlugin(plugin, server);
+								server.Log(plugin.getName() + " loaded!");
 							} else {
 								if (!Command.class.isAssignableFrom(class_)) {
 									continue;
@@ -138,6 +130,7 @@ public class PluginHandler {
 									server.getCommandHandler().addCommand(c);
 									CommandLoadEvent cle = new CommandLoadEvent(c, server);
 									server.getEventSystem().callEvent(cle);
+									server.Log(c.getName() + " loaded!");
 								} catch (Exception ex) {
 									ex.printStackTrace();
 								}
@@ -156,6 +149,18 @@ public class PluginHandler {
 			}
 		}
 	}
+	
+	public void loadPlugin(Plugin plugin, Server server) {
+		plugin.onLoad(new String[]{"-normal"});
+		if (plugin instanceof Game) {
+			games.add((Game) plugin);
+			server.Add((Game) plugin);
+		} else {
+			plugins.add(plugin);
+		}
+		PluginLoadEvent ple = new PluginLoadEvent(plugin, server);
+		server.getEventSystem().callEvent(ple);
+	}
 
 	public void loadplugins(Server server) {
 		File pluginFolder = new File("plugins/");
@@ -166,7 +171,7 @@ public class PluginHandler {
 		File[] pluginFiles = pluginFolder.listFiles();
 		for (int i = 0; i < pluginFiles.length; i++) {
 			if (pluginFiles[i].isFile() && pluginFiles[i].getName().endsWith(".jar")) {
-				loadPlugin(server, pluginFiles[i]);
+				loadFile(server, pluginFiles[i]);
 			}
 		}
 	}
