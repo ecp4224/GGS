@@ -21,6 +21,7 @@ import java.util.Properties;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+import net.mcforge.API.ManualLoad;
 import net.mcforge.server.Server;
 
 public class PluginHandler {
@@ -112,7 +113,8 @@ public class PluginHandler {
 									System.out.println("Plugin could not be load: " + name);
 									continue;
 								}
-
+								if (plugin instanceof ManualLoad) //Ignore manual loading plugins
+									continue;
 								plugin.onLoad(new String[]{"-normal"});
 								if (plugin instanceof Game) {
 									games.add((Game) plugin);
@@ -131,8 +133,9 @@ public class PluginHandler {
 									Class<? extends Command> commandClass = class_.asSubclass(Command.class);
 									Constructor<? extends Command> construct = commandClass.getConstructor();
 									Command c = construct.newInstance();
+									if (c instanceof ManualLoad) //Ignore manual loading commands
+										continue;
 									server.getCommandHandler().addCommand(c);
-									//server.Log("/" + c.getName() + " loaded!");
 									CommandLoadEvent cle = new CommandLoadEvent(c, server);
 									server.getEventSystem().callEvent(cle);
 								} catch (Exception ex) {
