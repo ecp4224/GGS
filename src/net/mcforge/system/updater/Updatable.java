@@ -8,10 +8,10 @@ import net.mcforge.API.plugin.PluginHandler;
  * by the core. You must provide the following:
  * 
  * <b>A check URL</b>
- * This url will return, in plan text, the lastest version as a String
+ * This url will return, in plan text, the latest version as a String
  *
  *<b>A Download URL</b>
- *This url will return a jar file of the lastest version.
+ *This url will return a jar file of the latest version.
  *
  *<b>Update Type</b>
  *This is the how the object will update, see {@link UpdateType} for more info
