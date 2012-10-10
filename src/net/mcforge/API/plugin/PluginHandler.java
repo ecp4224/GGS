@@ -113,10 +113,9 @@ public class PluginHandler {
 									System.out.println("Plugin could not be load: " + name);
 									continue;
 								}
-								if (plugin instanceof ManualLoad) //Ignore manual loading plugins
+								if (plugin.getClass().getAnnotation(ManualLoad.class) != null) //Ignore manual loading plugins
 									continue;
 								loadPlugin(plugin, server);
-								server.Log(plugin.getName() + " loaded!");
 							} else {
 								if (!Command.class.isAssignableFrom(class_)) {
 									continue;
@@ -125,12 +124,11 @@ public class PluginHandler {
 									Class<? extends Command> commandClass = class_.asSubclass(Command.class);
 									Constructor<? extends Command> construct = commandClass.getConstructor();
 									Command c = construct.newInstance();
-									if (c instanceof ManualLoad) //Ignore manual loading commands
+									if (c.getClass().getAnnotation(ManualLoad.class) != null) //Ignore manual loading commands
 										continue;
 									server.getCommandHandler().addCommand(c);
 									CommandLoadEvent cle = new CommandLoadEvent(c, server);
 									server.getEventSystem().callEvent(cle);
-									server.Log(c.getName() + " loaded!");
 								} catch (Exception ex) {
 									ex.printStackTrace();
 								}
