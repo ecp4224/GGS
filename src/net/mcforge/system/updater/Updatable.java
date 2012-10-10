@@ -4,13 +4,13 @@ import net.mcforge.API.plugin.Plugin;
 import net.mcforge.API.plugin.PluginHandler;
 
 /**
- * An updatable object can be automaticly updated
+ * An updatable object can be automatically updated
  * by the core. You must provide the following:
  * 
  * <b>A check URL</b>
  * This url will return, in plan text, the lastest version as a String
  *
- *<b>a Download URL</b>
+ *<b>A Download URL</b>
  *This url will return a jar file of the lastest version.
  *
  *<b>Update Type</b>
