@@ -23,6 +23,7 @@ import java.util.jar.JarFile;
 
 import net.mcforge.API.ManualLoad;
 import net.mcforge.server.Server;
+import net.mcforge.system.updater.Updatable;
 
 public class PluginHandler {
 	private ArrayList<Plugin> plugins = new ArrayList<Plugin>();
@@ -64,6 +65,8 @@ public class PluginHandler {
 							String name = fullName.substring(path.length(), fullName.length() - ".class".length());
 
 							Class<?> class_ = Class.forName(path.replace('/', '.') + name, true, loader);
+							if (class_.getAnnotation(ManualLoad.class) != null)
+								continue;
 							if (Plugin.class.isAssignableFrom(class_)) {
 								Class<? extends Plugin> pluginClass = class_.asSubclass(Plugin.class);
 								Constructor<? extends Plugin> constructByServer = null;
@@ -113,9 +116,9 @@ public class PluginHandler {
 									System.out.println("Plugin could not be load: " + name);
 									continue;
 								}
-								if (plugin.getClass().getAnnotation(ManualLoad.class) != null) //Ignore manual loading plugins
-									continue;
 								loadPlugin(plugin, server);
+								if (plugin instanceof Updatable)
+									server.getUpdateService().getUpdateManager().add((Updatable)plugin);
 							} else {
 								if (!Command.class.isAssignableFrom(class_)) {
 									continue;
@@ -124,9 +127,9 @@ public class PluginHandler {
 									Class<? extends Command> commandClass = class_.asSubclass(Command.class);
 									Constructor<? extends Command> construct = commandClass.getConstructor();
 									Command c = construct.newInstance();
-									if (c.getClass().getAnnotation(ManualLoad.class) != null) //Ignore manual loading commands
-										continue;
 									server.getCommandHandler().addCommand(c);
+									if (c instanceof Updatable)
+										server.getUpdateService().getUpdateManager().add((Updatable)c);
 									CommandLoadEvent cle = new CommandLoadEvent(c, server);
 									server.getEventSystem().callEvent(cle);
 								} catch (Exception ex) {

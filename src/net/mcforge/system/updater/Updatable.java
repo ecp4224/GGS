@@ -3,6 +3,27 @@ package net.mcforge.system.updater;
 import net.mcforge.API.plugin.Plugin;
 import net.mcforge.API.plugin.PluginHandler;
 
+/**
+ * An updatable object can be automaticly updated
+ * by the core. You must provide the following:
+ * 
+ * <b>A check URL</b>
+ * This url will return, in plan text, the lastest version as a String
+ *
+ *<b>a Download URL</b>
+ *This url will return a jar file of the lastest version.
+ *
+ *<b>Update Type</b>
+ *This is the how the object will update, see {@link UpdateType} for more info
+ *
+ *<b>Current Version</b>
+ *This will return, in a String, the current version of this object
+ *
+ *<b>Unload Method</b>
+ *This will unload the object from memory. For plugins, {@link PluginHandler#unload(Plugin)} will do the trick.
+ *For commands, {@link CommandHandler#removeCommand(Command)} will unload the object.
+ *
+ */
 public interface Updatable {
 	
 	/**
