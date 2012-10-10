@@ -70,7 +70,7 @@ public abstract class Plugin
 	 */
 	public String getName()
 	{
-		return (properties.getProperty("name") != null ? properties.getProperty("name") : getClass().getSimpleName());
+		return (properties != null ? (properties.getProperty("name") != null ? properties.getProperty("name") : getClass().getSimpleName()) : getClass().getSimpleName());
 	}
 	
 	
@@ -122,7 +122,7 @@ public abstract class Plugin
 	public boolean equals(Object obj) {
 		if (obj instanceof Plugin) {
 			Plugin p = (Plugin)obj;
-			return p.getName().equals(getName()) && p.getVersion().equals(getVersion());
+			return p.getName().equals(getName());
 		}
 		return false;
 	}

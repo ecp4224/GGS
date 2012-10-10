@@ -67,8 +67,10 @@ public class UpdateService implements Tick {
 				BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
 				String str;
 				while ((str = in.readLine()) != null) {
-					if (!str.equals(u.getCurrentVersion()))
+					if (!str.equals(u.getCurrentVersion())) {
 						queue.add(u);
+						break;
+					}
 				}
 				in.close();
 			} catch (IOException e) {
@@ -80,29 +82,8 @@ public class UpdateService implements Tick {
 	}
 
 	public void update(Updatable u) {
-		UpdateType type = u.getUpdateType();
-		if (type.getType() < defaulttype.getType())
-			type = defaulttype;
-		if (type == UpdateType.Auto_Silent || type == UpdateType.Auto_Notify) {
-			u.unload();
-			try {
-				downloadFile(u.getDownloadURL(), u.getDownloadPath());
-				server.getPluginHandler().loadFile(server, new File(u.getDownloadPath()));
-				if (type == UpdateType.Auto_Notify)
-					server.Log(u.getDownloadPath() + " has been updated!");
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		else if (type == UpdateType.Auto_Silent_Restart || type == UpdateType.Auto_Notify_Restart) {
-			restart.add(u.getDownloadURL() + "@@" + u.getDownloadPath() + "@@" + type.getType());
-			if (type == UpdateType.Auto_Notify_Restart)
-				server.Log(u.getDownloadPath() + " will be updated after a restart!");
-			save();
-		}
-		else if (type == UpdateType.Ask) {
-			//TODO Ask the user
-		}
+		Thread t = new Updater(u);
+		t.start();
 	}
 
 	@Override
@@ -180,5 +161,49 @@ public class UpdateService implements Tick {
 		FileOutputStream fos = new FileOutputStream(path);
 		fos.getChannel().transferFrom(rbc, 0, 1 << 24);
 		fos.close();
+	}
+	
+	private class Updater extends Thread {
+		
+		Updatable u;
+		public Updater(Updatable u) { this.u = u; }
+		@Override
+		public void run() {
+			UpdateType type = u.getUpdateType();
+			if (type.getType() < defaulttype.getType())
+				type = defaulttype;
+			if (type == UpdateType.Auto_Silent || type == UpdateType.Auto_Notify) {
+				u.unload();
+				try {
+					downloadFile(u.getDownloadURL(), u.getDownloadPath());
+					server.getPluginHandler().loadFile(server, new File(u.getDownloadPath()));
+					if (type == UpdateType.Auto_Notify)
+						server.Log(u.getDownloadPath() + " has been updated!");
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			else if (type == UpdateType.Auto_Silent_Restart || type == UpdateType.Auto_Notify_Restart) {
+				restart.add(u.getDownloadURL() + "@@" + u.getDownloadPath() + "@@" + type.getType());
+				if (type == UpdateType.Auto_Notify_Restart)
+					server.Log(u.getDownloadPath() + " will be updated after a restart!");
+				save();
+			}
+			else if (type == UpdateType.Ask) {
+				server.getConsole().sendMessage("An update for " + u.getDownloadPath() + " is ready for download.");
+				server.getConsole().sendMessage("Would you like to update?");
+				if (server.getConsole().nextBoolean()) {
+					u.unload();
+					try {
+						downloadFile(u.getDownloadURL(), u.getDownloadPath());
+						server.getPluginHandler().loadFile(server, new File(u.getDownloadPath()));
+						if (type == UpdateType.Auto_Notify)
+							server.Log(u.getDownloadPath() + " has been updated!");
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		}
 	}
 }
