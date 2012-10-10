@@ -26,7 +26,12 @@ public class UpdateService implements Tick {
 	private Server server;
 	private boolean update;
 	private UpdateType defaulttype;
-
+	
+	/**
+	 * Create a new UpdateService.
+	 * @param server
+	 *              The server the UpdateService belongs to
+	 */
 	public UpdateService(Server server) {
 		this.server = server;
 		this.server.Add(this);
@@ -39,6 +44,11 @@ public class UpdateService implements Tick {
 		applyUpdates();
 	}
 
+	/**
+	 * Get the server this UpdateService belongs to
+	 * @return
+	 *        The {@link Server} object
+	 */
 	public Server getServer() {
 		return server;
 	}
@@ -53,34 +63,54 @@ public class UpdateService implements Tick {
 		return um;
 	}
 
+	/**
+	 * Check for updates.
+	 * This will check for updates on all update objects
+	 */
 	public void checkAll() {
 		if (update)
 			return;
 		queue.clear();
 		for (int i = 0; i < um.getUpdateObjects().size(); i++) {
 			Updatable u = um.getUpdateObjects().get(i);
-			if (restart.contains(u))
-				continue;
-			URL url;
-			try {
-				url = new URL(u.getCheckURL());
-				BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
-				String str;
-				while ((str = in.readLine()) != null) {
-					if (!str.equals(u.getCurrentVersion())) {
-						queue.add(u);
-						break;
-					}
-				}
-				in.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			check(u);
 		}
 		if (queue.size() > 0)
 			update = true;
 	}
+	
+	/**
+	 * Check for updates on an Updatable object.
+	 * If the object is already scheduled to update after restart, or scheduled to update
+	 * at a later time, then nothing happens.
+	 * @param u
+	 *         The updatable object to check for updates on
+	 */
+	public void check(Updatable u) {
+		if (restart.contains(u) || queue.contains(u))
+			return;
+		URL url;
+		try {
+			url = new URL(u.getCheckURL());
+			BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
+			String str;
+			while ((str = in.readLine()) != null) {
+				if (!str.equals(u.getCurrentVersion())) {
+					queue.add(u);
+					break;
+				}
+			}
+			in.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
+	/**
+	 * Update an updatable object.
+	 * @param u
+	 *         The object to update
+	 */
 	public void update(Updatable u) {
 		Thread t = new Updater(u);
 		t.start();

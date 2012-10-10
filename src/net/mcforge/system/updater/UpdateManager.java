@@ -39,6 +39,11 @@ public class UpdateManager {
 			updatelist.add(object);
 	}
 	
+	/**
+	 * Get a list of objects that will be updating
+	 * @return
+	 *        An {@link ArrayList> of udpatable objects
+	 */
 	public ArrayList<Updatable> getUpdateObjects() {
 		return updatelist;
 	}

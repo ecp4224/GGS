@@ -264,6 +264,7 @@ public final class Server implements LogInterface {
 		description = getSystemProperties().getValue("WOM-Server-description");
 		flags = getSystemProperties().getValue("WOM-Server-Flags");
 	}
+	
 	/**
 	 * Start the logger.
 	 * The logger can be started before the server is started, but
@@ -291,6 +292,11 @@ public final class Server implements LogInterface {
 		}
 	}
 	
+	/**
+	 * Start the SQL service
+	 * @param set
+	 *           The SQL interface to use
+	 */
 	public void startSQL(ISQL set) {
 		if (set == null) {
 			try {
@@ -320,6 +326,9 @@ public final class Server implements LogInterface {
 		Log("Set up SQL");
 	}
 	
+	/**
+	 * Start the SQL service
+	 */
 	public void startSQL() {
 		startSQL(null);
 	}
@@ -492,7 +501,7 @@ public final class Server implements LogInterface {
 	 * @param t
 	 *         The {@link Tick} object to call
 	 */
-	public  void Add(Tick t) {
+	public void Add(Tick t) {
 		synchronized(ticks) {
 			if (!ticks.contains(t))
 				ticks.add(t);
