@@ -59,6 +59,10 @@ public final class Server implements LogInterface {
 	private Messages m; //Pls lets make everything in messages static this is just stupid
 	public static final List<String> devs = Arrays.asList( "Dmitchell", "501st_commander", "Lavoaster", "Alem_Zupa", "bemacized", "Shade2010", "edh649", "hypereddie10", "Gamemakergm", "Serado", "Wouto1997", "cazzar", "givo");
 	/**
+	 * Weather or not to verify names when players connect
+	 */
+	public boolean VerifyNames;
+	/**
 	 * The players currently on the server
 	 */
 	public ArrayList<Player> players = new ArrayList<Player>();
@@ -263,6 +267,7 @@ public final class Server implements LogInterface {
 		Public = getSystemProperties().getBool("Public");
 		description = getSystemProperties().getValue("WOM-Server-description");
 		flags = getSystemProperties().getValue("WOM-Server-Flags");
+		VerifyNames = getSystemProperties().getBool("Verify-Names");
 	}
 	
 	/**

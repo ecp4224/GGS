@@ -61,6 +61,7 @@ public class Properties {
 		p.addSetting("Port", 25565);
 		p.addSetting("Max-Players", 30);
 		p.addSetting("Public", true);
+		p.addSetting("Verify-Names", true);
 		p.addSetting("WOM-Server-description", "A server");
 		p.addSetting("WOM-Server-Flags", "[MCForge]");
 		p.addSetting("MainLevel", "levels/Main.ggs");
