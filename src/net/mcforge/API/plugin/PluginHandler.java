@@ -49,6 +49,17 @@ public class PluginHandler {
 	public ArrayList<ClassicExtension> getExtensions() {
 		return ext;
 	}
+	
+	public void addExtension(ClassicExtension ce) {
+		ext.add(ce);
+	}
+	
+	public void addExtension(Object o) {
+		Class<?> class_ = o.getClass();
+		ClassicExtension ce = null;
+		if ((ce = class_.getAnnotation(ClassicExtension.class)) != null)
+			addExtension(ce);
+	}
 
 	public void loadFile(Server server, File arg0) {
 		JarFile file = null;

@@ -11,11 +11,17 @@ import net.mcforge.networking.packets.PacketManager;
 import net.mcforge.networking.packets.PacketType;
 import net.mcforge.server.Server;
 
+@ClassicExtension(extName = "ExtEntry")
 public class ExtEntryPacket extends ExtendPacket {
 
 	public ExtEntryPacket(String name, byte ID, PacketManager parent,
 			PacketType packetType) {
 		super(name, ID, parent, packetType);
+		parent.server.getPluginHandler().addExtension(this);
+	}
+
+	public ExtEntryPacket(PacketManager packetManager) {
+		this("ExtEntry", (byte)0x11, packetManager, PacketType.Client_to_Server);
 	}
 
 	@Override

@@ -4,22 +4,25 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 
+import net.mcforge.API.ClassicExtension;
 import net.mcforge.iomodel.Player;
 import net.mcforge.networking.IOClient;
 import net.mcforge.networking.packets.PacketManager;
 import net.mcforge.networking.packets.PacketType;
 import net.mcforge.server.Server;
 
+@ClassicExtension(extName = "ExtInfo")
 public class ExtInfo extends ExtendPacket {
 
 	private static final String NAME = "GGS";
 	public ExtInfo(String name, byte ID, PacketManager parent,
 			PacketType packetType) {
 		super(name, ID, parent, packetType);
+		parent.server.getPluginHandler().addExtension(this);
 	}
 	
 	public ExtInfo(PacketManager parent) {
-		super("ExtInfo", (byte)0x10, parent, PacketType.Client_to_Server);
+		this("ExtInfo", (byte)0x10, parent, PacketType.Client_to_Server);
 	}
 
 	@Override
