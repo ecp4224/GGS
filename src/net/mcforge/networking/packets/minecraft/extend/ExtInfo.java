@@ -14,7 +14,7 @@ import net.mcforge.server.Server;
 @ClassicExtension(extName = "ExtInfo")
 public class ExtInfo extends ExtendPacket {
 
-	private static final String NAME = "GGS";
+	private static final String NAME = "MCForge";
 	public ExtInfo(String name, byte ID, PacketManager parent,
 			PacketType packetType) {
 		super(name, ID, parent, packetType);

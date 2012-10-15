@@ -356,9 +356,9 @@ public final class Server implements LogInterface {
 		loadSystemProperties();
 		us = new UpdateService(this);
 		m = new Messages(this);
+		ph = new PluginHandler();
 		pm = new PacketManager(this);
 		pm.StartReading();
-		ph = new PluginHandler();
 		ph.loadplugins(this);
 		Log("Loaded plugins");
 		lm = new LevelHandler(this);

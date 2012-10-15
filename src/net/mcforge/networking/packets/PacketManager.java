@@ -39,28 +39,7 @@ import net.mcforge.server.Server;
 
 public class PacketManager {
 	
-	protected Packet[] packets = new Packet[] {
-		new Connect(this),
-		new DespawnPlayer(this),
-		new FinishLevelSend(this),
-		new GlobalPosUpdate(this),
-		new Kick(this),
-		new LevelSend(this),
-		new LevelStartSend(this),
-		new Message(this),
-		new MOTD(this),
-		new Ping(this),
-		new PosUpdate(this),
-		new SetBlock(this),
-		new SpawnPlayer(this),
-		new TP(this),
-		new UpdateUser(this),
-		new Welcome(this),
-		new GET(this),
-		new ClickDistancePacket(this),
-		new ExtEntryPacket(this),
-		new ExtInfo(this)
-	};
+	protected Packet[] packets;
 	
 	protected ServerSocket serverSocket;
 	
@@ -78,11 +57,37 @@ public class PacketManager {
 	 */
 	public PacketManager(Server instance) {
 		this.server = instance;
+		initPackets();
 		try {
 			serverSocket = new ServerSocket(this.server.Port);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	protected void initPackets() {
+		packets = new Packet[] {
+				new Connect(this),
+				new DespawnPlayer(this),
+				new FinishLevelSend(this),
+				new GlobalPosUpdate(this),
+				new Kick(this),
+				new LevelSend(this),
+				new LevelStartSend(this),
+				new Message(this),
+				new MOTD(this),
+				new Ping(this),
+				new PosUpdate(this),
+				new SetBlock(this),
+				new SpawnPlayer(this),
+				new TP(this),
+				new UpdateUser(this),
+				new Welcome(this),
+				new GET(this),
+				new ClickDistancePacket(this),
+				new ExtEntryPacket(this),
+				new ExtInfo(this)
+			};
 	}
 	
 	/**
