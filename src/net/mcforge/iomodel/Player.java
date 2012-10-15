@@ -262,6 +262,19 @@ public class Player extends IOClient implements CommandExecutor {
 	}
 	
 	/**
+	 * Check to see if a player has the ability to use an Extension.
+	 * @param object
+	 *              The Extension object
+	 * @return
+	 *        True if the player can use it.
+	 *        False if the player can't use it <b>OR</b> if the object provided was not a
+	 *        {@link ClassicExtension}
+	 */
+	public boolean hasExtension(Object object) {
+		return hasExtension(object.getClass());
+	}
+	
+	/**
 	 * Weather the user is on wom
 	 * @return
 	 *        True if the user is using the WoM client
