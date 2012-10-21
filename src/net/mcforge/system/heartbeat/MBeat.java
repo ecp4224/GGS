@@ -49,6 +49,13 @@ public class MBeat extends Heart {
 		}
 		boolean flag = true;
 		if (url.equals("</html>")) { url = "minecraft.net is down!"; flag = false; }
+		if (!url.equals("")) {
+			String newHash = url.substring(url.lastIndexOf('/') + 1);
+			if (server.hash == null || server.hash.equals("") || !newHash.equals(server.hash)) {
+				server.hash = newHash;
+				show = false;
+			}
+		}
 		if (!show) {
 					if (flag)
 					{

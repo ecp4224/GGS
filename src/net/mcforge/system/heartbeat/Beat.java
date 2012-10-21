@@ -7,16 +7,20 @@
  ******************************************************************************/
 package net.mcforge.system.heartbeat;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 
 import net.mcforge.server.Server;
 
-public class Beat {
+public class Beat extends Thread {
 	private Server server;
 
 	private ArrayList<Heart> hearts = new ArrayList<Heart>();
-
-	private Thread beater;
 	
 	private boolean running;
 
@@ -58,19 +62,18 @@ public class Beat {
 	 * Start beating. If the beater already started beating, then
 	 * nothing will happen.
 	 */
-	public void start() {
+	public void startBeating() {
 		if (running)
 			return;
 		running = true;
-		beater = new Beater(this);
-		beater.start();
+		super.start();
 	}
 	
 	/**
 	 * Stop beating. If the beater is already stopped, then
 	 * nothing will happen.
 	 */
-	public void stop() {
+	public void stopBeating() {
 		if (!running)
 			return;
 		running = false;
@@ -112,5 +115,60 @@ public class Beat {
 	 */
 	public boolean isRunning() {
 		return running;
+	}
+	
+	@Override
+	public void run() {
+		URL url;
+		HttpURLConnection connection = null;
+		BufferedReader reader;
+		byte[] data;
+		while (isRunning()) {
+			synchronized(getHearts()) {
+				for (Heart h : getHearts()) {
+					try {
+						URL u = new URL(h.getURL());
+						HttpURLConnection con = (HttpURLConnection)u.openConnection();
+						con.connect();
+
+						if(con.getResponseCode() == HttpURLConnection.HTTP_OK)
+						{
+							url = new URL(h.getURL() + "?" + h.Prepare(getServer()));
+							connection = (HttpURLConnection)url.openConnection();
+							data = h.Prepare(getServer()).getBytes();
+							connection.setDoOutput(true);
+							connection.setRequestProperty("Content-Lenght", String.valueOf(data.length));
+							connection.setUseCaches(false);
+							connection.setDoInput(true);
+							connection.setDoOutput(true);
+							connection.connect();
+							try {
+								reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+								try {
+									h.onPump(reader, getServer());
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
+							} catch (Exception e) {
+								e.printStackTrace();
+								getServer().Log("Error pumping " + h.getURL() + " heart!");
+							}
+						}
+					} catch (MalformedURLException e) {
+						e.printStackTrace();
+					} catch (IOException e) {
+						System.out.println("Unable to connect to " + h.getURL() + "!");
+					} finally {
+						if (connection != null)
+							connection.disconnect();
+					}
+				}
+			}
+			try {
+				Thread.sleep(30000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 }

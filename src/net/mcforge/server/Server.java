@@ -34,6 +34,7 @@ import net.mcforge.sql.ISQL;
 import net.mcforge.sql.MySQL;
 import net.mcforge.system.Console;
 import net.mcforge.system.heartbeat.Beat;
+import net.mcforge.system.heartbeat.ForgeBeat;
 import net.mcforge.system.heartbeat.Heart;
 import net.mcforge.system.heartbeat.MBeat;
 import net.mcforge.system.heartbeat.WBeat;
@@ -58,6 +59,10 @@ public final class Server implements LogInterface {
 	private Console console;
 	private Messages m; //Pls lets make everything in messages static this is just stupid
 	public static final List<String> devs = Arrays.asList( "Dmitchell", "501st_commander", "Lavoaster", "Alem_Zupa", "bemacized", "Shade2010", "edh649", "hypereddie10", "Gamemakergm", "Serado", "Wouto1997", "cazzar", "givo");
+	/**
+	 * The URL hash for this server
+	 */
+	public String hash;
 	/**
 	 * Weather or not to verify names when players connect
 	 */
@@ -410,7 +415,8 @@ public final class Server implements LogInterface {
 		heartbeater = new Beat(this);
 		heartbeater.addHeart(new MBeat());
 		heartbeater.addHeart(new WBeat());
-		heartbeater.start();
+		heartbeater.addHeart(new ForgeBeat());
+		heartbeater.startBeating();
 		Log("Created heartbeat");
 		Log("Server url can be found in 'url.txt'");
 		ServerStartedEvent sse = new ServerStartedEvent(this);
@@ -484,7 +490,7 @@ public final class Server implements LogInterface {
 		MainLevel.save();
 		tick.join();
 		logger.Stop();
-		heartbeater.stop();
+		heartbeater.stopBeating();
 		ArrayList<Player> players = new ArrayList<Player>();
 		for (Player p : this.players) {
 			players.add(p);
