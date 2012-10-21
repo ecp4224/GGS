@@ -500,6 +500,7 @@ public final class Server implements LogInterface {
 			p.kick("Server shut down. Thanks for playing!");
 		}
 		players.clear();
+		Properties.reset();
 		pm.StopReading();
 	}
 	

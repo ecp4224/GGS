@@ -52,6 +52,13 @@ public class Properties {
 		
 	}
 	
+	/**
+	 * Reset the init value for System Properties
+	 */
+	public static void reset() {
+		init = false;
+	}
+	
 	private static void makeDefaults(String filename, Server server, Properties p) {
 		//TODO Fill in all defaults
 		server.Log("System config not found..creating..");
