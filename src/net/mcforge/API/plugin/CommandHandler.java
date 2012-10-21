@@ -92,8 +92,8 @@ public class CommandHandler {
 			if (!(player instanceof Main) && !player.getGroup().canExecute(c)) //the thing we had before failed. temp one
 				player.sendMessage("Sorry, you don't have permission to execute this command!");
 			else {
-				_server.Log(player.getName() + " used /" + c.getName() + arrayToString(args));
-				c.execute(player, args);
+				CommandExecute ce = new CommandExecute(player, c, args);
+				ce.start();
 			}
 		}
 	}
@@ -210,6 +210,20 @@ public class CommandHandler {
 		}
 		out.flush();
 		out.close();
+	}
+	
+	private class CommandExecute extends Thread {
+		
+		CommandExecutor p;
+		Command cmd;
+		String[] args;
+		public CommandExecute(CommandExecutor p, Command cmd, String[] args) { this.p = p; this.cmd = cmd; this.args = args; }
+		
+		@Override
+		public void run() {
+			_server.Log(p.getName() + " used /" + cmd.getName() + arrayToString(args));
+			cmd.execute(p, args);
+		}
 	}
 
 }
