@@ -21,6 +21,7 @@ import java.util.Properties;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+import net.mcforge.API.ClassicExtension;
 import net.mcforge.API.ManualLoad;
 import net.mcforge.server.Server;
 import net.mcforge.system.updater.Updatable;
@@ -29,6 +30,8 @@ public class PluginHandler {
 	private ArrayList<Plugin> plugins = new ArrayList<Plugin>();
 
 	private ArrayList<Game> games = new ArrayList<Game>();
+	
+	private ArrayList<ClassicExtension> ext = new ArrayList<ClassicExtension>();
 
 	private final ClassLoader loader = URLClassLoader.newInstance(new URL[]{}, getClass().getClassLoader());
 	/**
@@ -41,6 +44,21 @@ public class PluginHandler {
 			p.onUnload();
 			plugins.remove(p);
 		}
+	}
+	
+	public ArrayList<ClassicExtension> getExtensions() {
+		return ext;
+	}
+	
+	public void addExtension(ClassicExtension ce) {
+		ext.add(ce);
+	}
+	
+	public void addExtension(Object o) {
+		Class<?> class_ = o.getClass();
+		ClassicExtension ce = null;
+		if ((ce = class_.getAnnotation(ClassicExtension.class)) != null)
+			addExtension(ce);
 	}
 
 	public void loadFile(Server server, File arg0) {
@@ -67,6 +85,8 @@ public class PluginHandler {
 							Class<?> class_ = Class.forName(path.replace('/', '.') + name, true, loader);
 							if (class_.getAnnotation(ManualLoad.class) != null)
 								continue;
+							if (class_.getAnnotation(ClassicExtension.class) != null)
+								ext.add(class_.getAnnotation(ClassicExtension.class));
 							if (Plugin.class.isAssignableFrom(class_)) {
 								Class<? extends Plugin> pluginClass = class_.asSubclass(Plugin.class);
 								Constructor<? extends Plugin> constructByServer = null;

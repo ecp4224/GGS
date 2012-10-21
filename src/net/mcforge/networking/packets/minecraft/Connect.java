@@ -9,6 +9,9 @@ package net.mcforge.networking.packets.minecraft;
 
 import java.io.*;
 
+import net.mcforge.API.ClassicExtension;
+import net.mcforge.networking.ClientType;
+
 import net.mcforge.API.player.PlayerConnectEvent;
 import net.mcforge.API.player.PlayerLoginEvent;
 import net.mcforge.iomodel.Player;
@@ -61,22 +64,30 @@ public class Connect extends Packet {
 				server.players.add(player);
 
 				player.Login();
+				player.client = ClientType.parse(message[129]);
+				if (player.client == ClientType.Extend_Classic) {
+					Packet packet = server.getPacketManager().getPacket((byte)0x10);
+					packet.Write(player, player.getServer());
+					packet = server.getPacketManager().getPacket((byte)0x11);
+					for (ClassicExtension c : player.getServer().getPluginHandler().getExtensions()) {
+						packet.Write(player, server, c);
+					}
+				}
 				PlayerLoginEvent login = new PlayerLoginEvent(player);
 				server.getEventSystem().callEvent(login);
-				player.opID = message[129];
 			}
 			else {
-                            if (!connect.getAutologin()) {
-				if (connect.getKickMessage().equals(""))
-					player.kick("Invalid Login!");
+				if (!connect.getAutologin()) {
+					if (connect.getKickMessage().equals(""))
+						player.kick("Invalid Login!");
+					else
+						player.kick(connect.getKickMessage());
+					return;
+				}
 				else
-					player.kick(connect.getKickMessage());
-				return;
-                            }
-                            else
-                            {
-                                server.Log("plugin granted " + player.username + " verification bypass!");
-                            }
+				{
+					server.Log("plugin granted " + player.username + " verification bypass!");
+				}
 			}
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
