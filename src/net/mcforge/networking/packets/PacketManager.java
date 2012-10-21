@@ -135,9 +135,8 @@ public class PacketManager {
 	/**
 	 * Stop listening for clients.
 	 */
-	@SuppressWarnings("deprecation")
 	public void StopReading() {
-		reader.stop();
+		//reader.stop();
 		try {
 			serverSocket.close();
 		} catch (IOException e1) {
