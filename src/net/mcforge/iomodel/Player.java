@@ -20,6 +20,8 @@ import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import net.mcforge.API.ClassicExtension;
+
 import net.mcforge.API.level.PlayerJoinedLevel;
 import net.mcforge.API.player.PlayerBlockChangeEvent;
 import net.mcforge.API.player.PlayerChatEvent;
@@ -28,6 +30,7 @@ import net.mcforge.API.player.PlayerDisconnectEvent;
 import net.mcforge.chat.ChatColor;
 import net.mcforge.chat.Messages;
 import net.mcforge.groups.Group;
+import net.mcforge.networking.ClientType;
 import net.mcforge.networking.IOClient;
 import net.mcforge.networking.packets.Packet;
 import net.mcforge.networking.packets.PacketManager;
@@ -45,9 +48,11 @@ public class Player extends IOClient implements CommandExecutor {
 	protected short Y;
 	protected short Z;
 	protected byte ID;
+	protected ArrayList<ClassicExtension> extend = new ArrayList<ClassicExtension>();
 	protected Level level;
 	protected Thread levelsender;
 	protected Messages chat;
+	protected String clientName = "Minecraft";
 	protected ArrayList<Player> seeable = new ArrayList<Player>();
 	protected Ping tick = new Ping(this);
 	protected ChatColor color = ChatColor.White;
@@ -87,7 +92,7 @@ public class Player extends IOClient implements CommandExecutor {
 	/**
 	 * What type of client the player is using.
 	 */
-	public ClientType ClientType;
+	public ClientType client;
 	/**
 	 * The last X pos of the player
 	 */
@@ -184,6 +189,102 @@ public class Player extends IOClient implements CommandExecutor {
 	}
 	
 	/**
+	 * Get the name of the client the player is using.
+	 * Browser/Normal client = Minecraft
+	 * WoM client = WoM
+	 * Extended Classic compatible client = X (vary's on client)
+	 * @return
+	 *        The name of the client
+	 */
+	public String getClientName() {
+		return clientName;
+	}
+	
+	/**
+	 * Set the name of the client the player is using
+	 * @param name
+	 *            The name of the client
+	 */
+	public void setClientName(String name) {
+		this.clientName = name;
+	}
+	
+	/**
+	 * Add an extension this player can use.
+	 * If the player is not using {@link ClientType#Extend_Classic} protocol, nothing will
+	 * be added.
+	 * @param ext
+	 *           The Extension to add.
+	 */
+	public void addExtension(ClassicExtension ext) {
+		if (client != ClientType.Extend_Classic)
+			return;
+		extend.add(ext);
+	}
+	
+	/**
+	 * Get a list of extensions this player can use.
+	 * @return
+	 *        An {@link ArrayList} of {@link ClassicExtension}'s
+	 */
+	public final ArrayList<ClassicExtension> getExtensions() {
+		return extend;
+	}
+	
+	/**
+	 * Check to see if a player has the ability to use an Extension.
+	 * @param name
+	 *           The name of the extension
+	 * @return
+	 *        returns true if the player can use it, otherwise returns false.
+	 */
+	public boolean hasExtension(String name) {
+		for (ClassicExtension c : getExtensions()) {
+			if (c.extName().equals(name))
+				return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * Check to see if a player has the ability to use an Extension.
+	 * @param class_
+	 *              The class of Extension
+	 * @return
+	 *        True if the player can use it.
+	 *        Returns false if the player can't use it <b>OR</b> if the class provided was not a {@link ClassicExtension}
+	 */
+	public boolean hasExtension(Class<?> class_) {
+		ClassicExtension c = null;
+		if ((c = class_.getAnnotation(ClassicExtension.class)) != null)
+			return hasExtension(c.extName());
+		return false;
+	}
+	
+	/**
+	 * Check to see if a player has the ability to use an Extension.
+	 * @param object
+	 *              The Extension object
+	 * @return
+	 *        True if the player can use it.
+	 *        False if the player can't use it <b>OR</b> if the object provided was not a
+	 *        {@link ClassicExtension}
+	 */
+	public boolean hasExtension(Object object) {
+		return hasExtension(object.getClass());
+	}
+	
+	/**
+	 * Weather the user is on wom
+	 * @return
+	 *        True if the user is using the WoM client
+	 */
+	public boolean isOnWom() {
+		return client == ClientType.WoM;
+	}
+	
+	
+	/**
 	 * Get the username the client will see above the player's head
 	 * @return 
 	 *        The username with the color at the beginning.
@@ -219,7 +320,7 @@ public class Player extends IOClient implements CommandExecutor {
 	 * @return Returns true if the account is valid, otherwise it will return false
 	 */
 	public boolean VerifyLogin() {
-		return mppass.equals(getRealmppass()) && server.VerifyNames;
+		return server.VerifyNames ? mppass.equals(getRealmppass()) : true;
 	}
 	
 	/**
@@ -761,8 +862,7 @@ public class Player extends IOClient implements CommandExecutor {
          */
         public void sendWoMMessage(String message)
         {
-            if (ClientType.equals(net.mcforge.iomodel.ClientType.WoM)) //happy eclipse? (FU)
-            {
+        	if (client == ClientType.WoM) {
                 sendMessage("^detail.user=" + message);
             }
         }
@@ -963,7 +1063,12 @@ public class Player extends IOClient implements CommandExecutor {
 	 */
 	public void recieveMessage(String message){
 		if(message.startsWith("/"))
-		{	
+		{
+			if (message.indexOf("/womid") != -1) {
+				setClientName("WoM");
+				client = ClientType.WoM;
+				return;
+			}
 			PlayerCommandEvent event = new PlayerCommandEvent(this, message);
 			pm.server.getEventSystem().callEvent(event);
 			if (event.isCancelled())

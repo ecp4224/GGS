@@ -13,6 +13,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import net.mcforge.API.level.LevelLoadEvent;
+import net.mcforge.API.level.LevelPreLoadEvent;
+import net.mcforge.API.level.LevelUnloadEvent;
 import net.mcforge.iomodel.Player;
 import net.mcforge.server.Server;
 import net.mcforge.server.Tick;
@@ -131,8 +134,26 @@ public class LevelHandler {
 	 */
 	public Level loadLevel(String filename) {
 		Level l = null;
+		LevelPreLoadEvent event1 = new LevelPreLoadEvent(filename);
+		server.getEventSystem().callEvent(event1);
+		if (event1.isCancelled()) {
+			if ((l = event1.getReplacement()) == null)
+				return null;
+			else {
+				levels.add(l);
+				return l;
+			}
+		}
 		try {
 			l = Level.Load(filename);
+			LevelLoadEvent event = new LevelLoadEvent(l);
+			server.getEventSystem().callEvent(event);
+			if(event.isCancelled()) {
+				server.Log("Loading of level " + l.name + " was canceled by " + event.getCanceler());
+				l.unload(server); //Dispose the level
+				l = null;
+				return null;
+			}
 		} catch (ClassNotFoundException e) {
 			server.Log("ERROR LOADING LEVEL!");
 			e.printStackTrace();
@@ -150,9 +171,18 @@ public class LevelHandler {
 	 * as <b>true</b>.
 	 * @param level
 	 *             The level will unload
+	 * @return boolean
+	 *                Returns true if the level was unloaded, otherwise returns false.
 	 */
-	public void unloadLevel(Level level) {
+	public boolean unloadLevel(Level level) {
+		LevelUnloadEvent event = new LevelUnloadEvent(level);
+		server.getEventSystem().callEvent(event);
+		if (event.isCancelled()) {
+			server.Log("The unloading of level " + level + " was canceled by " + event.getCanceler());
+			return false;
+		}
 		unloadLevel(level, true);
+		return true;
 	}
 	/**
 	 * Unload a level

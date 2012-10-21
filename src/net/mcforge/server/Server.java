@@ -339,6 +339,19 @@ public final class Server implements LogInterface {
 	}
 	
 	/**
+	 * Start the event system
+	 */
+	public void startEvents() {
+		if (es == null)
+			es = new EventSystem(this);
+	}
+	
+	public void startTicker() {
+		if (!tick.isAlive())
+			tick.start();
+	}
+	
+	/**
 	 * Start the server
 	 */
 	public void Start(Console console, boolean startSQL) {
@@ -347,7 +360,7 @@ public final class Server implements LogInterface {
 		Running = true;
 		this.console = console;
 		console.setServer(this);
-		es = new EventSystem(this);
+		startEvents();
 		startLogger();
 		Log("Starting MCForge v" + VERSION);
 		ch = new CommandHandler(this);
@@ -356,9 +369,9 @@ public final class Server implements LogInterface {
 		loadSystemProperties();
 		us = new UpdateService(this);
 		m = new Messages(this);
+		ph = new PluginHandler();
 		pm = new PacketManager(this);
 		pm.StartReading();
-		ph = new PluginHandler();
 		ph.loadplugins(this);
 		Log("Loaded plugins");
 		lm = new LevelHandler(this);
@@ -374,7 +387,7 @@ public final class Server implements LogInterface {
 		}
 		MainLevel = lm.loadLevel(getSystemProperties().getValue("MainLevel"));
 		lm.loadLevels();
-		tick.start();
+		startTicker();
 		Log("Loaded levels");
 		SecureRandom sr = null;
 		try {
