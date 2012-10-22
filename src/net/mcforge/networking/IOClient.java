@@ -31,6 +31,28 @@ public class IOClient {
 	
 	protected long readID;
 	
+	protected String IP;
+	
+	protected String HostName;
+	
+	/**
+	 * Returns the IP address string in textual presentation.
+	 * @return the raw IP address in a string format.
+	 */
+	public String getIP() {
+		return IP;
+	}
+	
+	/**
+	 * Gets the host name for this IP address. 
+	 * If this InetAddress was created with a host name, this host name will be remembered and returned; otherwise, a reverse name lookup will be performed and the result will be returned based on the system configured name lookup service. If a lookup of the name service is required, call getCanonicalHostName. 
+	 * If there is a security manager, its checkConnect method is first called with the hostname and -1 as its arguments to see if the operation is allowed. If the operation is not allowed, it will return the textual representation of the IP address.
+	 * @return the host name for this IP address, or if the operation is not allowed by the security check, the textual representation of the IP address.
+	 */
+	public String getHostName() {
+		return HostName;
+	}
+	
 	
 	/**
 	 * Get the thread ID for the thread thats currently
@@ -61,6 +83,8 @@ public class IOClient {
 			pm.server.Log("Error");
 			e.printStackTrace();
 		}
+		this.IP = client.getInetAddress().getHostAddress();
+		this.HostName = client.getInetAddress().getHostName();
 	}
 	
 	/**
