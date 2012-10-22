@@ -59,10 +59,9 @@ public class Properties {
 		init = false;
 	}
 	
-	private static void makeDefaults(String filename, Server server, Properties p) {
-		//TODO Fill in all defaults
-		server.Log("System config not found..creating..");
-		p.addSetting("Server-Name", "[MCForge] Default Server");
+        
+       private static Properties getDefaults(Properties p) {
+                p.addSetting("Server-Name", "[MCForge] Default Server");
 		p.addSetting("WOM-Alternate-Name", "[MCForge] Default Server");
 		p.addSetting("MOTD", "Welcome!");
 		p.addSetting("Port", 25565);
@@ -77,6 +76,12 @@ public class Properties {
 		p.addSetting("MySQL-username", "root");
 		p.addSetting("MySQL-password", "password");
 		p.addSetting("MySQL-database-name", "ggsdb");
+                return p;
+       }
+	private static void makeDefaults(String filename, Server server, Properties p) {
+		//TODO Fill in all defaults
+		server.Log("System config not found..creating..");
+		p = getDefaults(p);
 		try {
 			p.save(filename);
 			init = true;
@@ -121,9 +126,12 @@ public class Properties {
 		BufferedReader br = new BufferedReader(new InputStreamReader(in));
 		String strLine;
 		while ((strLine = br.readLine()) != null)   {
-			if (strLine.startsWith("#"))
-				continue;
-			settings.add(strLine);
+			if (strLine.startsWith("#")) {
+                            continue;
+                        }
+                        else {
+                            settings.add(strLine);
+                        }
 		}
 		in.close();
 	}
