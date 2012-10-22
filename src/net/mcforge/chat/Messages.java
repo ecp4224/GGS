@@ -57,6 +57,8 @@ public class Messages {
 	}
 	
 	public String[] split(String message) {
+		if (message.equals(""))
+			return new String[] { "" };
 		char[] array = message.toCharArray();
 		String toadd = "";
 		ArrayList<String> temp = new ArrayList<String>();
@@ -65,6 +67,17 @@ public class Messages {
 			if (i % 64 == 0 && i != 0) {
 				temp.add(toadd);
 				toadd = "";
+			}
+			//If the current letter is 1 before a multiply of 64
+			//And the current index + 1 is still less than the array
+			//And the current index is a &
+			//Assume its a color code
+			//And add it to the next line
+			else if (i % 64 == 1 && i + 1 < array.length && array[i] == '&') {
+				toadd += "" + array[i + 1];
+				temp.add(toadd);
+				toadd = "";
+				i++;
 			}
 		}
 		if (!toadd.equals(""))
