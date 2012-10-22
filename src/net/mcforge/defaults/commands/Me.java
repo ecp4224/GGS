@@ -22,7 +22,7 @@ public class Me extends PlayerCommand
 	@Override
 	public String getName()
 	{
-		return "me";
+		return "test";
 	}
 
 	@Override
@@ -52,7 +52,7 @@ public class Me extends PlayerCommand
 			}
 			message = message.trim();
 			for (Player p : player.getServer().players)
-				p.sendMessage("&6~" + player.getDisplayColor() + message);
+				p.sendMessage("You are now ranked Builder, type /help for your new set of commands. Because you get these awesome commands and I mean really awesome! BY now your most likely guessed that this is a test to guess line wrapping. IS IT WORKING, IS IT WORKING?!?!?!?!");
 		}
 	}
 

@@ -24,6 +24,7 @@ import net.mcforge.API.plugin.CommandHandler;
 import net.mcforge.API.plugin.PluginHandler;
 import net.mcforge.API.server.ServerStartedEvent;
 import net.mcforge.chat.Messages;
+import net.mcforge.defaults.commands.Me;
 import net.mcforge.groups.Group;
 import net.mcforge.iomodel.Player;
 import net.mcforge.networking.packets.PacketManager;
@@ -421,6 +422,7 @@ public final class Server implements LogInterface {
 		Log("Server url can be found in 'url.txt'");
 		ServerStartedEvent sse = new ServerStartedEvent(this);
 		es.callEvent(sse);
+		getCommandHandler().addCommand(new Me());
 	}
 	
 	/**
