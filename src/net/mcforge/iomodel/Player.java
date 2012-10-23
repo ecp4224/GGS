@@ -23,6 +23,7 @@ import java.util.regex.Pattern;
 import net.mcforge.API.ClassicExtension;
 
 import net.mcforge.API.level.PlayerJoinedLevel;
+import net.mcforge.API.player.PlayerBanRequestEvent;
 import net.mcforge.API.player.PlayerBlockChangeEvent;
 import net.mcforge.API.player.PlayerChatEvent;
 import net.mcforge.API.player.PlayerCommandEvent;
@@ -246,6 +247,74 @@ public class Player extends IOClient implements CommandExecutor {
 				return true;
 		}
 		return false;
+	}
+	
+	/**
+	 * Ban this player.
+	 * This method will execute a BanRequest Event. If the end-user does not
+	 * have a ban plugin, then the player wont be banned.
+	 * @param banner
+	 *             The client who is doing the banning
+	 * @param reason
+	 *              The reason for banning this player
+	 * @param kick
+	 *            Weather this player should be kicked as well.
+	 */
+	public void ban(CommandExecutor banner, String reason, boolean kick) {
+		PlayerBanRequestEvent pbre = new PlayerBanRequestEvent(this, reason, kick, banner);
+		this.server.getEventSystem().callEvent(pbre);
+		if (kick)
+			kick("Banned: " + reason);
+	}
+	
+	/**
+	 * Ban this player.
+	 * This method will execute a BanRequest Event. If the end-user does not
+	 * have a ban plugin, then the player wont be banned.
+	 * @param banner
+	 *              The client who is doing the banning
+	 * @param reason
+	 *              The reason for the ban
+	 */
+	public void ban(CommandExecutor banner, String reason) {
+		ban(banner, reason, false);
+	}
+	
+	/**
+	 * Ban this player.
+	 * This method will execute a BanRequest Event. If the end-user does not
+	 * have a ban plugin, then the player wont be banned.
+	 * The reason provided will be <b>"No reason given"</b>
+	 * @param banner
+	 *              The client doing the banning
+	 */
+	public void ban(CommandExecutor banner) {
+		ban(banner, "No reason given", false);
+	}
+	
+	/**
+	 * Ban and kick this player.
+	 * This method will execute a BanRequest Event. If the end-user does not
+	 * have a ban plugin, then the player wont be banned.
+	 * @param banner
+	 *              The client who is doing the banning
+	 * @param reason
+	 *              The reason for the ban
+	 */
+	public void kickBan(CommandExecutor banner, String reason) {
+		ban(banner, reason, true);
+	}
+	
+	/**
+	 * Ban and kick this player.
+	 * This method will execute a BanRequest Event. If the end-user does not
+	 * have a ban plugin, then the player wont be banned.
+	 * The reason provided will be <b>"No reason given"</b>
+	 * @param banner
+	 *              The client doing the banning
+	 */
+	public void kickBan(CommandExecutor banner) {
+		ban(banner, "No reason given", true);
 	}
 	
 	/**
