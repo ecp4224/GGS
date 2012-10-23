@@ -259,9 +259,11 @@ public class Player extends IOClient implements CommandExecutor {
 	 *              The reason for banning this player
 	 * @param kick
 	 *            Weather this player should be kicked as well.
+	 * @param banip
+	 *             Weather to ban the player's IP as well.
 	 */
-	public void ban(CommandExecutor banner, String reason, boolean kick) {
-		PlayerBanRequestEvent pbre = new PlayerBanRequestEvent(this, reason, kick, banner);
+	public void ban(CommandExecutor banner, String reason, boolean kick, boolean banip) {
+		PlayerBanRequestEvent pbre = new PlayerBanRequestEvent(this, reason, kick, banner, banip);
 		this.server.getEventSystem().callEvent(pbre);
 		if (kick)
 			kick("Banned: " + reason);
@@ -277,7 +279,7 @@ public class Player extends IOClient implements CommandExecutor {
 	 *              The reason for the ban
 	 */
 	public void ban(CommandExecutor banner, String reason) {
-		ban(banner, reason, false);
+		ban(banner, reason, false, false);
 	}
 	
 	/**
@@ -289,7 +291,7 @@ public class Player extends IOClient implements CommandExecutor {
 	 *              The client doing the banning
 	 */
 	public void ban(CommandExecutor banner) {
-		ban(banner, "No reason given", false);
+		ban(banner, "No reason given", false, false);
 	}
 	
 	/**
@@ -302,7 +304,7 @@ public class Player extends IOClient implements CommandExecutor {
 	 *              The reason for the ban
 	 */
 	public void kickBan(CommandExecutor banner, String reason) {
-		ban(banner, reason, true);
+		ban(banner, reason, true, false);
 	}
 	
 	/**
@@ -314,7 +316,34 @@ public class Player extends IOClient implements CommandExecutor {
 	 *              The client doing the banning
 	 */
 	public void kickBan(CommandExecutor banner) {
-		ban(banner, "No reason given", true);
+		ban(banner, "No reason given", true, false);
+	}
+	
+	/**
+	 * IP Ban this player.
+	 * A IP Ban will kick the player as well.
+	 * This method will execute a BanRequest Event. If the end-user does not
+	 * have a ban plugin, then the player wont be banned.
+	 * @param banner
+	 *              The client who is doing the banning
+	 * @param reason
+	 *              The reason for the ban
+	 */
+	public void ipBan(CommandExecutor banner, String reason) {
+		ban(banner, reason, true, true);
+	}
+	
+	/**
+	 * IP Ban this player.
+	 * A IP Ban will kick the player as well
+	 * This method will execute a BanRequest Event. If the end-user does not
+	 * have a ban plugin, then the player wont be banned.
+	 * The reason provided will be <b>"No reason given"</b>
+	 * @param banner
+	 *              The client doing the banning
+	 */
+	public void ipBan(CommandExecutor banner) {
+		ban(banner, "No reason given", true, true);
 	}
 	
 	/**

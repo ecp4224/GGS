@@ -13,18 +13,30 @@ public class PlayerBanRequestEvent extends PlayerEvent {
 	private CommandExecutor banner;
 	private String reason;
 	private boolean kick;
+	private boolean banip;
 	private static EventList events = new EventList();
 	
-	public PlayerBanRequestEvent(Player who, String reason, boolean kick, CommandExecutor banner2) {
+	public PlayerBanRequestEvent(Player who, String reason, boolean kick, CommandExecutor banner2, boolean banip) {
 		super(who);
 		this.banner = banner2;
 		this.reason = reason;
 		this.kick = kick;
+		this.banip = banip;
 	}
 
 	@Override
 	public EventList getEvents() {
 		return events;
+	}
+	
+	/**
+	 * Weather the request is a ip ban.
+	 * @return
+	 *        True if the requst is a IP ban.
+	 *        False if its not.
+	 */
+	public boolean requestIsIPBan() {
+		return banip;
 	}
 	
 	/**
