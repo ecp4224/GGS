@@ -21,7 +21,8 @@ public class SQLite implements ISQL {
 	protected Connection connection;
 	private Server server;
 	private String prefix;
-	private final String PATH = "jdbc:sqlite:MCForge.db";
+	private String file;
+	private final String PATH = "jdbc:sqlite:";
 	@Override
 	public void ExecuteQuery(String command) {
 		try {
@@ -38,6 +39,23 @@ public class SQLite implements ISQL {
 			e.printStackTrace();
 		}
 
+	}
+	
+	/**
+	 * Set the file SQLite will use to save the database
+	 * to.
+	 * @param file
+	 */
+	public void setFile(String file) {
+		this.file = file;
+	}
+	
+	/**
+	 * Get the file SQLite is saving the database to.
+	 * @return
+	 */
+	public String getFile() {
+		return file;
 	}
 
 	@Override

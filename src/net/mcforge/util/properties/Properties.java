@@ -76,6 +76,9 @@ public class Properties {
 		p.addSetting("MySQL-username", "root");
 		p.addSetting("MySQL-password", "password");
 		p.addSetting("MySQL-database-name", "ggsdb");
+		p.addSetting("MySQL-IP", "127.0.0.1");
+		p.addSetting("MySQL-Port", 3306);
+		p.addSetting("SQLite-File", "mcf.db");
                 return p;
        }
 	private static void makeDefaults(String filename, Server server, Properties p) {

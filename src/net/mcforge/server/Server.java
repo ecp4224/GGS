@@ -33,6 +33,7 @@ import net.mcforge.util.logger.Logger;
 import net.mcforge.util.properties.Properties;
 import net.mcforge.sql.ISQL;
 import net.mcforge.sql.MySQL;
+import net.mcforge.sql.SQLite;
 import net.mcforge.system.Console;
 import net.mcforge.system.heartbeat.Beat;
 import net.mcforge.system.heartbeat.ForgeBeat;
@@ -325,6 +326,12 @@ public final class Server implements LogInterface {
 				mysql.setUsername(getSystemProperties().getValue("MySQL-username"));
 				mysql.setPassword(getSystemProperties().getValue("MySQL-password"));
 				mysql.setDatabase(getSystemProperties().getValue("MySQL-database-name"));
+				mysql.setIP(getSystemProperties().getValue("MySQL-IP"));
+				mysql.setPort(Integer.parseInt(getSystemProperties().getValue("MySQL-Port")));
+			}
+			else if (sql instanceof SQLite) {
+				final SQLite sqlite = (SQLite)sql;
+				sqlite.setFile(getSystemProperties().getValue("SQLite-File"));
 			}
 		}
 		else

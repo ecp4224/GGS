@@ -109,6 +109,38 @@ public class MySQL implements ISQL {
 	public String getURL() {
 		return "jdbc:mysql://" + IP + ":" + port + "/";
 	}
+	
+	/**
+	 * Set the IP of the MySQL database
+	 * @param IP
+	 */
+	public void setIP(String IP) {
+		this.IP = IP;
+	}
+	
+	/**
+	 * Set the port of the MySQL database
+	 * @param port
+	 */
+	public void setPort(int port) {
+		this.port = port;
+	}
+	
+	/**
+	 * Get the IP of the MySQL database
+	 * @return
+	 */
+	public String getIP() {
+		return IP;
+	}
+	
+	/**
+	 * Get the port of the MySQL database
+	 * @return
+	 */
+	public int getPort() {
+		return port;
+	}
 	/**
 	 * Get the URL to the mysql server including the database
 	 * @return The URL
