@@ -106,7 +106,7 @@ public class SQLite implements ISQL {
 			if (!new File("MCForge.db").exists())
 				new File("MCForge.db").createNewFile();
 			DriverManager.registerDriver(new org.sqlite.JDBC());
-			connection = DriverManager.getConnection(PATH);
+			connection = DriverManager.getConnection(PATH + getFile());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
