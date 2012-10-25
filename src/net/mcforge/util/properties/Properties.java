@@ -167,6 +167,10 @@ public class Properties {
 		return toreturn;
 	}
 	
+	public boolean doesValueExist(String key) {
+		return settings.contains(key);
+	}
+	
 	/**
 	 * Get the value of the setting <b>key</b>
 	 * If no setting is found, then <b>"null"</b> will be
