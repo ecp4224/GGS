@@ -172,13 +172,13 @@ public class PluginHandler {
 	}
 	
 	public void loadPlugin(Plugin plugin, Server server) {
-		plugin.onLoad(new String[]{"-normal"});
 		if (plugin instanceof Game) {
 			games.add((Game) plugin);
 			server.Add((Game) plugin);
 		} else {
 			plugins.add(plugin);
 		}
+		plugin.onLoad(new String[]{"-normal"}); //Load called after added so plugins can disable/unload in the load method.
 		PluginLoadEvent ple = new PluginLoadEvent(plugin, server);
 		server.getEventSystem().callEvent(ple);
 	}
