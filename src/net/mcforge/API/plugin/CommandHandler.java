@@ -118,6 +118,7 @@ public class CommandHandler {
 			return;
 		commands.add(cmd);
 		try {
+			setDefaults(cmd);
 			loadPermissions();
 			savePermissions();
 		} catch (IOException e) {
@@ -148,6 +149,11 @@ public class CommandHandler {
 		removeCommand(c);
 	}
 	
+	public void setDefaults(Command c) {
+		c.setPermissionLevel(c.getDefaultPermissionLevel());
+		c.setOP(c.isOpCommandDefault());
+	}
+	
 	private void loadPermissions() throws IOException {
 		if (!new File("properties").exists())
 			new File("properties").mkdir();
@@ -164,11 +170,15 @@ public class CommandHandler {
 			for (Command c : commands) {
 				if (c.getName().equalsIgnoreCase(cmdname)) {
 					c.setPermissionLevel(Integer.parseInt(strLine.split("\\:")[1]));
-					String letter = strLine.split("\\:")[2];
-					if (letter.equals("OP"))
-						c.setOP(true);
-					else
-						c.setOP(false);
+					try {
+						String letter = strLine.split("\\:")[2];
+						if (letter.equals("OP"))
+							c.setOP(true);
+						else
+							c.setOP(false);
+					} catch (Exception e) {
+						c.setOP(c.isOpCommandDefault());
+					}
 					break;
 				}
 			}
