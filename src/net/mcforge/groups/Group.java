@@ -92,7 +92,7 @@ public class Group {
 	 * @return Returns true if the group can execute the command
 	 */
 	public boolean canExecute(Command c) {
-		if (c.isOpCommand() && isOP)
+		if (c.isOPCommand() && isOP)
 			return true;
 		if (c.getPermissionLevel() >= permissionlevel)
 			return true;

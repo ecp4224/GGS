@@ -21,6 +21,11 @@ public abstract class Command {
 	
 	private int permission;
 	
+	// -1 - not set
+	// 0 - false
+	// 1 - true
+	private int opcommand;
+	
 	/**
 	 * An array of shortcuts for this command
 	 * @return
@@ -37,11 +42,11 @@ public abstract class Command {
 	public abstract String getName();
 	
 	/**
-	 * Weather this command is for ops only
+	 * Weather this command is for ops only by default
 	 * @return
 	 *        True if only ops can use it, otherwise it will be false.
 	 */
-	public abstract boolean isOpCommand();
+	public abstract boolean isOpCommandDefault();
 	
 	/**
 	 * The default permission level for this command. This value
@@ -83,10 +88,24 @@ public abstract class Command {
 		this.permission = permission;
 	}
 	
+	public boolean isOPCommand() {
+		return (opcommand == 0 ? false : opcommand == -1 ? isOpCommandDefault() : true);
+	}
+	
 	/**
 	 * Sets the help for this command.
 	 * Help will appear when the CommandExecutor uses /help command
 	 * @param executor - the command's executor
 	 */
 	public abstract void help(CommandExecutor executor);
+
+	/**
+	 * Set weather this command is an OP Command or not.
+	 * @param b
+	 *         True if this command is an op command.
+	 *         False if this command is not an op command.
+	 */
+	public void setOP(boolean b) {
+		this.opcommand = b ? 1 : 0;
+	}
 }

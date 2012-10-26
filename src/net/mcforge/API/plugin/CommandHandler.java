@@ -164,6 +164,11 @@ public class CommandHandler {
 			for (Command c : commands) {
 				if (c.getName().equalsIgnoreCase(cmdname)) {
 					c.setPermissionLevel(Integer.parseInt(strLine.split("\\:")[1]));
+					String letter = strLine.split("\\:")[2];
+					if (letter.equals("OP"))
+						c.setOP(true);
+					else
+						c.setOP(false);
 					break;
 				}
 			}
@@ -186,7 +191,7 @@ public class CommandHandler {
 		out.println("#Permission file for commands");
 		out.println("#Name:Permission Level");
 		for (Command c : commands) {
-			out.println(c.getName() + ":" + c.getDefaultPermissionLevel());
+			out.println(c.getName() + ":" + c.getDefaultPermissionLevel() + ":" + (c.isOPCommand() ? "OP": "A"));
 		}
 		out.flush();
 		out.close();
@@ -204,9 +209,12 @@ public class CommandHandler {
 			return;
 		}
 		out.println("#Permission file for commands");
-		out.println("#Name:Permission Level");
+		out.println("#Name:Permission Level:[OP:A]");
+		out.println("#Example:");
+		out.println("#OPCommand:100:OP");
+		out.println("#NormalCommand:43:A");
 		for (Command c : commands) {
-			out.println(c.getName() + ":" + c.getPermissionLevel());
+			out.println(c.getName() + ":" + c.getPermissionLevel() + ":" + (c.isOPCommand() ? "OP": "A"));
 		}
 		out.flush();
 		out.close();
