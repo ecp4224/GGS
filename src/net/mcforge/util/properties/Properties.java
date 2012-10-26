@@ -167,8 +167,8 @@ public class Properties {
 		return toreturn;
 	}
 	
-	public boolean doesValueExist(String key) {
-		return settings.contains(key);
+	public boolean hasValue(String key) {
+		return !getValue(key).equals("null");
 	}
 	
 	/**
