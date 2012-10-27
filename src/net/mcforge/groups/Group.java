@@ -96,6 +96,8 @@ public class Group {
 			return true;
 		else if (c.getPermissionLevel() <= permissionlevel && !c.isOPCommand() && !isOP)
 			return true;
+		else if (isOP && !c.isOPCommand())
+			return true;
 		else if (exceptions.contains(c.getName()))
 			return true;
 		for (String shorts : c.getShortcuts()) {
@@ -241,6 +243,12 @@ public class Group {
 		for (Group g : groups) {
 			for (Player pp : g.online) {
 				if (p.username.equals(pp.username))
+					return g;
+			}
+		}
+		for (Group g : groups) {
+			for (String pp : g.members) {
+				if (pp.equals(p.username))
 					return g;
 			}
 		}
