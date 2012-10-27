@@ -1,10 +1,14 @@
 package net.mcforge.system;
 
 import net.mcforge.API.CommandExecutor;
+import net.mcforge.API.server.ServerChatEvent;
+import net.mcforge.chat.ChatColor;
+import net.mcforge.chat.Messages;
 import net.mcforge.server.Server;
 
 public abstract class Console implements CommandExecutor {
 	private Server server;
+	private Messages m;
 	
 	/**
 	 * Set the server this console is controlling.
@@ -16,6 +20,15 @@ public abstract class Console implements CommandExecutor {
 	 */
 	public void setServer(Server server) {
 		this.server = server;
+		m = new Messages(server);
+	}
+	
+	public void sendGlobalMessage(String message) {
+		ServerChatEvent event = new ServerChatEvent(this, message);
+		server.getEventSystem().callEvent(event);
+		if (event.isCancelled())
+			return;
+		m.serverBroadcast(ChatColor.Purple + "[Server] " + ChatColor.White + message);
 	}
 	
 	/**
