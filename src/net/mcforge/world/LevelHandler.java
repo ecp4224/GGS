@@ -19,6 +19,7 @@ import net.mcforge.API.level.LevelUnloadEvent;
 import net.mcforge.iomodel.Player;
 import net.mcforge.server.Server;
 import net.mcforge.server.Tick;
+import net.mcforge.world.generator.FlatGrass;
 
 public class LevelHandler {
 
@@ -58,11 +59,15 @@ public class LevelHandler {
 	 */
 	public void newLevel(String name, short width, short height, short length)
 	{
+		newLevel(name, width, height, length, new FlatGrass(server));
+	}
+	
+	public void newLevel(String name, short width, short height, short length, Generator gen) {
 		if(!new File("levels/" + name + ".ggs").exists())
 		{
 			Level level = new Level(width, height, length);
 			level.name = name;
-			level.FlatGrass(server);
+			level.generateWorld(gen);
 			try {
 				level.save();
 			} catch (IOException e) {
@@ -161,6 +166,7 @@ public class LevelHandler {
 			server.Log("ERROR LOADING LEVEL!");
 			e.printStackTrace();
 		}
+		l.checkPhysics(server);
 		if (l != null)
 			levels.add(l);
 		return l;

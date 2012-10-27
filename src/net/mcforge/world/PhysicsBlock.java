@@ -18,7 +18,7 @@ public abstract class PhysicsBlock extends Block implements Tick {
 	private int _y;
 	private int _z;
 	private Level _level;
-	private Server _server;
+	private transient Server _server;
 	public PhysicsBlock(byte ID, String name) {
 		super(ID, name);
 	}
@@ -89,11 +89,11 @@ public abstract class PhysicsBlock extends Block implements Tick {
 	public void move(int newx, int newy, int newz) {
 		if (_level == null)
 			return;
-		_level.setTile(Block.getBlock((byte)0), _x, _y, _z, _server);
-		Player.GlobalBlockChange((short)_x, (short)_y, (short)_z, Block.getBlock((byte)0), _level, _server, false);
+		/*Player.GlobalBlockChange((short)_x, (short)_y, (short)_z, Block.getBlock("Air"), _level, _server);
 		setPos(newx, newy, newz);
-		_level.setTile(this, _x,  _y, _z, _server);
-		Player.GlobalBlockChange((short)_x, (short)_y, (short)_z, this, _level, _server, false);
+		Player.GlobalBlockChange((short)_x, (short)_y, (short)_z, this, _level, _server);*/
+		remove();
+		add(newx, newy, newz);
 	}
 	
 	/**
@@ -105,10 +105,7 @@ public abstract class PhysicsBlock extends Block implements Tick {
 	public void add(int newx, int newy, int newz) {
 		if (_level == null)
 			return;
-		if (_level.getTile(newx, newy, newz).getVisableBlock() == this.getVisableBlock())
-			return;
-		_level.setTile(this, newx, newy, newz, _server);
-		Player.GlobalBlockChange((short)newx, (short)newy, (short)newz, this, _level, _server, false);
+		Player.GlobalBlockChange((short)newx, (short)newy, (short)newz, this, _level, _server);
 	}
 	
 	/**
@@ -120,8 +117,7 @@ public abstract class PhysicsBlock extends Block implements Tick {
 	public void remove(int x, int y, int z) {
 		if (_level == null)
 			return;
-		_level.setTile(Block.getBlock((byte)0), x, y, z, _server);
-		Player.GlobalBlockChange((short)x, (short)y, (short)z, this, _level, _server, false);
+		Player.GlobalBlockChange((short)x, (short)y, (short)z, Block.getBlock("Air"), _level, _server);
 	}
 	
 	/**
@@ -203,6 +199,10 @@ public abstract class PhysicsBlock extends Block implements Tick {
 	 */
 	public Server getServer() {
 		return _server;
+	}
+	
+	public void setServer(Server server) {
+		this._server = server;
 	}
 
 }

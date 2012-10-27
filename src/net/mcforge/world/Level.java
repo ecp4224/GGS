@@ -19,57 +19,57 @@ import net.mcforge.world.convert.DatToGGS;
 import net.mcforge.world.generator.*;
 
 public class Level implements Serializable {
-	
+
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -7297498370800056856L;
 
 	private Thread physics;
-	
+
 	private boolean run;
-	
+
 	transient ArrayList<Tick> ticks = new ArrayList<Tick>();
-	
+
 	private boolean autosave;
-	
+
 	private Block[] blocks;
-	
+
 	/**
 	 * The width of the level (max X)
 	 */
 	public short width;
-	
+
 	/**
 	 * The height of the level (max Y)
 	 */
 	public short height;
-	
+
 	/**
 	 * The depth of the level (max Z)
 	 */
 	public short depth;
-	
+
 	/**
 	 * The X position (in blocks) where the player spawns.
 	 */
 	public int spawnx;
-	
+
 	/**
 	 * The Y position (in blocks) where the player spawns.
 	 */
 	public int spawny;
-	
+
 	/**
 	 * The Z position (in blocks) where the player spawns.
 	 */
 	public int spawnz;
-	
+
 	/**
 	 * The name of the level
 	 */
 	public String name;
-	
+
 	/**
 	 * The constructor for {@link Level}
 	 * The constructor wont generate a flat world, you need to
@@ -91,7 +91,7 @@ public class Level implements Serializable {
 		this.spawnz = depth / 2;
 		blocks = new Block[width*height*depth];
 	}
-	
+
 	/**
 	 * The constructor for the level
 	 * This constructor starts the physics ticks
@@ -105,7 +105,7 @@ public class Level implements Serializable {
 		run = true;
 		physics.start();
 	}
-	
+
 	/**
 	 * Generate a flat world
 	 */
@@ -113,7 +113,7 @@ public class Level implements Serializable {
 		FlatGrass g = new FlatGrass(s);
 		generateWorld(g);
 	}
-	
+
 	/**
 	 * Generate a world
 	 * @param g
@@ -125,7 +125,7 @@ public class Level implements Serializable {
 			blocks = new Block[width*height*depth];
 		g.generate(this);
 	}
-	
+
 	/**
 	 * Weather or not this level will autosave.
 	 * AutoSave will save the level every minute and save
@@ -136,7 +136,7 @@ public class Level implements Serializable {
 	public boolean isAutoSaveEnabled() {
 		return autosave;
 	}
-	
+
 	/**
 	 * Set weather the level will autosave or not.
 	 * AutoSave will save the level every minute and save
@@ -147,7 +147,7 @@ public class Level implements Serializable {
 	public void setAutoSave(boolean set) {
 		autosave = set;
 	}
-	
+
 	/**
 	 * Set a block in this world.
 	 * If the block is a physicsblock, it will be added
@@ -181,26 +181,32 @@ public class Level implements Serializable {
 			wasthere.onDelete(this, pos[0], pos[1], pos[2], server);
 		}
 		b.onPlace(this, pos[0], pos[1], pos[2], server);
-		
-		if (getTile(pos[0] + 1, pos[1], pos[2]) instanceof PhysicsBlock && ticks.contains(getTile(pos[0] + 1, pos[1], pos[2])))
-			ticks.add((PhysicsBlock)getTile(pos[0] + 1, pos[1], pos[2]));
+		try {
+			if (getTile(pos[0] + 1, pos[1], pos[2]) instanceof PhysicsBlock && !ticks.contains(getTile(pos[0] + 1, pos[1], pos[2])))
+				ticks.add((PhysicsBlock)getTile(pos[0] + 1, pos[1], pos[2]));
 
-		if (getTile(pos[0] - 1, pos[1], pos[2]) instanceof PhysicsBlock && ticks.contains(getTile(pos[0] - 1, pos[1], pos[2])))
-			ticks.add((PhysicsBlock)getTile(pos[0] - 1, pos[1], pos[2]));
+			if (getTile(pos[0] - 1, pos[1], pos[2]) instanceof PhysicsBlock && !ticks.contains(getTile(pos[0] - 1, pos[1], pos[2])))
+				ticks.add((PhysicsBlock)getTile(pos[0] - 1, pos[1], pos[2]));
 
-		if (getTile(pos[0], pos[1] + 1, pos[2]) instanceof PhysicsBlock && ticks.contains(getTile(pos[0], pos[1] + 1, pos[2])))
-			ticks.add((PhysicsBlock)getTile(pos[0], pos[1] + 1, pos[2]));
+			if (getTile(pos[0], pos[1] + 1, pos[2]) instanceof PhysicsBlock && !ticks.contains(getTile(pos[0], pos[1] + 1, pos[2])))
+				ticks.add((PhysicsBlock)getTile(pos[0], pos[1] + 1, pos[2]));
 
-		if (getTile(pos[0], pos[1] - 1, pos[2]) instanceof PhysicsBlock && ticks.contains(getTile(pos[0], pos[1] - 1, pos[2])))
-			ticks.add((PhysicsBlock)getTile(pos[0], pos[1] - 1, pos[2]));
+			if (getTile(pos[0], pos[1] - 1, pos[2]) instanceof PhysicsBlock && !ticks.contains(getTile(pos[0], pos[1] - 1, pos[2])))
+				ticks.add((PhysicsBlock)getTile(pos[0], pos[1] - 1, pos[2]));
 
-		if (getTile(pos[0], pos[1], pos[2] + 1) instanceof PhysicsBlock && ticks.contains(getTile(pos[0], pos[1], pos[2] + 1)))
-			ticks.add((PhysicsBlock)getTile(pos[0], pos[1], pos[2] + 1));
+			if (getTile(pos[0], pos[1], pos[2] + 1) instanceof PhysicsBlock && !ticks.contains(getTile(pos[0], pos[1], pos[2] + 1)))
+				ticks.add((PhysicsBlock)getTile(pos[0], pos[1], pos[2] + 1));
 
-		if (getTile(pos[0], pos[1], pos[2] - 1) instanceof PhysicsBlock && ticks.contains(getTile(pos[0], pos[1], pos[2] - 1)))
-			ticks.add((PhysicsBlock)getTile(pos[0], pos[1], pos[2] - 1));
+			if (getTile(pos[0], pos[1], pos[2] - 1) instanceof PhysicsBlock && !ticks.contains(getTile(pos[0], pos[1], pos[2] - 1)))
+				ticks.add((PhysicsBlock)getTile(pos[0], pos[1], pos[2] - 1));
+		} catch (Exception e) { }
 	}
 	
+	public void checkPhysics(Server server) {
+		Thread t = new StartPhysics(server);
+		t.start();
+	}
+
 	/**
 	 * Get a block in this level
 	 * @param index
@@ -217,7 +223,7 @@ public class Level implements Serializable {
 			System.out.println("" + blocks[index].getVisableBlock());
 		return blocks[index];
 	}
-	
+
 	/**
 	 * Get a block at the X, Y, Z coordinates
 	 * @param x
@@ -232,7 +238,7 @@ public class Level implements Serializable {
 	public Block getTile(int x, int y, int z) {
 		return getTile(posToInt(x, y, z));
 	}
-	
+
 	/**
 	 * Get how big the block array is
 	 * @return
@@ -241,7 +247,7 @@ public class Level implements Serializable {
 	public int getLength() {
 		return blocks.length;
 	}
-	
+
 	/**
 	 * Set a block in this world.
 	 * If the block is a physicsblock, it will be added
@@ -262,12 +268,12 @@ public class Level implements Serializable {
 	public void setTile(Block b, int x, int y, int z, Server server) {
 		setTile(b, posToInt(x, y, z), server);
 	}
-	
+
 	/**
 	 * Convert coordinates to a number that will
 	 * correspond to where the coordinates are in the
 	 * block array
-     * @param x
+	 * @param x
 	 *        The X coordinate
 	 * @param y
 	 *        The Y coordinate
@@ -278,15 +284,15 @@ public class Level implements Serializable {
 	 *        are in the block array
 	 */
 	public int posToInt(int x, int y, int z) {
-        if (x < 0) { return -1; }
-        if (x >= width) { return -1; }
-        if (y < 0) { return -1; }
-        if (y >= height) { return -1; }
-        if (z < 0) { return -1; }
-        if (z >= depth) { return -1; }
-        return x + z * width + y * width * depth;
-    }
-	
+		if (x < 0) { return -1; }
+		if (x >= width) { return -1; }
+		if (y < 0) { return -1; }
+		if (y >= height) { return -1; }
+		if (z < 0) { return -1; }
+		if (z >= depth) { return -1; }
+		return x + z * width + y * width * depth;
+	}
+
 	private int[] IntToPos(int index) {
 		int[] toreturn = new int[3];
 		toreturn[1] = (index / width / height);
@@ -296,7 +302,7 @@ public class Level implements Serializable {
 		toreturn[0] = index;
 		return toreturn;
 	}
-	
+
 	/**
 	 * Save the level
 	 * @throws IOException
@@ -314,7 +320,7 @@ public class Level implements Serializable {
 		gos.close();
 		fos.close();
 	}
-	
+
 	/**
 	 * Unload this level.
 	 * All players who are in this level will be sent to the {@link Server#MainLevel}
@@ -352,7 +358,7 @@ public class Level implements Serializable {
 		}
 		blocks = null;
 	}
-	
+
 	/**
 	 * Load a level and return the level
 	 * @param filename
@@ -392,7 +398,7 @@ public class Level implements Serializable {
 		}
 		return l;
 	}
-	
+
 	/**
 	 * Convert a .dat file to a .ggs file
 	 * @param file
@@ -421,7 +427,7 @@ public class Level implements Serializable {
 		new File(file).delete();
 		return lvl;
 	}
-	
+
 	/**
 	 * Convert a .lvl file to a .ggs file
 	 * @param file
@@ -438,7 +444,7 @@ public class Level implements Serializable {
 		GZIPInputStream decompressor = new GZIPInputStream(in);
 		DataInputStream data = new DataInputStream(decompressor);
 		int magic = convert(data.readShort());
-		
+
 		if (magic != 1874) {
 			System.out.println("INVALID .lvl FILE!");
 			return null;
@@ -469,7 +475,7 @@ public class Level implements Serializable {
 		level.save();
 		return level;
 	}
-	
+
 	private static short convert(int convert) {
 		return (short) (((convert >> 8) & 0xff) + ((convert << 8) & 0xff00));
 	}
@@ -487,7 +493,7 @@ public class Level implements Serializable {
 
 		return Block.getBlock("Air");
 	}
-	
+
 	private class Ticker extends Thread implements Serializable {
 		private static final long serialVersionUID = 1609185967611447514L;
 
@@ -521,15 +527,40 @@ public class Level implements Serializable {
 			}
 		}
 	}
-	
+
 	private class Ticker2 extends Thread implements Serializable {
 		private static final long serialVersionUID = 1L;
-		
+
 		PhysicsBlock pb;
 		public Ticker2(PhysicsBlock pb) { this.pb = pb; }
 		@Override
 		public void run() {
 			pb.tick();
 		}
+	}
+	
+	private class StartPhysics extends Thread implements Serializable {
+		private static final long serialVersionUID = 1L;
+		transient Server server;
+		public StartPhysics(Server server) { this.server = server; }
+		@Override
+		public void run() {
+			for (int i = 0; i < blocks.length; i++) {
+				if (blocks[i] instanceof PhysicsBlock) {
+					PhysicsBlock pb = (PhysicsBlock)blocks[i];
+					if (pb.getServer() == null)
+						pb.setServer(server);
+					if (!ticks.contains(pb))
+						ticks.add(pb);
+				}
+			}
+		}
+	}
+
+	public void skipChange(int x, int y, int z, Block block, Server server) {
+		if (x < 0 || y < 0 || z < 0) return;
+		if (x >= width || y >= depth || z >= height) return;
+
+		this.setTile(block, x,  y, z, server);
 	}
 }

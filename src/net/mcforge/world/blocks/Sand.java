@@ -43,9 +43,9 @@ public class Sand extends PhysicsBlock {
 
 	@Override
 	public void tick() {
-		if (getLevel().getTile(getX(), getY(), getZ() - 1).getVisableBlock() == 0)
+		if (getLevel().getTile(getX(), getY() - 1, getZ()).getVisableBlock() == 0)
         {
-            super.move(getX(), getY() - 1, getZ());
+			super.move(getX(), getY() - 1, getZ());
             return;
         }
         
@@ -92,9 +92,9 @@ public class Sand extends PhysicsBlock {
             int x = (int)check.get(i).x;
             int z = (int)check.get(i).z;
             int y = x * z == 0 ? 1 : 2;
-            if (getLevel().getTile(getX() + x, getY() - y, getZ() + z) == Block.getBlock("Air") && getLevel().getTile(getX() + x, getY() - y + 1, getZ() + z) == Block.getBlock("Air"))
+            if (getLevel().getTile(getX() + x, getY() - y, getZ() + z).getVisableBlock() == 0 && getLevel().getTile(getX() + x, getY() - y + 1, getZ() + z).getVisableBlock() == 0)
             {
-                move(getX() + x, getY() - y, getZ() + z);
+            	super.move(getX() + x, getY() - y, getZ() + z);
                 check.clear();
                 diag.clear();
                 card.clear();
