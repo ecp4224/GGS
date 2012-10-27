@@ -68,6 +68,17 @@ public abstract class Command {
 	public abstract void execute(CommandExecutor player, String[] args);
 	
 	/**
+	 * Weather this command will run outside the CommandHandler thread.
+	 * Override this method to set this option
+	 * @return
+	 *        True if the command will run in a separate thread.
+	 *        False if it will not.
+	 */
+	public boolean runInSeperateThread() {
+		return false;
+	}
+	
+	/**
 	 * Get the true permission level for this command set by the
 	 * server admin.
 	 * If you want to get the default permission level, then use

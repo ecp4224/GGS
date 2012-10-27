@@ -89,11 +89,17 @@ public class CommandHandler {
 			args = new String[0];
 		if(c != null)
 		{
-			if (!(player instanceof Console) && !player.getGroup().canExecute(c)) //the thing we had before failed. temp one
+			if (!(player instanceof Console) && !player.getGroup().canExecute(c))
 				player.sendMessage("Sorry, you don't have permission to execute this command!");
 			else {
-				CommandExecute ce = new CommandExecute(player, c, args);
-				ce.start();
+				if (c.runInSeperateThread()) {
+					CommandExecute ce = new CommandExecute(player, c, args);
+					ce.start();
+				}
+				else {
+					_server.Log(player.getName() + " used /" + c.getName() + arrayToString(args));
+					c.execute(player, args);
+				}
 			}
 		}
 	}
