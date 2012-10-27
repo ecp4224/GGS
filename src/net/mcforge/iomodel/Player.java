@@ -652,6 +652,8 @@ public class Player extends IOClient implements CommandExecutor {
 	public static void GlobalBlockChange(short X, short Y, short Z, Block block, Level l, Server s, boolean updateLevel) {
 		if (updateLevel)
 			l.setTile(block, X, Y, Z, s);
+		if (s == null)
+			return;
 		//Do this way to save on packet overhead
 		Packet sb = s.getPacketManager().getPacket((byte)0x05);
 		for (Player p : s.players)

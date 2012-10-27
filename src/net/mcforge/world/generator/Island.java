@@ -142,10 +142,10 @@ public class Island implements Generator {
 
 	void AddTree(Level Lvl, short x, short y, short z, Random Rand)
 	{
-		byte height = (byte)(Rand.nextInt(2) + 5);
+		byte height = (byte)(5 + (int)(Math.random() * ((8 - 5) + 1)));
 		for (short yy = 0; yy < height; yy++) Lvl.skipChange(x, (short)(y + yy), z, Block.getBlock("Wood"), _server);
 
-		short top = (short)(height - Rand.nextInt(2) + 1);
+		short top = (short)(height - (2 + (int)(Math.random() * ((4 - 2) + 1))));
 
 		for (short xx = (short)-top; xx <= top; ++xx)
 		{
@@ -156,14 +156,12 @@ public class Island implements Generator {
 					short Dist = (short)(Math.sqrt(xx * xx + yy * yy + zz * zz));
 					if (Dist < top + 1)
 					{
-						if (Rand.nextInt((int)(Dist)) < 2)
-						{
-							try
+						try {
+							if (Rand.nextInt((int)(Dist)) < 2)
 							{
 								Lvl.skipChange((short)(x + xx), (short)(y + yy + height), (short)(z + zz), Block.getBlock("Leaves"), _server);
 							}
-							catch (Exception e) { }
-						}
+						} catch (Exception e) { }
 					}
 				}
 			}
