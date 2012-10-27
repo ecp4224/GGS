@@ -19,7 +19,7 @@ import java.util.ArrayList;
 
 import net.mcforge.API.CommandExecutor;
 import net.mcforge.server.Server;
-import net.mcforge.test.console.Main;
+import net.mcforge.system.Console;
 
 public class CommandHandler {
 	public ArrayList<Command> commands = new ArrayList<Command>();
@@ -89,7 +89,7 @@ public class CommandHandler {
 			args = new String[0];
 		if(c != null)
 		{
-			if (!(player instanceof Main) && !player.getGroup().canExecute(c)) //the thing we had before failed. temp one
+			if (!(player instanceof Console) && !player.getGroup().canExecute(c)) //the thing we had before failed. temp one
 				player.sendMessage("Sorry, you don't have permission to execute this command!");
 			else {
 				CommandExecute ce = new CommandExecute(player, c, args);

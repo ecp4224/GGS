@@ -177,7 +177,7 @@ public abstract class Block implements Serializable {
 			if (b.name.equalsIgnoreCase(name))
 				return b;
 		}
-		for (Block b : blocks) {
+		for (Block b : custom) {
 			if (b.name.equalsIgnoreCase(name))
 				return b;
 		}

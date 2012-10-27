@@ -92,16 +92,17 @@ public class Group {
 	 * @return Returns true if the group can execute the command
 	 */
 	public boolean canExecute(Command c) {
-		if (c.isOPCommand() && isOP)
+		if (c.isOPCommand() && isOP && c.getPermissionLevel() <= permissionlevel)
 			return true;
-		if (c.getPermissionLevel() >= permissionlevel)
+		else if (c.getPermissionLevel() <= permissionlevel && !c.isOPCommand() && !isOP)
 			return true;
-		if (exceptions.contains(c.getName()))
+		else if (exceptions.contains(c.getName()))
 			return true;
-		for (String shorts : c.getShortcuts())
+		for (String shorts : c.getShortcuts()) {
 			if (exceptions.contains(shorts)) {
 				return true;
 			}
+		}
 		return (parent != null) ? parent.canExecute(c) : false;
 	}
 	/**
