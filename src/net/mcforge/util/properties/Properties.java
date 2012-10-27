@@ -188,7 +188,7 @@ public class Properties {
 			if (settings.get(i).startsWith("#"))
 				continue;
 			if (settings.get(i).split("=")[0].trim().equalsIgnoreCase(key)) {
-				settings.add((i == 0 ? 0 : i - 1),comment);
+				settings.add(i, comment);
 				return;
 			}
 		}
