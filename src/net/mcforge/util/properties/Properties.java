@@ -129,12 +129,7 @@ public class Properties {
 		BufferedReader br = new BufferedReader(new InputStreamReader(in));
 		String strLine;
 		while ((strLine = br.readLine()) != null)   {
-			if (strLine.startsWith("#")) {
-                            continue;
-                        }
-                        else {
-                            settings.add(strLine);
-                        }
+			settings.add(strLine);
 		}
 		in.close();
 	}
@@ -167,8 +162,34 @@ public class Properties {
 		return toreturn;
 	}
 	
+	/**
+	 * Weather this properties file has a value for a setting
+	 * @param key
+	 *          The setting to search
+	 * @return
+	 *        True if it does have a value
+	 *        False if the setting doesnt exist.
+	 */
 	public boolean hasValue(String key) {
 		return !getValue(key).equals("null");
+	}
+	
+	/**
+	 * Add a comment on top of a setting.
+	 * @param key
+	 *           The setting that the comment will be for.
+	 * @param comment
+	 *               The comment to add.
+	 */
+	public void addComment(String key, String comment) {
+		for (int i = 0; i < settings.size(); i++) {
+			if (settings.get(i).startsWith("#"))
+				continue;
+			if (settings.get(i).split("=")[0].trim().equalsIgnoreCase(key)) {
+				settings.add((i == 0 ? 0 : i - 1),comment);
+				return;
+			}
+		}
 	}
 	
 	/**
@@ -185,6 +206,8 @@ public class Properties {
 	public String getValue(String key) {
 		synchronized(settings) {
 			for (String k : settings) {
+				if (k.startsWith("#"))
+					continue;
 				String finalk = k.split("=")[0].trim();
 				if (finalk.equalsIgnoreCase(key))
 					return k.split("=")[1].trim();
@@ -281,6 +304,8 @@ public class Properties {
 			return;
 		synchronized(settings) {
 			for (int i = 0; i < settings.size(); i++) {
+				if (settings.get(i).startsWith("#"))
+					continue;
 				if (settings.get(i).split("=")[0].trim().equalsIgnoreCase(key)) {
 					settings.remove(i);
 					break;
