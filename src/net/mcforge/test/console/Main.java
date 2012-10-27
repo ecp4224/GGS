@@ -12,6 +12,7 @@ import java.util.Scanner;
 import net.mcforge.API.EventHandler;
 import net.mcforge.API.Listener;
 import net.mcforge.API.io.ServerLogEvent;
+import net.mcforge.API.server.ServerChatEvent;
 import net.mcforge.chat.ChatColor;
 import net.mcforge.chat.Messages;
 import net.mcforge.groups.Group;
@@ -45,12 +46,16 @@ public class Main extends Console implements Listener {
 					s.getCommandHandler().execute(this, line, "");
 			}
 			else {
+				ServerChatEvent event = new ServerChatEvent(this, line);
+				s.getEventSystem().callEvent(event);
+				if (event.isCancelled())
+					continue;
 				m.serverBroadcast(ChatColor.Purple + "[Server] " + ChatColor.White + line);
 				s.Log("[Server] " + line);
 			}
 		}
 		System.out.println("Server stopped..");
-		scanner.close(); //happy eclipse?
+		scanner.close();
 		System.exit(0);
 	}
 

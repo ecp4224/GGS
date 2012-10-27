@@ -4,7 +4,7 @@ import net.mcforge.API.Event;
 import net.mcforge.API.EventList;
 import net.mcforge.server.Server;
 
-public abstract class ServerEvent extends Event {
+public abstract class ServerEvent extends Event  {
 	
 	private Server server;
 	

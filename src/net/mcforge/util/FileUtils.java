@@ -16,15 +16,15 @@ import java.util.List;
 import java.util.Scanner;
 
 /**
- * The Class FileUtils.
+ * An abstract class used for easier file interaction.
+ * Almost all of the methods in the class throw {@link IOException}
  */
-public class FileUtils {
+public abstract class FileUtils {
 
 	/**
 	 * The directory for the log files
 	 */
 	public static final String LOG_DIR = "logs" + File.separator;
-
 	/**
 	 * The directory for the properties file
 	 */
@@ -41,16 +41,20 @@ public class FileUtils {
 	 * The file name for the rules file
 	 */
 	public static final String RULES_FILE = "rules.txt";
+	public static final String IRCCONTROLLERS_FILE = "ranks" + File.separator + "IRCControllers";
 
-	private static Scanner scanner;
-	private static Formatter formatter;
+	public static void createFilesAndDirs() {
+		try {
+			createIfNotExist("ranks", "IRCControllers");
+		}
+		catch (IOException e) {
+		}
+	}
 	/**
 	 * Creates the directory/file if it doesn't exist.
 	 * 
-	 * @param dir
-	 *            the dir
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
+	 * @param dir - The directory to create
+	 * @throws IOException - Signals that an I/O exception has occurred.
 	 */
 	public static void createIfNotExist(String path, String fileName, String contents) throws IOException {
 		File filePath = new File(path);
@@ -75,26 +79,23 @@ public class FileUtils {
 	}
 	
 	/**
-	 * Creates a file if it does not exists. if the file does exists,
-	 * then nothing happens
-	 * @param path
-	 *            The directory of the file
-	 * @param fileName
-	 *                The file name
-	 * @throws IOException
-	 *                    This is thrown if there's a problem writing the file
+	 * Creates a file if it does not exists.
+	 * 
+	 * @param path - The directory of the file
+	 * @param fileName - The name of the file
+	 * 
+	 * @throws IOException - If there's a problem writing the file
 	 */
 	public static void createIfNotExist(String path, String fileName) throws IOException {
 		createIfNotExist(path, fileName, "");
 	}
 
 	/**
-	 * Creates a file if it does not exists. if the file does exists,
-	 * then nothing happens
-	 * @param fileName
-	 *                The file name
-	 * @throws IOException
-	 *                    This is thrown if there's a problem writing the file
+	 * Creates a file if it does not exists.
+	 * 
+	 * @param fileName - The name of the file
+	 * 
+	 * @throws IOException - If there's a problem writing the file
 	 */
 	public static void createIfNotExist(String fileName) throws IOException {
 		File file = new File(fileName);
@@ -106,33 +107,84 @@ public class FileUtils {
 	/**
 	 * Delete the file/directory if exist.
 	 * 
-	 * @param element
-	 *              the element
+	 * @param filePath - The path of the file/directory to delete.
 	 */
-	public static void deleteIfExist(String element) {
-		File file = new File(element);
+	public static void deleteIfExist(String filePath) {
+		File file = new File(filePath);
 		if (file.exists()) {
 			file.delete();
 		}
 	}
-	public static void appendText(String filePath, String text, boolean newLine) throws IOException {
-		formatter = new Formatter(new File(filePath)); //TODO: add a good jdocs for these 
-		formatter.out().append(String.format("%s%s", text, newLine ? "\n" : ""));
+	
+	/**
+	 * Writes the specified line to the specified file, creating the file if doesn't exist
+	 * 
+	 * @param filePath - The path of the file to write to
+	 * @param text - The text to write to the specified file
+	 * 
+	 * @throws IOException If there's an error while writing to the file
+	 */
+	public static void writeText(String filePath, String text) throws IOException {
+		createIfNotExist(filePath);
+		Formatter formatter = new Formatter(new File(filePath));
+		formatter.out().append(text);
 		formatter.close();
 	}
-	public static void appendText(String filePath, String text) throws IOException {
-		appendText(filePath, text, false);
+	
+	/**
+	 * Writes the specified string array to the specified file, creating the file if it doesn't exist
+	 * 
+	 * @param filePath - The path of the file to write to
+	 * @param lines - The string array to write to the specified file
+	 * 
+	 * @throws IOException If there's an error while writing to the file
+	 */
+	public static void writeLines(String filePath, String... lines) throws IOException {
+		createIfNotExist(filePath);
+		Formatter formatter = new Formatter(new File(filePath));
+		for (int i = 0; i < lines.length; i++) {
+			formatter.out().append(lines[i]);
+		}
+		formatter.close();
 	}
+	
+	/**
+	 * Reads the contents of the specified file
+	 * 
+	 * @param filePath - The path of the file to read from
+	 * 
+	 * @return A string array with the contents of the read file
+	 * @throws IOException If there's an error while reading from the file
+	 */
 	public static String[] readAllLines(String filePath) throws IOException {
-		scanner = new Scanner(new File(filePath));
+		List<String> lines = readToList(filePath);
+		return lines.toArray(new String[lines.size()]);
+	}
+	
+	/**
+	 * Reads the contents of the specified file
+	 * 
+	 * @param filePath - The path of the file to read from
+	 * 
+	 * @return A string list with the contents of the read file
+	 * @throws IOException If there's an error while reading from the file
+	 */
+	public static List<String> readToList(String filePath) throws IOException {
+		Scanner scanner = new Scanner(new File(filePath));
 		List<String> lines = new ArrayList<String>();
 		while (scanner.hasNext()) {
 			lines.add(scanner.nextLine());
 		}
-		return lines.toArray(new String[lines.size()]);
+		scanner.close();
+		return lines;
 	}
+
+	/**
+	 * Checks whether the specified file exists
+	 * 
+	 * @param filePath - the file path to check
+	 */
 	public static boolean exists(String filePath) {
 		return new File(filePath).exists();
 	}
-
 }

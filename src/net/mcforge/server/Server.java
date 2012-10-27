@@ -28,6 +28,7 @@ import net.mcforge.defaults.commands.Me;
 import net.mcforge.groups.Group;
 import net.mcforge.iomodel.Player;
 import net.mcforge.networking.packets.PacketManager;
+import net.mcforge.util.FileUtils;
 import net.mcforge.util.logger.LogInterface;
 import net.mcforge.util.logger.Logger;
 import net.mcforge.util.properties.Properties;
@@ -377,6 +378,7 @@ public final class Server implements LogInterface {
 		startLogger();
 		Log("Starting MCForge v" + VERSION);
 		ch = new CommandHandler(this);
+		FileUtils.createFilesAndDirs();
 		Group.Load(this);
 		p = Properties.init(this);
 		loadSystemProperties();
