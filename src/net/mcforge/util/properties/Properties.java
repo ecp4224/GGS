@@ -182,6 +182,8 @@ public class Properties {
 	 *               The comment to add.
 	 */
 	public void addComment(String key, String comment) {
+		if (!comment.startsWith("#"))
+			comment = "#" + comment;
 		for (int i = 0; i < settings.size(); i++) {
 			if (settings.get(i).startsWith("#"))
 				continue;
