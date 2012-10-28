@@ -4,26 +4,26 @@ import net.mcforge.API.plugin.Plugin;
 import net.mcforge.API.plugin.PluginHandler;
 
 /**
- * An updatable object can be automatically updated
- * by the core. You must provide the following:
- * 
- * <b>A check URL</b>
- * This url will return, in plan text, the latest version as a String
- *
- *<b>A Download URL</b>
- *This url will return a jar file of the latest version.
- *
- *<b>Update Type</b>
- *This is the how the object will update, see {@link UpdateType} for more info
- *
- *<b>Current Version</b>
- *This will return, in a String, the current version of this object
- *
- *<b>Unload Method</b>
- *This will unload the object from memory. For plugins, {@link PluginHandler#unload(Plugin)} will do the trick.
- *For commands, {@link CommandHandler#removeCommand(Command)} will unload the object.
- *
- */
+* An updatable object can be automatically updated
+* by the core. You must provide the following:
+* 
+* <b>A check URL</b>
+* This url will return, in plan text, the latest version as a String
+*
+*<b>A Download URL</b>
+*This url will return a jar file of the latest version.
+*
+*<b>Update Type</b>
+*This is the how the object will update, see {@link UpdateType} for more info
+*
+*<b>Current Version</b>
+*This will return, in a String, the current version of this object
+*
+*<b>Unload Method</b>
+*This will unload the object from memory. For plugins, {@link PluginHandler#unload(Plugin)} will do the trick.
+*For commands, {@link CommandHandler#removeCommand(Command)} will unload the object.
+*
+*/
 public interface Updatable {
 	
 	/**
@@ -78,3 +78,4 @@ public interface Updatable {
 	 */
 	public void unload();
 }
+

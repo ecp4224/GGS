@@ -1,10 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2012 MCForge.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the GNU Public License v3.0
- * which accompanies this distribution, and is available at
- * http://www.gnu.org/licenses/gpl.html
- ******************************************************************************/
+* Copyright (c) 2012 MCForge.
+* All rights reserved. This program and the accompanying materials
+* are made available under the terms of the GNU Public License v3.0
+* which accompanies this distribution, and is available at
+* http://www.gnu.org/licenses/gpl.html
+******************************************************************************/
 package net.mcforge.util.properties;
 
 import java.io.BufferedReader;
@@ -59,9 +59,9 @@ public class Properties {
 		init = false;
 	}
 	
-        
-       private static Properties getDefaults(Properties p) {
-                p.addSetting("Server-Name", "[MCForge] Default Server");
+		
+	private static Properties getDefaults(Properties p) {
+				p.addSetting("Server-Name", "[MCForge] Default Server");
 		p.addSetting("WOM-Alternate-Name", "[MCForge] Default Server");
 		p.addSetting("MOTD", "Welcome!");
 		p.addSetting("Port", 25565);
@@ -79,8 +79,8 @@ public class Properties {
 		p.addSetting("MySQL-IP", "127.0.0.1");
 		p.addSetting("MySQL-Port", 3306);
 		p.addSetting("SQLite-File", "mcf.db");
-                return p;
-       }
+				return p;
+	}
 	private static void makeDefaults(String filename, Server server, Properties p) {
 		//TODO Fill in all defaults
 		server.Log("System config not found..creating..");
@@ -316,3 +316,4 @@ public class Properties {
 		}
 	}
 }
+

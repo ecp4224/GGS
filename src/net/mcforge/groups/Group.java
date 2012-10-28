@@ -1,10 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2012 MCForge.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the GNU Public License v3.0
- * which accompanies this distribution, and is available at
- * http://www.gnu.org/licenses/gpl.html
- ******************************************************************************/
+* Copyright (c) 2012 MCForge.
+* All rights reserved. This program and the accompanying materials
+* are made available under the terms of the GNU Public License v3.0
+* which accompanies this distribution, and is available at
+* http://www.gnu.org/licenses/gpl.html
+******************************************************************************/
 package net.mcforge.groups;
 
 import java.io.BufferedReader;
@@ -340,48 +340,48 @@ public class Group {
 		scanner.close();
 		return lines.toArray(new String[lines.size()]);
 	}
-        
-        /**
-         * Deletes this group.
-         */
-        public boolean Delete()
-        {
-            String[] lines;
-            ArrayList<String> writelines = new ArrayList<String>();
-            groups.remove(this);
-            try {
-                lines = readAllLines(FileUtils.PROPS_DIR + "groups.xml");
-            } catch (IOException ex) {
-                return false;
-            }
-            boolean ingroup = false;
-            for (int i=0;i<lines.length;i++)
-            {
-                if (lines[i].toLowerCase().indexOf("<name>" + this.name.toLowerCase() + "</name>") != -1)
-                {
-                    ingroup = true;
-                    writelines.remove(writelines.size() - 1);
-                }
-                if (!ingroup)
-                {
-                    writelines.add(lines[i]);
-                }
-                if (ingroup)
-                {
-                    if (lines[i].toLowerCase().indexOf("</group>") != -1)
-                    {
-                        ingroup = false;
-                    }
-                }
-            }
-            BufferedWriter bw;
+		
+		/**
+		* Deletes this group.
+		*/
+		public boolean Delete()
+		{
+			String[] lines;
+			ArrayList<String> writelines = new ArrayList<String>();
+			groups.remove(this);
+			try {
+				lines = readAllLines(FileUtils.PROPS_DIR + "groups.xml");
+			} catch (IOException ex) {
+				return false;
+			}
+			boolean ingroup = false;
+			for (int i=0;i<lines.length;i++)
+			{
+				if (lines[i].toLowerCase().indexOf("<name>" + this.name.toLowerCase() + "</name>") != -1)
+				{
+					ingroup = true;
+					writelines.remove(writelines.size() - 1);
+				}
+				if (!ingroup)
+				{
+					writelines.add(lines[i]);
+				}
+				if (ingroup)
+				{
+					if (lines[i].toLowerCase().indexOf("</group>") != -1)
+					{
+						ingroup = false;
+					}
+				}
+			}
+			BufferedWriter bw;
 		try {
 			bw = new BufferedWriter(new FileWriter(new File(
 					FileUtils.PROPS_DIR + "groups.xml"), false));
 		} catch (IOException ex) {
 			return false;
 		}
-                String[] newlines = writelines.toArray(new String[writelines.size()]);
+				String[] newlines = writelines.toArray(new String[writelines.size()]);
 		for (int i=0;i<newlines.length;i++)
 		{
 			try {
@@ -396,91 +396,35 @@ public class Group {
 		} catch (IOException ex) {
 			return false;
 		}
-                return true;
-        }
-        
-        /**
-         * change a group's name
-         * @param name new name to set it to
-         * @return success true/false
-         */
-        public boolean SetName(String name)
-        {
-            String[] lines;
-            try {
-                lines = readAllLines(FileUtils.PROPS_DIR + "groups.xml");
-            } catch (IOException ex) {
-                return false;
-            }
-            String[] newlines = new String[lines.length];
-            for (int i=0;i<lines.length;i++)
-            {
-                if (lines[i].toLowerCase().indexOf("<name>" + this.name.toLowerCase() + "</name>") != -1)
-                {
-                    newlines[i] = "<name>" + name + "</name>";
-                }
-                else
-                {
-                    newlines[i] = lines[i];
-                }
-            }
-            BufferedWriter bw = null;
-		try {
-			bw = new BufferedWriter(new FileWriter(new File(
-					FileUtils.PROPS_DIR + "groups.xml"), false));
-		} catch (IOException ex) {
-			return false;
+				return true;
 		}
-		for (int i=0;i<newlines.length;i++)
+		
+		/**
+		* change a group's name
+		* @param name new name to set it to
+		* @return success true/false
+		*/
+		public boolean SetName(String name)
 		{
+			String[] lines;
 			try {
-				bw.write(newlines[i]);
+				lines = readAllLines(FileUtils.PROPS_DIR + "groups.xml");
 			} catch (IOException ex) {
 				return false;
 			}
-			try {
-				bw.newLine();
-			} catch (IOException ex) {
-				return false;
+			String[] newlines = new String[lines.length];
+			for (int i=0;i<lines.length;i++)
+			{
+				if (lines[i].toLowerCase().indexOf("<name>" + this.name.toLowerCase() + "</name>") != -1)
+				{
+					newlines[i] = "<name>" + name + "</name>";
+				}
+				else
+				{
+					newlines[i] = lines[i];
+				}
 			}
-		}
-		try {
-			bw.close();
-		} catch (IOException ex) {
-			return false;
-		}
-                this.name = name;
-                return true;
-        }
-        
-        /**
-         * Change if this is an operator group or not
-         * @param isop if operator or not (true/false)
-         * @return returns if action was successful
-         */
-        public boolean SetIsOp(boolean isop)
-        {
-            String[] lines = null;
-            try {
-                lines = readAllLines(FileUtils.PROPS_DIR + "groups.xml");
-            } catch (IOException ex) {
-                return false;
-            }
-            String[] newlines = new String[lines.length];
-            for (int i=0;i<lines.length;i++)
-            {
-                if (lines[i].toLowerCase().indexOf("<name>" + this.name.toLowerCase() + "</name>") != -1)
-                {
-                    newlines[i] = lines[i];
-                    i++;
-                    newlines[i] = isop ? "<isop>true</isop>" : "<isop>false</isop>";
-                }
-                else
-                {
-                    newlines[i] = lines[i];
-                }
-            }
-            BufferedWriter bw = null;
+			BufferedWriter bw = null;
 		try {
 			bw = new BufferedWriter(new FileWriter(new File(
 					FileUtils.PROPS_DIR + "groups.xml"), false));
@@ -505,40 +449,38 @@ public class Group {
 		} catch (IOException ex) {
 			return false;
 		}
-                this.isOP = isop;
-                return true;
-        }
-        
-        /**
-         * Change permissions level
-         * @param permissionlevel the new level to set it to
-         * @return returns if successful
-         */
-        public boolean SetPermission(int permissionlevel)
-        {
-            String[] lines = null;
-            try {
-                lines = readAllLines(FileUtils.PROPS_DIR + "groups.xml");
-            } catch (IOException ex) {
-                return false;
-            }
-            String[] newlines = new String[lines.length];
-            for (int i=0;i<lines.length;i++)
-            {
-                if (lines[i].toLowerCase().indexOf("<name>" + this.name.toLowerCase() + "</name>") != -1)
-                {
-                    newlines[i] = lines[i];
-                    i++;
-                    newlines[i] = lines[i];
-                    i++;
-                    newlines[i] = "<permission>" + Integer.toString(permissionlevel) + "</permission>";
-                }
-                else
-                {
-                    newlines[i] = lines[i];
-                }
-            }
-            BufferedWriter bw = null;
+				this.name = name;
+				return true;
+		}
+		
+		/**
+		* Change if this is an operator group or not
+		* @param isop if operator or not (true/false)
+		* @return returns if action was successful
+		*/
+		public boolean SetIsOp(boolean isop)
+		{
+			String[] lines = null;
+			try {
+				lines = readAllLines(FileUtils.PROPS_DIR + "groups.xml");
+			} catch (IOException ex) {
+				return false;
+			}
+			String[] newlines = new String[lines.length];
+			for (int i=0;i<lines.length;i++)
+			{
+				if (lines[i].toLowerCase().indexOf("<name>" + this.name.toLowerCase() + "</name>") != -1)
+				{
+					newlines[i] = lines[i];
+					i++;
+					newlines[i] = isop ? "<isop>true</isop>" : "<isop>false</isop>";
+				}
+				else
+				{
+					newlines[i] = lines[i];
+				}
+			}
+			BufferedWriter bw = null;
 		try {
 			bw = new BufferedWriter(new FileWriter(new File(
 					FileUtils.PROPS_DIR + "groups.xml"), false));
@@ -563,10 +505,68 @@ public class Group {
 		} catch (IOException ex) {
 			return false;
 		}
-                this.permissionlevel = permissionlevel;
-                return true;
-        }
-        
+				this.isOP = isop;
+				return true;
+		}
+		
+		/**
+		* Change permissions level
+		* @param permissionlevel the new level to set it to
+		* @return returns if successful
+		*/
+		public boolean SetPermission(int permissionlevel)
+		{
+			String[] lines = null;
+			try {
+				lines = readAllLines(FileUtils.PROPS_DIR + "groups.xml");
+			} catch (IOException ex) {
+				return false;
+			}
+			String[] newlines = new String[lines.length];
+			for (int i=0;i<lines.length;i++)
+			{
+				if (lines[i].toLowerCase().indexOf("<name>" + this.name.toLowerCase() + "</name>") != -1)
+				{
+					newlines[i] = lines[i];
+					i++;
+					newlines[i] = lines[i];
+					i++;
+					newlines[i] = "<permission>" + Integer.toString(permissionlevel) + "</permission>";
+				}
+				else
+				{
+					newlines[i] = lines[i];
+				}
+			}
+			BufferedWriter bw = null;
+		try {
+			bw = new BufferedWriter(new FileWriter(new File(
+					FileUtils.PROPS_DIR + "groups.xml"), false));
+		} catch (IOException ex) {
+			return false;
+		}
+		for (int i=0;i<newlines.length;i++)
+		{
+			try {
+				bw.write(newlines[i]);
+			} catch (IOException ex) {
+				return false;
+			}
+			try {
+				bw.newLine();
+			} catch (IOException ex) {
+				return false;
+			}
+		}
+		try {
+			bw.close();
+		} catch (IOException ex) {
+			return false;
+		}
+				this.permissionlevel = permissionlevel;
+				return true;
+		}
+		
 	/**
 	 * Load the groups for the server
 	 * @param server The server the groups will be loaded into
@@ -703,3 +703,4 @@ public class Group {
 			 " </Group>\n" +
 			"</Groups>";
 }
+

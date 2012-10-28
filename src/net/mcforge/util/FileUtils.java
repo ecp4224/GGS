@@ -1,10 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2012 MCForge.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the GNU Public License v3.0
- * which accompanies this distribution, and is available at
- * http://www.gnu.org/licenses/gpl.html
- ******************************************************************************/
+* Copyright (c) 2012 MCForge.
+* All rights reserved. This program and the accompanying materials
+* are made available under the terms of the GNU Public License v3.0
+* which accompanies this distribution, and is available at
+* http://www.gnu.org/licenses/gpl.html
+******************************************************************************/
 package net.mcforge.util;
 
 import java.io.File;
@@ -16,9 +16,9 @@ import java.util.List;
 import java.util.Scanner;
 
 /**
- * An abstract class used for easier file interaction.
- * Almost all of the methods in the class throw {@link IOException}
- */
+* An abstract class used for easier file interaction.
+* Almost all of the methods in the class throw {@link IOException}
+*/
 public abstract class FileUtils {
 
 	/**

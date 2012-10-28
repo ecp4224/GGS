@@ -1,22 +1,22 @@
 /*******************************************************************************
- * Copyright (c) 2012 MCForge.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the GNU Public License v3.0
- * which accompanies this distribution, and is available at
- * http://www.gnu.org/licenses/gpl.html
- ******************************************************************************/
+* Copyright (c) 2012 MCForge.
+* All rights reserved. This program and the accompanying materials
+* are made available under the terms of the GNU Public License v3.0
+* which accompanies this distribution, and is available at
+* http://www.gnu.org/licenses/gpl.html
+******************************************************************************/
 package net.mcforge.API.plugin;
 
 import net.mcforge.API.CommandExecutor;
 
 /**
- * A command that can be executed by any {@link CommandExecutor} by typing
- * \/commandname arg1 arg2 arg3 in-game, or any other method provided
- * by plugins/extenders.
- * 
- * If you want a command that can only be used by a {@link Player}
- * then use the {@link PlayerCommand} class
- */
+* A command that can be executed by any {@link CommandExecutor} by typing
+* \/commandname arg1 arg2 arg3 in-game, or any other method provided
+* by plugins/extenders.
+* 
+* If you want a command that can only be used by a {@link Player}
+* then use the {@link PlayerCommand} class
+*/
 public abstract class Command {
 	
 	private int permission;
@@ -120,3 +120,4 @@ public abstract class Command {
 		this.opcommand = b ? 1 : 0;
 	}
 }
+

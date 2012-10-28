@@ -34,3 +34,4 @@ public abstract class ExtendPacket extends Packet {
 	public abstract void WriteData(Player client, Server servers, Object...para);
 
 }
+

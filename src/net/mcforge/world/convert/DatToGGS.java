@@ -1,10 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2012 MCForge.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the GNU Public License v3.0
- * which accompanies this distribution, and is available at
- * http://www.gnu.org/licenses/gpl.html
- ******************************************************************************/
+* Copyright (c) 2012 MCForge.
+* All rights reserved. This program and the accompanying materials
+* are made available under the terms of the GNU Public License v3.0
+* which accompanies this distribution, and is available at
+* http://www.gnu.org/licenses/gpl.html
+******************************************************************************/
 package net.mcforge.world.convert;
 
 import java.io.*;
@@ -13,10 +13,10 @@ import java.util.zip.GZIPOutputStream;
 import java.util.zip.GZIPInputStream;
 
 /**
- * This class was taken from the Minecraft Wiki
- * and was slightly modified
- *
- */
+* This class was taken from the Minecraft Wiki
+* and was slightly modified
+*
+*/
 public class DatToGGS {
 	public com.mojang.minecraft.level.Level level = null;
 	private int width;
@@ -179,3 +179,4 @@ public class DatToGGS {
 		level.setData(x, y, z, new byte[x*y*z]);
 	}
 }
+

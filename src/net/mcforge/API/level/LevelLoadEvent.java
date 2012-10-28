@@ -54,3 +54,4 @@ public class LevelLoadEvent extends LevelEvent implements Cancelable {
 	}
 
 }
+

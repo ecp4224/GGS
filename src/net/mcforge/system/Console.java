@@ -86,3 +86,4 @@ public abstract class Console implements CommandExecutor {
 		return s.equalsIgnoreCase("true") || s.equalsIgnoreCase("yes") || s.equalsIgnoreCase("accept") || s.equalsIgnoreCase("allow") || s.equalsIgnoreCase("permit");
 	}
 }
+

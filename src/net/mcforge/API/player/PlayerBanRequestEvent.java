@@ -5,9 +5,9 @@ import net.mcforge.API.EventList;
 import net.mcforge.iomodel.Player;
 
 /**
- * This event is for ban plugins that will handle ban requests from the core.
- * If no plugin is handling bans, then a player will not be banned
- */
+* This event is for ban plugins that will handle ban requests from the core.
+* If no plugin is handling bans, then a player will not be banned
+*/
 public class PlayerBanRequestEvent extends PlayerEvent {
 
 	private CommandExecutor banner;
@@ -77,3 +77,4 @@ public class PlayerBanRequestEvent extends PlayerEvent {
 		return kick;
 	}
 }
+
