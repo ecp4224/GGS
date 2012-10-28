@@ -150,5 +150,10 @@ public class Lava extends PhysicsBlock {
 		return index + x + z * getLevel().width + y * getLevel().width * getLevel().height;
 	}
 
+	@Override
+	public boolean initAtStart() {
+		return true;
+	}
+
 }
 

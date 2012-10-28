@@ -7,11 +7,12 @@
 ******************************************************************************/
 package net.mcforge.world.blocks;
 
+import net.mcforge.iomodel.Player;
 import net.mcforge.server.Server;
 import net.mcforge.world.Block;
-import net.mcforge.world.Level;
+import net.mcforge.world.PhysicsBlock;
 
-public class Grass extends Block {
+public class Grass extends PhysicsBlock {
 
 	/**
 	 * 
@@ -19,17 +20,39 @@ public class Grass extends Block {
 	private static final long serialVersionUID = 1L;
 
 	public Grass(byte ID, String name) {
-		super(ID, name);
+		this(ID, name, null);
 	}
 	
 	public Grass() {
-		super((byte)2, "Grass");
+		this((byte)2, "Grass");
 	}
 	
+	public Grass(Server s) {
+		this((byte)2, "Grass", s);
+	}
+	
+	public Grass(byte ID, String name, Server s) {
+		super((byte)2, "Grass", s);
+	}
+
 	@Override
-	public void onPlace(Level l, int x, int y, int z, Server server) {
-		if (l.getTile(x, y - 1, z) == Block.getBlock("Grass"))
-			l.setTile(Block.getBlock("Dirt"), x, y - 1, z, server);
+	public boolean initAtStart() {
+		return true;
+	}
+
+	@Override
+	public PhysicsBlock clone(Server s) {
+		return new Grass(s);
+	}
+
+	@Override
+	public void tick() {
+		if (getLevel().getTile(getX(), getY() - 1, getZ()).getVisableBlock() == 2)
+			Player.GlobalBlockChange((short)getX(), (short)(getY() - 1), (short)getZ(), Block.getBlock("Dirt"), getLevel(), getServer());
+		if (getLevel().getTile(getX(), getY() + 1, getZ()).getVisableBlock() != 0)
+			super.change(Block.getBlock("Dirt"));
+		else
+			super.stopTick();
 	}
 }
 

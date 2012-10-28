@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import net.mcforge.server.Server;
-import net.mcforge.world.Block;
 import net.mcforge.world.PhysicsBlock;
 
 public class Sand extends PhysicsBlock {
@@ -116,5 +115,10 @@ public class Sand extends PhysicsBlock {
 			this.x = x;
 			this.z = z;
 		}
+	}
+
+	@Override
+	public boolean initAtStart() {
+		return true;
 	}
 }

@@ -32,7 +32,18 @@ public abstract class PhysicsBlock extends Block implements Tick {
 		if (_level != l)
 			return;
 		_level.ticks.remove(this);
+		_level = null;
+		_server = null;
 	}
+	
+	/**
+	 * Weather this block should be added to the tick
+	 * when the level loads.
+	 * @return
+	 *        True if this block should be added to the tick when the level loads.
+	 *        False if this block should not be added to the tick when the level loads.
+	 */
+	public abstract boolean initAtStart();
 	
 	/**
 	 * Create a clone of the Physics Block.
@@ -121,9 +132,24 @@ public abstract class PhysicsBlock extends Block implements Tick {
 	}
 	
 	/**
+	 * Change this block into another block.
+	 * @param b
+	 *         The block to change into.
+	 */
+	public void change(Block b) {
+		if (_level == null)
+			return;
+		Player.GlobalBlockChange((short)_x, (short)_y, (short)_z, b, _level, _server);
+	}
+	
+	/**
 	 * Stop this block from ticking
 	 */
 	public void stopTick() {
+		if (_level == null)
+			return;
+		if (_level.ticks == null)
+			return;
 		if (_level.ticks.contains(this))
 			_level.ticks.remove(this);
 	}

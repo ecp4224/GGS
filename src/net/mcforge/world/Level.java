@@ -169,6 +169,7 @@ public class Level implements Serializable {
 		if (b instanceof PhysicsBlock) {
 			PhysicsBlock pb = ((PhysicsBlock)b).clone(server);
 			pb.setLevel(this);
+			pb.setServer(server);
 			pb.setPos(pos[0], pos[1], pos[2]);
 			blocks[index] = pb;
 			if (this.ticks == null)
@@ -203,7 +204,7 @@ public class Level implements Serializable {
 	}
 	
 	public void checkPhysics(Server server) {
-		Thread t = new StartPhysics(server);
+		Thread t = new StartPhysics(server, this);
 		t.start();
 	}
 
@@ -501,15 +502,24 @@ public class Level implements Serializable {
 		@Override
 		public void run() {
 			Thread.currentThread().getId();
+			ArrayList<Tick> toremove = new ArrayList<Tick>();
 			while (run) {
 				if (ticks == null)
 					ticks = new ArrayList<Tick>();
+				for (Tick t : toremove) {
+					ticks.remove(t);
+				}
+				toremove.clear();
 				synchronized (ticks) {
 					@SuppressWarnings("unchecked")
 					ArrayList<Tick> temp = (ArrayList<Tick>)ticks.clone();
 					for (int i = 0; i < temp.size(); i++) {
 						if (temp.get(i) instanceof PhysicsBlock) {
 							PhysicsBlock pb = (PhysicsBlock)temp.get(i);
+							if (pb.getLevel() == null && pb.getServer() == null) {
+								toremove.add(pb);
+								continue;
+							}
 							if (pb.runInSeperateThread()) {
 								Thread t = new Ticker2(pb);
 								t.start();
@@ -545,7 +555,8 @@ public class Level implements Serializable {
 	private class StartPhysics extends Thread implements Serializable {
 		private static final long serialVersionUID = 1L;
 		transient Server server;
-		public StartPhysics(Server server) { this.server = server; }
+		transient Level l;
+		public StartPhysics(Server server, Level l) { this.l = l; this.server = server; }
 		@Override
 		public void run() {
 			for (int i = 0; i < blocks.length; i++) {
@@ -553,7 +564,9 @@ public class Level implements Serializable {
 					PhysicsBlock pb = (PhysicsBlock)blocks[i];
 					if (pb.getServer() == null)
 						pb.setServer(server);
-					if (!ticks.contains(pb))
+					if (pb.getLevel() == null)
+						pb.setLevel(l);
+					if (!ticks.contains(pb) && pb.initAtStart())
 						ticks.add(pb);
 				}
 			}
