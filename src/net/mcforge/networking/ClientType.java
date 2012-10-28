@@ -27,3 +27,4 @@ public enum ClientType {
 		return ClientType.Minecraft; //Resort to Default
 	}
 }
+

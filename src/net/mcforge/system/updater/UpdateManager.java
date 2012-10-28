@@ -48,3 +48,4 @@ public class UpdateManager {
 		return updatelist;
 	}
 }
+

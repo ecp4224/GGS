@@ -1,10 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2012 GamezGalaxy.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the GNU Public License v3.0
- * which accompanies this distribution, and is available at
- * http://www.gnu.org/licenses/gpl.html
- ******************************************************************************/
+* Copyright (c) 2012 GamezGalaxy.
+* All rights reserved. This program and the accompanying materials
+* are made available under the terms of the GNU Public License v3.0
+* which accompanies this distribution, and is available at
+* http://www.gnu.org/licenses/gpl.html
+******************************************************************************/
 package net.mcforge.iomodel;
 
 import java.io.*;
@@ -666,7 +666,7 @@ public class Player extends IOClient implements CommandExecutor {
 	 * @param X The X coord of the block
 	 * @param Y The Y coord of the block
 	 * @param Z The Z coord of the block
- 	 * @param block The block to send
+* @param block The block to send
 	 */
 	public void SendBlockChange(short X, short Y, short Z, Block block) {
 		server.getPacketManager().getPacket((byte)0x05).Write(this, server, X, Y, Z, block.getVisableBlock());
@@ -685,11 +685,11 @@ public class Player extends IOClient implements CommandExecutor {
 		GlobalBlockChange(X, Y, Z, block, l, s, true);
 	}
 	
-        public static Player find(Server server, String name)
-        {
-            return server.findPlayer(name);
-        }
-        
+		public static Player find(Server server, String name)
+		{
+			return server.findPlayer(name);
+		}
+		
 	/**
 	 * Get a list of who the player can see
 	 * @return An ArrayList of players
@@ -956,18 +956,18 @@ public class Player extends IOClient implements CommandExecutor {
 			p.Write(this, pm.server);
 		}
 	}
-        /**
-         * Sends a wom message to the client if it uses wom.
-         * 
-         * @param message
-         *              The message to put in detail spot.
-         */
-        public void sendWoMMessage(String message)
-        {
-        	if (client == ClientType.WoM) {
-                sendMessage("^detail.user=" + message);
-            }
-        }
+		/**
+		* Sends a wom message to the client if it uses wom.
+		* 
+		* @param message
+		*              The message to put in detail spot.
+		*/
+		public void sendWoMMessage(String message)
+		{
+		if (client == ClientType.WoM) {
+				sendMessage("^detail.user=" + message);
+			}
+		}
 	/**
 	 * Change the level the player is currently in. This method will
 	 * call {@link #changeLevel(Level, boolean)} with threading being false.
@@ -1311,3 +1311,4 @@ public class Player extends IOClient implements CommandExecutor {
 		return username;
 	}
 }
+

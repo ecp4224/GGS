@@ -52,3 +52,4 @@ public class LevelUnloadEvent extends LevelEvent implements Cancelable {
 		this.canceler = Thread.currentThread().getStackTrace()[2].getClassName();
 	}
 }
+

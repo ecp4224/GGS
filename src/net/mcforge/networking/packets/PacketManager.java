@@ -1,10 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2012 MCForge.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the GNU Public License v3.0
- * which accompanies this distribution, and is available at
- * http://www.gnu.org/licenses/gpl.html
- ******************************************************************************/
+* Copyright (c) 2012 MCForge.
+* All rights reserved. This program and the accompanying materials
+* are made available under the terms of the GNU Public License v3.0
+* which accompanies this distribution, and is available at
+* http://www.gnu.org/licenses/gpl.html
+******************************************************************************/
 package net.mcforge.networking.packets;
 
 import java.io.DataInputStream;
@@ -148,27 +148,27 @@ public class PacketManager {
 			e.printStackTrace();
 		}
 	}
-    
-    private void Accept(Socket connection) throws IOException {
-    	DataInputStream reader = new DataInputStream(connection.getInputStream());
-    	byte firstsend = reader.readByte();
-    	switch (firstsend) {
-    	case 0: //Minecraft player
-    		new Player(connection, this, firstsend, server);
-    		break;
-    	case (byte)'G': //A browser or website is using GET
-    		new Browser(connection, this, firstsend);
-    	    break;
-    	case 2: //SMP Player
-    		Packet p = this.getPacket(firstsend);
-    		if (p == null)
-    			connection.close();
-    		IOClient ic = new IOClient(connection, this);
-    		//ic.Listen();
-    		p.Handle(new byte[0], server, ic);
-    		break;
-    	}
-    }
+	
+	private void Accept(Socket connection) throws IOException {
+	DataInputStream reader = new DataInputStream(connection.getInputStream());
+	byte firstsend = reader.readByte();
+	switch (firstsend) {
+	case 0: //Minecraft player
+	new Player(connection, this, firstsend, server);
+	break;
+	case (byte)'G': //A browser or website is using GET
+	new Browser(connection, this, firstsend);
+	break;
+	case 2: //SMP Player
+	Packet p = this.getPacket(firstsend);
+	if (p == null)
+	connection.close();
+	IOClient ic = new IOClient(connection, this);
+	//ic.Listen();
+	p.Handle(new byte[0], server, ic);
+	break;
+	}
+	}
 	
 	private class Read extends Thread {
 		
@@ -188,3 +188,4 @@ public class PacketManager {
 	}
 
 }
+

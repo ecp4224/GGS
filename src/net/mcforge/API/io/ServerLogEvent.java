@@ -51,3 +51,4 @@ public class ServerLogEvent extends ServerEvent {
 	}
 
 }
+

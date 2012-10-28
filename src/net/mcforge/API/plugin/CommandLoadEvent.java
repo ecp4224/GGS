@@ -48,3 +48,4 @@ public class CommandLoadEvent extends Event {
 		return plugin;
 	}
 }
+

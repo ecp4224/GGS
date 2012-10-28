@@ -11,3 +11,4 @@ public @interface ClassicExtension {
 	String extName();
 	int version() default 1;
 }
+
