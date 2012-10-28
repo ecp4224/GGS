@@ -62,25 +62,43 @@ public class Properties {
         
        private static Properties getDefaults(Properties p) {
                 p.addSetting("Server-Name", "[MCForge] Default Server");
+                p.addComment("Server-Name", "The name of the server");
 		p.addSetting("WOM-Alternate-Name", "[MCForge] Default Server");
+		p.addComment("WOM-Alternate-Name", "The name that will appear in the WoM Direct list.");
 		p.addSetting("MOTD", "Welcome!");
+		p.addComment("MOTD", "The message players see on the loading screen.");
 		p.addSetting("Port", 25565);
+		p.addComment("Port", "The port to listen on. The default port is 25565.");
 		p.addSetting("Max-Players", 30);
+		p.addComment("Max-Players", "The max number of players that are allowed on.");
 		p.addSetting("Public", true);
+		p.addComment("Public", "Weather the server will be listed on minecraft.net");
 		p.addSetting("Verify-Names", true);
+		p.addComment("Verify-Names", "Check to see if players are logged in.");
 		p.addSetting("Advanced-Sand", true);
 		p.addComment("Advanced-Sand", "Weather sand will use the new physics system or the old one. New - Looks nicer, Old - Saves on CPU/Memory");
 		p.addSetting("WOM-Server-description", "A server");
+		p.addComment("WOM-Server-description", "A description of the server");
 		p.addSetting("WOM-Server-Flags", "[MCForge]");
+		p.addComment("WOM-Server-Flags", "Flags that will appear in the WoM Direct list");
 		p.addSetting("MainLevel", "levels/Main.ggs");
+		p.addComment("MainLevel", "The main level players join when they enter the server");
 		p.addSetting("SQL-Driver", "net.mcforge.sql.SQLite");
-		p.addSetting("SQL-table-prefix", "ggs");
+		p.addComment("SQL-Driver", "The SQL Driver to use. SQLite = net.mcforge.sql.SQLite. MySQL = net.mcforge.sql.MySQL");
+		p.addSetting("SQL-table-prefix", "mcf");
+		p.addComment("SQL-table-prefix", "The prefix that will appear in table names owned by the server.");
 		p.addSetting("MySQL-username", "root");
+		p.addComment("MySQL-username", "If using MySQL, the username for MySQL");
 		p.addSetting("MySQL-password", "password");
+		p.addComment("MySQL-password", "If using MySQL, the password for the username specified in \"MySQL-username\"");
 		p.addSetting("MySQL-database-name", "ggsdb");
+		p.addComment("MySQL-database-name", "If using MySQL, the database name to use.");
 		p.addSetting("MySQL-IP", "127.0.0.1");
+		p.addComment("MySQL-IP", "If using MySQL, the IP of the MySQL server");
 		p.addSetting("MySQL-Port", 3306);
+		p.addComment("MySQL-Port", "If using MySQL, the port for the MySQL server");
 		p.addSetting("SQLite-File", "mcf.db");
+		p.addComment("SQLite-File", "If using SQLite, the filename it should save as.");
                 return p;
        }
 	private static void makeDefaults(String filename, Server server, Properties p) {
@@ -186,6 +204,8 @@ public class Properties {
 	public void addComment(String key, String comment) {
 		if (!comment.startsWith("#"))
 			comment = "#" + comment;
+		if (!comment.endsWith("."))
+			comment += ".";
 		for (int i = 0; i < settings.size(); i++) {
 			if (settings.get(i).startsWith("#"))
 				continue;
@@ -295,6 +315,7 @@ public class Properties {
 	public void addSetting(String key, String value) {
 		synchronized(settings) {
 			settings.add(key + " = " + value);
+			settings.add(System.getProperty("line.separator"));
 		}
 	}
 	
