@@ -370,7 +370,7 @@ public class Level implements Serializable {
 	 * @throws ClassNotFoundException
 	 *                              This exception is thrown if a block that was saved with the level is not loaded or cant be found.
 	 */
-	public static Level Load(String filename) throws IOException, ClassNotFoundException {
+	public static Level Load(String filename, Server server) throws IOException, ClassNotFoundException {
 		Level l = null;
 		if (filename.endsWith(".dat"))
 			l = convertDAT(filename);
@@ -391,6 +391,7 @@ public class Level implements Serializable {
 			l.physics = l.new Ticker();
 			l.name = new File(filename).getName().split("\\.")[0];
 			l.run = true;
+			l.checkPhysics(server);
 			l.physics.start();
 			obj.close();
 			gis.close();
@@ -503,22 +504,24 @@ public class Level implements Serializable {
 			while (run) {
 				if (ticks == null)
 					ticks = new ArrayList<Tick>();
-				@SuppressWarnings("unchecked")
-				ArrayList<Tick> temp = (ArrayList<Tick>)ticks.clone();
-				for (int i = 0; i < temp.size(); i++) {
-					if (temp.get(i) instanceof PhysicsBlock) {
-						PhysicsBlock pb = (PhysicsBlock)temp.get(i);
-						if (pb.runInSeperateThread()) {
-							Thread t = new Ticker2(pb);
-							t.start();
-							continue;
+				synchronized (ticks) {
+					@SuppressWarnings("unchecked")
+					ArrayList<Tick> temp = (ArrayList<Tick>)ticks.clone();
+					for (int i = 0; i < temp.size(); i++) {
+						if (temp.get(i) instanceof PhysicsBlock) {
+							PhysicsBlock pb = (PhysicsBlock)temp.get(i);
+							if (pb.runInSeperateThread()) {
+								Thread t = new Ticker2(pb);
+								t.start();
+								continue;
+							}
 						}
+						Tick t = temp.get(i);
+						if (t != null)
+							t.tick();
 					}
-					Tick t = temp.get(i);
-					if (t != null)
-						t.tick();
+					temp.clear();
 				}
-				temp.clear();
 				try {
 					Thread.sleep(100);
 				} catch (InterruptedException e) {

@@ -68,6 +68,8 @@ public class Properties {
 		p.addSetting("Max-Players", 30);
 		p.addSetting("Public", true);
 		p.addSetting("Verify-Names", true);
+		p.addSetting("Advanced-Sand", true);
+		p.addComment("Advanced-Sand", "Weather sand will use the new physics system or the old one. New - Looks nicer, Old - Saves on CPU/Memory");
 		p.addSetting("WOM-Server-description", "A server");
 		p.addSetting("WOM-Server-Flags", "[MCForge]");
 		p.addSetting("MainLevel", "levels/Main.ggs");

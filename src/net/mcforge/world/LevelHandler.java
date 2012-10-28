@@ -150,7 +150,7 @@ public class LevelHandler {
 			}
 		}
 		try {
-			l = Level.Load(filename);
+			l = Level.Load(filename, server);
 			LevelLoadEvent event = new LevelLoadEvent(l);
 			server.getEventSystem().callEvent(event);
 			if(event.isCancelled()) {
@@ -166,7 +166,6 @@ public class LevelHandler {
 			server.Log("ERROR LOADING LEVEL!");
 			e.printStackTrace();
 		}
-		l.checkPhysics(server);
 		if (l != null)
 			levels.add(l);
 		return l;

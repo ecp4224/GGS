@@ -78,6 +78,11 @@ public final class Server implements LogInterface {
 	 * Weather the server is running or not
 	 */
 	public boolean Running;
+	
+	/**
+	 * Weather sand will use the new physics or old.
+	 */
+	public boolean newSand;
 	/**
 	 * The port of the server
 	 */
@@ -276,6 +281,7 @@ public final class Server implements LogInterface {
 		description = getSystemProperties().getValue("WOM-Server-description");
 		flags = getSystemProperties().getValue("WOM-Server-Flags");
 		VerifyNames = getSystemProperties().getBool("Verify-Names");
+		newSand = getSystemProperties().getBool("Advanced-Sand");
 	}
 	
 	/**
