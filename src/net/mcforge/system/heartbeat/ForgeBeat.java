@@ -33,3 +33,4 @@ public class ForgeBeat extends Heart {
 	}
 
 }
+

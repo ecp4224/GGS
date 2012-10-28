@@ -72,3 +72,4 @@ public class ExtEntryPacket extends ExtendPacket {
 	}
 
 }
+

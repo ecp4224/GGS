@@ -28,3 +28,4 @@ public abstract class ServerEvent extends Event  {
 	public abstract EventList getEvents();
 
 }
+

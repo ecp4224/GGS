@@ -5,12 +5,12 @@ import net.mcforge.API.EventList;
 import net.mcforge.system.Console;
 
 /**
- * This event is executed when the console sends a global message. The console
- * must use the {@link Console#sendGlobalMessage(String)}, or execute/handle
- * the event on its own. If the end user is using a launcher that does not use
- * the sendGlobalMessage method and the launcher does not execute the event, then
- * this event will never be called.
- */
+* This event is executed when the console sends a global message. The console
+* must use the {@link Console#sendGlobalMessage(String)}, or execute/handle
+* the event on its own. If the end user is using a launcher that does not use
+* the sendGlobalMessage method and the launcher does not execute the event, then
+* this event will never be called.
+*/
 public class ServerChatEvent extends ServerEvent implements Cancelable  {
 	private static EventList events = new EventList();
 	private Console console;
@@ -70,3 +70,4 @@ public class ServerChatEvent extends ServerEvent implements Cancelable  {
 		canceled = cancel;
 	}
 }
+

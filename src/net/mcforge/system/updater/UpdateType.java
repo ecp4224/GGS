@@ -68,3 +68,4 @@ public enum UpdateType {
 			return UpdateType.Ask;
 	}
 }
+
