@@ -1,10 +1,10 @@
 /*******************************************************************************
-* Copyright (c) 2012 GamezGalaxy.
-* All rights reserved. This program and the accompanying materials
-* are made available under the terms of the GNU Public License v3.0
-* which accompanies this distribution, and is available at
-* http://www.gnu.org/licenses/gpl.html
-******************************************************************************/
+ * Copyright (c) 2012 GamezGalaxy.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the GNU Public License v3.0
+ * which accompanies this distribution, and is available at
+ * http://www.gnu.org/licenses/gpl.html
+ ******************************************************************************/
 package net.mcforge.iomodel;
 
 import java.io.*;
@@ -49,6 +49,8 @@ public class Player extends IOClient implements CommandExecutor {
 	protected short Y;
 	protected short Z;
 	protected byte ID;
+	protected boolean showprefix;
+	protected String prefix;
 	protected ArrayList<ClassicExtension> extend = new ArrayList<ClassicExtension>();
 	protected Level level;
 	protected Thread levelsender;
@@ -122,7 +124,7 @@ public class Player extends IOClient implements CommandExecutor {
 	 * The old pitch of the player
 	 */
 	public byte oldpitch;
-	
+
 	public static MessageDigest digest;
 	/**
 	 * Create a new Player object
@@ -139,7 +141,7 @@ public class Player extends IOClient implements CommandExecutor {
 	 * The activity of the player.
 	 */
 	private boolean afk;
-	
+
 	/**
 	 * This is the last byte in the Connect Packet
 	 * sent by the client.
@@ -188,9 +190,9 @@ public class Player extends IOClient implements CommandExecutor {
 		Listen();
 		pm.server.Add(tick);
 	}
-	
-	
-	
+
+
+
 	/**
 	 * Get the name of the client the player is using.
 	 * Browser/Normal client = Minecraft
@@ -202,7 +204,7 @@ public class Player extends IOClient implements CommandExecutor {
 	public String getClientName() {
 		return clientName;
 	}
-	
+
 	/**
 	 * Set the name of the client the player is using
 	 * @param name
@@ -211,7 +213,7 @@ public class Player extends IOClient implements CommandExecutor {
 	public void setClientName(String name) {
 		this.clientName = name;
 	}
-	
+
 	/**
 	 * Add an extension this player can use.
 	 * If the player is not using {@link ClientType#Extend_Classic} protocol, nothing will
@@ -224,7 +226,7 @@ public class Player extends IOClient implements CommandExecutor {
 			return;
 		extend.add(ext);
 	}
-	
+
 	/**
 	 * Get a list of extensions this player can use.
 	 * @return
@@ -233,7 +235,7 @@ public class Player extends IOClient implements CommandExecutor {
 	public final ArrayList<ClassicExtension> getExtensions() {
 		return extend;
 	}
-	
+
 	/**
 	 * Check to see if a player has the ability to use an Extension.
 	 * @param name
@@ -248,7 +250,7 @@ public class Player extends IOClient implements CommandExecutor {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Ban this player.
 	 * This method will execute a BanRequest Event. If the end-user does not
@@ -268,7 +270,7 @@ public class Player extends IOClient implements CommandExecutor {
 		if (kick)
 			kick("Banned: " + reason);
 	}
-	
+
 	/**
 	 * Ban this player.
 	 * This method will execute a BanRequest Event. If the end-user does not
@@ -281,7 +283,7 @@ public class Player extends IOClient implements CommandExecutor {
 	public void ban(CommandExecutor banner, String reason) {
 		ban(banner, reason, false, false);
 	}
-	
+
 	/**
 	 * Ban this player.
 	 * This method will execute a BanRequest Event. If the end-user does not
@@ -293,7 +295,7 @@ public class Player extends IOClient implements CommandExecutor {
 	public void ban(CommandExecutor banner) {
 		ban(banner, "No reason given", false, false);
 	}
-	
+
 	/**
 	 * Ban and kick this player.
 	 * This method will execute a BanRequest Event. If the end-user does not
@@ -306,7 +308,7 @@ public class Player extends IOClient implements CommandExecutor {
 	public void kickBan(CommandExecutor banner, String reason) {
 		ban(banner, reason, true, false);
 	}
-	
+
 	/**
 	 * Ban and kick this player.
 	 * This method will execute a BanRequest Event. If the end-user does not
@@ -318,7 +320,7 @@ public class Player extends IOClient implements CommandExecutor {
 	public void kickBan(CommandExecutor banner) {
 		ban(banner, "No reason given", true, false);
 	}
-	
+
 	/**
 	 * IP Ban this player.
 	 * A IP Ban will kick the player as well.
@@ -332,7 +334,7 @@ public class Player extends IOClient implements CommandExecutor {
 	public void ipBan(CommandExecutor banner, String reason) {
 		ban(banner, reason, true, true);
 	}
-	
+
 	/**
 	 * IP Ban this player.
 	 * A IP Ban will kick the player as well
@@ -345,7 +347,7 @@ public class Player extends IOClient implements CommandExecutor {
 	public void ipBan(CommandExecutor banner) {
 		ban(banner, "No reason given", true, true);
 	}
-	
+
 	/**
 	 * Check to see if a player has the ability to use an Extension.
 	 * @param class_
@@ -360,7 +362,7 @@ public class Player extends IOClient implements CommandExecutor {
 			return hasExtension(c.extName());
 		return false;
 	}
-	
+
 	/**
 	 * Check to see if a player has the ability to use an Extension.
 	 * @param object
@@ -373,7 +375,7 @@ public class Player extends IOClient implements CommandExecutor {
 	public boolean hasExtension(Object object) {
 		return hasExtension(object.getClass());
 	}
-	
+
 	/**
 	 * Weather the user is on wom
 	 * @return
@@ -382,17 +384,17 @@ public class Player extends IOClient implements CommandExecutor {
 	public boolean isOnWom() {
 		return client == ClientType.WoM;
 	}
-	
-	
+
+
 	/**
 	 * Get the username the client will see above the player's head
 	 * @return 
 	 *        The username with the color at the beginning.
 	 */
 	public String getDisplayName() {
-		return color.toString() + username;
+		return prefix + color.toString() + username;
 	}
-	
+
 	/**
 	 * Get the color of the player's username
 	 * @return
@@ -401,7 +403,49 @@ public class Player extends IOClient implements CommandExecutor {
 	public ChatColor getDisplayColor() {
 		return color;
 	}
-	
+
+	/**
+	 * Get the string that is added before the user's username.
+	 * @return
+	 *        The prefix
+	 */
+	public String getPrefix() {
+		return prefix;
+	}
+
+	/**
+	 * Set something to go before the user's username.
+	 * This can be a title or a star.
+	 * This prefix wont appear above the players head, unless
+	 * {@link Player#isShowingPrefix()} is true.
+	 * @param prefix The prefix to set.
+	 */
+	public void setPrefix(String prefix) {
+		this.prefix = prefix;
+	}
+
+	/**
+	 * Weather the user is showing there prefix
+	 * above there player.
+	 * @return
+	 *        True if they are, false if they are not.
+	 */
+	public boolean isShowingPrefix() {
+		return showprefix;
+	}
+
+	/**
+	 * Set weather or not the user should show there prefix above
+	 * there player's head.
+	 * This method will respawn the player using {@link Player#respawn()}
+	 * @param value
+	 *             True if they should, false if they should not.
+	 */
+	public void setShowPrefix(boolean value) {
+		this.showprefix = value;
+		respawn();
+	}
+
 	/**
 	 * Set the color for this player
 	 * @param color 
@@ -409,12 +453,19 @@ public class Player extends IOClient implements CommandExecutor {
 	 */
 	public void setDisplayColor(ChatColor color) {
 		this.color = color;
+		respawn();
+	}
+	
+	/**
+	 * Respawn this player.
+	 */
+	public void respawn() {
 		for (Player p : getServer().players) {
 			p.Despawn(this);
 			p.spawnPlayer(this);
 		}
 	}
-	
+
 	/**
 	 * Verify the player is using a valid account
 	 * @return Returns true if the account is valid, otherwise it will return false
@@ -422,7 +473,7 @@ public class Player extends IOClient implements CommandExecutor {
 	public boolean VerifyLogin() {
 		return server.VerifyNames ? mppass.equals(getRealmppass()) : true;
 	}
-	
+
 	/**
 	 * Get the mppass the user <b>SHOULD</b> have.
 	 * @return
@@ -436,7 +487,7 @@ public class Player extends IOClient implements CommandExecutor {
 		}
 		return new BigInteger(1, digest.digest()).toString(16);
 	}
-	
+
 	/**
 	 * Returns extra data stored in the player
 	 * @param key 
@@ -475,7 +526,7 @@ public class Player extends IOClient implements CommandExecutor {
 		}
 		return (T)extra.get(key);
 	}
-	
+
 	public boolean hasValue(String key) {
 		if (extra.containsKey(key))
 			return true;
@@ -493,7 +544,7 @@ public class Player extends IOClient implements CommandExecutor {
 			return true;
 		}
 	}
-	
+
 	/**
 	 * Store extra data into the player, you can get this data back by
 	 * using the {@link Player#getValue(String)} method
@@ -507,7 +558,7 @@ public class Player extends IOClient implements CommandExecutor {
 			extra.remove(key);
 		extra.put(key, object);
 	}
-	
+
 	/**
 	 * Save the value <b>key</b> to the database.
 	 * The object <b>key</b> represents will be serialized to the
@@ -548,7 +599,7 @@ public class Player extends IOClient implements CommandExecutor {
 		else
 			throw new NotSerializableException("The object that was stored in ExtraData cant be saved because it doesnt implement Serializable!");
 	}
-	
+
 	/**
 	 * Login the player
 	 * @throws InterruptedException 
@@ -586,7 +637,7 @@ public class Player extends IOClient implements CommandExecutor {
 		setPos((short)((0.5 + level.spawnx) * 32), (short)((1 + level.spawny) * 32), (short)((0.5 + level.spawnz) * 32));
 		isLoggedin = true;
 	}
-	
+
 	/**
 	 * Get the current group the player is in
 	 * @return The group
@@ -609,7 +660,7 @@ public class Player extends IOClient implements CommandExecutor {
 			p.Write(this, server);
 		}
 	}
-	
+
 	/**
 	 * Handle the block change packet
 	 * @param X The X pos where the client modified
@@ -638,7 +689,7 @@ public class Player extends IOClient implements CommandExecutor {
 		else if (type == PlaceMode.BREAK)
 			GlobalBlockChange(X, Y, Z, Block.getBlock((byte)0), level, pm.server);
 	}
-	
+
 	/**
 	 * Send a block update to all the players on level "l" in server "s"
 	 * @param X The X pos of the udpate
@@ -660,18 +711,18 @@ public class Player extends IOClient implements CommandExecutor {
 			if (p.level == l)
 				sb.Write(p, s, X, Y, Z, block.getVisableBlock());
 	}
-	
+
 	/**
 	 * Send a block to this player
 	 * @param X The X coord of the block
 	 * @param Y The Y coord of the block
 	 * @param Z The Z coord of the block
-* @param block The block to send
+	 * @param block The block to send
 	 */
 	public void SendBlockChange(short X, short Y, short Z, Block block) {
 		server.getPacketManager().getPacket((byte)0x05).Write(this, server, X, Y, Z, block.getVisableBlock());
 	}
-	
+
 	/**
 	 * Send a block update to all the players on level "l" in server "s"
 	 * @param X The X pos of the udpate
@@ -684,12 +735,12 @@ public class Player extends IOClient implements CommandExecutor {
 	public static void GlobalBlockChange(short X, short Y, short Z, Block block, Level l, Server s) {
 		GlobalBlockChange(X, Y, Z, block, l, s, true);
 	}
-	
-		public static Player find(Server server, String name)
-		{
-			return server.findPlayer(name);
-		}
-		
+
+	public static Player find(Server server, String name)
+	{
+		return server.findPlayer(name);
+	}
+
 	/**
 	 * Get a list of who the player can see
 	 * @return An ArrayList of players
@@ -697,7 +748,7 @@ public class Player extends IOClient implements CommandExecutor {
 	public ArrayList<Player> getSeeable() {
 		return seeable;
 	}
-	
+
 	/**
 	 * Send the player an MoTD screen
 	 * You can have the user hang on the MoTD screen when the player first joins
@@ -707,7 +758,7 @@ public class Player extends IOClient implements CommandExecutor {
 	public void sendMoTD(String topline, String bottomline) {
 		pm.getPacket("MOTD").Write(this, pm.server, topline, bottomline);
 	}
-	
+
 	public void UpdatePos() throws IOException {
 		if (!isLoggedin)
 			return;
@@ -726,7 +777,7 @@ public class Player extends IOClient implements CommandExecutor {
 				p.WriteData(tosend);
 		}
 	}
-	
+
 	/**
 	 * Spawn a new player for this player
 	 * @param p The player to spawn
@@ -745,7 +796,7 @@ public class Player extends IOClient implements CommandExecutor {
 	public Level getLevel() {
 		return level;
 	}
-	
+
 	/**
 	 * Send a new level to the player
 	 * @param level The level to send
@@ -758,7 +809,7 @@ public class Player extends IOClient implements CommandExecutor {
 		levelsender = new SendLevel(this);
 		levelsender.start();
 	}
-	
+
 	/**
 	 * Weather or not the player is loading the level
 	 * @return True if the player is loading the level, false if the player is not
@@ -766,7 +817,7 @@ public class Player extends IOClient implements CommandExecutor {
 	public boolean isLoading() {
 		return levelsender != null;
 	}
-	
+
 	/**
 	 * Wait for the player to finish loading the level
 	 * The method blocks until the player finishes loading the level 
@@ -778,8 +829,8 @@ public class Player extends IOClient implements CommandExecutor {
 			return;
 		levelsender.join();
 	}
-	
-	
+
+
 	protected void SendWelcome() {
 		pm.getPacket("Welcome").Write(this, pm.server);
 	}
@@ -826,7 +877,7 @@ public class Player extends IOClient implements CommandExecutor {
 	public short getX() {
 		return X;
 	}
-	
+
 	/**
 	 * Get the X cord. of the player on the level
 	 * This is in block cord.
@@ -931,7 +982,7 @@ public class Player extends IOClient implements CommandExecutor {
 	public void setPos(short x, short y, short z) {
 		setPos(x, y, z, yaw, pitch);
 	}
-	
+
 	protected void TP() {
 		Packet p = pm.getPacket("TP");
 		for (Player pp : pm.server.players) {
@@ -939,7 +990,7 @@ public class Player extends IOClient implements CommandExecutor {
 				p.Write(pp, pp.pm.server, this, ID); //Tell all the other players as well...
 		}
 	}
-	
+
 	/**
 	 * Sends a message to the player.
 	 * If the message is longer than 64 chars, then it will not send.
@@ -956,18 +1007,18 @@ public class Player extends IOClient implements CommandExecutor {
 			p.Write(this, pm.server);
 		}
 	}
-		/**
-		* Sends a wom message to the client if it uses wom.
-		* 
-		* @param message
-		*              The message to put in detail spot.
-		*/
-		public void sendWoMMessage(String message)
-		{
+	/**
+	 * Sends a wom message to the client if it uses wom.
+	 * 
+	 * @param message
+	 *              The message to put in detail spot.
+	 */
+	public void sendWoMMessage(String message)
+	{
 		if (client == ClientType.WoM) {
-				sendMessage("^detail.user=" + message);
-			}
+			sendMessage("^detail.user=" + message);
 		}
+	}
 	/**
 	 * Change the level the player is currently in. This method will
 	 * call {@link #changeLevel(Level, boolean)} with threading being false.
@@ -1016,7 +1067,7 @@ public class Player extends IOClient implements CommandExecutor {
 			aynct.start();
 		}
 	}
-	
+
 	/**
 	 * This clears the chat screen for the client
 	 * by sending 20 blank messages
@@ -1183,8 +1234,8 @@ public class Player extends IOClient implements CommandExecutor {
 					Pattern pattern = Pattern.compile("%([0-9]|[a-f]|[k-r])(.+?)");
 					Matcher matcher = pattern.matcher(m);
 					while (matcher.find()) {
-					  String code = matcher.group().substring(1);
-					  m = m.replaceAll("%"+code, "&"+code);
+						String code = matcher.group().substring(1);
+						m = m.replaceAll("%"+code, "&"+code);
 					}
 				}
 			}
@@ -1196,7 +1247,7 @@ public class Player extends IOClient implements CommandExecutor {
 			chat.serverBroadcast(this.getDisplayName() + ChatColor.White + ": " + m);
 		}
 	}
-	
+
 	/**
 	 * Get the current server object the player is in
 	 * @return
@@ -1206,7 +1257,7 @@ public class Player extends IOClient implements CommandExecutor {
 	public Server getServer() {
 		return server;
 	}
-	
+
 	/**
 	 * Despawn a player for this player
 	 * @param p The player to despawn
@@ -1217,7 +1268,7 @@ public class Player extends IOClient implements CommandExecutor {
 		pm.getPacket((byte)0x0c).Write(this, pm.server, p.ID);
 		seeable.remove(p);
 	}
-	
+
 	/**
 	 * Close the connection of this client
 	 * If you want to kick the player, use {@link #kick(String)}
@@ -1233,10 +1284,10 @@ public class Player extends IOClient implements CommandExecutor {
 		}
 		for (Player p : pm.server.players)
 			p.Despawn(this);
-		PlayerDisconnectEvent event = new PlayerDisconnectEvent(this);
-		server.getEventSystem().callEvent(event);
-		super.CloseConnection();
-		pm.server.Remove(tick); //Do this last as this takes a while to remove
+				PlayerDisconnectEvent event = new PlayerDisconnectEvent(this);
+				server.getEventSystem().callEvent(event);
+				super.CloseConnection();
+				pm.server.Remove(tick); //Do this last as this takes a while to remove
 	}
 
 	protected void finishLevel() {
@@ -1260,11 +1311,11 @@ public class Player extends IOClient implements CommandExecutor {
 			}
 		}
 	}
-	
+
 	protected class asyncLevel extends Thread {
-		
+
 		Level level;
-		
+
 		public asyncLevel(Level level) { this.level = level; }
 		@Override
 		public void run() {
