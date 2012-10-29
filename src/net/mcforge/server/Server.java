@@ -397,14 +397,7 @@ public final class Server implements LogInterface {
 		Log("Loaded plugins");
 		lm = new LevelHandler(this);
 		if (!new File(getSystemProperties().getValue("MainLevel")).exists()) {
-			Level l = new Level((short)64, (short)64, (short)64);
-			l.name = "Main";
-			l.FlatGrass(this);
-			try {
-				l.save();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			lm.newLevel("Main", (short)64, (short)64, (short)64);
 		}
 		MainLevel = lm.loadLevel(getSystemProperties().getValue("MainLevel"));
 		lm.loadLevels();

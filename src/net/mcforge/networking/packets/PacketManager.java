@@ -136,7 +136,7 @@ public class PacketManager {
 	 * Stop listening for clients.
 	 */
 	public void StopReading() {
-		//reader.stop();
+		reader.interrupt();
 		try {
 			serverSocket.close();
 		} catch (IOException e1) {
@@ -176,12 +176,15 @@ public class PacketManager {
 		public void run() {
 			Socket connection = null;
 			while (server.Running) {
+				if (serverSocket.isClosed())
+					break;
 				try {
 					connection = serverSocket.accept();
 					server.Log("Connection made from " + connection.getInetAddress().toString());
 					Accept(connection);
 				} catch (IOException e) {
-					e.printStackTrace();
+					if (e.getMessage().indexOf("socket closed") == -1)
+						e.printStackTrace();
 				}
 			}
 		}

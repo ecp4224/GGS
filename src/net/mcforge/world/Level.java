@@ -503,8 +503,8 @@ public class Level implements Serializable {
 
 	private class Ticker extends Thread implements Serializable {
 		private static final long serialVersionUID = 1609185967611447514L;
-		private Server server;
-		private Level level;
+		private transient Server server;
+		private transient Level level;
 		public Ticker(Server server, Level level) { this.level = level; this.server = server; }
 		
 		@Override
