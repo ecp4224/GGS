@@ -21,7 +21,7 @@ public class Unknown extends Block {
 	}
 	
 	public Unknown() {
-		super((byte)43, "NULL");
+		super((byte)0, "NULL");
 	}
 	
 

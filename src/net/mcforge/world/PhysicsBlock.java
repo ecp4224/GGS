@@ -82,6 +82,16 @@ public abstract class PhysicsBlock extends Block implements Tick {
 	}
 	
 	/**
+	 * Change the pos of the physics block
+	 * This does NOT update the physics block
+	 * @param pos
+	 *           The location array in x, y, z
+	 */
+	public void setPos(int[] pos) {
+		setPos(pos[0], pos[1], pos[2]);
+	}
+	
+	/**
 	 * Change the level of the physics block
 	 * This method does NOT update the physics block
 	 * @param level The new level
@@ -100,11 +110,8 @@ public abstract class PhysicsBlock extends Block implements Tick {
 	public void move(int newx, int newy, int newz) {
 		if (_level == null)
 			return;
-		/*Player.GlobalBlockChange((short)_x, (short)_y, (short)_z, Block.getBlock("Air"), _level, _server);
-		setPos(newx, newy, newz);
-		Player.GlobalBlockChange((short)_x, (short)_y, (short)_z, this, _level, _server);*/
-		remove();
 		add(newx, newy, newz);
+		remove();
 	}
 	
 	/**

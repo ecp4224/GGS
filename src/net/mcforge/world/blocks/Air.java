@@ -24,6 +24,11 @@ public class Air extends Block {
 	public Air() {
 		super((byte)0, "Air");
 	}
+	
+	@Override
+	public boolean canWalkThrough() {
+		return true;
+	}
 
 }
 

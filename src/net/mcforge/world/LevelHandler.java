@@ -73,7 +73,6 @@ public class LevelHandler {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			levels.add(level);
 		}
 	}
 	

@@ -23,6 +23,11 @@ public class YellowFlower extends Block {
 	public YellowFlower() {
 		super((byte)37, "YellowFlower");
 	}
+	
+	@Override
+	public boolean canWalkThrough() {
+		return true;
+	}
 
 }
 

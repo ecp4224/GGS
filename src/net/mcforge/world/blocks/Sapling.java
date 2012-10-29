@@ -23,6 +23,11 @@ public class Sapling extends Block {
 	public Sapling() {
 		super((byte)6, "Sapling");
 	}
+	
+	@Override
+	public boolean canWalkThrough() {
+		return true;
+	}
 
 }
 

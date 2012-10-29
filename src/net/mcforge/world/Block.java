@@ -134,6 +134,10 @@ public abstract class Block implements Serializable {
 		custom.remove(b);
 	}
 	
+	public boolean canWalkThrough() {
+		return false;
+	}
+	
 	/**
 	 * Initialize a new block
 	 * @param ID 

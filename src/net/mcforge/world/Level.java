@@ -101,9 +101,6 @@ public class Level implements Serializable {
 	 */
 	public Level() {
 		this.ticks = new ArrayList<Tick>();
-		physics = new Ticker();
-		run = true;
-		physics.start();
 	}
 
 	/**
@@ -124,6 +121,12 @@ public class Level implements Serializable {
 		if (blocks == null)
 			blocks = new Block[width*height*depth];
 		g.generate(this);
+	}
+	
+	public void startPhysics(Server server) {
+		physics = new Ticker(server, this);
+		run = true;
+		physics.start();
 	}
 
 	/**
@@ -161,12 +164,12 @@ public class Level implements Serializable {
 	 * @param server
 	 *              The server this blockchange is happening in
 	 */
-	public void setTile(Block b, int index, Server server) {
+	public void setTile(Block b, int index, Server server, boolean physics) {
 		if (index < 0) index = 0;
 		if (index >= blocks.length) index = blocks.length - 1;
 		Block wasthere = blocks[index];
 		int[] pos = IntToPos(index);
-		if (b instanceof PhysicsBlock) {
+		if (b instanceof PhysicsBlock && physics) {
 			PhysicsBlock pb = ((PhysicsBlock)b).clone(server);
 			pb.setLevel(this);
 			pb.setServer(server);
@@ -182,6 +185,8 @@ public class Level implements Serializable {
 			wasthere.onDelete(this, pos[0], pos[1], pos[2], server);
 		}
 		b.onPlace(this, pos[0], pos[1], pos[2], server);
+		if (!physics)
+			return;
 		try {
 			if (getTile(pos[0] + 1, pos[1], pos[2]) instanceof PhysicsBlock && !ticks.contains(getTile(pos[0] + 1, pos[1], pos[2])))
 				ticks.add((PhysicsBlock)getTile(pos[0] + 1, pos[1], pos[2]));
@@ -267,7 +272,7 @@ public class Level implements Serializable {
 	 *              The server this blockchange is happening in
 	 */
 	public void setTile(Block b, int x, int y, int z, Server server) {
-		setTile(b, posToInt(x, y, z), server);
+		setTile(b, posToInt(x, y, z), server, true);
 	}
 
 	/**
@@ -389,7 +394,7 @@ public class Level implements Serializable {
 				throw new IOException("The level version does not match the current");
 			}
 			l.ticks = new ArrayList<Tick>();
-			l.physics = l.new Ticker();
+			l.physics = l.new Ticker(server, l);
 			l.name = new File(filename).getName().split("\\.")[0];
 			l.run = true;
 			l.checkPhysics(server);
@@ -498,7 +503,10 @@ public class Level implements Serializable {
 
 	private class Ticker extends Thread implements Serializable {
 		private static final long serialVersionUID = 1609185967611447514L;
-
+		private Server server;
+		private Level level;
+		public Ticker(Server server, Level level) { this.level = level; this.server = server; }
+		
 		@Override
 		public void run() {
 			Thread.currentThread().getId();
@@ -516,10 +524,10 @@ public class Level implements Serializable {
 					for (int i = 0; i < temp.size(); i++) {
 						if (temp.get(i) instanceof PhysicsBlock) {
 							PhysicsBlock pb = (PhysicsBlock)temp.get(i);
-							if (pb.getLevel() == null && pb.getServer() == null) {
-								toremove.add(pb);
-								continue;
-							}
+							if (pb.getLevel() == null)
+								pb.setLevel(level);
+							if (pb.getServer() == null)
+								pb.setServer(server);
 							if (pb.runInSeperateThread()) {
 								Thread t = new Ticker2(pb);
 								t.start();
@@ -561,13 +569,15 @@ public class Level implements Serializable {
 		public void run() {
 			for (int i = 0; i < blocks.length; i++) {
 				if (blocks[i] instanceof PhysicsBlock) {
-					PhysicsBlock pb = (PhysicsBlock)blocks[i];
-					if (pb.getServer() == null)
-						pb.setServer(server);
-					if (pb.getLevel() == null)
-						pb.setLevel(l);
-					if (!ticks.contains(pb) && pb.initAtStart())
-						ticks.add(pb);
+					PhysicsBlock b = (PhysicsBlock)blocks[i];
+					PhysicsBlock pb = ((PhysicsBlock)b).clone(server);
+					pb.setLevel(l);
+					pb.setServer(server);
+					pb.setPos(l.IntToPos(i));
+					blocks[i] = pb;
+					if (l.ticks == null)
+						l.ticks = new ArrayList<Tick>();
+					l.ticks.add(pb);
 				}
 			}
 		}
@@ -577,6 +587,6 @@ public class Level implements Serializable {
 		if (x < 0 || y < 0 || z < 0) return;
 		if (x >= width || y >= depth || z >= height) return;
 
-		this.setTile(block, x,  y, z, server);
+		this.setTile(block, posToInt(x, y, z), server, false);
 	}
 }

@@ -32,6 +32,9 @@ public class Water extends Lava {
 	@Override
 	public PhysicsBlock clone(Server s) {
 		Water w = new Water((byte)8, "Water", s);
+		w.type = type;
+		if (w.type == 0)
+			w.type = random.nextInt(6) + 1;
 		return w;
 	}
 

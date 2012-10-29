@@ -23,6 +23,11 @@ public class StationaryWater extends Block {
 	public StationaryWater() {
 		super((byte)9, "StationaryWater");
 	}
+	
+	@Override
+	public boolean canWalkThrough() {
+		return true;
+	}
 
 }
 

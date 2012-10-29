@@ -54,11 +54,11 @@ public class Dirt extends PhysicsBlock {
 	public boolean change() {
 		if (getLevel() == null) 
 			return false;
-		if (getLevel().getTile(getX(), getY() + 1, getZ()).getVisableBlock() != 0)
+		if (!getLevel().getTile(getX(), getY() + 1, getZ()).canWalkThrough())
 			return false;
 		int y = getY() + 1;
 		for (; y < getLevel().height - 1; y++) {
-			if (getLevel().getTile(getX(), y + 1, getZ()).getVisableBlock() != 0) {
+			if (!getLevel().getTile(getX(), y + 1, getZ()).canWalkThrough()) {
 				return false;
 			}
 		}

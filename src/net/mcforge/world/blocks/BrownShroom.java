@@ -23,6 +23,10 @@ public class BrownShroom extends Block {
 	public BrownShroom() {
 		super((byte)39, "BrownShroom");
 	}
-
+	
+	@Override
+	public boolean canWalkThrough() {
+		return true;
+	}
 }
 

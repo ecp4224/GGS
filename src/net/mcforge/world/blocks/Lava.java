@@ -22,9 +22,9 @@ public class Lava extends PhysicsBlock {
 	
 	private int time;
 	
-	private int type;
+	protected int type;
 	
-	private final Random random = new Random();
+	protected final Random random = new Random();
 
 	public Lava(byte ID, String name) {
 		super(ID, name);
@@ -152,6 +152,13 @@ public class Lava extends PhysicsBlock {
 
 	@Override
 	public boolean initAtStart() {
+		return true;
+	}
+	
+	@Override
+	public boolean canWalkThrough() {
+		if (type == 0)
+			type = random.nextInt(6) + 1;
 		return true;
 	}
 

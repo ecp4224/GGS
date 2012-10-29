@@ -49,7 +49,7 @@ public class Grass extends PhysicsBlock {
 	public void tick() {
 		if (getLevel().getTile(getX(), getY() - 1, getZ()).getVisableBlock() == 2)
 			Player.GlobalBlockChange((short)getX(), (short)(getY() - 1), (short)getZ(), Block.getBlock("Dirt"), getLevel(), getServer());
-		if (getLevel().getTile(getX(), getY() + 1, getZ()).getVisableBlock() != 0)
+		if (!getLevel().getTile(getX(), getY() + 1, getZ()).canWalkThrough())
 			super.change(Block.getBlock("Dirt"));
 		else
 			super.stopTick();

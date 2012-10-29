@@ -32,7 +32,7 @@ public class Gravel extends Sand {
 
 	@Override
 	public PhysicsBlock clone(Server s) {
-		Gravel ss = new Gravel((byte)12, "Gravel", s);
+		Gravel ss = new Gravel((byte)13, "Gravel", s);
 		ss.wait = wait;
 		return ss;
 	}

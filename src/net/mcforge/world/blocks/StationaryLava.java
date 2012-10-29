@@ -23,6 +23,11 @@ public class StationaryLava extends Block {
 	public StationaryLava() {
 		super((byte)11, "StationaryLava");
 	}
+	
+	@Override
+	public boolean canWalkThrough() {
+		return true;
+	}
 
 }
 
