@@ -81,7 +81,7 @@ public class Properties {
 		p.addComment("WOM-Server-description", "A description of the server");
 		p.addSetting("WOM-Server-Flags", "[MCForge]");
 		p.addComment("WOM-Server-Flags", "Flags that will appear in the WoM Direct list");
-		p.addSetting("MainLevel", "levels/Main.ggs");
+		p.addSetting("MainLevel", "Main");
 		p.addComment("MainLevel", "The main level players join when they enter the server");
 		p.addSetting("SQL-Driver", "net.mcforge.sql.SQLite");
 		p.addComment("SQL-Driver", "The SQL Driver to use. SQLite = net.mcforge.sql.SQLite. MySQL = net.mcforge.sql.MySQL");

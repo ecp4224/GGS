@@ -114,7 +114,7 @@ public final class Server implements LogInterface {
 	/**
 	 * The main level (The level the user first joins when the player joins the server)
 	 */
-	public Level MainLevel;
+	public String MainLevel;
 	/**
 	 * Weather or not the server is public
 	 */
@@ -396,10 +396,11 @@ public final class Server implements LogInterface {
 		ph.loadplugins(this);
 		Log("Loaded plugins");
 		lm = new LevelHandler(this);
-		if (!new File(getSystemProperties().getValue("MainLevel")).exists()) {
+		MainLevel = getSystemProperties().getValue("MainLevel");
+		if (!new File("levels/" + MainLevel + ".ggs").exists()) {
 			lm.newLevel("Main", (short)64, (short)64, (short)64);
+			MainLevel = "Main";
 		}
-		MainLevel = lm.loadLevel(getSystemProperties().getValue("MainLevel"));
 		lm.loadLevels();
 		startTicker();
 		Log("Loaded levels");
@@ -494,10 +495,11 @@ public final class Server implements LogInterface {
 			p.sendMessage("Stopping server...");
 		}
 		for (Level l : this.getLevelHandler().getLevelList()) {
-			if (l != MainLevel)
+			if (!l.name.equals(MainLevel))
 				l.unload(this);
 		}
-		MainLevel.save();
+		getLevelHandler().findLevel(MainLevel).save();
+		getLevelHandler().findLevel(MainLevel).unload(this);
 		tick.join();
 		logger.Stop();
 		heartbeater.stopBeating();

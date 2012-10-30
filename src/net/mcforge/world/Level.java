@@ -352,6 +352,7 @@ public class Level implements Serializable {
 		if (save)
 			save();
 		run = false;
+		server.Log("[" + name + "] Stopping physics..");
 		try {
 			physics.join();
 		} catch (InterruptedException e) {
@@ -360,7 +361,7 @@ public class Level implements Serializable {
 		server.Log("Unloading " + name);
 		for (Player p : server.players) {
 			if (p.getLevel() == this)
-				p.changeLevel(server.MainLevel, false);
+				p.changeLevel(server.getLevelHandler().findLevel(server.MainLevel), false);
 		}
 		blocks = null;
 	}

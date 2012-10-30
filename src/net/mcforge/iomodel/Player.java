@@ -616,7 +616,7 @@ public class Player extends IOClient implements CommandExecutor {
 		if (Group.getGroup(this) == null)
 			setGroup(Group.getDefault());
 		SendWelcome();
-		setLevel(pm.server.MainLevel);
+		setLevel(pm.server.getLevelHandler().findLevel(pm.server.MainLevel));
 		levelsender.join(); //Wait for finish
 		X = (short)((0.5 + level.spawnx) * 32);
 		Y = (short)((1 + level.spawny) * 32);
