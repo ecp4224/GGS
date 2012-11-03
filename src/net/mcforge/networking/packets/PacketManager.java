@@ -150,24 +150,24 @@ public class PacketManager {
 	}
 	
 	private void Accept(Socket connection) throws IOException {
-	DataInputStream reader = new DataInputStream(connection.getInputStream());
-	byte firstsend = reader.readByte();
-	switch (firstsend) {
-	case 0: //Minecraft player
-	new Player(connection, this, firstsend, server);
-	break;
-	case (byte)'G': //A browser or website is using GET
-	new Browser(connection, this, firstsend);
-	break;
-	case 2: //SMP Player
-	Packet p = this.getPacket(firstsend);
-	if (p == null)
-	connection.close();
-	IOClient ic = new IOClient(connection, this);
-	//ic.Listen();
-	p.Handle(new byte[0], server, ic);
-	break;
-	}
+		DataInputStream reader = new DataInputStream(connection.getInputStream());
+		byte firstsend = reader.readByte();
+		switch (firstsend) {
+		case 0: //Minecraft player
+			new Player(connection, this, firstsend, server);
+			break;
+		case (byte)'G': //A browser or website is using GET
+			new Browser(connection, this, firstsend);
+		break;
+		case 2: //SMP Player
+			Packet p = this.getPacket(firstsend);
+			if (p == null)
+				connection.close();
+			IOClient ic = new IOClient(connection, this);
+			//ic.Listen();
+			p.Handle(new byte[0], server, ic);
+			break;
+		}
 	}
 	
 	private class Read extends Thread {
@@ -181,11 +181,25 @@ public class PacketManager {
 				try {
 					connection = serverSocket.accept();
 					server.Log("Connection made from " + connection.getInetAddress().toString());
-					Accept(connection);
+					new AcceptThread(connection).start();
 				} catch (IOException e) {
 					if (e.getMessage().indexOf("socket closed") == -1)
 						e.printStackTrace();
 				}
+			}
+		}
+	}
+	
+	private class AcceptThread extends Thread {
+		private Socket connection;
+		public AcceptThread(Socket connection) { this.connection = connection; }
+		
+		@Override
+		public void run() {
+			try {
+				Accept(connection);
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
 		}
 	}
