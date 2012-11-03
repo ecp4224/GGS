@@ -60,6 +60,7 @@ public class PacketManager {
 		initPackets();
 		try {
 			serverSocket = new ServerSocket(this.server.Port);
+			serverSocket.setSoTimeout(10000);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
