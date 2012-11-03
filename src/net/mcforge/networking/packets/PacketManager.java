@@ -60,7 +60,6 @@ public class PacketManager {
 		initPackets();
 		try {
 			serverSocket = new ServerSocket(this.server.Port);
-			serverSocket.setSoTimeout(10000);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -181,6 +180,7 @@ public class PacketManager {
 					break;
 				try {
 					connection = serverSocket.accept();
+					connection.setSoTimeout(10000);
 					server.Log("Connection made from " + connection.getInetAddress().toString());
 					new AcceptThread(connection).start();
 				} catch (IOException e) {
