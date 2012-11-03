@@ -22,7 +22,7 @@ import net.mcforge.server.Server;
 public class Properties {
 	private ArrayList<String> settings = new ArrayList<String>();
 	private static boolean init = false;
-	
+
 	/**
 	 * Load server settings
 	 * <b>This method can only be called once</b>
@@ -49,20 +49,20 @@ public class Properties {
 			}
 		}
 		return p;
-		
+
 	}
-	
+
 	/**
 	 * Reset the init value for System Properties
 	 */
 	public static void reset() {
 		init = false;
 	}
-	
-        
-       private static Properties getDefaults(Properties p) {
-                p.addSetting("Server-Name", "[MCForge] Default Server");
-                p.addComment("Server-Name", "The name of the server");
+
+
+	private static Properties getDefaults(Properties p) {
+		p.addSetting("Server-Name", "[MCForge] Default Server");
+		p.addComment("Server-Name", "The name of the server");
 		p.addSetting("WOM-Alternate-Name", "[MCForge] Default Server");
 		p.addComment("WOM-Alternate-Name", "The name that will appear in the WoM Direct list.");
 		p.addSetting("MOTD", "Welcome!");
@@ -83,6 +83,8 @@ public class Properties {
 		p.addComment("WOM-Server-Flags", "Flags that will appear in the WoM Direct list");
 		p.addSetting("MainLevel", "Main");
 		p.addComment("MainLevel", "The main level players join when they enter the server");
+		p.addSetting("Money-Name", "moneys");
+		p.addComment("Money-Name", "The name for currency on this server.");
 		p.addSetting("SQL-Driver", "net.mcforge.sql.SQLite");
 		p.addComment("SQL-Driver", "The SQL Driver to use. SQLite = net.mcforge.sql.SQLite. MySQL = net.mcforge.sql.MySQL");
 		p.addSetting("SQL-table-prefix", "mcf");
@@ -99,8 +101,8 @@ public class Properties {
 		p.addComment("MySQL-Port", "If using MySQL, the port for the MySQL server");
 		p.addSetting("SQLite-File", "mcf.db");
 		p.addComment("SQLite-File", "If using SQLite, the filename it should save as.");
-                return p;
-       }
+		return p;
+	}
 	private static void makeDefaults(String filename, Server server, Properties p) {
 		//TODO Fill in all defaults
 		server.Log("System config not found..creating..");
@@ -114,7 +116,7 @@ public class Properties {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * Save the properties file
 	 * @param filename
@@ -132,7 +134,7 @@ public class Properties {
 		}
 		out.close();
 	}
-	
+
 	/**
 	 * Load the properties file. 
 	 * This will reload the settings in memory.
@@ -153,7 +155,7 @@ public class Properties {
 		}
 		in.close();
 	}
-	
+
 	/**
 	 * Get the boolean value of the setting <b>key</b>
 	 * @param key
@@ -165,7 +167,7 @@ public class Properties {
 	public boolean getBool(String key) {
 		return getValue(key).equalsIgnoreCase("true");
 	}
-	
+
 	/**
 	 * Get the int value of the setting <b>key</b>
 	 * @param key
@@ -181,7 +183,7 @@ public class Properties {
 		toreturn = Integer.parseInt(getValue(key));
 		return toreturn;
 	}
-	
+
 	/**
 	 * Weather this properties file has a value for a setting
 	 * @param key
@@ -193,7 +195,7 @@ public class Properties {
 	public boolean hasValue(String key) {
 		return !getValue(key).equals("null");
 	}
-	
+
 	/**
 	 * Add a comment on top of a setting.
 	 * @param key
@@ -215,7 +217,7 @@ public class Properties {
 			}
 		}
 	}
-	
+
 	/**
 	 * Get the value of the setting <b>key</b>
 	 * If no setting is found, then <b>"null"</b> will be
@@ -239,7 +241,7 @@ public class Properties {
 			return "null";
 		}
 	}
-	
+
 	/**
 	 * Change a setting in the properties file
 	 * This can also be used to add a setting, but its
@@ -253,7 +255,7 @@ public class Properties {
 	public void updateSetting(String key, boolean value) {
 		updateSetting(key, (value) ? "true" : "false");
 	}
-	
+
 	/**
 	 * Change a setting in the properties file
 	 * This can also be used to add a setting, but its
@@ -267,7 +269,7 @@ public class Properties {
 	public void updateSetting(String key, int value) {
 		updateSetting(key, "" + value);
 	}
-	
+
 	/**
 	 * Change a setting in the properties file
 	 * This can also be used to add a setting, but its
@@ -282,7 +284,7 @@ public class Properties {
 		removeSetting(key);
 		addSetting(key, value);
 	}
-	
+
 	/**
 	 * Add a setting to the properties file
 	 * @param 
@@ -293,7 +295,7 @@ public class Properties {
 	public void addSetting(String key, boolean value) {
 		addSetting(key, (value) ? "true" : "false");
 	}
-	
+
 	/**
 	 * Add a setting to the properties file
 	 * @param 
@@ -304,7 +306,7 @@ public class Properties {
 	public void addSetting(String key, int value) {
 		addSetting(key, "" + value);
 	}
-	
+
 	/**
 	 * Add a setting to the properties file
 	 * @param 
@@ -318,7 +320,7 @@ public class Properties {
 			settings.add(System.getProperty("line.separator"));
 		}
 	}
-	
+
 	/**
 	 * Remove a setting from the properties file
 	 * @param 

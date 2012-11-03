@@ -63,6 +63,10 @@ public final class Server implements LogInterface {
 	private Messages m; //Pls lets make everything in messages static this is just stupid
 	public static final List<String> devs = Arrays.asList( "Dmitchell", "501st_commander", "Lavoaster", "Alem_Zupa", "bemacized", "Shade2010", "edh649", "hypereddie10", "Gamemakergm", "Serado", "Wouto1997", "cazzar", "givo");
 	/**
+	 * The name for currency on this server.
+	 */
+	public String CurrencyName;
+	/**
 	 * The URL hash for this server
 	 */
 	public String hash;
@@ -282,6 +286,7 @@ public final class Server implements LogInterface {
 		flags = getSystemProperties().getValue("WOM-Server-Flags");
 		VerifyNames = getSystemProperties().getBool("Verify-Names");
 		newSand = getSystemProperties().getBool("Advanced-Sand");
+		CurrencyName = getSystemProperties().getValue("Money-Name");
 	}
 	
 	/**

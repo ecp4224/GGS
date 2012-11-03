@@ -53,6 +53,7 @@ public class Player extends IOClient implements CommandExecutor {
 	protected String prefix;
 	protected ArrayList<ClassicExtension> extend = new ArrayList<ClassicExtension>();
 	protected Level level;
+	protected int money;
 	protected Thread levelsender;
 	protected Messages chat;
 	protected String clientName = "Minecraft";
@@ -486,6 +487,14 @@ public class Player extends IOClient implements CommandExecutor {
 			e.printStackTrace();
 		}
 		return new BigInteger(1, digest.digest()).toString(16);
+	}
+	
+	public int getMoney() {
+		return money;
+	}
+	
+	public void setMoney(int amount) {
+		this.money = amount;
 	}
 
 	/**
