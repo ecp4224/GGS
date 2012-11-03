@@ -512,7 +512,7 @@ public class Player extends IOClient implements CommandExecutor {
 	 *                               If there was a problem casting the object.
 	 */
 	@SuppressWarnings("unchecked")
-	public <T> T getValue(String key) throws SQLException, IOException, ClassNotFoundException {
+	public <T> T getValue(String key) {
 		if (!extra.containsKey(key)) {
 			T value = null;
 			ResultSet r = server.getSQL().fillData("SELECT count(*) FROM " + server.getSQL().getPrefix() + "_extra WHERE name='" + username + "' AND setting='" + key + "'");
@@ -527,9 +527,18 @@ public class Player extends IOClient implements CommandExecutor {
 				return null;
 			else {
 				r = server.getSQL().fillData("SELECT * FROM " + server.getSQL().getPrefix() + "_extra WHERE name='" + username + "' AND setting='" + key + "'");
-				value = (T)r.getObject("value");
+				try {
+					value = (T)r.getObject("value");
+				} catch (SQLException e) {
+					e.printStackTrace();
+					return null;
+				}
 				extra.put(key, value);
-				r.close();
+				try {
+					r.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
 				return value;
 			}
 		}
