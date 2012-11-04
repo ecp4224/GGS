@@ -393,7 +393,7 @@ public class Player extends IOClient implements CommandExecutor {
 	 *        The username with the color at the beginning.
 	 */
 	public String getDisplayName() {
-		return prefix + color.toString() + username;
+		return (isShowingPrefix() ? prefix : "") + color.toString() + username; 
 	}
 
 	/**
@@ -432,6 +432,8 @@ public class Player extends IOClient implements CommandExecutor {
 	 *        True if they are, false if they are not.
 	 */
 	public boolean isShowingPrefix() {
+		if (getPrefix() == null || getPrefix().equals(""))
+			return false;
 		return showprefix;
 	}
 

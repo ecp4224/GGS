@@ -179,14 +179,7 @@ public class LevelHandler {
 	 *                Returns true if the level was unloaded, otherwise returns false.
 	 */
 	public boolean unloadLevel(Level level) {
-		LevelUnloadEvent event = new LevelUnloadEvent(level);
-		server.getEventSystem().callEvent(event);
-		if (event.isCancelled()) {
-			server.Log("The unloading of level " + level + " was canceled by " + event.getCanceler());
-			return false;
-		}
-		unloadLevel(level, true);
-		return true;
+		return unloadLevel(level, true);
 	}
 	/**
 	 * Unload a level
@@ -194,16 +187,26 @@ public class LevelHandler {
 	 *             The level to unload
 	 * @param save
 	 *            Weather the level should save before unloading
+	 * 
+	 * @return boolean
+	 *                Returns true if the level was unloaded, otherwise returns false.
 	 */
-	public void unloadLevel(Level level, boolean save) {
+	public boolean unloadLevel(Level level, boolean save) {
+		LevelUnloadEvent event = new LevelUnloadEvent(level);
+		server.getEventSystem().callEvent(event);
+		if (event.isCancelled()) {
+			server.Log("The unloading of level " + level + " was canceled by " + event.getCanceler());
+			return false;
+		}
 		if (!levels.contains(level))
-			return;
+			return false;
 		try {
 			level.unload(server, save);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		levels.remove(level);
+		return true;
 	}
 	
 	private class Saver implements Tick {

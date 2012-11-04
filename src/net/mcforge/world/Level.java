@@ -34,6 +34,8 @@ public class Level implements Serializable {
 	private boolean autosave;
 
 	private Block[] blocks;
+	
+	private boolean unloading;
 
 	/**
 	 * The width of the level (max X)
@@ -122,7 +124,7 @@ public class Level implements Serializable {
 			blocks = new Block[width*height*depth];
 		g.generate(this);
 	}
-	
+
 	public void startPhysics(Server server) {
 		physics = new Ticker(server, this);
 		run = true;
@@ -207,7 +209,7 @@ public class Level implements Serializable {
 				ticks.add((PhysicsBlock)getTile(pos[0], pos[1], pos[2] - 1));
 		} catch (Exception e) { }
 	}
-	
+
 	public void checkPhysics(Server server) {
 		Thread t = new StartPhysics(server, this);
 		t.start();
@@ -352,9 +354,11 @@ public class Level implements Serializable {
 		if (save)
 			save();
 		run = false;
+		unloading = true;
 		server.Log("[" + name + "] Stopping physics..");
 		try {
-			physics.join();
+			physics.interrupt();
+			physics.join(5000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -398,6 +402,7 @@ public class Level implements Serializable {
 			l.physics = l.new Ticker(server, l);
 			l.name = new File(filename).getName().split("\\.")[0];
 			l.run = true;
+			l.unloading = false;
 			l.checkPhysics(server);
 			l.physics.start();
 			obj.close();
@@ -489,11 +494,15 @@ public class Level implements Serializable {
 	}
 
 	private static Block translateBlock(byte id) {
+		if (id == 8)
+			return Block.getBlock((byte)9);
+		if (id == 10)
+			return Block.getBlock((byte)11);
 		if (id >= 0 && id <= 49)
 			return Block.getBlock(id);
 		//TODO Convert more blocks
 		if (id == 106)
-			return Block.getBlock("Water");
+			return Block.getBlock((byte)9);
 		if (id == 105)
 			return Block.getBlock("Air");
 		if (id == 111)
@@ -507,7 +516,7 @@ public class Level implements Serializable {
 		private transient Server server;
 		private transient Level level;
 		public Ticker(Server server, Level level) { this.level = level; this.server = server; }
-		
+
 		@Override
 		public void run() {
 			Thread.currentThread().getId();
@@ -519,34 +528,33 @@ public class Level implements Serializable {
 					ticks.remove(t);
 				}
 				toremove.clear();
-				synchronized (ticks) {
-					@SuppressWarnings("unchecked")
-					ArrayList<Tick> temp = (ArrayList<Tick>)ticks.clone();
-					for (int i = 0; i < temp.size(); i++) {
-						if (temp.get(i) instanceof PhysicsBlock) {
-							PhysicsBlock pb = (PhysicsBlock)temp.get(i);
-							if (pb.getLevel() == null)
-								pb.setLevel(level);
-							if (pb.getServer() == null)
-								pb.setServer(server);
-							if (pb.runInSeperateThread()) {
-								Thread t = new Ticker2(pb);
-								t.start();
-								continue;
-							}
+				@SuppressWarnings("unchecked")
+				ArrayList<Tick> temp = (ArrayList<Tick>)ticks.clone();
+				for (int i = 0; i < temp.size(); i++) {
+					if (unloading)
+						break;
+					if (temp.get(i) instanceof PhysicsBlock) {
+						PhysicsBlock pb = (PhysicsBlock)temp.get(i);
+						if (pb.getLevel() == null)
+							pb.setLevel(level);
+						if (pb.getServer() == null)
+							pb.setServer(server);
+						if (pb.runInSeperateThread()) {
+							Thread t = new Ticker2(pb);
+							t.start();
+							continue;
 						}
-						Tick t = temp.get(i);
-						if (t != null)
-							t.tick();
 					}
-					temp.clear();
+					Tick t = temp.get(i);
+					if (t != null && !unloading)
+						t.tick();
 				}
+				temp.clear();
 				try {
 					Thread.sleep(100);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
+				} catch (InterruptedException e) { }
 			}
+			server.Log("[" + name + "] Physics stopped.");
 		}
 	}
 
@@ -557,10 +565,12 @@ public class Level implements Serializable {
 		public Ticker2(PhysicsBlock pb) { this.pb = pb; }
 		@Override
 		public void run() {
+			if (unloading)
+				return;
 			pb.tick();
 		}
 	}
-	
+
 	private class StartPhysics extends Thread implements Serializable {
 		private static final long serialVersionUID = 1L;
 		transient Server server;
