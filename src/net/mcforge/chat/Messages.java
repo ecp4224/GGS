@@ -111,11 +111,11 @@ public class Messages {
 		return ret.substring(0, ret.length() - separator.length());
 	}
 	/**
-	 * Joins the elements of the specified array using ", " as a separator
+	 * Joins the elements of the specified array using " " as a separator
 	 * @param array - The string array to join
 	 */
 	public static String join(String[] array) {
-		return join(array, ", ");
+		return join(array, " ");
 	}
 }
 

@@ -17,7 +17,7 @@ public class FlatGrass implements Generator {
 	private Server _server;
 	
 	/**
-	 * The constructor for the flatgrass generator
+	 * The constructor for the flatgrass level generator
 	 * @param server
 	 *              The server the level is in
 	 */

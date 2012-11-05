@@ -460,6 +460,9 @@ public class Level implements Serializable {
 
 		if (magic != 1874) {
 			System.out.println("INVALID .lvl FILE!");
+			in.close();
+			decompressor.close();
+			data.close();
 			return null;
 		}
 		//data.read(new byte[16]);
@@ -594,6 +597,16 @@ public class Level implements Serializable {
 		}
 	}
 
+	/**
+	 * Changes the block at the specified coordinates to the specified block
+	 * without checking for any physics changes
+	 * 
+	 * @param x - The x coordinate
+	 * @param y - The y coordinate
+	 * @param z - The z coordinate
+	 * @param block - The block to change to
+	 * @param server - The server
+	 */
 	public void skipChange(int x, int y, int z, Block block, Server server) {
 		if (x < 0 || y < 0 || z < 0) return;
 		if (x >= width || y >= depth || z >= height) return;
