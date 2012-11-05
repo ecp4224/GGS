@@ -103,7 +103,10 @@ public class Logger {
 		synchronized(queue) {
 			if (!Running)
 				return;
-			queue.add(message);
+			Calendar cal = Calendar.getInstance();
+			String date = dateFormat.format(cal.getTime());
+			String finalmessage = "[" + date + "] " + message;
+			queue.add(finalmessage);
 		}
 	}
 
@@ -140,7 +143,6 @@ public class Logger {
 
 		@Override
 		public void run() {
-			Calendar cal = Calendar.getInstance();
 			Iterator<String> it = null;
 			while (Running) {
 				synchronized(queue) {
@@ -154,18 +156,15 @@ public class Logger {
 					if (it == null)
 						continue;
 					while (it.hasNext()) {
-						cal = Calendar.getInstance();
 						String message = (String)it.next();
-						String date = dateFormat.format(cal.getTime());
-						String finalmessage = "[" + date + "] " + message;
 						if (owner != null && owner instanceof LogInterface) {
 							if (message.contains("ERROR"))
-								((LogInterface)owner).onError(finalmessage);
+								((LogInterface)owner).onError(message);
 							else
-								((LogInterface)owner).onLog(finalmessage);
+								((LogInterface)owner).onLog(message);
 						}
 						if (out != null)
-							out.println(finalmessage);
+							out.println(message);
 					}
 					queue.clear();
 					out.flush();
