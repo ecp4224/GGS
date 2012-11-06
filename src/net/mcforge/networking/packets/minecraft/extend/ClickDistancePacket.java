@@ -16,7 +16,6 @@ public class ClickDistancePacket extends ExtendPacket {
 	public ClickDistancePacket(String name, byte ID, PacketManager parent,
 			PacketType packetType) {
 		super(name, ID, parent, packetType);
-		parent.server.getPluginHandler().addExtension(this);
 	}
 	
 	public ClickDistancePacket(PacketManager parent) {

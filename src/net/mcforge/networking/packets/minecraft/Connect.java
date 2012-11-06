@@ -60,9 +60,6 @@ public class Connect extends Packet {
 				return;
 			}
 			if (player.VerifyLogin() && !connect.isCancelled() && !connect.getAutologin()) {
-				server.players.add(player);
-
-				player.login();
 				player.client = ClientType.parse(message[129]);
 				if (player.client == ClientType.Extend_Classic) {
 					Packet packet = server.getPacketManager().getPacket((byte)0x10);
@@ -72,6 +69,8 @@ public class Connect extends Packet {
 						packet.Write(player, server, c);
 					}
 				}
+				server.players.add(player);
+				player.login();
 				PlayerLoginEvent login = new PlayerLoginEvent(player);
 				server.getEventSystem().callEvent(login);
 			}

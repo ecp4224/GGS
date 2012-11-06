@@ -17,7 +17,6 @@ public class ExtEntryPacket extends ExtendPacket {
 	public ExtEntryPacket(String name, byte ID, PacketManager parent,
 			PacketType packetType) {
 		super(name, ID, parent, packetType);
-		parent.server.getPluginHandler().addExtension(this);
 	}
 
 	public ExtEntryPacket(PacketManager packetManager) {

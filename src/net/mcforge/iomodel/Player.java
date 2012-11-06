@@ -364,7 +364,7 @@ public class Player extends IOClient implements CommandExecutor {
 			return hasExtension(c.extName());
 		return false;
 	}
-	
+
 	/**
 	 * Get the current block the client is holding.
 	 * If the client supports the ClassicExtension protocol, then
@@ -377,7 +377,7 @@ public class Player extends IOClient implements CommandExecutor {
 	public byte getBlockHolding() {
 		return block;
 	}
-	
+
 	/**
 	 * Set the current block the client is holding.
 	 * @param block
@@ -481,7 +481,7 @@ public class Player extends IOClient implements CommandExecutor {
 		this.color = color;
 		respawn();
 	}
-	
+
 	/**
 	 * Respawn this player.
 	 */
@@ -513,11 +513,11 @@ public class Player extends IOClient implements CommandExecutor {
 		}
 		return new BigInteger(1, digest.digest()).toString(16);
 	}
-	
+
 	public int getMoney() {
 		return money;
 	}
-	
+
 	public void setMoney(int amount) {
 		this.money = amount;
 	}
@@ -670,8 +670,10 @@ public class Player extends IOClient implements CommandExecutor {
 		pm.server.Log(this.username + " has joined the server.");
 		chat.serverBroadcast(this.username + " has joined the server.");
 		spawnPlayer(this);
+		updateAllLists(); //Update me in your list
 		setPos((short)((0.5 + level.spawnx) * 32), (short)((1 + level.spawny) * 32), (short)((0.5 + level.spawnz) * 32));
 		for (Player p : pm.server.players) {
+			pm.getPacket((byte)0x33).Write(this, server, p); //Update mine for you
 			if (p.level == level) {
 				spawnPlayer(p); //Spawn p for me
 				p.spawnPlayer(this); //Spawn me for p
@@ -688,6 +690,7 @@ public class Player extends IOClient implements CommandExecutor {
 	public Group getGroup() {
 		return Group.getGroup(this);
 	}
+
 	/**
 	 * Change the group the player is in
 	 */
@@ -701,6 +704,17 @@ public class Player extends IOClient implements CommandExecutor {
 		if ((old != null && old.isOP && !newgroup.isOP) || (old != null && !old.isOP && newgroup.isOP) || old == null) {
 			Packet p = pm.getPacket((byte)0x0f);
 			p.Write(this, server);
+		}
+		updateAllLists();
+	}
+
+	/**
+	 * Change this player in all ext player's lists.
+	 */
+	private void updateAllLists() {
+		for (Player p : server.players) {
+			if (p.hasExtension("ExtAddPlayerName"))
+				pm.getPacket((byte)0x33).Write(p, server, this);
 		}
 	}
 
@@ -829,6 +843,8 @@ public class Player extends IOClient implements CommandExecutor {
 		if (seeable.contains(p))
 			return;
 		pm.getPacket((byte)0x07).Write(this, server, p);
+		if (this.hasExtension("ExtPlayer") && p.client == ClientType.Extend_Classic)
+			pm.getPacket((byte)0x39).Write(this, server, p);
 		seeable.add(p);
 	}
 
@@ -1127,128 +1143,6 @@ public class Player extends IOClient implements CommandExecutor {
 			server.getCommandHandler().execute(this, message.split("\\ ")[0], message.substring(message.indexOf(message.split("\\ ")[1])));
 		else
 			server.getCommandHandler().execute(this, message, "");
-		/* Leaving this here so you can reference the old commands
-		 * List<String> list = new ArrayList<String>();
-		Collections.addAll(list, message.split(" "));
-
-		String[] args = new String[list.size() - 1];
-
-		for(int i = 1; i < list.size(); i++)
-		{
-			args[i - 1] = list.get(i);
-		}
-
-		String command = message.split(" ")[0];
-
-		if(command.equals("/cc"))
-		{
-			if(this.cc)
-			{
-				this.sendMessage("Color Codes have been disabled.");
-				this.cc = false;
-			}else{
-				this.sendMessage("Color Codes have been enabled.");
-				this.cc = true;
-			}
-		}
-		else if (command.equals("/spawn"))
-			setPos((short)((0.5 + level.spawnx) * 32), (short)((1 + level.spawny) * 32), (short)((0.5 + level.spawnz) * 32));
-		else if(command.equals("/stop")) {
-			try {
-				server.Stop();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		} else if(command.equals("/ban")) {
-			if(args.length == 1)
-			{
-				try {
-					FileWriter out = new FileWriter("properties/banned.txt", true);
-
-					out.write(args[0] + "\n");
-
-					out.flush();
-					out.close();
-				} catch (FileNotFoundException e) {
-					e.printStackTrace();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		} else if(command.equals("/unban")) {
-			if(args.length == 1)
-			{
-				server.removeLineFromFile("properties/banned.txt", args[0]);
-			}
-		} else if(command.equals("/newlvl")) {
-			if(args.length == 4)
-			{
-				LevelHandler handler = server.getLevelHandler();
-				handler.loadLevels();
-				Level[] levels = handler.levels.toArray(new Level[handler.levels.size()]);
-
-				if(handler.findLevel(args[0]) == null)
-				{
-					handler.newLevel(args[0], Short.valueOf(args[1]), Short.valueOf(args[2]), Short.valueOf(args[3]));
-
-					sendMessage("Created new level: " + args[0] + ".");
-				} else {
-					sendMessage("Level already exists...");
-				}
-			}
-		} else if(command.equals("/g")) {
-			if(args.length == 1)
-			{
-				LevelHandler handler = server.getLevelHandler();
-				Level level = handler.findLevel(args[0]);
-
-				if(level != null)
-				{
-					//Despawn(this);
-					try {
-						changeLevel(level);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-				} else {
-					sendMessage("Level doesn't exist...");
-				}
-			}
-		} else if(command.equals("/loaded")) {
-			LevelHandler handler = server.getLevelHandler();
-			Level[] levels = handler.levels.toArray(new Level[handler.levels.size()]);
-
-			for(Level l : levels)
-			{
-				if(l != null)
-				{
-					sendMessage(l.name);
-				}
-			}
-		}
-
-		// TODO: Automatically find all classes that extend to GGPlugin.
-		// TODO: Create a system where the plugin is in a separate JAR.
-
-		try {
-			Class c = Class.forName("com.gamezgalaxy.test.console.TestPlugin");
-			Constructor<? extends GGSPlugin> constructor = c.getConstructor();
-			GGSPlugin result = constructor.newInstance();
-
-			result.onCommand(this, command, args);
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (NoSuchMethodException e) {
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			e.printStackTrace();
-		} catch (InstantiationException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		}*/
 	}
 
 	/**
@@ -1323,14 +1217,17 @@ public class Player extends IOClient implements CommandExecutor {
 		if(this.username != null)
 		{
 			pm.server.Log(this.username + " has left the server.");
-			chat.serverBroadcast(this.username + " has left the server.");
+			chat.serverBroadcast(this.username + " has left the server.");		
 		}
-		for (Player p : pm.server.players)
+		for (Player p : pm.server.players) {
 			p.Despawn(this);
-				PlayerDisconnectEvent event = new PlayerDisconnectEvent(this);
-				server.getEventSystem().callEvent(event);
-				super.CloseConnection();
-				pm.server.Remove(tick); //Do this last as this takes a while to remove
+			if (p.hasExtension("ExtRemovePlayerName"))
+				pm.getPacket((byte)0x35).Write(p, server, this);
+		}
+		PlayerDisconnectEvent event = new PlayerDisconnectEvent(this);
+		server.getEventSystem().callEvent(event);
+		super.CloseConnection();
+		pm.server.Remove(tick); //Do this last as this takes a while to remove
 	}
 
 	protected void finishLevel() {

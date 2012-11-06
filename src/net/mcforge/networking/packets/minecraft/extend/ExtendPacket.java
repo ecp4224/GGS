@@ -13,6 +13,7 @@ public abstract class ExtendPacket extends Packet {
 	public ExtendPacket(String name, byte ID, PacketManager parent,
 			PacketType packetType) {
 		super(name, ID, parent, packetType);
+		parent.server.getPluginHandler().addExtension(this);
 	}
 	
 	@Override

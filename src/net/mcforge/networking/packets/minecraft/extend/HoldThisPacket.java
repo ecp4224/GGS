@@ -10,15 +10,14 @@ import net.mcforge.networking.packets.PacketType;
 import net.mcforge.server.Server;
 
 @ClassicExtension(extName = "HoldThis")
-public class HoldThis extends ExtendPacket {
+public class HoldThisPacket extends ExtendPacket {
 
-	public HoldThis(String name, byte ID, PacketManager parent,
+	public HoldThisPacket(String name, byte ID, PacketManager parent,
 			PacketType packetType) {
 		super(name, ID, parent, packetType);
-		parent.server.getPluginHandler().addExtension(this);
 	}
 	
-	public HoldThis(PacketManager parent) {
+	public HoldThisPacket(PacketManager parent) {
 		this("HoldThis", (byte)0x31, parent, PacketType.Client_to_Server);
 	}
 
