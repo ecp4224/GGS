@@ -46,7 +46,7 @@ public class ExtInfoPacket extends ExtendPacket {
 		String data = NAME;
 		while (data.length() < 64)
 			data += " ";
-		ByteBuffer bf = ByteBuffer.allocate(66);
+		ByteBuffer bf = ByteBuffer.allocate(67);
 		bf.put(ID);
 		try {
 			bf.put(data.getBytes("US-ASCII"));
