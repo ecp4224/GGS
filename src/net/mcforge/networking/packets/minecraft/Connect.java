@@ -32,8 +32,7 @@ public class Connect extends Packet {
 
 	@Override
 	public void Write(IOClient player, Server server) {
-		// TODO Auto-generated method stub
-
+		
 	}
 	@Override
 	public void Handle(byte[] message, Server server, IOClient p) {
@@ -63,7 +62,7 @@ public class Connect extends Packet {
 			if (player.VerifyLogin() && !connect.isCancelled() && !connect.getAutologin()) {
 				server.players.add(player);
 
-				player.Login();
+				player.login();
 				player.client = ClientType.parse(message[129]);
 				if (player.client == ClientType.Extend_Classic) {
 					Packet packet = server.getPacketManager().getPacket((byte)0x10);

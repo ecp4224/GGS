@@ -49,6 +49,7 @@ public class Player extends IOClient implements CommandExecutor {
 	protected short Y;
 	protected short Z;
 	protected byte ID;
+	protected byte block;
 	protected boolean showprefix;
 	protected String prefix;
 	protected ArrayList<ClassicExtension> extend = new ArrayList<ClassicExtension>();
@@ -363,6 +364,28 @@ public class Player extends IOClient implements CommandExecutor {
 			return hasExtension(c.extName());
 		return false;
 	}
+	
+	/**
+	 * Get the current block the client is holding.
+	 * If the client supports the ClassicExtension protocol, then
+	 * this value will be updated frequently.
+	 * If the client does not support the ClassicExtension protocol, then
+	 * this value will update every time the client makes a block change.
+	 * @return
+	 *        The current block the client is holding
+	 */
+	public byte getBlockHolding() {
+		return block;
+	}
+	
+	/**
+	 * Set the current block the client is holding.
+	 * @param block
+	 *             The current block the client is holding
+	 */
+	public void setHoldingBlock(byte iD2) {
+		this.block = iD2;
+	}
 
 	/**
 	 * Check to see if a player has the ability to use an Extension.
@@ -624,7 +647,7 @@ public class Player extends IOClient implements CommandExecutor {
 	 * Login the player
 	 * @throws InterruptedException 
 	 */
-	public void Login() throws InterruptedException {
+	public void login() throws InterruptedException {
 		if (isLoggedin)
 			return;
 		for (int i = 0; i < getServer().players.size(); i++) {

@@ -10,6 +10,7 @@ package net.mcforge.networking.packets.minecraft;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
+import net.mcforge.API.ClassicExtension;
 import net.mcforge.API.player.PlayerMoveEvent;
 import net.mcforge.iomodel.Player;
 import net.mcforge.networking.IOClient;
@@ -18,6 +19,7 @@ import net.mcforge.networking.packets.PacketManager;
 import net.mcforge.networking.packets.PacketType;
 import net.mcforge.server.Server;
 
+@ClassicExtension(extName = "HeldBlock")
 public class PosUpdate extends Packet {
 
 	public PosUpdate(String name, byte ID, PacketManager parent,
@@ -44,12 +46,14 @@ public class PosUpdate extends Packet {
 			return;
 		ByteBuffer bb = ByteBuffer.allocate(9);
 		bb.put(message);
-		//byte ID = bb.get(0);
+		byte ID = bb.get(0);
 		short X = bb.getShort(1);
 		short Y = bb.getShort(3);
 		short Z = bb.getShort(5);
 		player.yaw = bb.get(7);
 		player.pitch = bb.get(8);
+		if (player.hasExtension(this))
+			player.setHoldingBlock(ID);
 		player.setX(X);
 		player.setY(Y);
 		player.setZ(Z);

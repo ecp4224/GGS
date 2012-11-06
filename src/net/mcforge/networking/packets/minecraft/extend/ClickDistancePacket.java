@@ -32,9 +32,9 @@ public class ClickDistancePacket extends ExtendPacket {
 	}
 
 	@Override
-	public void WriteData(Player p, Server servers, Object... para) {
+	public void WriteData(Player p, Server servers, Object... para) throws ExtensionNotSupportedException {
 		if (!p.hasExtension(this))
-			return;
+			throw new ExtensionNotSupportedException(this);
 		ByteBuffer bf = ByteBuffer.allocate(2);
 		bf.put(ID);
 		bf.putShort(Short.parseShort(para[0].toString()));

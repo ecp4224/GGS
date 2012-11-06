@@ -48,6 +48,8 @@ public class SetBlock extends Packet {
 		bb.putShort(Y);
 		bb.putShort(Z);
 		bb.put(block);
+		if (player instanceof Player)
+			((Player)player).setHoldingBlock(block);
 		try {
 			player.WriteData(bb.array());
 		} catch (IOException e) {
