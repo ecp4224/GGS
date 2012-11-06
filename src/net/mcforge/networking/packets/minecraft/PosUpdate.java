@@ -25,11 +25,12 @@ public class PosUpdate extends Packet {
 	public PosUpdate(String name, byte ID, PacketManager parent,
 			PacketType packetType) {
 		super(name, ID, parent, packetType);
+		parent.server.getPluginHandler().addExtension(this);
+		this.length = 9;
 	}
 	
 	public PosUpdate(PacketManager pm) {
-		super("PosUpdate", (byte)0x08, pm, PacketType.Client_to_Server);
-		this.length = 9;
+		this("PosUpdate", (byte)0x08, pm, PacketType.Client_to_Server);
 	}
 
 	@Override

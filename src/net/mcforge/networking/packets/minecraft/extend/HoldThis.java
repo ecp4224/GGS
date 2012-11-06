@@ -40,8 +40,6 @@ public class HoldThis extends ExtendPacket {
 	}
 
 	@Override
-	public void Handle(byte[] message, Server server, IOClient player) {
-		
-	}
+	public void Handle(byte[] message, Server server, IOClient player) { }
 
 }
