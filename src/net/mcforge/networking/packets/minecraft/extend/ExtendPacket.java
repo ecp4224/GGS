@@ -13,6 +13,7 @@ public abstract class ExtendPacket extends Packet {
 	public ExtendPacket(String name, byte ID, PacketManager parent,
 			PacketType packetType) {
 		super(name, ID, parent, packetType);
+		parent.server.getPluginHandler().addExtension(this);
 	}
 	
 	@Override
@@ -20,7 +21,11 @@ public abstract class ExtendPacket extends Packet {
 		Player p = (client instanceof Player ? (Player)client : null);
 		if (p == null || p.client != ClientType.Extend_Classic)
 			return;
-		WriteData(p, servers, para);
+		try {
+			WriteData(p, servers, para);
+		} catch (ExtensionNotSupportedException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	@Override
@@ -28,10 +33,14 @@ public abstract class ExtendPacket extends Packet {
 		Player p = (client instanceof Player ? (Player)client : null);
 		if (p == null || p.client != ClientType.Extend_Classic)
 			return;
-		WriteData(p, servers);
+		try {
+			WriteData(p, servers);
+		} catch (ExtensionNotSupportedException e) {
+			e.printStackTrace();
+		}
 	}
 	
-	public abstract void WriteData(Player client, Server servers, Object...para);
+	public abstract void WriteData(Player client, Server servers, Object...para) throws ExtensionNotSupportedException;
 
 }
 

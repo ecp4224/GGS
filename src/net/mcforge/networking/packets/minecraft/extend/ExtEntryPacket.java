@@ -17,7 +17,6 @@ public class ExtEntryPacket extends ExtendPacket {
 	public ExtEntryPacket(String name, byte ID, PacketManager parent,
 			PacketType packetType) {
 		super(name, ID, parent, packetType);
-		parent.server.getPluginHandler().addExtension(this);
 	}
 
 	public ExtEntryPacket(PacketManager packetManager) {
@@ -29,14 +28,14 @@ public class ExtEntryPacket extends ExtendPacket {
 		String name = ((ClassicExtension)para[0]).extName();
 		if (name.length() < 64)
 			name += " ";
-		ByteBuffer bf = ByteBuffer.allocate(68);
+		ByteBuffer bf = ByteBuffer.allocate(69);
 		bf.put(ID);
 		try {
 			bf.put(name.getBytes("US-ASCII"));
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
-		bf.putInt(((ClassicExtension)para[1]).version());
+		bf.putInt(((ClassicExtension)para[0]).version());
 		try {
 			p.WriteData(bf.array());
 		} catch (IOException e) {

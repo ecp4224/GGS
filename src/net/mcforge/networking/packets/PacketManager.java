@@ -33,8 +33,12 @@ import net.mcforge.networking.packets.minecraft.TP;
 import net.mcforge.networking.packets.minecraft.UpdateUser;
 import net.mcforge.networking.packets.minecraft.Welcome;
 import net.mcforge.networking.packets.minecraft.extend.ClickDistancePacket;
+import net.mcforge.networking.packets.minecraft.extend.ExtAddPlayerNamePacket;
 import net.mcforge.networking.packets.minecraft.extend.ExtEntryPacket;
-import net.mcforge.networking.packets.minecraft.extend.ExtInfo;
+import net.mcforge.networking.packets.minecraft.extend.ExtInfoPacket;
+import net.mcforge.networking.packets.minecraft.extend.ExtPlayerPacket;
+import net.mcforge.networking.packets.minecraft.extend.ExtRemovePlayerNamePacket;
+import net.mcforge.networking.packets.minecraft.extend.HoldThisPacket;
 import net.mcforge.server.Server;
 
 public class PacketManager {
@@ -86,7 +90,11 @@ public class PacketManager {
 				new GET(this),
 				new ClickDistancePacket(this),
 				new ExtEntryPacket(this),
-				new ExtInfo(this)
+				new ExtInfoPacket(this),
+				new HoldThisPacket(this),
+				new ExtPlayerPacket(this),
+				new ExtAddPlayerNamePacket(this),
+				new ExtRemovePlayerNamePacket(this)
 			};
 	}
 	

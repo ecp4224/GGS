@@ -165,8 +165,10 @@ public class LevelHandler {
 			server.Log("ERROR LOADING LEVEL!");
 			e.printStackTrace();
 		}
-		if (l != null)
+		if (l != null) {
+			server.Log("[" + l.name + "] Loaded!");
 			levels.add(l);
+		}
 		return l;
 	}
 	/**

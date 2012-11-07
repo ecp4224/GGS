@@ -32,8 +32,7 @@ public class Connect extends Packet {
 
 	@Override
 	public void Write(IOClient player, Server server) {
-		// TODO Auto-generated method stub
-
+		
 	}
 	@Override
 	public void Handle(byte[] message, Server server, IOClient p) {
@@ -61,9 +60,6 @@ public class Connect extends Packet {
 				return;
 			}
 			if (player.VerifyLogin() && !connect.isCancelled() && !connect.getAutologin()) {
-				server.players.add(player);
-
-				player.Login();
 				player.client = ClientType.parse(message[129]);
 				if (player.client == ClientType.Extend_Classic) {
 					Packet packet = server.getPacketManager().getPacket((byte)0x10);
@@ -73,6 +69,8 @@ public class Connect extends Packet {
 						packet.Write(player, server, c);
 					}
 				}
+				server.players.add(player);
+				player.login();
 				PlayerLoginEvent login = new PlayerLoginEvent(player);
 				server.getEventSystem().callEvent(login);
 			}
