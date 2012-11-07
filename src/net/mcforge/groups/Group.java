@@ -209,7 +209,6 @@ public class Group {
 	}
 	
 	private class Listen implements Listener {
-		@SuppressWarnings("unused")
 		@EventHandler
 		public void connect(PlayerLoginEvent event) {
 			for (String member : members) {
@@ -374,29 +373,13 @@ public class Group {
 					}
 				}
 			}
-			BufferedWriter bw;
-		try {
-			bw = new BufferedWriter(new FileWriter(new File(
-					FileUtils.PROPS_DIR + "groups.xml"), false));
-		} catch (IOException ex) {
-			return false;
-		}
-				String[] newlines = writelines.toArray(new String[writelines.size()]);
-		for (int i=0;i<newlines.length;i++)
-		{
+			String[] newlines = writelines.toArray(new String[writelines.size()]);
 			try {
-				bw.write(newlines[i]);
-				bw.newLine();
-			} catch (IOException ex) {
+				FileUtils.writeLines(FileUtils.PROPS_DIR + "groups.xml", newlines);
+			} catch (IOException e) {
 				return false;
 			}
-		}
-		try {
-			bw.close();
-		} catch (IOException ex) {
-			return false;
-		}
-				return true;
+			return true;
 		}
 		
 		/**
@@ -424,33 +407,13 @@ public class Group {
 					newlines[i] = lines[i];
 				}
 			}
-			BufferedWriter bw = null;
-		try {
-			bw = new BufferedWriter(new FileWriter(new File(
-					FileUtils.PROPS_DIR + "groups.xml"), false));
-		} catch (IOException ex) {
-			return false;
-		}
-		for (int i=0;i<newlines.length;i++)
-		{
 			try {
-				bw.write(newlines[i]);
-			} catch (IOException ex) {
+				FileUtils.writeLines(FileUtils.PROPS_DIR + "groups.xml", newlines);
+			} catch (IOException e) {
 				return false;
 			}
-			try {
-				bw.newLine();
-			} catch (IOException ex) {
-				return false;
-			}
-		}
-		try {
-			bw.close();
-		} catch (IOException ex) {
-			return false;
-		}
-				this.name = name;
-				return true;
+			this.name = name;
+			return true;
 		}
 		
 		/**
@@ -480,33 +443,13 @@ public class Group {
 					newlines[i] = lines[i];
 				}
 			}
-			BufferedWriter bw = null;
-		try {
-			bw = new BufferedWriter(new FileWriter(new File(
-					FileUtils.PROPS_DIR + "groups.xml"), false));
-		} catch (IOException ex) {
-			return false;
-		}
-		for (int i=0;i<newlines.length;i++)
-		{
 			try {
-				bw.write(newlines[i]);
-			} catch (IOException ex) {
+				FileUtils.writeLines(FileUtils.PROPS_DIR + "groups.xml", newlines);
+			} catch (IOException e) {
 				return false;
 			}
-			try {
-				bw.newLine();
-			} catch (IOException ex) {
-				return false;
-			}
-		}
-		try {
-			bw.close();
-		} catch (IOException ex) {
-			return false;
-		}
-				this.isOP = isop;
-				return true;
+			this.isOP = isop;
+			return true;
 		}
 		
 		/**
@@ -538,33 +481,13 @@ public class Group {
 					newlines[i] = lines[i];
 				}
 			}
-			BufferedWriter bw = null;
-		try {
-			bw = new BufferedWriter(new FileWriter(new File(
-					FileUtils.PROPS_DIR + "groups.xml"), false));
-		} catch (IOException ex) {
-			return false;
-		}
-		for (int i=0;i<newlines.length;i++)
-		{
 			try {
-				bw.write(newlines[i]);
-			} catch (IOException ex) {
+				FileUtils.writeLines(FileUtils.PROPS_DIR + "groups.xml", newlines);
+			} catch (IOException e) {
 				return false;
 			}
-			try {
-				bw.newLine();
-			} catch (IOException ex) {
-				return false;
-			}
-		}
-		try {
-			bw.close();
-		} catch (IOException ex) {
-			return false;
-		}
-				this.permissionlevel = permissionlevel;
-				return true;
+			this.permissionlevel = permissionlevel;
+			return true;
 		}
 		
 	/**

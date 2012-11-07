@@ -600,6 +600,7 @@ public class Level implements Serializable {
 	/**
 	 * Changes the block at the specified coordinates to the specified block
 	 * without checking for any physics changes
+	 * If you change a block in a level, it won't be sent to clients
 	 * 
 	 * @param x - The x coordinate
 	 * @param y - The y coordinate
