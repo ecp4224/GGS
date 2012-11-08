@@ -8,19 +8,24 @@ import net.mcforge.world.Generator;
 import net.mcforge.world.Level;
 import net.mcforge.world.TreeGenerator;
 
-public class Mountains implements Generator {
-	
+public class Forest implements Generator {
+
 	final Random rand = new Random();
 	float divide;
 	float[] terrain;
 	float[] overlay;
 	float[] overlay2;
 	private Server _server;
-	
-	public Mountains(Server _server) {
-		this._server = _server;
+
+	/**
+	 * The constructor for the island level generator
+	 * @param server
+	 *              The server the level is in
+	 */
+	public Forest(Server server) {
+		this._server = server;
 	}
-	
+
 	@Override
 	public void generate(Level l) {
 		generate(l, 64, 64, 64);
@@ -36,22 +41,21 @@ public class Mountains implements Generator {
 		GenerateFault(terrain, l);
 		FilterAverage(l);
 		GeneratePerlinNoise(overlay, l, rand);
-
-		float RangeLow = 0.3f;
-        float RangeHigh = 0.9f;
-        float TreeDens = 1.4f;
-        short TreeDist = 4;
+		float RangeLow = 0.45f;
+		float RangeHigh = 0.8f;
+		float TreeDens = 0.7f;
+		short TreeDist = 2;
 		try {
 			for (int bb = 0; bb < terrain.length; bb++)
 			{
 				short x = (short)(bb % l.width);
 				short y = (short)(bb / l.width);
-				short z = Evaluate(l, Range(terrain[bb], RangeLow - NegateEdge(x, y, l), RangeHigh - NegateEdge(x, y, l)));
+				short z = Evaluate(l, Range(terrain[bb], RangeLow, RangeHigh));
 				if (z > WaterLevel)
 				{
 					for (short zz = 0; z - zz >= 0; zz++)
 					{
-						if (overlay[bb] < 0.72f)    //If not zoned for rocks or gravel
+						if (overlay[bb] < 0.72f)
 						{
 							if (z > WaterLevel + 2)
 							{
@@ -61,12 +65,12 @@ public class Mountains implements Generator {
 							}
 							else
 							{
-								l.skipChange(x, (short)(z - zz), y, Block.getBlock("Sand"), _server);                        //SAAAND extra for islands
+								l.skipChange(x, (short)(z - zz), y, Block.getBlock("Dirt"), _server); 
 							}
 						}
 						else
 						{
-							l.skipChange(x, (short)(z - zz), y, Block.getBlock("Stone"), _server);    //zoned for above sea level rock floor
+							l.skipChange(x, (short)(z - zz), y, Block.getBlock("Grass"), _server);
 						}
 					}
 					int temprand = rand.nextInt(12);
@@ -83,45 +87,11 @@ public class Mountains implements Generator {
 						break;
 					}
 					if (overlay[bb] < 0.65f && overlay2[bb] < TreeDens)
-					{
 						if (l.getTile(x, z + 1, y).getVisableBlock() == (byte)0)
-						{
 							if (l.getTile(x, z, y).name.equals("Grass"))
-							{
 								if (rand.nextInt(13) == 0)
-								{
 									if (!TreeGenerator.checkForTree(l, x, z, y, TreeDist))
-									{
-										TreeGenerator.generateTree(_server, l, x, (short)(z + 1), y, rand);
-									}
-								}
-							}
-						}
-					}
-
-				}
-				else    //Must be on/under the water line then
-				{
-					for (short zz = 0; WaterLevel - zz >= 0; zz++)
-					{
-						if (WaterLevel - zz > z)
-						{ l.skipChange(x, (short)(WaterLevel - zz), y, Block.getBlock("Water"), _server); }    //better fill the water aboce me
-						else if (WaterLevel - zz > z - 3)
-						{
-							if (overlay[bb] < 0.75f)
-							{
-								l.skipChange(x, (short)(WaterLevel - zz), y, Block.getBlock("Sand"), _server);   //sand top
-							}
-							else
-							{
-								l.skipChange(x, (short)(WaterLevel - zz), y, Block.getBlock("Gravel"), _server);  //zoned for gravel
-							}
-						}
-						else
-						{ 
-							l.skipChange(x, (short)(WaterLevel - zz), y, Block.getBlock("Stone"), _server); 
-						}
-					}
+										TreeGenerator.generateTree(_server, l, x,(short)(z + 1), y, rand);								
 				}
 			}
 			FindSpawn(l, WaterLevel);
@@ -130,10 +100,9 @@ public class Mountains implements Generator {
 		{
 			e.printStackTrace();
 		}
-
-		terrain = new float[0]; //Derp
-		overlay = new float[0]; //Derp
-		overlay2 = new float[0]; //Derp
+		terrain = new float[0];
+		overlay = new float[0];
+		overlay2 = new float[0];
 	}
 	
 	void FindSpawn(Level l, int waterlevel) {
@@ -147,7 +116,6 @@ public class Mountains implements Generator {
 		}
 	}
 
-
 	private void GenerateFault(float[] array, Level l) {
 		float startheight = 0.5f;
 		float dispAux;
@@ -155,10 +123,8 @@ public class Mountains implements Generator {
 		float a, b, c, w, d;
 
 		float DispMax, DispMin, DispChange;
+		DispMax = 0.01f;
 		DispChange = -0.0025f;
-		
-		DispMax = 0.02f;
-        startheight = 0.6f;
 
 		for (int x = 0; x < array.length; x++)
 		{
@@ -382,4 +348,5 @@ public class Mountains implements Generator {
 		if (temp > lvl.depth - 1) return (short)(lvl.depth - 1);
 		return temp;
 	}
+
 }
