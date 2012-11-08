@@ -673,7 +673,8 @@ public class Player extends IOClient implements CommandExecutor {
 		updateAllLists(); //Update me in your list
 		setPos((short)((0.5 + level.spawnx) * 32), (short)((1 + level.spawny) * 32), (short)((0.5 + level.spawnz) * 32));
 		for (Player p : pm.server.players) {
-			pm.getPacket((byte)0x33).Write(this, server, p); //Update mine for you
+			if (this.hasExtension("ExtAddPlayerName"))
+				pm.getPacket((byte)0x33).Write(this, server, p); //Update mine for you
 			if (p.level == level) {
 				spawnPlayer(p); //Spawn p for me
 				p.spawnPlayer(this); //Spawn me for p

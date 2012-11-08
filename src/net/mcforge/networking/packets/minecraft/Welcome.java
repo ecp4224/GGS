@@ -43,12 +43,15 @@ public class Welcome extends Packet {
 			byte[] finals = new byte[131];
 			finals[0] = ID;
 			finals[1] = 0x07;
+			String smotd = server.MOTD;
+			if (((Player)player).getLevel().name.equals(server.MainLevel) && !((Player)player).getLevel().motd.equals("ignore"))
+				smotd = ((Player)player).getLevel().motd;
 			while (server.Name.length() < 64)
 				server.Name += " ";
 			while (server.MOTD.length() < 64)
-				server.MOTD += " ";
+				smotd += " ";
 			byte[] name = server.Name.getBytes("US-ASCII");
-			byte[] motd = server.MOTD.getBytes("US-ASCII");
+			byte[] motd = smotd.getBytes("US-ASCII");
 			System.arraycopy(name, 0, finals, 2, name.length);
 			System.arraycopy(motd, 0, finals, name.length + 2, motd.length);
 			finals[130] = (isop ? (byte)100 : (byte)0);

@@ -125,14 +125,26 @@ public class Properties {
 	 *                    This is thrown if there's an error saving the file
 	 */
 	public void save(String filename) throws IOException {
-		if (new File("properties/" + filename).exists())
-			new File("properties/" + filename).delete();
-		new File("properties/" + filename).createNewFile();
-		PrintWriter out = new PrintWriter("properties/" + filename);
+		String truefile = (filename.indexOf("properties/") != -1 ? filename : "properties/" + filename);
+		if (new File(truefile).exists())
+			new File(truefile).delete();
+		createChildDirectories(truefile);
+		new File(truefile).createNewFile();
+		PrintWriter out = new PrintWriter(truefile);
 		for (String s : settings) {
 			out.println(s);
 		}
 		out.close();
+	}
+	
+	private void createChildDirectories(String filepath) {
+		String[] dirs = filepath.split("\\/"); 
+		String path = "";
+		for (String directory : dirs) {
+			path += (path.equals("") ? directory : "/" + directory);
+			if (directory.indexOf(".") == -1 && !new File(path).exists())
+				new File(path).mkdir();
+		}
 	}
 
 	/**
@@ -146,7 +158,10 @@ public class Properties {
 	public void load(String filename) throws IOException {
 		if (settings.size() > 0)
 			settings.clear();
-		FileInputStream fstream = new FileInputStream("properties/" + filename);
+		String truefile = (filename.indexOf("properties/") != -1 ? filename : "properties/" + filename);
+		if (!new File(truefile).exists())
+			return;
+		FileInputStream fstream = new FileInputStream(truefile);
 		DataInputStream in = new DataInputStream(fstream);
 		BufferedReader br = new BufferedReader(new InputStreamReader(in));
 		String strLine;

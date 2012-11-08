@@ -15,6 +15,7 @@ import java.util.zip.GZIPOutputStream;
 import net.mcforge.iomodel.Player;
 import net.mcforge.server.Server;
 import net.mcforge.server.Tick;
+import net.mcforge.util.properties.Properties;
 import net.mcforge.world.convert.DatToGGS;
 import net.mcforge.world.generator.*;
 
@@ -32,6 +33,12 @@ public class Level implements Serializable {
 	transient ArrayList<Tick> ticks = new ArrayList<Tick>();
 
 	private boolean autosave;
+	
+	private boolean growgrass;
+	
+	private int physicsspeed;
+	
+	private Properties levelprop;
 
 	private Block[] blocks;
 	
@@ -71,6 +78,11 @@ public class Level implements Serializable {
 	 * The name of the level
 	 */
 	public String name;
+	
+	/**
+	 * The MoTD for this level
+	 */
+	public String motd;
 
 	/**
 	 * The constructor for {@link Level}
@@ -213,6 +225,37 @@ public class Level implements Serializable {
 	public void checkPhysics(Server server) {
 		Thread t = new StartPhysics(server, this);
 		t.start();
+	}
+	
+	public void loadProperties() {
+		levelprop = new Properties();
+		try {
+			levelprop.load("levels/properties/" + name + ".properties");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		this.physicsspeed = 100;
+		if (!levelprop.hasValue("Physics speed"))
+			levelprop.addSetting("Physics speed", physicsspeed);
+		else
+			this.physicsspeed = levelprop.getInt("Physics speed");
+		
+		this.motd = "ignore";
+		if (!levelprop.hasValue("MOTD"))
+			levelprop.addSetting("MOTD", "ignore");
+		else
+			this.motd = levelprop.getValue("MOTD");	
+		
+		try {
+			levelprop.save("levels/properties/" + name + ".properties");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	
+	}
+	
+	public Properties getLevelProperties() {
+		return levelprop;
 	}
 
 	/**
@@ -402,6 +445,7 @@ public class Level implements Serializable {
 			l.physics = l.new Ticker(server, l);
 			l.name = new File(filename).getName().split("\\.")[0];
 			l.run = true;
+			l.loadProperties();
 			l.unloading = false;
 			l.checkPhysics(server);
 			l.physics.start();
@@ -554,7 +598,7 @@ public class Level implements Serializable {
 				}
 				temp.clear();
 				try {
-					Thread.sleep(100);
+					Thread.sleep(physicsspeed);
 				} catch (InterruptedException e) { }
 			}
 			server.Log("[" + name + "] Physics stopped.");
