@@ -122,8 +122,10 @@ public class LevelHandler {
 		levels.clear();
 		File levelsFolder = new File("levels");
 		File[] levelFiles = levelsFolder.listFiles();
-		for(File f : levelFiles)
-			loadLevel(levelsFolder.getPath() + "/" + f.getName());
+		for(File f : levelFiles) {
+			if (f.getName().endsWith(".ggs"))
+				loadLevel(levelsFolder.getPath() + "/" + f.getName());
+		}
 	}
 	
 	/**

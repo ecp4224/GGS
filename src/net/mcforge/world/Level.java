@@ -16,7 +16,6 @@ import net.mcforge.iomodel.Player;
 import net.mcforge.server.Server;
 import net.mcforge.server.Tick;
 import net.mcforge.util.properties.Properties;
-import net.mcforge.world.convert.DatToGGS;
 import net.mcforge.world.generator.*;
 
 public class Level implements Serializable {
@@ -34,13 +33,11 @@ public class Level implements Serializable {
 
 	private boolean autosave;
 	
-	private boolean growgrass;
-	
 	private int physicsspeed;
 	
 	private Properties levelprop;
 
-	private Block[] blocks;
+	public Block[] blocks;
 	
 	private boolean unloading;
 
@@ -426,9 +423,7 @@ public class Level implements Serializable {
 	 */
 	public static Level Load(String filename, Server server) throws IOException, ClassNotFoundException {
 		Level l = null;
-		if (filename.endsWith(".dat"))
-			l = convertDAT(filename);
-		else if (filename.endsWith(".lvl"))
+		if (filename.endsWith(".lvl"))
 			l = convertLVL(filename);
 		else {
 			FileInputStream fis = new FileInputStream(filename);
@@ -454,35 +449,6 @@ public class Level implements Serializable {
 			fis.close();
 		}
 		return l;
-	}
-
-	/**
-	 * Convert a .dat file to a .ggs file
-	 * @param file
-	 *           The file to load and convert
-	 * @return
-	 *        The converted level object
-	 * @throws IOException
-	 *                   An IOException is thrown if there is a problem reading the file
-	 */
-	public static Level convertDAT(String file) throws IOException {
-		String name = new File(file).getName().split("\\.")[0];
-		DatToGGS newlvl = new DatToGGS();
-		newlvl.load(file);
-		Level lvl = new Level((short)newlvl.level.width, (short)newlvl.level.height, (short)newlvl.level.height);
-		int[] cords = new int[3];
-		for (int i = 0; i < newlvl.level.blocks.length; i++) {
-			cords = newlvl.getCoords(i);
-			try {
-				lvl.blocks[lvl.posToInt(cords[0], cords[1], cords[2])] = Block.getBlock(newlvl.level.blocks[i]);
-			} catch (Exception e) {
-				System.out.println(i + "= " + cords[0] + ":" + cords[1] + ":" + cords[2]);
-			}
-		}
-		lvl.name = name;
-		lvl.save();
-		new File(file).delete();
-		return lvl;
 	}
 
 	/**

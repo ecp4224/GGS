@@ -32,9 +32,11 @@ Please follow these rules when making pull requests
 5. Follow Oracle Code Convention [10.5.1][4], [10.5.2][5], and [10.5.3][6]
 
 ##Required Dependencies
-- [Minecraft Classic Server][9]
 - [MySQL Driver][7]
 - [SQLite Driver][8]
+
+##Building with Maven
+The source has a maven script for required dependencies, so just run 'mvn clean install'
 
 ##Copyright/License
 
