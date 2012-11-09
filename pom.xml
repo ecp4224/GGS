@@ -2,15 +2,11 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.mcforge</groupId>
   <artifactId>MCForge</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>6.0</version>
   <name>MCForge Core</name>
   <description>The Core for MCForge 6</description>
 
   <repositories>
-    <repository>
-      <id>GamezGalaxy-Repo</id>
-      <url>http://maven.gamezgalaxy.com:8181/repository/ggrepo/</url>
-    </repository>
     <repository>
       <id>maven-central</id>
       <url>http://central.maven.org/maven2</url>
@@ -49,7 +45,7 @@
 	          <Main-Class>net.mcforge.test.console.Main</Main-Class>
 	          <Implementation-Title>${project.name}</Implementation-Title>
 	          <Implementation-Version>${describe}</Implementation-Version>
-	          <Implementation-Vendor>Steveice10</Implementation-Vendor>
+	          <Implementation-Vendor>MCForge</Implementation-Vendor>
 	          <Sealed>true</Sealed>
 	        </manifestEntries>
 	        <manifestSections>
