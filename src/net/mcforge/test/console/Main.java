@@ -7,6 +7,7 @@
 ******************************************************************************/
 package net.mcforge.test.console;
 
+import java.io.IOException;
 import java.util.Scanner;
 
 import net.mcforge.API.EventHandler;
@@ -34,7 +35,18 @@ public class Main extends Console implements Listener {
 		Scanner scanner = new Scanner(System.in);
 		while (s.Running) {
 			String line = scanner.nextLine();
-			if (line.startsWith("/")) {
+			if (line.equals("/stop")) {
+				try {
+					s.Stop();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			else if (line.startsWith("/")) {
 				line = line.substring(1); //Get rid of the / at the beginning
 				if (line.split("\\ ").length > 1)
 					s.getCommandHandler().execute(this, line.split("\\ ")[0], line.substring(line.indexOf(line.split("\\ ")[1])));
