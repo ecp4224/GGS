@@ -29,11 +29,13 @@ public class Level implements Serializable {
 	 */
 	private static final long serialVersionUID = -7297498370800056856L;
 
-	private Thread physics;
+	private transient Thread physics;
 
 	private boolean run;
+	
+	private transient boolean saving;
 
-	transient ArrayList<Tick> ticks = new ArrayList<Tick>();
+	ArrayList<Tick> ticks = new ArrayList<Tick>();
 
 	private boolean autosave;
 	
@@ -363,6 +365,8 @@ public class Level implements Serializable {
 	public void save() throws IOException {
 		if (!new File("levels").exists())
 			new File("levels").mkdir();
+		saving = true;
+		
 		Kryo poni = new Kryo();
 		FileOutputStream fos = new FileOutputStream("levels/" + name + ".ggs");
 		GZIPOutputStream gos = new GZIPOutputStream(fos);
@@ -372,6 +376,7 @@ public class Level implements Serializable {
 		out.close();
 		gos.close();
 		fos.close();
+		saving = false;
 	}
 
 	/**
@@ -442,14 +447,13 @@ public class Level implements Serializable {
 				objInput.close();
 				throw new IOException("The level version does not match the current");
 			}
-			l.ticks = new ArrayList<Tick>();
 			l.physics = l.new Ticker(server, l);
 			l.name = new File(filename).getName().split("\\.")[0];
 			l.run = true;
 			l.loadProperties();
 			l.unloading = false;
-			l.checkPhysics(server);
 			l.physics.start();
+			l.saving = false;
 			objInput.close();
 			gis.close();
 			fis.close();
@@ -550,7 +554,7 @@ public class Level implements Serializable {
 				@SuppressWarnings("unchecked")
 				ArrayList<Tick> temp = (ArrayList<Tick>)ticks.clone();
 				for (int i = 0; i < temp.size(); i++) {
-					if (unloading)
+					if (unloading || saving)
 						break;
 					if (temp.get(i) instanceof PhysicsBlock) {
 						PhysicsBlock pb = (PhysicsBlock)temp.get(i);
@@ -629,5 +633,15 @@ public class Level implements Serializable {
 		if (x >= width || y >= depth || z >= height) return;
 
 		this.setTile(block, posToInt(x, y, z), server, false);
+		if (block instanceof PhysicsBlock)
+			skipTick(x, y, z, block, server);
+	}
+	
+	private void skipTick(int x, int y, int z, Block block, Server server) {
+		PhysicsBlock pb = ((PhysicsBlock)block).clone(server);
+		pb.setLevel(this);
+		pb.setServer(server);
+		pb.setPos(x, y, z);
+		this.ticks.add(pb);
 	}
 }

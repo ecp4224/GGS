@@ -151,7 +151,11 @@ public class LevelHandler {
 			}
 		}
 		try {
+			long startTime = System.nanoTime();
 			l = Level.Load(filename, server);
+			long endTime = System.nanoTime();
+			long duration = endTime - startTime;
+			server.Log("Loading took: " + duration + "ms");
 			LevelLoadEvent event = new LevelLoadEvent(l);
 			server.getEventSystem().callEvent(event);
 			if(event.isCancelled()) {

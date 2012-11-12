@@ -1270,6 +1270,7 @@ public class Player extends IOClient implements CommandExecutor {
 		public SendLevel(Player p) { this.p = p; }
 		@Override
 		public void run() {
+			long startTime = System.nanoTime();
 			Packet pa;
 			pa = pm.getPacket((byte)0x02);
 			pa.Write(p, pm.server);
@@ -1280,6 +1281,9 @@ public class Player extends IOClient implements CommandExecutor {
 			pa = pm.getPacket((byte)0x04);
 			pa.Write(p, pm.server);
 			pa = null;
+			long endTime = System.nanoTime();
+			long duration = endTime - startTime;
+			server.Log("Loading took: " + duration + "ms");
 			p.finishLevel();
 		}
 	}
