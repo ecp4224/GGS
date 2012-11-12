@@ -503,8 +503,10 @@ public final class Server implements LogInterface {
 			if (!l.name.equals(MainLevel))
 				l.unload(this);
 		}
-		getLevelHandler().findLevel(MainLevel).save();
-		getLevelHandler().findLevel(MainLevel).unload(this);
+		if (getLevelHandler().findLevel(MainLevel) != null) {
+			getLevelHandler().findLevel(MainLevel).save();
+			getLevelHandler().findLevel(MainLevel).unload(this);
+		}
 		tick.join();
 		logger.Stop();
 		heartbeater.stopBeating();
