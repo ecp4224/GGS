@@ -35,7 +35,7 @@ public class Level implements Serializable {
 	
 	private int physicsspeed;
 	
-	private Properties levelprop;
+	private transient Properties levelprop;
 
 	public Block[] blocks;
 	
