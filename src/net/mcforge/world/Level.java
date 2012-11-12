@@ -12,6 +12,10 @@ import java.util.ArrayList;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
+import com.esotericsoftware.kryo.Kryo;
+import com.esotericsoftware.kryo.io.Input;
+import com.esotericsoftware.kryo.io.Output;
+
 import net.mcforge.iomodel.Player;
 import net.mcforge.server.Server;
 import net.mcforge.server.Tick;
@@ -359,11 +363,12 @@ public class Level implements Serializable {
 	public void save() throws IOException {
 		if (!new File("levels").exists())
 			new File("levels").mkdir();
+		Kryo poni = new Kryo();
 		FileOutputStream fos = new FileOutputStream("levels/" + name + ".ggs");
 		GZIPOutputStream gos = new GZIPOutputStream(fos);
-		ObjectOutputStream out = new ObjectOutputStream(gos);
+		Output out = new Output(gos);
 		out.writeLong(serialVersionUID);
-		out.writeObject(this);
+		poni.writeObject(out, this);
 		out.close();
 		gos.close();
 		fos.close();
@@ -426,14 +431,15 @@ public class Level implements Serializable {
 		if (filename.endsWith(".lvl"))
 			l = convertLVL(filename);
 		else {
+			Kryo input = new Kryo();
 			FileInputStream fis = new FileInputStream(filename);
 			GZIPInputStream gis = new GZIPInputStream(fis);
-			ObjectInputStream obj = new ObjectInputStream(gis);
-			long version = obj.readLong();
+			Input objInput = new Input(gis);
+			long version = objInput.readLong();
 			if (version == serialVersionUID){
-				l = (Level)obj.readObject();
+				l = (Level)input.readObject(objInput, Level.class);
 			}else{
-				obj.close();
+				objInput.close();
 				throw new IOException("The level version does not match the current");
 			}
 			l.ticks = new ArrayList<Tick>();
@@ -444,7 +450,7 @@ public class Level implements Serializable {
 			l.unloading = false;
 			l.checkPhysics(server);
 			l.physics.start();
-			obj.close();
+			objInput.close();
 			gis.close();
 			fis.close();
 		}

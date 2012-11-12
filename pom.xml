@@ -24,6 +24,11 @@
       <version>3.6.16</version>
       <scope>provided</scope>
     </dependency>
+    <dependency>
+      <groupId>com.esotericsoftware.kryo</groupId>
+      <artifactId>kryo</artifactId>
+      <version>2.10</version>
+    </dependency>
   </dependencies>
   <build>
     <defaultGoal>clean install</defaultGoal>

@@ -34,6 +34,7 @@ Please follow these rules when making pull requests
 ##Required Dependencies
 - [MySQL Driver][7]
 - [SQLite Driver][8]
+- [Kryo][10]
 
 ##Building with Maven
 The source has a maven script for required dependencies, so just run 'mvn clean install'
@@ -68,3 +69,4 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 [7]: http://www.mysql.com/downloads/connector/j/
 [8]: http://mirror.nexua.org/Dependencies/sqlite-jdbc.jar
 [9]: http://www.minecraft.net/classic/list
+[10]: http://code.google.com/p/kryo/downloads/list
