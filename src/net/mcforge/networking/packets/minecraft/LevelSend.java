@@ -10,6 +10,7 @@ package net.mcforge.networking.packets.minecraft;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.zip.GZIPOutputStream;
 
 import net.mcforge.API.io.PacketPrepareEvent;
@@ -33,6 +34,7 @@ public class LevelSend extends Packet {
 
 	@Override
 	public void Write(IOClient p, Server server) {
+		ArrayList<byte[]> tosend = new ArrayList<byte[]>();
 		PacketPrepareEvent event = new PacketPrepareEvent(p, this, server);
 		server.getEventSystem().callEvent(event);
 		if (event.isCancelled())
@@ -66,9 +68,14 @@ public class LevelSend extends Packet {
 				gzip = tempbuffer;
 				int percent = (int)((double)((double)i * (double)100 / (double)number));
 				send[1027] = (byte)percent; 
-				player.WriteData(send);
-				Thread.sleep(10);
+				tosend.add(send);
 			}
+			for (byte[] array : tosend) {
+				player.WriteData(array);
+				if (!player.getIP().equals("127.0.0.1"))
+					Thread.sleep(10);
+			}
+			tosend.clear();
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (InterruptedException e) {

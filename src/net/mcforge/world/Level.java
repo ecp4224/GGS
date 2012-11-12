@@ -187,14 +187,8 @@ public class Level implements Serializable {
 		Block wasthere = blocks[index];
 		int[] pos = IntToPos(index);
 		if (b instanceof PhysicsBlock && physics) {
-			PhysicsBlock pb = ((PhysicsBlock)b).clone(server);
-			pb.setLevel(this);
-			pb.setServer(server);
-			pb.setPos(pos[0], pos[1], pos[2]);
-			blocks[index] = pb;
-			if (this.ticks == null)
-				this.ticks = new ArrayList<Tick>();
-			this.ticks.add(pb);
+			blocks[index] = addTick(pos[0], pos[1], pos[2], b, server);
+			return;
 		}
 		else
 			blocks[index] = b;
@@ -206,23 +200,36 @@ public class Level implements Serializable {
 			return;
 		try {
 			if (getTile(pos[0] + 1, pos[1], pos[2]) instanceof PhysicsBlock && !ticks.contains(getTile(pos[0] + 1, pos[1], pos[2])))
-				ticks.add((PhysicsBlock)getTile(pos[0] + 1, pos[1], pos[2]));
+				addTick(pos[0] + 1, pos[1], pos[2], getTile(pos[0] + 1, pos[1], pos[2]), server);
 
 			if (getTile(pos[0] - 1, pos[1], pos[2]) instanceof PhysicsBlock && !ticks.contains(getTile(pos[0] - 1, pos[1], pos[2])))
-				ticks.add((PhysicsBlock)getTile(pos[0] - 1, pos[1], pos[2]));
+				addTick(pos[0] - 1, pos[1], pos[2], getTile(pos[0] - 1, pos[1], pos[2]), server);
 
 			if (getTile(pos[0], pos[1] + 1, pos[2]) instanceof PhysicsBlock && !ticks.contains(getTile(pos[0], pos[1] + 1, pos[2])))
-				ticks.add((PhysicsBlock)getTile(pos[0], pos[1] + 1, pos[2]));
+				addTick(pos[0], pos[1] + 1, pos[2], getTile(pos[0], pos[1] + 1, pos[2]), server);
 
 			if (getTile(pos[0], pos[1] - 1, pos[2]) instanceof PhysicsBlock && !ticks.contains(getTile(pos[0], pos[1] - 1, pos[2])))
-				ticks.add((PhysicsBlock)getTile(pos[0], pos[1] - 1, pos[2]));
+				addTick(pos[0], pos[1] - 1, pos[2], getTile(pos[0], pos[1] - 1, pos[2]), server);
 
 			if (getTile(pos[0], pos[1], pos[2] + 1) instanceof PhysicsBlock && !ticks.contains(getTile(pos[0], pos[1], pos[2] + 1)))
-				ticks.add((PhysicsBlock)getTile(pos[0], pos[1], pos[2] + 1));
+				addTick(pos[0], pos[1], pos[2] + 1, getTile(pos[0], pos[1], pos[2] + 1), server);
 
 			if (getTile(pos[0], pos[1], pos[2] - 1) instanceof PhysicsBlock && !ticks.contains(getTile(pos[0], pos[1], pos[2] - 1)))
-				ticks.add((PhysicsBlock)getTile(pos[0], pos[1], pos[2] - 1));
+				addTick(pos[0], pos[1], pos[2] - 1, getTile(pos[0], pos[1], pos[2] - 1), server);
 		} catch (Exception e) { }
+	}
+	
+	public PhysicsBlock addTick(int x, int y, int z, Block b, Server server) {
+		if (!(b instanceof PhysicsBlock))
+			return null;
+		PhysicsBlock pb = ((PhysicsBlock)b).clone(server);
+		pb.setLevel(this);
+		pb.setServer(server);
+		pb.setPos(x, y, z);
+		if (this.ticks == null)
+			this.ticks = new ArrayList<Tick>();
+		this.ticks.add(pb);
+		return pb;
 	}
 
 	public void checkPhysics(Server server) {
@@ -567,6 +574,10 @@ public class Level implements Serializable {
 							t.start();
 							continue;
 						}
+						if (getTile(pb.getX(), pb.getY(), pb.getZ()).getVisableBlock() != pb.getVisableBlock()) {
+							toremove.add(pb);
+							continue;
+						}
 					}
 					Tick t = temp.get(i);
 					if (t != null && !unloading)
@@ -629,11 +640,15 @@ public class Level implements Serializable {
 	 * @param server - The server
 	 */
 	public void skipChange(int x, int y, int z, Block block, Server server) {
+		skipChange(x, y, z, block, server, true);
+	}
+	
+	public void skipChange(int x, int y, int z, Block block, Server server, boolean addtick) {
 		if (x < 0 || y < 0 || z < 0) return;
 		if (x >= width || y >= depth || z >= height) return;
 
 		this.setTile(block, posToInt(x, y, z), server, false);
-		if (block instanceof PhysicsBlock)
+		if (block instanceof PhysicsBlock && addtick)
 			skipTick(x, y, z, block, server);
 	}
 	

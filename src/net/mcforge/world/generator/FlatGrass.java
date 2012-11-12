@@ -30,11 +30,11 @@ public class FlatGrass implements Generator {
 			for (int y = 0; y < l.height; y++) {
 				for (int z = 0; z < l.depth; z++) {
 					if (y < l.height / 2)
-						l.skipChange(x, y, z,Block.getBlock("dirt"),  _server);
+						l.skipChange(x, y, z,Block.getBlock("dirt"),  _server, false);
 					else if (y == l.height / 2)
-						l.skipChange(x, y, z,Block.getBlock("grass"),  _server);
+						l.skipChange(x, y, z,Block.getBlock("grass"),  _server, false);
 					else
-						l.skipChange( x, y, z,Block.getBlock("air"),  _server);
+						l.skipChange( x, y, z,Block.getBlock("air"),  _server, false);
 				}
 			}
 		}
