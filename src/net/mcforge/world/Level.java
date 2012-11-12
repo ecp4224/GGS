@@ -79,7 +79,7 @@ public class Level implements Serializable {
 	/**
 	 * The MoTD for this level
 	 */
-	public String motd;
+	public String motd = "ignore";
 
 	/**
 	 * The constructor for {@link Level}
