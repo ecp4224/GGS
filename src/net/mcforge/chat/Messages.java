@@ -87,10 +87,11 @@ public class Messages {
 			//And the current index is a &
 			//Assume its a color code
 			//And add it to the next line
-			else if ((i - last) % 63 == 1 && i + 1 < array.length && array[i] == '&') {
+			else if ((i - last) % 63 == 1 && (i - last) > 1 && i + 1 < array.length && array[i] == '&') {
 				toadd += "" + array[i + 1];
 				temp.add(toadd);
 				toadd = "";
+				last = i;
 				i++;
 			}
 		}
