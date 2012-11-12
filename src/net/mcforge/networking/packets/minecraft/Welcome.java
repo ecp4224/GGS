@@ -48,7 +48,7 @@ public class Welcome extends Packet {
 				smotd = ((Player)player).getLevel().motd;
 			while (server.Name.length() < 64)
 				server.Name += " ";
-			while (server.MOTD.length() < 64)
+			while (smotd.length() < 64)
 				smotd += " ";
 			byte[] name = server.Name.getBytes("US-ASCII");
 			byte[] motd = smotd.getBytes("US-ASCII");
