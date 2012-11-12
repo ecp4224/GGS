@@ -188,7 +188,7 @@ public class PacketManager {
 					break;
 				try {
 					connection = serverSocket.accept();
-					connection.setSoTimeout(10000);
+					connection.setSoTimeout(300000);
 					server.Log("Connection made from " + connection.getInetAddress().toString());
 					new AcceptThread(connection).start();
 				} catch (IOException e) {
