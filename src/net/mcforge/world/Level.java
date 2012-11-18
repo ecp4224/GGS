@@ -20,6 +20,7 @@ import net.mcforge.iomodel.Player;
 import net.mcforge.server.Server;
 import net.mcforge.server.Tick;
 import net.mcforge.util.properties.Properties;
+import net.mcforge.world.blocks.convert.OldBlocks;
 import net.mcforge.world.generator.*;
 
 public class Level implements Serializable {
@@ -441,7 +442,7 @@ public class Level implements Serializable {
 	public static Level Load(String filename, Server server) throws IOException, ClassNotFoundException {
 		Level l = null;
 		if (filename.endsWith(".lvl"))
-			l = convertLVL(filename);
+			l = convertLVL(filename, server);
 		else {
 			Kryo input = new Kryo();
 			FileInputStream fis = new FileInputStream(filename);
@@ -477,7 +478,7 @@ public class Level implements Serializable {
 	 * @throws IOException
 	 *                   An IOException is thrown if there is a problem reading the file
 	 */
-	public static Level convertLVL(String file) throws IOException {
+	public static Level convertLVL(String file, Server s) throws IOException {
 		String name = new File(file).getName().split("\\.")[0];
 		File f = new File(file);
 		FileInputStream in = new FileInputStream(f);
@@ -496,17 +497,21 @@ public class Level implements Serializable {
 		short width = convert(data.readShort());
 		short height = convert(data.readShort());
 		short depth = convert(data.readShort());
-		Level level = new Level(width, height, depth);
+		Level level = new Level(width, depth, height);
 		level.spawnx = convert(data.readShort());
 		level.spawnz = convert(data.readShort());
 		level.spawny = convert(data.readShort());
 		//Ignore these bytes
-		data.readUnsignedByte();
-		data.readUnsignedByte();
-
-		level.blocks = new Block[width * depth * height];
+		data.readByte();
+		data.readByte();
+		data.readByte();
+		data.readByte();
+		
 		for (int i = 0; i < level.blocks.length; i++) {
-			level.blocks[i] = translateBlock(data.readByte());
+			level.blocks[i] = translateBlock(data.readByte(), s);
+			//int[] pos = TranslateNumber(i, level);
+			//byte block = data.readByte();
+			//level.skipChange(pos[0], pos[1], pos[2], translateBlock(block), null, false);
 		}
 		data.close();
 		try {
@@ -523,22 +528,14 @@ public class Level implements Serializable {
 		return (short) (((convert >> 8) & 0xff) + ((convert << 8) & 0xff00));
 	}
 
-	private static Block translateBlock(byte id) {
+	private static Block translateBlock(byte id, Server s) {
 		if (id == 8)
 			return Block.getBlock((byte)9);
 		if (id == 10)
 			return Block.getBlock((byte)11);
 		if (id >= 0 && id <= 49)
 			return Block.getBlock(id);
-		//TODO Convert more blocks
-		if (id == 106)
-			return Block.getBlock((byte)9);
-		if (id == 105)
-			return Block.getBlock("Air");
-		if (id == 111)
-			return Block.getBlock("Log");
-
-		return Block.getBlock("Air");
+		return Block.getBlock(OldBlocks.convert(id, s));
 	}
 
 	private class Ticker extends Thread implements Serializable {
