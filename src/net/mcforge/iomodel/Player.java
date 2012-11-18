@@ -17,8 +17,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import net.mcforge.API.ClassicExtension;
 
@@ -1165,24 +1163,17 @@ public class Player extends IOClient implements CommandExecutor {
 			if (event.isCancelled())
 				return;
 			processCommand(message);
-		}else{
-			String m = message;
-			if(!m.matches(".*%([0-9]|[a-f]|[k-r])%([0-9]|[a-f]|[k-r])%([0-9]|[a-f]|[k-r])")){
-				if(m.matches(".*%([0-9]|[a-f]|[k-r])(.+?).*") && this.cc){
-					Pattern pattern = Pattern.compile("%([0-9]|[a-f]|[k-r])(.+?)");
-					Matcher matcher = pattern.matcher(m);
-					while (matcher.find()) {
-						String code = matcher.group().substring(1);
-						m = m.replaceAll("%"+code, "&"+code);
-					}
-				}
-			}
+		}else{		
+			String formattedMessage = message;
+			if(this.cc)
+				formattedMessage = ChatColor.convertColorCodes(message);
+			
 			PlayerChatEvent event = new PlayerChatEvent(this, message);
 			pm.server.getEventSystem().callEvent(event);
 			if (event.isCancelled())
 				return;
 			pm.server.Log("User "+ this.username + " sent: " + message);
-			chat.serverBroadcast(this.getDisplayName() + ChatColor.White + ": " + m);
+			chat.serverBroadcast(this.getDisplayName() + ChatColor.White + ": " + formattedMessage);
 		}
 	}
 
