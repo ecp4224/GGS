@@ -7,6 +7,9 @@
 ******************************************************************************/
 package net.mcforge.chat;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public enum ChatColor {
 	Black('&', '0'),
 	Dark_Blue('&', '1'),
@@ -39,6 +42,28 @@ public enum ChatColor {
 	@Override
 	public String toString() {
 		return "" + id + type;
+	}
+	
+	/**
+	 * Converts a message containing unformatted color codes to formatted
+	 * 
+	 * @param message
+	 * @return string
+	 */
+	public static String convertColorCodes(String message)
+	{
+		String m = message;
+		if(!m.matches(".*%([0-9]|[a-f]|[k-r])%([0-9]|[a-f]|[k-r])%([0-9]|[a-f]|[k-r])")){
+			if(m.matches(".*%([0-9]|[a-f]|[k-r])(.+?).*")){
+				Pattern pattern = Pattern.compile("%([0-9]|[a-f]|[k-r])(.+?)");
+				Matcher matcher = pattern.matcher(m);
+				while (matcher.find()) {
+					String code = matcher.group().substring(1);
+					m = m.replaceAll("%"+code, "&"+code);
+				}
+			}
+		}
+		return m;
 	}
 	
 	/**

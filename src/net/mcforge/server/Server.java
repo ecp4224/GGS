@@ -13,9 +13,7 @@ import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
-import java.util.List;
 import java.util.Random;
 
 import net.mcforge.API.EventSystem;
@@ -60,7 +58,7 @@ public final class Server implements LogInterface {
 	private String Salt;
 	private ISQL sql;
 	private Console console;
-	private Messages m; //Pls lets make everything in messages static this is just stupid
+	private Messages m;
 	public static final String[] devs = new String []{"Dmitchell", "501st_commander", "Lavoaster", "Alem_Zupa", "bemacized", "Shade2010", "edh649", "hypereddie10", "Gamemakergm", "Serado", "Wouto1997", "cazzar", "givo"};
 	/**
 	 * The name for currency on this server.
