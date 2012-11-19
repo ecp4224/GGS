@@ -58,6 +58,8 @@ public class MySQL implements ISQL {
 				}
 				catch (SQLException e) {
 					server.Log("ERROR EXECUTING STATEMENT!");
+					server.Log("Statement: ");
+					server.Log(s);
 					e.printStackTrace();
 				}
 			}

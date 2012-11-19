@@ -37,6 +37,7 @@ import net.mcforge.networking.packets.minecraft.GlobalPosUpdate;
 import net.mcforge.networking.packets.minecraft.TP;
 import net.mcforge.server.Server;
 import net.mcforge.server.Tick;
+import net.mcforge.sql.MySQL;
 import net.mcforge.world.Block;
 import net.mcforge.world.Level;
 import net.mcforge.world.PlaceMode;
@@ -541,6 +542,8 @@ public class Player extends IOClient implements CommandExecutor {
 			ResultSet r = server.getSQL().fillData("SELECT count(*) FROM " + server.getSQL().getPrefix() + "_extra WHERE name='" + username + "' AND setting='" + key + "'");
 			int size = 0;
 			try {
+				if (server.getSQL() instanceof MySQL)
+					r.next();
 				size = r.getInt(1);
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -575,6 +578,8 @@ public class Player extends IOClient implements CommandExecutor {
 			ResultSet r = server.getSQL().fillData("SELECT count(*) FROM " + server.getSQL().getPrefix() + "_extra WHERE name='" + username + "' AND setting='" + key + "'");
 			int size = 0;
 			try {
+				if (server.getSQL() instanceof MySQL)
+					r.next();
 				size = r.getInt(1);
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -619,7 +624,10 @@ public class Player extends IOClient implements CommandExecutor {
 			return;
 		if (extra.get(key) instanceof Serializable) {
 			ResultSet r = server.getSQL().fillData("SElECT count(*) FROM " + server.getSQL().getPrefix() + "_extra WHERE name='" + username + "' AND setting='" + key + "'");
-			int size = r.getInt(1);
+			int size = 0;
+			if (server.getSQL() instanceof MySQL)
+				r.next();
+			size = r.getInt(1);
 			PreparedStatement pstmt = null;
 			if (size == 0) {
 				pstmt = server.getSQL().getConnection().prepareStatement("INSERT INTO " + server.getSQL().getPrefix() + "_extra(name, setting, value) VALUES (?, ?, ?)");

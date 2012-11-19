@@ -1,14 +1,15 @@
 /*******************************************************************************
-* Copyright (c) 2012 MCForge.
-* All rights reserved. This program and the accompanying materials
-* are made available under the terms of the GNU Public License v3.0
-* which accompanies this distribution, and is available at
-* http://www.gnu.org/licenses/gpl.html
-******************************************************************************/
+ * Copyright (c) 2012 MCForge.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the GNU Public License v3.0
+ * which accompanies this distribution, and is available at
+ * http://www.gnu.org/licenses/gpl.html
+ ******************************************************************************/
 package net.mcforge.networking.packets;
 
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -42,18 +43,18 @@ import net.mcforge.networking.packets.minecraft.extend.HoldThisPacket;
 import net.mcforge.server.Server;
 
 public class PacketManager {
-	
+
 	protected Packet[] packets;
-	
+
 	protected ServerSocket serverSocket;
-	
+
 	protected Thread reader;
-	
+
 	/**
 	 * The server this PacketManager belongs to
 	 */
 	public Server server;
-	
+
 	/**
 	 * The constructor for the PacketManager
 	 * @param instance
@@ -68,7 +69,7 @@ public class PacketManager {
 			e.printStackTrace();
 		}
 	}
-	
+
 	protected void initPackets() {
 		packets = new Packet[] {
 				new Connect(this),
@@ -95,9 +96,9 @@ public class PacketManager {
 				new ExtPlayerPacket(this),
 				new ExtAddPlayerNamePacket(this),
 				new ExtRemovePlayerNamePacket(this)
-			};
+		};
 	}
-	
+
 	/**
 	 * Get a packet this PacketManager handles.
 	 * @param opCode
@@ -113,7 +114,7 @@ public class PacketManager {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Get a packet this PacketManager handles.
 	 * @param name
@@ -129,7 +130,7 @@ public class PacketManager {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Have the PacketManager start listening for clients
 	 * on the port provided by the {@link PacketManager#server}
@@ -139,7 +140,7 @@ public class PacketManager {
 		reader.start();
 		server.Log("Listening on port " + server.Port);
 	}
-	
+
 	/**
 	 * Stop listening for clients.
 	 */
@@ -156,10 +157,10 @@ public class PacketManager {
 			e.printStackTrace();
 		}
 	}
-	
+
 	private void Accept(Socket connection) throws IOException {
 		DataInputStream reader = new DataInputStream(connection.getInputStream());
-		byte firstsend = reader.readByte();
+		byte firstsend = (byte)reader.read();
 		switch (firstsend) {
 		case 0: //Minecraft player
 			new Player(connection, this, firstsend, server);
@@ -177,9 +178,9 @@ public class PacketManager {
 			break;
 		}
 	}
-	
+
 	private class Read extends Thread {
-		
+
 		@Override
 		public void run() {
 			Socket connection = null;
@@ -188,21 +189,25 @@ public class PacketManager {
 					break;
 				try {
 					connection = serverSocket.accept();
-					connection.setSoTimeout(300000);
+					//connection.setSoTimeout(300000);
+					connection.setSoTimeout(10000);
 					server.Log("Connection made from " + connection.getInetAddress().toString());
 					new AcceptThread(connection).start();
+					Thread.sleep(500);
 				} catch (IOException e) {
 					if (e.getMessage().indexOf("socket closed") == -1)
 						e.printStackTrace();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
 				}
 			}
 		}
 	}
-	
+
 	private class AcceptThread extends Thread {
 		private Socket connection;
 		public AcceptThread(Socket connection) { this.connection = connection; }
-		
+
 		@Override
 		public void run() {
 			try {
