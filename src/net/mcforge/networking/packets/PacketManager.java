@@ -195,8 +195,6 @@ public class PacketManager {
 				} catch (IOException e) {
 					if (e.getMessage().indexOf("socket closed") == -1)
 						e.printStackTrace();
-				} catch (InterruptedException e) {
-					e.printStackTrace();
 				}
 			}
 		}
