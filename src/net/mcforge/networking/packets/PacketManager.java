@@ -189,11 +189,9 @@ public class PacketManager {
 					break;
 				try {
 					connection = serverSocket.accept();
-					//connection.setSoTimeout(300000);
-					connection.setSoTimeout(10000);
+					connection.setSoTimeout(300000);
 					server.Log("Connection made from " + connection.getInetAddress().toString());
 					new AcceptThread(connection).start();
-					Thread.sleep(500);
 				} catch (IOException e) {
 					if (e.getMessage().indexOf("socket closed") == -1)
 						e.printStackTrace();
