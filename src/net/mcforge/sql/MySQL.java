@@ -91,7 +91,7 @@ public class MySQL implements ISQL {
 		this.server = server;
 		try {
 			DriverManager.registerDriver(new com.mysql.jdbc.Driver());
-			connection = DriverManager.getConnection(getURL() + DB, username, pass);
+			connection = DriverManager.getConnection(getURL() + DB + getProperties(), username, pass);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -104,12 +104,21 @@ public class MySQL implements ISQL {
 	public Connection getConnection() {
 		return connection;
 	}
+	
 	/**
 	 * Get the URL to the mysql server
 	 * @return The URL
 	 */
 	public String getURL() {
 		return "jdbc:mysql://" + IP + ":" + port + "/";
+	}
+	
+	/**
+	 * Properties to add to the mysql connection
+	 * @return
+	 */
+	public String getProperties() {
+		return "?autoDeserialize=true";
 	}
 	
 	/**
