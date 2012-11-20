@@ -37,6 +37,7 @@ import net.mcforge.networking.packets.minecraft.GlobalPosUpdate;
 import net.mcforge.networking.packets.minecraft.TP;
 import net.mcforge.server.Server;
 import net.mcforge.server.Tick;
+import net.mcforge.sql.MySQL;
 import net.mcforge.world.Block;
 import net.mcforge.world.Level;
 import net.mcforge.world.PlaceMode;
@@ -541,6 +542,8 @@ public class Player extends IOClient implements CommandExecutor {
 			ResultSet r = server.getSQL().fillData("SELECT count(*) FROM " + server.getSQL().getPrefix() + "_extra WHERE name='" + username + "' AND setting='" + key + "'");
 			int size = 0;
 			try {
+				if (server.getSQL() instanceof MySQL)
+					r.next();
 				size = r.getInt(1);
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -551,10 +554,24 @@ public class Player extends IOClient implements CommandExecutor {
 			else {
 				r = server.getSQL().fillData("SELECT * FROM " + server.getSQL().getPrefix() + "_extra WHERE name='" + username + "' AND setting='" + key + "'");
 				try {
-					value = (T)r.getObject("value");
+					if (server.getSQL() instanceof MySQL) {
+						r.next();
+						ByteArrayInputStream bais;
+						ObjectInputStream ins;
+						bais = new ByteArrayInputStream(r.getBytes("value"));
+						ins = new ObjectInputStream(bais);
+						value = (T)ins.readObject();
+						ins.close();
+					}
+					else
+						value = (T)r.getObject("value");
 				} catch (SQLException e) {
 					e.printStackTrace();
 					return null;
+				} catch (IOException e) {
+					e.printStackTrace();
+				} catch (ClassNotFoundException e) {
+					e.printStackTrace();
 				}
 				extra.put(key, value);
 				try {
@@ -575,6 +592,8 @@ public class Player extends IOClient implements CommandExecutor {
 			ResultSet r = server.getSQL().fillData("SELECT count(*) FROM " + server.getSQL().getPrefix() + "_extra WHERE name='" + username + "' AND setting='" + key + "'");
 			int size = 0;
 			try {
+				if (server.getSQL() instanceof MySQL)
+					r.next();
 				size = r.getInt(1);
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -619,7 +638,14 @@ public class Player extends IOClient implements CommandExecutor {
 			return;
 		if (extra.get(key) instanceof Serializable) {
 			ResultSet r = server.getSQL().fillData("SElECT count(*) FROM " + server.getSQL().getPrefix() + "_extra WHERE name='" + username + "' AND setting='" + key + "'");
-			int size = r.getInt(1);
+			int size = 0;
+			if (server.getSQL() instanceof MySQL)
+				r.next();
+			size = r.getInt(1);
+			if (server.getSQL() instanceof MySQL) {
+				saveToMySQL(key, extra.get(key), size == 0);
+				return;
+			}
 			PreparedStatement pstmt = null;
 			if (size == 0) {
 				pstmt = server.getSQL().getConnection().prepareStatement("INSERT INTO " + server.getSQL().getPrefix() + "_extra(name, setting, value) VALUES (?, ?, ?)");
@@ -639,6 +665,35 @@ public class Player extends IOClient implements CommandExecutor {
 		}
 		else
 			throw new NotSerializableException("The object that was stored in ExtraData cant be saved because it doesnt implement Serializable!");
+	}
+	
+	private <T> void saveToMySQL(String key, T o, boolean add) throws IOException, SQLException {
+		PreparedStatement ps=null;
+		String sql=null;
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		ObjectOutputStream oos = new ObjectOutputStream(bos);
+		oos.writeObject(o);
+		oos.flush();
+		oos.close();
+		bos.close();
+		
+		byte[] data = bos.toByteArray();
+		if (add) {
+			sql = "INSERT INTO " + server.getSQL().getPrefix() + "_extra(name, setting, value) VALUES (?, ?, ?)";
+			ps = getServer().getSQL().getConnection().prepareStatement(sql);
+			ps.setString(1, username);
+			ps.setString(2, key);
+			ps.setObject(3, data);
+		}
+		else {
+			sql = "UPDATE " + server.getSQL().getPrefix() + "_extra SET value = ? WHERE name = ? AND setting = ?";
+			ps = getServer().getSQL().getConnection().prepareStatement(sql);
+			ps.setObject(1, data);
+			ps.setString(2, username);
+			ps.setString(3, key);
+		}
+		ps.executeUpdate();
+		
 	}
 
 	/**

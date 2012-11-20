@@ -570,9 +570,6 @@ public class Level implements Serializable {
 		
 		for (int i = 0; i < level.blocks.length; i++) {
 			level.blocks[i] = translateBlock(data.readByte(), s);
-			//int[] pos = TranslateNumber(i, level);
-			//byte block = data.readByte();
-			//level.skipChange(pos[0], pos[1], pos[2], translateBlock(block), null, false);
 		}
 		data.close();
 		try {
