@@ -98,7 +98,7 @@ public abstract class Block implements Serializable {
 	 * @return 
 	 *        The ID
 	 */
-	public byte getVisableBlock() {
+	public byte getVisibleBlock() {
 		return ID;
 	}
 	

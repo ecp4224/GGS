@@ -111,7 +111,7 @@ public class Ocean implements Generator {
 	void FindSpawn(Level l, int waterlevel) {
 		int tries = 100;
 		l.spawny = waterlevel + (int)(Math.random() * (((waterlevel + 8) - waterlevel) + 1));
-		while (l.getTile(l.spawnx, l.spawny, l.spawnz).getVisableBlock() != 0 && tries > 0) {
+		while (l.getTile(l.spawnx, l.spawny, l.spawnz).getVisibleBlock() != 0 && tries > 0) {
 			l.spawnx = rand.nextInt(l.width);
 			l.spawny = waterlevel + (int)(Math.random() * (((waterlevel + 8) - waterlevel) + 1));
 			l.spawnz = rand.nextInt(l.depth);

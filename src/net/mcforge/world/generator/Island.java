@@ -88,7 +88,7 @@ public class Island implements Generator {
 					}
 					if (overlay[bb] < 0.65f && overlay2[bb] < TreeDens)
 					{
-						if (l.getTile(x, z + 1, y).getVisableBlock() == (byte)0)
+						if (l.getTile(x, z + 1, y).getVisibleBlock() == (byte)0)
 						{
 							if (l.getTile(x, z, y).name.equals("Grass"))
 							{
@@ -143,7 +143,7 @@ public class Island implements Generator {
 	void FindSpawn(Level l, int waterlevel) {
 		int tries = 100;
 		l.spawny = waterlevel + (int)(Math.random() * (((waterlevel + 8) - waterlevel) + 1));
-		while (l.getTile(l.spawnx, l.spawny, l.spawnz).getVisableBlock() != 0 && tries > 0) {
+		while (l.getTile(l.spawnx, l.spawny, l.spawnz).getVisibleBlock() != 0 && tries > 0) {
 			l.spawnx = rand.nextInt(l.width);
 			l.spawny = waterlevel + (int)(Math.random() * (((waterlevel + 8) - waterlevel) + 1));
 			l.spawnz = rand.nextInt(l.depth);
@@ -186,8 +186,8 @@ public class Island implements Generator {
 			{
 				for (short zz = (short)-dist; zz <= +dist; ++zz)
 				{
-					byte foundTile = Lvl.getTile((short)(x + xx), (short)(z + zz), (short)(y + yy)).getVisableBlock();
-					if (foundTile == Block.getBlock("Wood").getVisableBlock() || foundTile == Block.getBlock("Green").getVisableBlock())
+					byte foundTile = Lvl.getTile((short)(x + xx), (short)(z + zz), (short)(y + yy)).getVisibleBlock();
+					if (foundTile == Block.getBlock("Wood").getVisibleBlock() || foundTile == Block.getBlock("Green").getVisibleBlock())
 					{
 						return true;
 					}

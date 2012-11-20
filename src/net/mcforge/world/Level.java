@@ -15,12 +15,15 @@ import java.util.zip.GZIPOutputStream;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
+import java.util.logging.Logger;
 
 import net.mcforge.iomodel.Player;
 import net.mcforge.server.Server;
 import net.mcforge.server.Tick;
 import net.mcforge.util.properties.Properties;
 import net.mcforge.world.blocks.convert.OldBlocks;
+import net.mcforge.world.converter.MojangLevel;
+import net.mcforge.world.converter.MojangLevelInputStream;
 import net.mcforge.world.generator.*;
 
 public class Level implements Serializable {
@@ -282,7 +285,7 @@ public class Level implements Serializable {
 		if (blocks[index] == null)
 			return Block.getBlock((byte)0);
 		if (blocks[index].name.equals("NULL"))
-			System.out.println("" + blocks[index].getVisableBlock());
+			System.out.println("" + blocks[index].getVisibleBlock());
 		return blocks[index];
 	}
 
@@ -427,7 +430,6 @@ public class Level implements Serializable {
 		}
 		blocks = null;
 	}
-
 	/**
 	 * Load a level and return the level
 	 * @param filename
@@ -468,9 +470,68 @@ public class Level implements Serializable {
 		}
 		return l;
 	}
-
+        /**
+         * Converts a .dat file to a .ggs file
+         * @param filename - The filename of the file to load and convert.
+         * @return - The converted level object.
+         * @throws IOException - An IOException is thrown if there is a problem reading the file.
+         */
+        public static Level convertDat(String filename) throws IOException{
+            FileInputStream fileIn = new FileInputStream(filename);
+            GZIPInputStream gzipDecompressor = new GZIPInputStream(fileIn);
+            DataInputStream dataInput = new DataInputStream(gzipDecompressor);
+                if((dataInput.readInt() != 0x271bb788)) {
+                    System.out.println("Error! Bad Magic: Invalid .dat file!");
+                    fileIn.close();
+                    gzipDecompressor.close();
+                    dataInput.close();
+                    return null;
+                }
+                if((dataInput.readByte() > 2)) {
+                    System.out.println("Error! Bad Version: .dat Level version is greater than 2.");
+                    fileIn.close();
+                    gzipDecompressor.close();
+                    dataInput.close();
+                    return null;
+                }
+                ObjectInputStream objectIn = new MojangLevelInputStream(gzipDecompressor);
+                try {
+                    MojangLevel l = (MojangLevel)objectIn.readObject();
+                    Level levelToReturn = getFromMojangLevel(l);
+                    levelToReturn.name = new File(filename).getName().split("\\.")[0];
+                    levelToReturn.save();
+                    new File(filename).delete();
+                    return levelToReturn;
+                } catch (ClassNotFoundException ex) {
+                    System.out.println(filename + ": Internal Error. Did not find MojangLevel. Cannot convert .dat level!. Report to a Developer!");
+                } catch(SecurityException e) {
+                    e.printStackTrace();
+                }
+                finally{
+                    fileIn.close();
+                    gzipDecompressor.close();
+                    dataInput.close();
+                    objectIn.close();
+                }
+                return null;
+        }
+        /**
+         * Converts a MojangLevel to a GGS Level.
+         * @param m - The MojangLevel to convert.
+         * @return  - Converted level!
+         */
+        private static Level getFromMojangLevel(MojangLevel m){
+            Level l = new Level((short)m.width, (short)m.depth, (short)m.height); // TODO: Test this change! Switched Depth and Height
+            l.spawnx = m.xSpawn;
+            l.spawny = m.zSpawn; // TODO: Test this change! Y to Z
+            l.spawnz = m.ySpawn; // TODO: Test this change! Z to Y
+            for(int i = 0; i < m.blocks.length; i++){
+                l.blocks[i] = Block.getBlock(m.blocks[i]); // Did I do this right?
+            }
+            return l;
+        }
 	/**
-	 * Convert a .lvl file to a .ggs file
+	 * Converts a .lvl file to a .ggs file
 	 * @param file
 	 *           The file to load and convert
 	 * @return
@@ -571,7 +632,7 @@ public class Level implements Serializable {
 							t.start();
 							continue;
 						}
-						if (getTile(pb.getX(), pb.getY(), pb.getZ()).getVisableBlock() != pb.getVisableBlock()) {
+						if (getTile(pb.getX(), pb.getY(), pb.getZ()).getVisibleBlock() != pb.getVisibleBlock()) {
 							toremove.add(pb);
 							continue;
 						}

@@ -435,7 +435,16 @@ public final class Server implements LogInterface {
 		ServerStartedEvent sse = new ServerStartedEvent(this);
 		es.callEvent(sse);
 		getCommandHandler().addCommand(new Me());
-	}
+            //Debug
+            Level l;
+        try {
+            l = Level.convertDat("levels/Turbine.dat");
+            System.out.println(l.name + " converted.");
+        } catch (IOException ex) {
+            java.util.logging.Logger.getLogger(Server.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        }
+        
 	
 	/**
 	 * Search for a player based on the name given.

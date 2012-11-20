@@ -66,7 +66,7 @@ public class Lava extends PhysicsBlock {
 			boolean c = false;
 			boolean d = false;
 			int i = 0;
-			while (i != x1 && (getLevel().getTile(getX() + i + 1, getY(), getZ()).getVisableBlock() == 0 || getLevel().getTile(getX() + i + 1, getY(), getZ()).getVisableBlock() == this.getVisableBlock())) {
+			while (i != x1 && (getLevel().getTile(getX() + i + 1, getY(), getZ()).getVisibleBlock() == 0 || getLevel().getTile(getX() + i + 1, getY(), getZ()).getVisibleBlock() == this.getVisibleBlock())) {
 				i++;
 				if (!check(getLevel().posToInt(getX() + i, getY(), getZ())))
 					break;
@@ -76,7 +76,7 @@ public class Lava extends PhysicsBlock {
 				}
 			}
 			i = 0;
-			while (i != x2 && (getLevel().getTile(getX() - i - 1, getY(), getZ()).getVisableBlock() == 0 || getLevel().getTile(getX() - i - 1, getY(), getZ()).getVisableBlock() == this.getVisableBlock())) {
+			while (i != x2 && (getLevel().getTile(getX() - i - 1, getY(), getZ()).getVisibleBlock() == 0 || getLevel().getTile(getX() - i - 1, getY(), getZ()).getVisibleBlock() == this.getVisibleBlock())) {
 				i++;
 				if (!check(getLevel().posToInt(getX() - i, getY(), getZ())))
 					break;
@@ -86,7 +86,7 @@ public class Lava extends PhysicsBlock {
 				}
 			}
 			i = 0;
-			while (i != z1 && (getLevel().getTile(getX(), getY(), getZ() + i + 1).getVisableBlock() == 0 || getLevel().getTile(getX(), getY(), getZ() + i + 1).getVisableBlock() == this.getVisableBlock())) {
+			while (i != z1 && (getLevel().getTile(getX(), getY(), getZ() + i + 1).getVisibleBlock() == 0 || getLevel().getTile(getX(), getY(), getZ() + i + 1).getVisibleBlock() == this.getVisibleBlock())) {
 				i++;
 				if (!check(getLevel().posToInt(getX(), getY(), getZ() + i)))
 					break;
@@ -96,7 +96,7 @@ public class Lava extends PhysicsBlock {
 				}
 			}
 			i = 0;
-			while (i != z2 && (getLevel().getTile(getX(), getY(), getZ() - i - 1).getVisableBlock() == 0 || getLevel().getTile(getX(), getY(), getZ() - i - 1).getVisableBlock() == this.getVisableBlock())) {
+			while (i != z2 && (getLevel().getTile(getX(), getY(), getZ() - i - 1).getVisibleBlock() == 0 || getLevel().getTile(getX(), getY(), getZ() - i - 1).getVisibleBlock() == this.getVisibleBlock())) {
 				i++;
 				if (!check(getLevel().posToInt(getX(), getY(), getZ() - i)))
 					break;
@@ -118,10 +118,10 @@ public class Lava extends PhysicsBlock {
 		if (b < 0 || b >= getLevel().getLength())
 			return false;
 		Block bb = getLevel().getTile(b);
-		byte btype = bb.getVisableBlock();
-		if (bb.getVisableBlock() == 0 && !nearSponge(b))
+		byte btype = bb.getVisibleBlock();
+		if (bb.getVisibleBlock() == 0 && !nearSponge(b))
 			return true;
-		if ((bb.getVisableBlock() == 41 || bb.getVisableBlock() == 15) && type >= 5)
+		if ((bb.getVisibleBlock() == 41 || bb.getVisibleBlock() == 15) && type >= 5)
 			return true;
 		if ((btype == 16 || btype == 47) && type >= 4)
 			return true;
@@ -131,7 +131,7 @@ public class Lava extends PhysicsBlock {
 			return true;
 		if ((btype == 1 || btype == 4 || btype == 9 || btype == 20 || btype == 42 || btype == 49) && type == 6)
 			return true;
-		if (btype == this.getVisableBlock())
+		if (btype == this.getVisibleBlock())
 			return false;
 		return false;
 	}

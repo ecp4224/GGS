@@ -87,7 +87,7 @@ public class Forest implements Generator {
 						break;
 					}
 					if (overlay[bb] < 0.65f && overlay2[bb] < TreeDens)
-						if (l.getTile(x, z + 1, y).getVisableBlock() == (byte)0)
+						if (l.getTile(x, z + 1, y).getVisibleBlock() == (byte)0)
 							if (l.getTile(x, z, y).name.equals("Grass"))
 								if (rand.nextInt(13) == 0)
 									if (!TreeGenerator.checkForTree(l, x, z, y, TreeDist))
@@ -108,7 +108,7 @@ public class Forest implements Generator {
 	void FindSpawn(Level l, int waterlevel) {
 		int tries = 100;
 		l.spawny = waterlevel + (int)(Math.random() * (((waterlevel + 8) - waterlevel) + 1));
-		while (l.getTile(l.spawnx, l.spawny, l.spawnz).getVisableBlock() != 0 && tries > 0) {
+		while (l.getTile(l.spawnx, l.spawny, l.spawnz).getVisibleBlock() != 0 && tries > 0) {
 			l.spawnx = rand.nextInt(l.width);
 			l.spawny = waterlevel + (int)(Math.random() * (((waterlevel + 8) - waterlevel) + 1));
 			l.spawnz = rand.nextInt(l.depth);

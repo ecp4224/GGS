@@ -42,7 +42,7 @@ public class RedFlower extends PhysicsBlock {
 
 	@Override
 	public void tick() {
-		if (getLevel().getTile(getX(), getY() - 1, getZ()).getVisableBlock() != 2)
+		if (getLevel().getTile(getX(), getY() - 1, getZ()).getVisibleBlock() != 2)
 			super.remove();
 		else
 			super.stopTick();

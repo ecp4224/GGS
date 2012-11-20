@@ -765,7 +765,7 @@ public class Player extends IOClient implements CommandExecutor {
 		Packet sb = s.getPacketManager().getPacket((byte)0x05);
 		for (Player p : s.players)
 			if (p.level == l)
-				sb.Write(p, s, X, Y, Z, block.getVisableBlock());
+				sb.Write(p, s, X, Y, Z, block.getVisibleBlock());
 	}
 
 	/**
@@ -776,7 +776,7 @@ public class Player extends IOClient implements CommandExecutor {
 	 * @param block The block to send
 	 */
 	public void SendBlockChange(short X, short Y, short Z, Block block) {
-		server.getPacketManager().getPacket((byte)0x05).Write(this, server, X, Y, Z, block.getVisableBlock());
+		server.getPacketManager().getPacket((byte)0x05).Write(this, server, X, Y, Z, block.getVisibleBlock());
 	}
 
 	/**

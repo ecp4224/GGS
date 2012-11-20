@@ -52,7 +52,7 @@ public class Sand extends PhysicsBlock {
 			return;
 		}
 		if (getServer().newSand) {
-			if (getLevel().getTile(getX(), getY() - 1, getZ()).getVisableBlock() == super.getVisableBlock()) {
+			if (getLevel().getTile(getX(), getY() - 1, getZ()).getVisibleBlock() == super.getVisibleBlock()) {
 				boolean north = getLevel().getTile(getX() + 1, getY(), getZ()).canWalkThrough();
 				boolean south = getLevel().getTile(getX() - 1, getY(), getZ()).canWalkThrough();
 				boolean east = getLevel().getTile(getX(), getY(), getZ() + 1).canWalkThrough();
