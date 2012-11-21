@@ -103,7 +103,7 @@ public abstract class Block implements Serializable {
 	}
 	
 	/**
-	 * This method is called when the block is delete
+	 * This method is called when the block is deleted
 	 * @param l 
 	 *          The level the block was deleted in
 	 * @param index 
