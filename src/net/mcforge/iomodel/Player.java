@@ -735,6 +735,7 @@ public class Player extends IOClient implements CommandExecutor {
 		}
 		setPos((short)((0.5 + level.spawnx) * 32), (short)((1 + level.spawny) * 32), (short)((0.5 + level.spawnz) * 32));
 		isLoggedin = true;
+		sendMessage(ChatColor.Dark_Red + "You're now dead." + ChatColor.Yellow + " Wait until the next round to build and play!");
 	}
 
 	/**

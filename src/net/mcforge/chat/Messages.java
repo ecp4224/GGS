@@ -63,6 +63,7 @@ public class Messages {
 		String toadd = "";
 		int last = 0;
 		ArrayList<String> temp = new ArrayList<String>();
+		ChatColor currentcolor = ChatColor.White;
 		for (int i = 0; i < array.length; i++) {
 			toadd += "" + array[i];
 			if ((i - last) % 63 == 0 && i != 0) {
@@ -81,6 +82,8 @@ public class Messages {
 				temp.add(finals);
 				toadd = "";
 				finals = "";
+				if (currentcolor != ChatColor.White)
+					toadd = currentcolor.toString();
 			}
 			//If the current letter is 1 before a multiply of 64
 			//And the current index + 1 is still less than the array
@@ -94,11 +97,16 @@ public class Messages {
 				last = i;
 				i++;
 			}
+			if (array[i] == '&' && i + 1 < array.length) {
+				String color = "" + array[i] + array[i + 1];
+				currentcolor = ChatColor.parse(color);
+			}
 		}
 		if (!toadd.equals(""))
 			temp.add(toadd);
 		return temp.toArray(new String[temp.size()]);
 	}
+	
 	/**
 	 * Joins the elements of the specified array using the specified separator as a separator
 	 * @param separator - The string to separate the joined elements of the array
