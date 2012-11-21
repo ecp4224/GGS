@@ -34,15 +34,20 @@ public abstract class FileUtils {
 	 */
 	public static final String TEXT_DIR = "text" + File.separator;
 	/**
-	 * The file name for the banned file
+	 * The filename for the banned file
 	 */
 	public static final String BANNED_FILE = "banned.txt";
 	/**
-	 * The file name for the rules file
+	 * The filename for the rules file
 	 */
 	public static final String RULES_FILE = "rules.txt";
+        /**
+         * The filename for the IRC Controllers file.
+         */
 	public static final String IRCCONTROLLERS_FILE = "ranks" + File.separator + "IRCControllers";
-
+        /**
+         * Creates all the files and directories that MCForge needs.
+         */
 	public static void createFilesAndDirs() {
 		try {
 			createIfNotExist("ranks", "IRCControllers");
@@ -50,12 +55,13 @@ public abstract class FileUtils {
 		catch (IOException e) {
 		}
 	}
-	/**
-	 * Creates the directory/file if it doesn't exist.
-	 * 
-	 * @param dir - The directory to create
-	 * @throws IOException - Signals that an I/O exception has occurred.
-	 */
+        /**
+         * Creates the directory/file if it doesn't exist.
+         * @param path - The directory to create.
+         * @param fileName - The file to create.
+         * @param contents - The contents inside the file.
+         * @throws IOException - Signals that an I/O exception has occurred.
+         */
 	public static void createIfNotExist(String path, String fileName, String contents) throws IOException {
 		File filePath = new File(path);
 		File fileFile = new File(path, fileName);
