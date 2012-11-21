@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface ClassicExtension {
-	String extName();
-	int version() default 1;
+    String extName();
+    int version() default 1;
 }
 

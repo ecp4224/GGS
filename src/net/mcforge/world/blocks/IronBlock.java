@@ -11,18 +11,18 @@ import net.mcforge.world.Block;
 
 public class IronBlock extends Block {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
 
-	public IronBlock(byte ID, String name) {
-		super(ID, name);
-	}
-	
-	public IronBlock() {
-		super((byte)42, "IronBlock");
-	}
+    public IronBlock(byte ID, String name) {
+        super(ID, name);
+    }
+    
+    public IronBlock() {
+        super((byte)42, "IronBlock");
+    }
 
 }
 

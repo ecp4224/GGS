@@ -18,116 +18,116 @@ import net.mcforge.server.Server;
 
 public class SQLite implements ISQL {
 
-	protected Connection connection;
-	private Server server;
-	private String prefix;
-	private String file;
-	private final String PATH = "jdbc:sqlite:";
-	@Override
-	public void ExecuteQuery(String command) {
-		try {
-			if (connection.isClosed())
-				Connect(server);
-		} catch (SQLException e) {//
-			Connect(server);
-		}
-		try {
-			Statement statement = connection.createStatement();
-			statement.executeUpdate(command);
-			statement.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+    protected Connection connection;
+    private Server server;
+    private String prefix;
+    private String file;
+    private final String PATH = "jdbc:sqlite:";
+    @Override
+    public void ExecuteQuery(String command) {
+        try {
+            if (connection.isClosed())
+                Connect(server);
+        } catch (SQLException e) {//
+            Connect(server);
+        }
+        try {
+            Statement statement = connection.createStatement();
+            statement.executeUpdate(command);
+            statement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
-	}
-	
-	/**
-	 * Set the file SQLite will use to save the database
-	 * to.
-	 * @param file
-	 */
-	public void setFile(String file) {
-		this.file = file;
-	}
-	
-	/**
-	 * Get the file SQLite is saving the database to.
-	 * @return
-	 */
-	public String getFile() {
-		return file;
-	}
+    }
+    
+    /**
+     * Set the file SQLite will use to save the database
+     * to.
+     * @param file
+     */
+    public void setFile(String file) {
+        this.file = file;
+    }
+    
+    /**
+     * Get the file SQLite is saving the database to.
+     * @return
+     */
+    public String getFile() {
+        return file;
+    }
 
-	@Override
-	public void ExecuteQuery(String[] commands) {
-		try {
-			if (connection.isClosed())
-				Connect(server);
-		} catch (SQLException e) {
-			Connect(server);
-		}
-		try {
-			Statement statement = connection.createStatement();
-			for (String s : commands) {
-				try {
-					statement.executeUpdate(s);
-				}
-				catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
-			statement.close();
-		}
-		catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
+    @Override
+    public void ExecuteQuery(String[] commands) {
+        try {
+            if (connection.isClosed())
+                Connect(server);
+        } catch (SQLException e) {
+            Connect(server);
+        }
+        try {
+            Statement statement = connection.createStatement();
+            for (String s : commands) {
+                try {
+                    statement.executeUpdate(s);
+                }
+                catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            statement.close();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
-	@Override
-	public ResultSet fillData(String command) {
-		try {
-			if (connection.isClosed())
-				Connect(server);
-		} catch (SQLException e) {
-			Connect(server);
-		}
-		try {
-			return connection.prepareStatement(command).executeQuery();
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
+    @Override
+    public ResultSet fillData(String command) {
+        try {
+            if (connection.isClosed())
+                Connect(server);
+        } catch (SQLException e) {
+            Connect(server);
+        }
+        try {
+            return connection.prepareStatement(command).executeQuery();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
-	@Override
-	public void Connect(Server server) {
-		this.server = server;
-		try {
-			if (!new File("MCForge.db").exists())
-				new File("MCForge.db").createNewFile();
-			DriverManager.registerDriver(new org.sqlite.JDBC());
-			connection = DriverManager.getConnection(PATH + getFile());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	/**
-	 * Get the connection
-	 * @return java.sql.connection
-	 */
-	@Override
-	public Connection getConnection() {
-		return connection;
-	}
+    @Override
+    public void Connect(Server server) {
+        this.server = server;
+        try {
+            if (!new File("MCForge.db").exists())
+                new File("MCForge.db").createNewFile();
+            DriverManager.registerDriver(new org.sqlite.JDBC());
+            connection = DriverManager.getConnection(PATH + getFile());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    /**
+     * Get the connection
+     * @return java.sql.connection
+     */
+    @Override
+    public Connection getConnection() {
+        return connection;
+    }
 
-	@Override
-	public void setPrefix(String prefix) {
-		this.prefix = prefix;
-	}
-	
-	@Override
-	public String getPrefix() {
-		return prefix;
-	}
+    @Override
+    public void setPrefix(String prefix) {
+        this.prefix = prefix;
+    }
+    
+    @Override
+    public String getPrefix() {
+        return prefix;
+    }
 }
 

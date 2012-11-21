@@ -11,22 +11,22 @@ import net.mcforge.world.Block;
 
 public class BrownShroom extends Block {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
 
-	public BrownShroom(byte ID, String name) {
-		super(ID, name);
-	}
-	
-	public BrownShroom() {
-		super((byte)39, "BrownShroom");
-	}
-	
-	@Override
-	public boolean canWalkThrough() {
-		return true;
-	}
+    public BrownShroom(byte ID, String name) {
+        super(ID, name);
+    }
+    
+    public BrownShroom() {
+        super((byte)39, "BrownShroom");
+    }
+    
+    @Override
+    public boolean canWalkThrough() {
+        return true;
+    }
 }
 

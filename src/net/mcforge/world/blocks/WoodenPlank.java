@@ -11,18 +11,18 @@ import net.mcforge.world.Block;
 
 public class WoodenPlank extends Block {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
 
-	public WoodenPlank(byte ID, String name) {
-		super(ID, name);
-	}
-	
-	public WoodenPlank() {
-		super((byte)5, "WoodenPlank");
-	}
+    public WoodenPlank(byte ID, String name) {
+        super(ID, name);
+    }
+    
+    public WoodenPlank() {
+        super((byte)5, "WoodenPlank");
+    }
 
 }
 

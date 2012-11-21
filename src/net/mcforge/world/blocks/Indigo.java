@@ -11,18 +11,18 @@ import net.mcforge.world.Block;
 
 public class Indigo extends Block {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
 
-	public Indigo(byte ID, String name) {
-		super(ID, name);
-	}
-	
-	public Indigo() {
-		super((byte)30, "Indigo");
-	}
+    public Indigo(byte ID, String name) {
+        super(ID, name);
+    }
+    
+    public Indigo() {
+        super((byte)30, "Indigo");
+    }
 
 }
 

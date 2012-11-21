@@ -11,18 +11,18 @@ import net.mcforge.world.Block;
 
 public class Violet extends Block {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
 
-	public Violet(byte ID, String name) {
-		super(ID, name);
-	}
-	
-	public Violet() {
-		super((byte)31, "Violet");
-	}
+    public Violet(byte ID, String name) {
+        super(ID, name);
+    }
+    
+    public Violet() {
+        super((byte)31, "Violet");
+    }
 
 }
 

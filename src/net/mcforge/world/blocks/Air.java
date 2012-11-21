@@ -12,23 +12,23 @@ import net.mcforge.world.Block;
 
 public class Air extends Block {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
 
-	public Air(byte ID, String name) {
-		super(ID, name);
-	}
-	
-	public Air() {
-		super((byte)0, "Air");
-	}
-	
-	@Override
-	public boolean canWalkThrough() {
-		return true;
-	}
+    public Air(byte ID, String name) {
+        super(ID, name);
+    }
+    
+    public Air() {
+        super((byte)0, "Air");
+    }
+    
+    @Override
+    public boolean canWalkThrough() {
+        return true;
+    }
 
 }
 

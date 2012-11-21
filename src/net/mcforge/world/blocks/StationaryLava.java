@@ -11,23 +11,23 @@ import net.mcforge.world.Block;
 
 public class StationaryLava extends Block {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
 
-	public StationaryLava(byte ID, String name) {
-		super(ID, name);
-	}
-	
-	public StationaryLava() {
-		super((byte)11, "StationaryLava");
-	}
-	
-	@Override
-	public boolean canWalkThrough() {
-		return true;
-	}
+    public StationaryLava(byte ID, String name) {
+        super(ID, name);
+    }
+    
+    public StationaryLava() {
+        super((byte)11, "StationaryLava");
+    }
+    
+    @Override
+    public boolean canWalkThrough() {
+        return true;
+    }
 
 }
 

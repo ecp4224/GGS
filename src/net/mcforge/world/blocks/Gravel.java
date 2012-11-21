@@ -12,30 +12,30 @@ import net.mcforge.world.PhysicsBlock;
 
 public class Gravel extends Sand {
 
-	int wait = 0;
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    int wait = 0;
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
 
-	public Gravel(byte ID, String name) {
-		super(ID, name);
-	}
+    public Gravel(byte ID, String name) {
+        super(ID, name);
+    }
 
-	public Gravel() {
-		super((byte)13, "Gravel");
-	}
+    public Gravel() {
+        super((byte)13, "Gravel");
+    }
 
-	public Gravel(byte b, String string, Server s) {
-		super(b, string, s);
-	}
+    public Gravel(byte b, String string, Server s) {
+        super(b, string, s);
+    }
 
-	@Override
-	public PhysicsBlock clone(Server s) {
-		Gravel ss = new Gravel((byte)13, "Gravel", s);
-		ss.wait = wait;
-		return ss;
-	}
+    @Override
+    public PhysicsBlock clone(Server s) {
+        Gravel ss = new Gravel((byte)13, "Gravel", s);
+        ss.wait = wait;
+        return ss;
+    }
 
 }
 

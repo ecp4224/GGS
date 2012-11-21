@@ -14,32 +14,32 @@ import net.mcforge.world.Level;
 
 public class PlayerJoinedLevel extends PlayerEvent {
 
-	private static EventList events = new EventList();
-	Level _level;
-	public PlayerJoinedLevel(Player who, Level level) {
-		super(who);
-	}
+    private static EventList events = new EventList();
+    Level _level;
+    public PlayerJoinedLevel(Player who, Level level) {
+        super(who);
+    }
 
-	@Override
-	public EventList getEvents() {
-		return events;
-	}
-	
-	/**
-	 * Get a list of registered listeners
-	 * @return The list of listeners
-	 */
-	public static EventList getEventList() {
-		return events;
-	}
-	
-	/**
-	 * Get the level the player joined
-	 * @return The level object
-	 */
-	public Level getLevel() {
-		return _level;
-	}
+    @Override
+    public EventList getEvents() {
+        return events;
+    }
+    
+    /**
+     * Get a list of registered listeners
+     * @return The list of listeners
+     */
+    public static EventList getEventList() {
+        return events;
+    }
+    
+    /**
+     * Get the level the player joined
+     * @return The level object
+     */
+    public Level getLevel() {
+        return _level;
+    }
 
 }
 

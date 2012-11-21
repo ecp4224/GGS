@@ -11,18 +11,18 @@ import net.mcforge.world.Block;
 
 public class Orange extends Block {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
 
-	public Orange(byte ID, String name) {
-		super(ID, name);
-	}
-	
-	public Orange() {
-		super((byte)22, "Orange");
-	}
+    public Orange(byte ID, String name) {
+        super(ID, name);
+    }
+    
+    public Orange() {
+        super((byte)22, "Orange");
+    }
 
 }
 

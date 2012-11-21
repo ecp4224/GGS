@@ -12,19 +12,19 @@ import net.mcforge.iomodel.Browser;
 
 public class BrowserConnectEvent extends BrowserEvent {
 
-	private static EventList events = new EventList();
-	
-	public BrowserConnectEvent(Browser b) {
-		super(b);
-	}
+    private static EventList events = new EventList();
+    
+    public BrowserConnectEvent(Browser b) {
+        super(b);
+    }
 
-	@Override
-	public EventList getEvents() {
-		return events;
-	}
-	public static EventList getEventList() {
-		return events;
-	}
+    @Override
+    public EventList getEvents() {
+        return events;
+    }
+    public static EventList getEventList() {
+        return events;
+    }
 
 }
 

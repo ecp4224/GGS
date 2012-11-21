@@ -15,53 +15,53 @@ import net.mcforge.networking.IOClient;
 import net.mcforge.server.Server;
 
 public class PacketReceivedEvent extends IOEvent implements Cancelable {
-	private DataInputStream reader;
-	private byte opcode;
-	private boolean _cancel;
-	private static EventList events = new EventList();
-	public PacketReceivedEvent(IOClient client, Server server, DataInputStream reader, byte opcode) {
-		super(client, server);
-		this.reader = reader;
-		this.opcode = opcode;
-	}
+    private DataInputStream reader;
+    private byte opcode;
+    private boolean _cancel;
+    private static EventList events = new EventList();
+    public PacketReceivedEvent(IOClient client, Server server, DataInputStream reader, byte opcode) {
+        super(client, server);
+        this.reader = reader;
+        this.opcode = opcode;
+    }
 
-	@Override
-	public boolean isCancelled() {
-		return _cancel;
-	}
+    @Override
+    public boolean isCancelled() {
+        return _cancel;
+    }
 
-	@Override
-	public void setCancel(boolean cancel) {
-		this._cancel = cancel;
-	}
+    @Override
+    public void setCancel(boolean cancel) {
+        this._cancel = cancel;
+    }
 
-	@Override
-	public EventList getEvents() {
-		return events;
-	}
-	/**
-	 * Get a list of registered listeners
-	 * @return The list of listeners
-	 */
-	public static EventList getEventList() {
-		return events;
-	}
-	/**
-	 * Get a DataInputStream to read the bytes being sent by the client
-	 * @return A DataInputStream
-	 */
-	public DataInputStream getReader() {
-		return reader;
-	}
-	/**
-	 * Get the op code the client sent
-	 * The op code is the first byte of the byte array, this usually
-	 * indicates what type of message it is.
-	 * @return The first byte or op code
-	 */
-	public byte getOpCode() {
-		return opcode;
-	}
+    @Override
+    public EventList getEvents() {
+        return events;
+    }
+    /**
+     * Get a list of registered listeners
+     * @return The list of listeners
+     */
+    public static EventList getEventList() {
+        return events;
+    }
+    /**
+     * Get a DataInputStream to read the bytes being sent by the client
+     * @return A DataInputStream
+     */
+    public DataInputStream getReader() {
+        return reader;
+    }
+    /**
+     * Get the op code the client sent
+     * The op code is the first byte of the byte array, this usually
+     * indicates what type of message it is.
+     * @return The first byte or op code
+     */
+    public byte getOpCode() {
+        return opcode;
+    }
 
 }
 

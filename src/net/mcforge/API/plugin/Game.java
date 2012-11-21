@@ -14,13 +14,13 @@ import java.util.Properties;
 
 public abstract class Game extends Plugin implements Tick {
 
-	public Game(Server server, Properties properties) {
-		super(server, properties);
-	}
-	public Game(Server server) {
-		super(server);
-	}
-	
-	public abstract void tick();
+    public Game(Server server, Properties properties) {
+        super(server, properties);
+    }
+    public Game(Server server) {
+        super(server);
+    }
+    
+    public abstract void tick();
 }
 

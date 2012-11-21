@@ -11,18 +11,18 @@ import net.mcforge.world.Block;
 
 public class Cyan extends Block {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
 
-	public Cyan(byte ID, String name) {
-		super(ID, name);
-	}
-	
-	public Cyan() {
-		super((byte)27, "Cyan");
-	}
+    public Cyan(byte ID, String name) {
+        super(ID, name);
+    }
+    
+    public Cyan() {
+        super((byte)27, "Cyan");
+    }
 
 }
 

@@ -13,20 +13,20 @@ import java.sql.ResultSet;
 import net.mcforge.server.Server;
 
 public interface ISQL {
-	
-	void ExecuteQuery(String command);
-	
-	void ExecuteQuery(String[] commands);
-	
-	ResultSet fillData(String command);
-	
-	void Connect(Server server);
-	
-	void setPrefix(String prefix);
-	
-	String getPrefix();
-	
-	Connection getConnection();
+    
+    void ExecuteQuery(String command);
+    
+    void ExecuteQuery(String[] commands);
+    
+    ResultSet fillData(String command);
+    
+    void Connect(Server server);
+    
+    void setPrefix(String prefix);
+    
+    String getPrefix();
+    
+    Connection getConnection();
 
 }
 

@@ -20,46 +20,46 @@ import net.mcforge.server.Server;
 
 public class LevelStartSend extends Packet {
 
-	public LevelStartSend(String name, byte ID, PacketManager parent,
-			PacketType packetType) {
-		super(name, ID, parent, packetType);
-	}
-	
-	public LevelStartSend(PacketManager pm) {
-		super("Start Level Send", (byte)0x02, pm, PacketType.Server_to_Client);
-	}
+    public LevelStartSend(String name, byte ID, PacketManager parent,
+            PacketType packetType) {
+        super(name, ID, parent, packetType);
+    }
+    
+    public LevelStartSend(PacketManager pm) {
+        super("Start Level Send", (byte)0x02, pm, PacketType.Server_to_Client);
+    }
 
-	@Override
-	public void Write(IOClient player, Server server) {
-		PacketPrepareEvent event = new PacketPrepareEvent(player, this, server);
-		server.getEventSystem().callEvent(event);
-		if (event.isCancelled())
-			return;
-		try {
-			player.WriteData(new byte[] { ID });
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+    @Override
+    public void Write(IOClient player, Server server) {
+        PacketPrepareEvent event = new PacketPrepareEvent(player, this, server);
+        server.getEventSystem().callEvent(event);
+        if (event.isCancelled())
+            return;
+        try {
+            player.WriteData(new byte[] { ID });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
-	@Override
-	public void Handle(byte[] message, Server server, IOClient player) {
-		//SMP Handshake
-		final String KICKMESSAGE = "This is not an SMP Server!";
-		try {
-			byte[] kickbyte = KICKMESSAGE.getBytes("US-ASCII");
-			ByteBuffer bb = ByteBuffer.allocate(3 + kickbyte.length);
-			bb.put((byte)255);
-			bb.putShort((short)kickbyte.length);
-			bb.put(kickbyte);
-			player.WriteData(bb.array());
-		} catch (UnsupportedEncodingException e) {;
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		player.CloseConnection();
-	}
+    @Override
+    public void Handle(byte[] message, Server server, IOClient player) {
+        //SMP Handshake
+        final String KICKMESSAGE = "This is not an SMP Server!";
+        try {
+            byte[] kickbyte = KICKMESSAGE.getBytes("US-ASCII");
+            ByteBuffer bb = ByteBuffer.allocate(3 + kickbyte.length);
+            bb.put((byte)255);
+            bb.putShort((short)kickbyte.length);
+            bb.put(kickbyte);
+            player.WriteData(bb.array());
+        } catch (UnsupportedEncodingException e) {;
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        player.CloseConnection();
+    }
 
 }
 

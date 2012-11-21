@@ -4,8 +4,8 @@ import net.mcforge.API.level.BlockConvertEvent;
 import net.mcforge.server.Server;
 
 public class OldBlocks {
-	
-	private static final byte air = (byte)0;
+    
+    private static final byte air = (byte)0;
     private static final byte rock = (byte)1;
     private static final byte grass = (byte)2;
     private static final byte dirt = (byte)3;
@@ -156,8 +156,8 @@ public class OldBlocks {
     private static final byte odoor12_air = (byte)181;
 
     private static final byte fire = (byte)185;
-	
-	private static final byte rocketstart = (byte)187;
+    
+    private static final byte rocketstart = (byte)187;
     private static final byte rockethead = (byte)188;
     private static final byte firework = (byte)189;
 
@@ -210,18 +210,18 @@ public class OldBlocks {
 
     private static final byte snake = (byte)251;
     private static final byte snaketail = (byte)252;
-	
-	private static final byte door_gold = (byte)253;
-	private static final byte door_gold_air = (byte)254;
-	
-	public static byte convert(byte b, Server s)
+    
+    private static final byte door_gold = (byte)253;
+    private static final byte door_gold_air = (byte)254;
+    
+    public static byte convert(byte b, Server s)
     {
-		if (s != null) {
-			BlockConvertEvent bce = new BlockConvertEvent(b);
-			s.getEventSystem().callEvent(bce);
-			if (bce.isCancelled())
-				return bce.getNewBlock();
-		}
+        if (s != null) {
+            BlockConvertEvent bce = new BlockConvertEvent(b);
+            s.getEventSystem().callEvent(bce);
+            if (bce.isCancelled())
+                return bce.getNewBlock();
+        }
         switch (b)
         {
             case flagbase: return mushroom; //CTF Flagbase
@@ -257,7 +257,7 @@ public class OldBlocks {
             case door_grass: return grass;
             case door_blue: return blue;
             case door_book: return bookcase;
-			case door_gold: return goldsolid;
+            case door_gold: return goldsolid;
             case door_cobblestone: return 4;
             case door_red: return red;
 
@@ -369,7 +369,7 @@ public class OldBlocks {
             case (byte) 216: //door10_air
             case door14_air:
             case door_iron_air:
-			case door_gold_air:
+            case door_gold_air:
             case door_cobblestone_air:
             case door_red_air: 
             case door_dirt_air:

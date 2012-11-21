@@ -11,18 +11,18 @@ import net.mcforge.world.Block;
 
 public class CoalOre extends Block {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
 
-	public CoalOre(byte ID, String name) {
-		super(ID, name);
-	}
-	
-	public CoalOre() {
-		super((byte)16, "CoalOre");
-	}
+    public CoalOre(byte ID, String name) {
+        super(ID, name);
+    }
+    
+    public CoalOre() {
+        super((byte)16, "CoalOre");
+    }
 
 }
 

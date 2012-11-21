@@ -18,33 +18,33 @@ import net.mcforge.server.Server;
 
 public class Ping extends Packet {
 
-	public Ping(String name, byte ID, PacketManager parent,
-			PacketType packetType) {
-		super(name, ID, parent, packetType);
-	}
-	
-	public Ping(PacketManager pm) {
-		super("Ping", (byte)0x01, pm, PacketType.Server_to_Client);
-	}
+    public Ping(String name, byte ID, PacketManager parent,
+            PacketType packetType) {
+        super(name, ID, parent, packetType);
+    }
+    
+    public Ping(PacketManager pm) {
+        super("Ping", (byte)0x01, pm, PacketType.Server_to_Client);
+    }
 
-	@Override
-	public void Write(IOClient player, Server server) {
-		PacketPrepareEvent event = new PacketPrepareEvent(player, this, server);
-		server.getEventSystem().callEvent(event);
-		if (event.isCancelled())
-			return;
-		try {
-			player.WriteData(new byte[] { ID });
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+    @Override
+    public void Write(IOClient player, Server server) {
+        PacketPrepareEvent event = new PacketPrepareEvent(player, this, server);
+        server.getEventSystem().callEvent(event);
+        if (event.isCancelled())
+            return;
+        try {
+            player.WriteData(new byte[] { ID });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
-	@Override
-	public void Handle(byte[] message, Server server, IOClient player) {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void Handle(byte[] message, Server server, IOClient player) {
+        // TODO Auto-generated method stub
+        
+    }
 
 }
 

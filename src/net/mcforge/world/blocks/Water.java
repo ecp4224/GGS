@@ -12,31 +12,31 @@ import net.mcforge.world.PhysicsBlock;
 
 public class Water extends Lava {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
 
-	public Water(byte ID, String name) {
-		super(ID, name);
-	}
-	
-	public Water() {
-		super((byte)8, "Water");
-	}
-	
-	public Water(byte b, String string, Server s) {
-		super(b, string, s);
-	}
+    public Water(byte ID, String name) {
+        super(ID, name);
+    }
+    
+    public Water() {
+        super((byte)8, "Water");
+    }
+    
+    public Water(byte b, String string, Server s) {
+        super(b, string, s);
+    }
 
-	@Override
-	public PhysicsBlock clone(Server s) {
-		Water w = new Water((byte)8, "Water", s);
-		w.type = type;
-		if (w.type == 0)
-			w.type = random.nextInt(6) + 1;
-		return w;
-	}
+    @Override
+    public PhysicsBlock clone(Server s) {
+        Water w = new Water((byte)8, "Water", s);
+        w.type = type;
+        if (w.type == 0)
+            w.type = random.nextInt(6) + 1;
+        return w;
+    }
 
 }
 

@@ -11,18 +11,18 @@ import net.mcforge.world.Block;
 
 public class Obsidian extends Block {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
 
-	public Obsidian(byte ID, String name) {
-		super(ID, name);
-	}
-	
-	public Obsidian() {
-		super((byte)49, "Obsidian");
-	}
+    public Obsidian(byte ID, String name) {
+        super(ID, name);
+    }
+    
+    public Obsidian() {
+        super((byte)49, "Obsidian");
+    }
 
 }
 

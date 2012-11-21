@@ -19,54 +19,54 @@ import net.mcforge.server.Server;
 
 public class MOTD extends Packet {
 
-	public MOTD(String name, byte ID, PacketManager parent,
-			PacketType packetType) {
-		super(name, ID, parent, packetType);
-	}
+    public MOTD(String name, byte ID, PacketManager parent,
+            PacketType packetType) {
+        super(name, ID, parent, packetType);
+    }
 
-	public MOTD(PacketManager pm) {
-		super("MOTD", (byte)0x00, pm, PacketType.Server_to_Client);
-	}
+    public MOTD(PacketManager pm) {
+        super("MOTD", (byte)0x00, pm, PacketType.Server_to_Client);
+    }
 
-	@Override
-	public void Write(IOClient player, Server server, Object...parma) {
-		PacketPrepareEvent event = new PacketPrepareEvent(player, this, server);
-		server.getEventSystem().callEvent(event);
-		if (event.isCancelled())
-			return;
-		try {
-			String topLine = (String)parma[0];
-			String bottomLine = (String)parma[1];
-			byte[] finals = new byte[131];
-			finals[0] = ID;
-			finals[1] = 0x07;
-			while (topLine.length() < 64)
-				topLine += " ";
-			while (bottomLine.length() < 64)
-				bottomLine += " ";
-			byte[] name = topLine.getBytes("US-ASCII");
-			byte[] motd = bottomLine.getBytes("US-ASCII");
-			System.arraycopy(name, 0, finals, 2, name.length);
-			System.arraycopy(motd, 0, finals, name.length + 2, motd.length);
-			finals[130] = 0x00;
-			player.WriteData(finals);
-			
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+    @Override
+    public void Write(IOClient player, Server server, Object...parma) {
+        PacketPrepareEvent event = new PacketPrepareEvent(player, this, server);
+        server.getEventSystem().callEvent(event);
+        if (event.isCancelled())
+            return;
+        try {
+            String topLine = (String)parma[0];
+            String bottomLine = (String)parma[1];
+            byte[] finals = new byte[131];
+            finals[0] = ID;
+            finals[1] = 0x07;
+            while (topLine.length() < 64)
+                topLine += " ";
+            while (bottomLine.length() < 64)
+                bottomLine += " ";
+            byte[] name = topLine.getBytes("US-ASCII");
+            byte[] motd = bottomLine.getBytes("US-ASCII");
+            System.arraycopy(name, 0, finals, 2, name.length);
+            System.arraycopy(motd, 0, finals, name.length + 2, motd.length);
+            finals[130] = 0x00;
+            player.WriteData(finals);
+            
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
-	@Override
-	public void Handle(byte[] message, Server server, IOClient player) {
-		// TODO Auto-generated method stub
+    @Override
+    public void Handle(byte[] message, Server server, IOClient player) {
+        // TODO Auto-generated method stub
 
-	}
+    }
 
-	@Override
-	public void Write(IOClient player, Server servers) {
-	}
+    @Override
+    public void Write(IOClient player, Server servers) {
+    }
 
 }
 

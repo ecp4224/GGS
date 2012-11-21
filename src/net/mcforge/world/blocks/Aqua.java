@@ -11,18 +11,18 @@ import net.mcforge.world.Block;
 
 public class Aqua extends Block {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
 
-	public Aqua(byte ID, String name) {
-		super(ID, name);
-	}
-	
-	public Aqua() {
-		super((byte)26, "Aqua");
-	}
+    public Aqua(byte ID, String name) {
+        super(ID, name);
+    }
+    
+    public Aqua() {
+        super((byte)26, "Aqua");
+    }
 
 }
 

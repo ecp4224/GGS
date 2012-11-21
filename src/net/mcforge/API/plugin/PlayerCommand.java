@@ -12,24 +12,24 @@ import net.mcforge.iomodel.Player;
 
 
 public abstract class PlayerCommand extends Command {
-	
-	@Override
-	public void execute(CommandExecutor e, String[] args0) {
-		if (e instanceof Player) {
-			Player player = (Player)e;
-			execute(player, args0);
-		}
-		else
-			e.sendMessage("This command can only be used ingame!");
-	}
-	
-	/**
-	 * Execute this command
-	 * @param player
-	 *              The <b>client</b> that used this command
-	 * @param args
-	 *           The arguments passed
-	 */
-	public abstract void execute(Player player, String[] args);
+    
+    @Override
+    public void execute(CommandExecutor e, String[] args0) {
+        if (e instanceof Player) {
+            Player player = (Player)e;
+            execute(player, args0);
+        }
+        else
+            e.sendMessage("This command can only be used ingame!");
+    }
+    
+    /**
+     * Execute this command
+     * @param player
+     *              The <b>client</b> that used this command
+     * @param args
+     *           The arguments passed
+     */
+    public abstract void execute(Player player, String[] args);
 }
 

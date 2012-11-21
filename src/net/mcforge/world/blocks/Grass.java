@@ -14,45 +14,45 @@ import net.mcforge.world.PhysicsBlock;
 
 public class Grass extends PhysicsBlock {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
 
-	public Grass(byte ID, String name) {
-		this(ID, name, null);
-	}
-	
-	public Grass() {
-		this((byte)2, "Grass");
-	}
-	
-	public Grass(Server s) {
-		this((byte)2, "Grass", s);
-	}
-	
-	public Grass(byte ID, String name, Server s) {
-		super((byte)2, "Grass", s);
-	}
+    public Grass(byte ID, String name) {
+        this(ID, name, null);
+    }
+    
+    public Grass() {
+        this((byte)2, "Grass");
+    }
+    
+    public Grass(Server s) {
+        this((byte)2, "Grass", s);
+    }
+    
+    public Grass(byte ID, String name, Server s) {
+        super((byte)2, "Grass", s);
+    }
 
-	@Override
-	public boolean initAtStart() {
-		return true;
-	}
+    @Override
+    public boolean initAtStart() {
+        return true;
+    }
 
-	@Override
-	public PhysicsBlock clone(Server s) {
-		return new Grass(s);
-	}
+    @Override
+    public PhysicsBlock clone(Server s) {
+        return new Grass(s);
+    }
 
-	@Override
-	public void tick() {
-		if (getLevel().getTile(getX(), getY() - 1, getZ()).getVisibleBlock() == 2)
-			Player.GlobalBlockChange((short)getX(), (short)(getY() - 1), (short)getZ(), Block.getBlock("Dirt"), getLevel(), getServer());
-		if (!getLevel().getTile(getX(), getY() + 1, getZ()).canWalkThrough())
-			super.change(Block.getBlock("Dirt"));
-		else
-			super.stopTick();
-	}
+    @Override
+    public void tick() {
+        if (getLevel().getTile(getX(), getY() - 1, getZ()).getVisibleBlock() == 2)
+            Player.GlobalBlockChange((short)getX(), (short)(getY() - 1), (short)getZ(), Block.getBlock("Dirt"), getLevel(), getServer());
+        if (!getLevel().getTile(getX(), getY() + 1, getZ()).canWalkThrough())
+            super.change(Block.getBlock("Dirt"));
+        else
+            super.stopTick();
+    }
 }
 

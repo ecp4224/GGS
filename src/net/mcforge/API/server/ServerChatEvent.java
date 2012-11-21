@@ -12,62 +12,62 @@ import net.mcforge.system.Console;
 * this event will never be called.
 */
 public class ServerChatEvent extends ServerEvent implements Cancelable  {
-	private static EventList events = new EventList();
-	private Console console;
-	private String message;
-	private boolean canceled;
-	
-	public ServerChatEvent(Console console, String message) {
-		super(console.getServer());
-		this.console = console;
-		this.message = message;
-	}
-	
-	@Override
-	public EventList getEvents() {
-		return events;
-	}
-	
-	/**
-	 * Get a list of registered listeners
-	 * @return The list of listeners
-	 */
-	public static EventList getEventList() {
-		return events;
-	}
-	
-	/**
-	 * Get the console that sent the message
-	 * @return The console.
-	 */
-	public Console getConsole() {
-		return console;
-	}
-	
-	/**
-	 * Get the message sent
-	 * @return The message.
-	 */
-	public String getMessage() {
-		return message;
-	}
-	
-	/**
-	 * Weather this event is canceled or not.
-	 * 
-	 * @return boolean
-	 *                If true, the event has been canceled.
-	 *                If false, the event has not been canceled.
-	 */
-	public boolean isCancelled() {
-		return canceled;
-	}
+    private static EventList events = new EventList();
+    private Console console;
+    private String message;
+    private boolean canceled;
+    
+    public ServerChatEvent(Console console, String message) {
+        super(console.getServer());
+        this.console = console;
+        this.message = message;
+    }
+    
+    @Override
+    public EventList getEvents() {
+        return events;
+    }
+    
+    /**
+     * Get a list of registered listeners
+     * @return The list of listeners
+     */
+    public static EventList getEventList() {
+        return events;
+    }
+    
+    /**
+     * Get the console that sent the message
+     * @return The console.
+     */
+    public Console getConsole() {
+        return console;
+    }
+    
+    /**
+     * Get the message sent
+     * @return The message.
+     */
+    public String getMessage() {
+        return message;
+    }
+    
+    /**
+     * Weather this event is canceled or not.
+     * 
+     * @return boolean
+     *                If true, the event has been canceled.
+     *                If false, the event has not been canceled.
+     */
+    public boolean isCancelled() {
+        return canceled;
+    }
 
-	/**
-	 * Cancel/Uncancel this event.
-	 */
-	public void setCancel(boolean cancel) {
-		canceled = cancel;
-	}
+    /**
+     * Cancel/Uncancel this event.
+     */
+    public void setCancel(boolean cancel) {
+        canceled = cancel;
+    }
 }
 

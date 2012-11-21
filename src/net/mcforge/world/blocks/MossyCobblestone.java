@@ -11,18 +11,18 @@ import net.mcforge.world.Block;
 
 public class MossyCobblestone extends Block {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
 
-	public MossyCobblestone(byte ID, String name) {
-		super(ID, name);
-	}
-	
-	public MossyCobblestone() {
-		super((byte)48, "MossyCobblestone");
-	}
+    public MossyCobblestone(byte ID, String name) {
+        super(ID, name);
+    }
+    
+    public MossyCobblestone() {
+        super((byte)48, "MossyCobblestone");
+    }
 
 }
 

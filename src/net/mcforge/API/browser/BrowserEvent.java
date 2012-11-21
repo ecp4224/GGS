@@ -11,14 +11,14 @@ import net.mcforge.API.Event;
 import net.mcforge.iomodel.Browser;
 
 public abstract class BrowserEvent extends Event {
-	private Browser _b;
-	
-	public BrowserEvent(Browser b) {
-		this._b = b;
-	}
-	
-	public Browser getBrowserObject() {
-		return _b;
-	}
+    private Browser _b;
+    
+    public BrowserEvent(Browser b) {
+        this._b = b;
+    }
+    
+    public Browser getBrowserObject() {
+        return _b;
+    }
 }
 

@@ -11,19 +11,19 @@ import net.mcforge.world.Block;
 
 public class Unknown extends Block {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
 
-	public Unknown(byte ID, String name) {
-		super(ID, name);
-	}
-	
-	public Unknown() {
-		super((byte)0, "NULL");
-	}
-	
+    public Unknown(byte ID, String name) {
+        super(ID, name);
+    }
+    
+    public Unknown() {
+        super((byte)0, "NULL");
+    }
+    
 
 }
 

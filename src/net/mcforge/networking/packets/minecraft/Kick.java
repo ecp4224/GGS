@@ -20,46 +20,46 @@ import net.mcforge.server.Server;
 
 public class Kick extends Packet {
 
-	public Kick(String name, byte ID, PacketManager parent,
-			PacketType packetType) {
-		super(name, ID, parent, packetType);
-	}
-	
-	public Kick(PacketManager pm) {
-		super("Kick", (byte)0x0e, pm, PacketType.Server_to_Client);
-	}
+    public Kick(String name, byte ID, PacketManager parent,
+            PacketType packetType) {
+        super(name, ID, parent, packetType);
+    }
+    
+    public Kick(PacketManager pm) {
+        super("Kick", (byte)0x0e, pm, PacketType.Server_to_Client);
+    }
 
-	@Override
-	public void Handle(byte[] message, Server server, IOClient player) {
-	}
+    @Override
+    public void Handle(byte[] message, Server server, IOClient player) {
+    }
 
-	@Override
-	public void Write(IOClient p, Server server) {
-		PacketPrepareEvent event = new PacketPrepareEvent(p, this, server);
-		server.getEventSystem().callEvent(event);
-		if (event.isCancelled())
-			return;
-		Player player;
-		if (p instanceof Player) {
-			player = (Player)p;
-		}
-		else
-			return;
-		try {
-			while (player.kickreason.length() < 64) {
-				player.kickreason += " ";
-			}
-			byte[] temp = player.kickreason.getBytes("US-ASCII");
-			byte[] finals = new byte[1 + temp.length];
-			finals[0] = ID;
-			System.arraycopy(temp, 0, finals, 1, temp.length);
-			player.WriteData(finals);
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+    @Override
+    public void Write(IOClient p, Server server) {
+        PacketPrepareEvent event = new PacketPrepareEvent(p, this, server);
+        server.getEventSystem().callEvent(event);
+        if (event.isCancelled())
+            return;
+        Player player;
+        if (p instanceof Player) {
+            player = (Player)p;
+        }
+        else
+            return;
+        try {
+            while (player.kickreason.length() < 64) {
+                player.kickreason += " ";
+            }
+            byte[] temp = player.kickreason.getBytes("US-ASCII");
+            byte[] finals = new byte[1 + temp.length];
+            finals[0] = ID;
+            System.arraycopy(temp, 0, finals, 1, temp.length);
+            player.WriteData(finals);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 }
 

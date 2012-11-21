@@ -11,13 +11,13 @@ import net.mcforge.groups.Group;
 import net.mcforge.server.Server;
 
 public interface CommandExecutor {
-	
-	public void sendMessage(String message);
-	
-	public Server getServer();
-	
-	public Group getGroup();
-	
-	public String getName();
+    
+    public void sendMessage(String message);
+    
+    public Server getServer();
+    
+    public Group getGroup();
+    
+    public String getName();
 }
 

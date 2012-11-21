@@ -11,18 +11,18 @@ import net.mcforge.world.Block;
 
 public class GoldBlock extends Block {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
 
-	public GoldBlock(byte ID, String name) {
-		super(ID, name);
-	}
-	
-	public GoldBlock() {
-		super((byte)41, "GoldBlock");
-	}
+    public GoldBlock(byte ID, String name) {
+        super(ID, name);
+    }
+    
+    public GoldBlock() {
+        super((byte)41, "GoldBlock");
+    }
 
 }
 

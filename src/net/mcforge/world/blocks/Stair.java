@@ -11,18 +11,18 @@ import net.mcforge.world.Block;
 
 public class Stair extends Block {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
 
-	public Stair(byte ID, String name) {
-		super(ID, name);
-	}
-	
-	public Stair() {
-		super((byte)44, "Stair");
-	}
+    public Stair(byte ID, String name) {
+        super(ID, name);
+    }
+    
+    public Stair() {
+        super((byte)44, "Stair");
+    }
 
 }
 

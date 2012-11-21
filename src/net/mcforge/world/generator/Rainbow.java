@@ -16,30 +16,30 @@ import net.mcforge.world.Level;
 
 public class Rainbow implements Generator {
 
-	private Server _server;
-	
-	/**
-	 * The constructor for the rainbow level generator
-	 * 
-	 * @param server - The server the level is in
-	 */
-	public Rainbow(Server server) {
-		this._server = server;
-	}
-	@Override
-	public void generate(Level l) {
-		Random rand = new Random(System.currentTimeMillis());
-		for (int x = 0; x < l.width; x++) {
-			for (int y = 0; y < l.height; y++) {
-				for (int z = 0; z < l.depth; z++) {
-					if (y == 0 || y == l.height - 1 || x == 0 || x == l.width - 1 || z == 0 || z == l.depth - 1) 
-						l.skipChange(x, y, z, Block.getBlock((byte)(rand.nextInt(36 - 21) + 21)), _server);
-				}
-			}
-		}
-	}
-	@Override
-	public void generate(Level l, int x, int y, int z) {
-		generate(l);
-	}
+    private Server _server;
+    
+    /**
+     * The constructor for the rainbow level generator
+     * 
+     * @param server - The server the level is in
+     */
+    public Rainbow(Server server) {
+        this._server = server;
+    }
+    @Override
+    public void generate(Level l) {
+        Random rand = new Random(System.currentTimeMillis());
+        for (int x = 0; x < l.width; x++) {
+            for (int y = 0; y < l.height; y++) {
+                for (int z = 0; z < l.depth; z++) {
+                    if (y == 0 || y == l.height - 1 || x == 0 || x == l.width - 1 || z == 0 || z == l.depth - 1) 
+                        l.skipChange(x, y, z, Block.getBlock((byte)(rand.nextInt(36 - 21) + 21)), _server);
+                }
+            }
+        }
+    }
+    @Override
+    public void generate(Level l, int x, int y, int z) {
+        generate(l);
+    }
 }

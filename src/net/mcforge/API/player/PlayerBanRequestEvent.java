@@ -10,71 +10,71 @@ import net.mcforge.iomodel.Player;
 */
 public class PlayerBanRequestEvent extends PlayerEvent {
 
-	private CommandExecutor banner;
-	private String reason;
-	private boolean kick;
-	private boolean banip;
-	private static EventList events = new EventList();
-	
-	public PlayerBanRequestEvent(Player who, String reason, boolean kick, CommandExecutor banner2, boolean banip) {
-		super(who);
-		this.banner = banner2;
-		this.reason = reason;
-		this.kick = kick;
-		this.banip = banip;
-	}
+    private CommandExecutor banner;
+    private String reason;
+    private boolean kick;
+    private boolean banip;
+    private static EventList events = new EventList();
+    
+    public PlayerBanRequestEvent(Player who, String reason, boolean kick, CommandExecutor banner2, boolean banip) {
+        super(who);
+        this.banner = banner2;
+        this.reason = reason;
+        this.kick = kick;
+        this.banip = banip;
+    }
 
-	@Override
-	public EventList getEvents() {
-		return events;
-	}
-	
-	/**
-	 * Weather the request is a ip ban.
-	 * @return
-	 *        True if the requst is a IP ban.
-	 *        False if its not.
-	 */
-	public boolean requestIsIPBan() {
-		return banip;
-	}
-	
-	/**
-	 * The person that banned the player.
-	 * @return
-	 *        The banner
-	 */
-	public CommandExecutor getBanner() {
-		return banner;
-	}
-	
-	/**
-	 * Get a list of registered listeners
-	 * @return The list of listeners
-	 */
-	public static EventList getEventList() {
-		return events;
-	}
-	
-	/**
-	 * The reason the banner provided for kicking this
-	 * player
-	 * @return
-	 *        The reason
-	 */
-	public String getReason() {
-		return reason;
-	}
-	
-	/**
-	 * Weather or not the player will be kicked
-	 * after the request.
-	 * @return
-	 *        True if the player will be kicked.
-	 *        False if the player will wont be kicked.
-	 */
-	public boolean playerKicked() {
-		return kick;
-	}
+    @Override
+    public EventList getEvents() {
+        return events;
+    }
+    
+    /**
+     * Weather the request is a ip ban.
+     * @return
+     *        True if the requst is a IP ban.
+     *        False if its not.
+     */
+    public boolean requestIsIPBan() {
+        return banip;
+    }
+    
+    /**
+     * The person that banned the player.
+     * @return
+     *        The banner
+     */
+    public CommandExecutor getBanner() {
+        return banner;
+    }
+    
+    /**
+     * Get a list of registered listeners
+     * @return The list of listeners
+     */
+    public static EventList getEventList() {
+        return events;
+    }
+    
+    /**
+     * The reason the banner provided for kicking this
+     * player
+     * @return
+     *        The reason
+     */
+    public String getReason() {
+        return reason;
+    }
+    
+    /**
+     * Weather or not the player will be kicked
+     * after the request.
+     * @return
+     *        True if the player will be kicked.
+     *        False if the player will wont be kicked.
+     */
+    public boolean playerKicked() {
+        return kick;
+    }
 }
 

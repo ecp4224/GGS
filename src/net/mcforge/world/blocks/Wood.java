@@ -11,18 +11,18 @@ import net.mcforge.world.Block;
 
 public class Wood extends Block {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
 
-	public Wood(byte ID, String name) {
-		super(ID, name);
-	}
-	
-	public Wood() {
-		super((byte)17, "Wood");
-	}
+    public Wood(byte ID, String name) {
+        super(ID, name);
+    }
+    
+    public Wood() {
+        super((byte)17, "Wood");
+    }
 
 }
 

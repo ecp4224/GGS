@@ -11,18 +11,18 @@ import net.mcforge.world.Block;
 
 public class Purple extends Block {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
 
-	public Purple(byte ID, String name) {
-		super(ID, name);
-	}
-	
-	public Purple() {
-		super((byte)29, "Purple");
-	}
+    public Purple(byte ID, String name) {
+        super(ID, name);
+    }
+    
+    public Purple() {
+        super((byte)29, "Purple");
+    }
 
 }
 

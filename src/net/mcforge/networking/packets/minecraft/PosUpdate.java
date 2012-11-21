@@ -22,55 +22,55 @@ import net.mcforge.server.Server;
 @ClassicExtension(extName = "HeldBlock")
 public class PosUpdate extends Packet {
 
-	public PosUpdate(String name, byte ID, PacketManager parent,
-			PacketType packetType) {
-		super(name, ID, parent, packetType);
-		parent.server.getPluginHandler().addExtension(this);
-		this.length = 9;
-	}
-	
-	public PosUpdate(PacketManager pm) {
-		this("PosUpdate", (byte)0x08, pm, PacketType.Client_to_Server);
-	}
+    public PosUpdate(String name, byte ID, PacketManager parent,
+            PacketType packetType) {
+        super(name, ID, parent, packetType);
+        parent.server.getPluginHandler().addExtension(this);
+        this.length = 9;
+    }
+    
+    public PosUpdate(PacketManager pm) {
+        this("PosUpdate", (byte)0x08, pm, PacketType.Client_to_Server);
+    }
 
-	@Override
-	public void Write(IOClient player, Server server) {
-	}
+    @Override
+    public void Write(IOClient player, Server server) {
+    }
 
-	@Override
-	public void Handle(byte[] message, Server server, IOClient p) {
-		Player player;
-		if (p instanceof Player) {
-			player = (Player)p;
-		}
-		else
-			return;
-		ByteBuffer bb = ByteBuffer.allocate(9);
-		bb.put(message);
-		byte ID = bb.get(0);
-		short X = bb.getShort(1);
-		short Y = bb.getShort(3);
-		short Z = bb.getShort(5);
-		player.yaw = bb.get(7);
-		player.pitch = bb.get(8);
-		if (player.hasExtension(this))
-			player.setHoldingBlock(ID);
-		player.setX(X);
-		player.setY(Y);
-		player.setZ(Z);
-		PlayerMoveEvent event = new PlayerMoveEvent(player, X, Y, Z);
-		server.getEventSystem().callEvent(event);
-		if (event.isCancelled()) {
-			player.setPos(player.oldX, player.oldY, player.oldZ, player.oldyaw, player.oldpitch);
-			return;
-		}
-		try {
-			player.UpdatePos();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-	}
+    @Override
+    public void Handle(byte[] message, Server server, IOClient p) {
+        Player player;
+        if (p instanceof Player) {
+            player = (Player)p;
+        }
+        else
+            return;
+        ByteBuffer bb = ByteBuffer.allocate(9);
+        bb.put(message);
+        byte ID = bb.get(0);
+        short X = bb.getShort(1);
+        short Y = bb.getShort(3);
+        short Z = bb.getShort(5);
+        player.yaw = bb.get(7);
+        player.pitch = bb.get(8);
+        if (player.hasExtension(this))
+            player.setHoldingBlock(ID);
+        player.setX(X);
+        player.setY(Y);
+        player.setZ(Z);
+        PlayerMoveEvent event = new PlayerMoveEvent(player, X, Y, Z);
+        server.getEventSystem().callEvent(event);
+        if (event.isCancelled()) {
+            player.setPos(player.oldX, player.oldY, player.oldZ, player.oldyaw, player.oldpitch);
+            return;
+        }
+        try {
+            player.UpdatePos();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        
+    }
 
 }
 

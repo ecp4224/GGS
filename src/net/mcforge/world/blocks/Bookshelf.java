@@ -11,18 +11,18 @@ import net.mcforge.world.Block;
 
 public class Bookshelf extends Block {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
 
-	public Bookshelf(byte ID, String name) {
-		super(ID, name);
-	}
-	
-	public Bookshelf() {
-		super((byte)47, "Bookshelf");
-	}
+    public Bookshelf(byte ID, String name) {
+        super(ID, name);
+    }
+    
+    public Bookshelf() {
+        super((byte)47, "Bookshelf");
+    }
 
 }
 

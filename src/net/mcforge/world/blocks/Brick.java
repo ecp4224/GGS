@@ -11,18 +11,18 @@ import net.mcforge.world.Block;
 
 public class Brick extends Block {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
 
-	public Brick(byte ID, String name) {
-		super(ID, name);
-	}
-	
-	public Brick() {
-		super((byte)45, "Brick");
-	}
+    public Brick(byte ID, String name) {
+        super(ID, name);
+    }
+    
+    public Brick() {
+        super((byte)45, "Brick");
+    }
 
 }
 

@@ -11,18 +11,18 @@ import net.mcforge.world.Block;
 
 public class Red extends Block {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
 
-	public Red(byte ID, String name) {
-		super(ID, name);
-	}
-	
-	public Red() {
-		super((byte)21, "Red");
-	}
+    public Red(byte ID, String name) {
+        super(ID, name);
+    }
+    
+    public Red() {
+        super((byte)21, "Red");
+    }
 
 }
 

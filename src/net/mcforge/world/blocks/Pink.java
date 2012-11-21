@@ -11,18 +11,18 @@ import net.mcforge.world.Block;
 
 public class Pink extends Block {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
 
-	public Pink(byte ID, String name) {
-		super(ID, name);
-	}
-	
-	public Pink() {
-		super((byte)33, "Pink");
-	}
+    public Pink(byte ID, String name) {
+        super(ID, name);
+    }
+    
+    public Pink() {
+        super((byte)33, "Pink");
+    }
 
 }
 

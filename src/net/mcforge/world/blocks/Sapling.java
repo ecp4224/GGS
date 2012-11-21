@@ -11,23 +11,23 @@ import net.mcforge.world.Block;
 
 public class Sapling extends Block {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
 
-	public Sapling(byte ID, String name) {
-		super(ID, name);
-	}
-	
-	public Sapling() {
-		super((byte)6, "Sapling");
-	}
-	
-	@Override
-	public boolean canWalkThrough() {
-		return true;
-	}
+    public Sapling(byte ID, String name) {
+        super(ID, name);
+    }
+    
+    public Sapling() {
+        super((byte)6, "Sapling");
+    }
+    
+    @Override
+    public boolean canWalkThrough() {
+        return true;
+    }
 
 }
 

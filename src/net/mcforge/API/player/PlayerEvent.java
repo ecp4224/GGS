@@ -12,21 +12,21 @@ import net.mcforge.API.EventList;
 import net.mcforge.iomodel.Player;
 
 public abstract class PlayerEvent extends Event {
-	
-	private Player who;
-	
-	public PlayerEvent(Player who) {
-		this.who = who;
-	}
-	
-	public Player getPlayer() {
-		return who;
-	}
-	/**
-	 * Get a list of registered listeners
-	 * @return The list of listeners
-	 */
-	public abstract EventList getEvents();
+    
+    private Player who;
+    
+    public PlayerEvent(Player who) {
+        this.who = who;
+    }
+    
+    public Player getPlayer() {
+        return who;
+    }
+    /**
+     * Get a list of registered listeners
+     * @return The list of listeners
+     */
+    public abstract EventList getEvents();
 
 }
 

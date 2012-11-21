@@ -11,18 +11,18 @@ import net.mcforge.world.Block;
 
 public class Sponge extends Block {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
 
-	public Sponge(byte ID, String name) {
-		super(ID, name);
-	}
-	
-	public Sponge() {
-		super((byte)19, "Sponge");
-	}
+    public Sponge(byte ID, String name) {
+        super(ID, name);
+    }
+    
+    public Sponge() {
+        super((byte)19, "Sponge");
+    }
 
 }
 

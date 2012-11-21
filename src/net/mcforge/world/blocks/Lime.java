@@ -11,18 +11,18 @@ import net.mcforge.world.Block;
 
 public class Lime extends Block {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
 
-	public Lime(byte ID, String name) {
-		super(ID, name);
-	}
-	
-	public Lime() {
-		super((byte)24, "Lime");
-	}
+    public Lime(byte ID, String name) {
+        super(ID, name);
+    }
+    
+    public Lime() {
+        super((byte)24, "Lime");
+    }
 
 }
 

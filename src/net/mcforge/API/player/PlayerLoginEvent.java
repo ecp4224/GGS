@@ -11,23 +11,23 @@ import net.mcforge.API.EventList;
 import net.mcforge.iomodel.Player;
 
 public class PlayerLoginEvent extends PlayerEvent {
-	private static EventList events = new EventList();
-	
-	public PlayerLoginEvent(Player who) {
-		super(who);
-	}
+    private static EventList events = new EventList();
+    
+    public PlayerLoginEvent(Player who) {
+        super(who);
+    }
 
-	@Override
-	public EventList getEvents() {
-		return events;
-	}
-	/**
-	 * Get a list of registered listeners
-	 * @return The list of listeners
-	 */
-	public static EventList getEventList() {
-		return events;
-	}
+    @Override
+    public EventList getEvents() {
+        return events;
+    }
+    /**
+     * Get a list of registered listeners
+     * @return The list of listeners
+     */
+    public static EventList getEventList() {
+        return events;
+    }
 
 }
 

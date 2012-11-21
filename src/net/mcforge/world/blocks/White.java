@@ -11,18 +11,18 @@ import net.mcforge.world.Block;
 
 public class White extends Block {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
 
-	public White(byte ID, String name) {
-		super(ID, name);
-	}
-	
-	public White() {
-		super((byte)36, "White");
-	}
+    public White(byte ID, String name) {
+        super(ID, name);
+    }
+    
+    public White() {
+        super((byte)36, "White");
+    }
 
 }
 

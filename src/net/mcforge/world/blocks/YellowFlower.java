@@ -11,23 +11,23 @@ import net.mcforge.world.Block;
 
 public class YellowFlower extends Block {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
 
-	public YellowFlower(byte ID, String name) {
-		super(ID, name);
-	}
-	
-	public YellowFlower() {
-		super((byte)37, "YellowFlower");
-	}
-	
-	@Override
-	public boolean canWalkThrough() {
-		return true;
-	}
+    public YellowFlower(byte ID, String name) {
+        super(ID, name);
+    }
+    
+    public YellowFlower() {
+        super((byte)37, "YellowFlower");
+    }
+    
+    @Override
+    public boolean canWalkThrough() {
+        return true;
+    }
 
 }
 

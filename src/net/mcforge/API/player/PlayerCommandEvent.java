@@ -18,86 +18,86 @@ import net.mcforge.iomodel.Player;
 
 public class PlayerCommandEvent extends PlayerEvent implements Cancelable {
 
-	private static EventList events = new EventList();
-	
-	private boolean _canceled; 
-	
-	private List<String> command;
-		
-	private String orginalmessage;
-	
-	public PlayerCommandEvent(Player who, String message) {
-		super(who);
-		this.orginalmessage = message;
-		this.command = this.parseCommand(message);
-	}
-	
-	/**
-	 * Parses a command
-	 * 
-	 * @url http://stackoverflow.com/a/366532/1509091 - Thanks!
-	 * @param command
-	 * @return
-	 */
-	public List<String> parseCommand(String command)
-	{
-		List<String> params = new ArrayList<String>();
-		Pattern regex = Pattern.compile("[^\\s\"']+|\"([^\"]*)\"|'([^']*)'");
-		Matcher regexMatcher = regex.matcher(command);
-		while (regexMatcher.find()) {
-			if (regexMatcher.group(1) != null) {
-				// Add double-quoted string without the quotes
-				params.add(regexMatcher.group(1));
-			} else if (regexMatcher.group(2) != null) {
-				// Add single-quoted string without the quotes
-				params.add(regexMatcher.group(2));
-			} else {
-				// Add unquoted word
-				params.add(regexMatcher.group());
-			}
-		}
-		return params;
-	}
-	
-	@Override
-	public EventList getEvents() {
-		return events;
-	}
-	/**
-	 * Get a list of registered listeners
-	 * @return The list of listeners
-	 */
-	public static EventList getEventList() {
-		return events;
-	}
-		
-	public String getOrginalMessage() {
-		return orginalmessage;
-	}
-	
-	public String getCommand() {
-		return this.command.get(0).substring(1);
-	}
-	
-	public List<String> getArgs(){
-		ArrayList<String> args = new ArrayList<String>();
-		for (int i = 1; i < command.size(); i++)
-			args.add(command.get(i));
-		return args;
-	}
-	
-	public void setCommand(List<String> command) {
-		this.command = command;
-	}
+    private static EventList events = new EventList();
+    
+    private boolean _canceled; 
+    
+    private List<String> command;
+        
+    private String orginalmessage;
+    
+    public PlayerCommandEvent(Player who, String message) {
+        super(who);
+        this.orginalmessage = message;
+        this.command = this.parseCommand(message);
+    }
+    
+    /**
+     * Parses a command
+     * 
+     * @url http://stackoverflow.com/a/366532/1509091 - Thanks!
+     * @param command
+     * @return
+     */
+    public List<String> parseCommand(String command)
+    {
+        List<String> params = new ArrayList<String>();
+        Pattern regex = Pattern.compile("[^\\s\"']+|\"([^\"]*)\"|'([^']*)'");
+        Matcher regexMatcher = regex.matcher(command);
+        while (regexMatcher.find()) {
+            if (regexMatcher.group(1) != null) {
+                // Add double-quoted string without the quotes
+                params.add(regexMatcher.group(1));
+            } else if (regexMatcher.group(2) != null) {
+                // Add single-quoted string without the quotes
+                params.add(regexMatcher.group(2));
+            } else {
+                // Add unquoted word
+                params.add(regexMatcher.group());
+            }
+        }
+        return params;
+    }
+    
+    @Override
+    public EventList getEvents() {
+        return events;
+    }
+    /**
+     * Get a list of registered listeners
+     * @return The list of listeners
+     */
+    public static EventList getEventList() {
+        return events;
+    }
+        
+    public String getOrginalMessage() {
+        return orginalmessage;
+    }
+    
+    public String getCommand() {
+        return this.command.get(0).substring(1);
+    }
+    
+    public List<String> getArgs(){
+        ArrayList<String> args = new ArrayList<String>();
+        for (int i = 1; i < command.size(); i++)
+            args.add(command.get(i));
+        return args;
+    }
+    
+    public void setCommand(List<String> command) {
+        this.command = command;
+    }
 
-	@Override
-	public boolean isCancelled() {
-		return _canceled;
-	}
+    @Override
+    public boolean isCancelled() {
+        return _canceled;
+    }
 
-	@Override
-	public void setCancel(boolean cancel) {
-		_canceled = cancel;
-	}
+    @Override
+    public void setCancel(boolean cancel) {
+        _canceled = cancel;
+    }
 }
 

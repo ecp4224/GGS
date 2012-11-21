@@ -14,35 +14,35 @@ import net.mcforge.world.Level;
 
 public class FlatGrass implements Generator {
 
-	private Server _server;
-	
-	/**
-	 * The constructor for the flatgrass level generator
-	 * @param server
-	 *              The server the level is in
-	 */
-	public FlatGrass(Server server) {
-		this._server = server;
-	}
-	@Override
-	public void generate(Level l) {
-		for (int x = 0; x < l.width; x++) {
-			for (int y = 0; y < l.height; y++) {
-				for (int z = 0; z < l.depth; z++) {
-					if (y < l.height / 2)
-						l.skipChange(x, y, z,Block.getBlock("dirt"),  _server, false);
-					else if (y == l.height / 2)
-						l.skipChange(x, y, z,Block.getBlock("grass"),  _server, false);
-					else
-						l.skipChange( x, y, z,Block.getBlock("air"),  _server, false);
-				}
-			}
-		}
-	}
-	@Override
-	public void generate(Level l, int x, int y, int z) {
-		generate(l);
-	}
+    private Server _server;
+    
+    /**
+     * The constructor for the flatgrass level generator
+     * @param server
+     *              The server the level is in
+     */
+    public FlatGrass(Server server) {
+        this._server = server;
+    }
+    @Override
+    public void generate(Level l) {
+        for (int x = 0; x < l.width; x++) {
+            for (int y = 0; y < l.height; y++) {
+                for (int z = 0; z < l.depth; z++) {
+                    if (y < l.height / 2)
+                        l.skipChange(x, y, z,Block.getBlock("dirt"),  _server, false);
+                    else if (y == l.height / 2)
+                        l.skipChange(x, y, z,Block.getBlock("grass"),  _server, false);
+                    else
+                        l.skipChange( x, y, z,Block.getBlock("air"),  _server, false);
+                }
+            }
+        }
+    }
+    @Override
+    public void generate(Level l, int x, int y, int z) {
+        generate(l);
+    }
 
 }
 

@@ -15,21 +15,21 @@ import net.mcforge.server.Server;
 
 public class ClientInfo extends Packet {
 
-	public ClientInfo(String name, byte ID, PacketManager parent,
-			PacketType packetType) {
-		super(name, ID, parent, packetType);
-	}
-	public ClientInfo(PacketManager parent) {
-		super("Client Info", (byte)16, parent, PacketType.Client_to_Server);
-	}
+    public ClientInfo(String name, byte ID, PacketManager parent,
+            PacketType packetType) {
+        super(name, ID, parent, packetType);
+    }
+    public ClientInfo(PacketManager parent) {
+        super("Client Info", (byte)16, parent, PacketType.Client_to_Server);
+    }
 
-	@Override
-	public void Handle(byte[] message, Server server, IOClient player) {
-	}
+    @Override
+    public void Handle(byte[] message, Server server, IOClient player) {
+    }
 
-	@Override
-	public void Write(IOClient player, Server server) {
-	}
+    @Override
+    public void Write(IOClient player, Server server) {
+    }
 
 }
 

@@ -11,18 +11,18 @@ import net.mcforge.world.Block;
 
 public class TNT extends Block {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
 
-	public TNT(byte ID, String name) {
-		super(ID, name);
-	}
-	
-	public TNT() {
-		super((byte)46, "TNT");
-	}
+    public TNT(byte ID, String name) {
+        super(ID, name);
+    }
+    
+    public TNT() {
+        super((byte)46, "TNT");
+    }
 
 }
 

@@ -11,18 +11,18 @@ import net.mcforge.world.Block;
 
 public class Green extends Block {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
 
-	public Green(byte ID, String name) {
-		super(ID, name);
-	}
-	
-	public Green() {
-		super((byte)25, "Green");
-	}
+    public Green(byte ID, String name) {
+        super(ID, name);
+    }
+    
+    public Green() {
+        super((byte)25, "Green");
+    }
 
 }
 

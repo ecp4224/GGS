@@ -8,10 +8,10 @@
 package net.mcforge.system.heartbeat;
 
 public class WBeat extends MBeat {
-	
-	@Override
-	public String getURL() {
-		return "http://direct.worldofminecraft.com/hb.php";
-	}
+    
+    @Override
+    public String getURL() {
+        return "http://direct.worldofminecraft.com/hb.php";
+    }
 }
 

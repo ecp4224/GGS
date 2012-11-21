@@ -11,18 +11,18 @@ import net.mcforge.world.Block;
 
 public class Magenta extends Block {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
 
-	public Magenta(byte ID, String name) {
-		super(ID, name);
-	}
-	
-	public Magenta() {
-		super((byte)32, "Magenta");
-	}
+    public Magenta(byte ID, String name) {
+        super(ID, name);
+    }
+    
+    public Magenta() {
+        super((byte)32, "Magenta");
+    }
 
 }
 

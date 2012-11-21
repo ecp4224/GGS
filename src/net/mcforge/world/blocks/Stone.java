@@ -11,18 +11,18 @@ import net.mcforge.world.Block;
 
 public class Stone extends Block {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
 
-	public Stone(byte ID, String name) {
-		super(ID, name);
-	}
-	
-	public Stone() {
-		super((byte)1, "Stone");
-	}
+    public Stone(byte ID, String name) {
+        super(ID, name);
+    }
+    
+    public Stone() {
+        super((byte)1, "Stone");
+    }
 
 }
 

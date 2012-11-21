@@ -11,23 +11,23 @@ import net.mcforge.world.Block;
 
 public class RedShroom extends Block {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
 
-	public RedShroom(byte ID, String name) {
-		super(ID, name);
-	}
-	
-	public RedShroom() {
-		super((byte)40, "RedShroom");
-	}
-	
-	@Override
-	public boolean canWalkThrough() {
-		return true;
-	}
+    public RedShroom(byte ID, String name) {
+        super(ID, name);
+    }
+    
+    public RedShroom() {
+        super((byte)40, "RedShroom");
+    }
+    
+    @Override
+    public boolean canWalkThrough() {
+        return true;
+    }
 
 }
 

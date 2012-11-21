@@ -11,23 +11,23 @@ import net.mcforge.world.Block;
 
 public class StationaryWater extends Block {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
 
-	public StationaryWater(byte ID, String name) {
-		super(ID, name);
-	}
-	
-	public StationaryWater() {
-		super((byte)9, "StationaryWater");
-	}
-	
-	@Override
-	public boolean canWalkThrough() {
-		return true;
-	}
+    public StationaryWater(byte ID, String name) {
+        super(ID, name);
+    }
+    
+    public StationaryWater() {
+        super((byte)9, "StationaryWater");
+    }
+    
+    @Override
+    public boolean canWalkThrough() {
+        return true;
+    }
 
 }
 

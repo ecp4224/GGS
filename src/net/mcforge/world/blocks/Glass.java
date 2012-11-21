@@ -11,18 +11,18 @@ import net.mcforge.world.Block;
 
 public class Glass extends Block {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
 
-	public Glass(byte ID, String name) {
-		super(ID, name);
-	}
-	
-	public Glass() {
-		super((byte)20, "Glass");
-	}
+    public Glass(byte ID, String name) {
+        super(ID, name);
+    }
+    
+    public Glass() {
+        super((byte)20, "Glass");
+    }
 
 }
 

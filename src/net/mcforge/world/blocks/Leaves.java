@@ -11,18 +11,18 @@ import net.mcforge.world.Block;
 
 public class Leaves extends Block {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
 
-	public Leaves(byte ID, String name) {
-		super(ID, name);
-	}
-	
-	public Leaves() {
-		super((byte)18, "Leaves");
-	}
+    public Leaves(byte ID, String name) {
+        super(ID, name);
+    }
+    
+    public Leaves() {
+        super((byte)18, "Leaves");
+    }
 
 }
 
