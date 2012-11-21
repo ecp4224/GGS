@@ -45,6 +45,7 @@ import net.mcforge.world.LevelHandler;
 
 public final class Server implements LogInterface {
 	private PacketManager pm;
+	private final java.util.logging.Logger log = java.util.logging.Logger.getLogger("MCForge");
 	private LevelHandler lm;
 	private Logger logger;
 	private CommandHandler ch;
@@ -435,15 +436,47 @@ public final class Server implements LogInterface {
 		ServerStartedEvent sse = new ServerStartedEvent(this);
 		es.callEvent(sse);
 		getCommandHandler().addCommand(new Me());
-            //Debug
-            Level l;
-        try {
-            l = Level.convertDat("levels/Turbine.dat");
-            System.out.println(l.name + " converted.");
-        } catch (IOException ex) {
-            java.util.logging.Logger.getLogger(Server.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        }
+		Log("Error loading server!");
+		//Debug
+		Level l;
+		try {
+			l = Level.convertDat("levels/Turbine.dat");
+			System.out.println(l.name + " converted.");
+		} catch (IOException ex) {
+			java.util.logging.Logger.getLogger(Server.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+		}
+	}
+	
+	/**
+	 * Send a message to all the players on this server
+	 * @param message
+	 *               The message to send
+	 */
+	public void sendGlobalMessage(String message) {
+		m.serverBroadcast(message);
+	}
+	
+	/**
+	 * Send a message to all players on the level <b>world</b>
+	 * @param message
+	 *               The message to send
+	 * @param world
+	 *             The world to send to
+	 */
+	public void sendWorldMessage(String message, Level world) {
+		sendWorldMessage(message, world.name);
+	}
+	
+	/**
+	 * Send a message to all the players on the level with the name <b>world</b>
+	 * @param message
+	 *               The message to send
+	 * @param world
+	 *             The world name to send to
+	 */
+	public void sendWorldMessage(String message, String world) {
+		m.worldBroadcast(message, world);
+	}
         
 	
 	/**
@@ -606,9 +639,8 @@ public final class Server implements LogInterface {
 		//TODO ..colors?
 		ServerLogEvent sle = new ServerLogEvent(this, message, message.split("\\]")[1].trim());
 		this.es.callEvent(sle);
-		System.out.println("==!ERROR!==");
 		System.out.println(message);
-		System.out.println("==!ERROR!==");
+		log.log(java.util.logging.Level.SEVERE, message);
 	}
 	
 	/**

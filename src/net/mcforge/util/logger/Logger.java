@@ -158,7 +158,7 @@ public class Logger {
 					while (it.hasNext()) {
 						String message = (String)it.next();
 						if (owner != null && owner instanceof LogInterface) {
-							if (message.contains("ERROR"))
+							if (message.contains("Error") || message.contains("ERROR") || message.contains("error"))
 								((LogInterface)owner).onError(message);
 							else
 								((LogInterface)owner).onLog(message);
