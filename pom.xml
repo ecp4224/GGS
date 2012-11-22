@@ -14,9 +14,9 @@
   </repositories>
   <dependencies>
     <dependency>
-	  <groupId>mysql</groupId>
-	  <artifactId>mysql-connector-java</artifactId>
-	  <version>5.1.6</version>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+      <version>5.1.6</version>
    </dependency>
    <dependency>
       <groupId>org.xerial</groupId>
@@ -33,51 +33,51 @@
   <build>
     <defaultGoal>clean install</defaultGoal>
     <sourceDirectory>${basedir}/src</sourceDirectory>
-	<plugins>
-	  <plugin>
-	    <groupId>org.apache.maven.plugins</groupId>
-	    <artifactId>maven-compiler-plugin</artifactId>
-	    <version>2.3.2</version>
-	  </plugin>
-	  <!-- JAR creation plugin -->
-	  <plugin>
-	    <groupId>org.apache.maven.plugins</groupId>
-	    <artifactId>maven-jar-plugin</artifactId>
-	    <version>2.3.2</version>
-	    <configuration>
-	      <archive>
-	        <manifestEntries>
-	          <Main-Class>net.mcforge.test.console.Main</Main-Class>
-	          <Implementation-Title>${project.name}</Implementation-Title>
-	          <Implementation-Version>${describe}</Implementation-Version>
-	          <Implementation-Vendor>MCForge</Implementation-Vendor>
-	          <Sealed>true</Sealed>
-	        </manifestEntries>
-	        <manifestSections>
-	          <manifestSection>
-	            <name>net/mcforge/test/console</name>
-	              <manifestEntries>
-	                <Sealed>true</Sealed>
-	              </manifestEntries>
-	            </manifestSection>
-	          </manifestSections>
-	        </archive>
-	      </configuration>
-	    </plugin>
-	    <!-- JAR dependency addition plugin -->
-	    <plugin>
-	      <groupId>org.apache.maven.plugins</groupId>
-	      <artifactId>maven-shade-plugin</artifactId>
-	      <version>1.5</version>
-	      <executions>
-	        <execution>
-	          <phase>package</phase>
-	          <goals>
-	            <goal>shade</goal>
-	          </goals>
-	        </execution>
-	      </executions>
-	    </plugin>
-	  </plugins>
-	</build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>2.3.2</version>
+      </plugin>
+      <!-- JAR creation plugin -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>2.3.2</version>
+        <configuration>
+          <archive>
+            <manifestEntries>
+              <Main-Class>net.mcforge.test.console.Main</Main-Class>
+              <Implementation-Title>${project.name}</Implementation-Title>
+              <Implementation-Version>${describe}</Implementation-Version>
+              <Implementation-Vendor>MCForge</Implementation-Vendor>
+              <Sealed>true</Sealed>
+            </manifestEntries>
+            <manifestSections>
+              <manifestSection>
+                <name>net/mcforge/test/console</name>
+                  <manifestEntries>
+                    <Sealed>true</Sealed>
+                  </manifestEntries>
+                </manifestSection>
+              </manifestSections>
+            </archive>
+          </configuration>
+        </plugin>
+        <!-- JAR dependency addition plugin -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-shade-plugin</artifactId>
+          <version>1.5</version>
+          <executions>
+            <execution>
+              <phase>package</phase>
+              <goals>
+                <goal>shade</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+      </plugins>
+    </build>
 </project>
