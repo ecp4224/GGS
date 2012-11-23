@@ -46,4 +46,3 @@ public class Space implements Generator {
     }
 
 }
-

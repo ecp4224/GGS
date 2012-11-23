@@ -69,4 +69,3 @@ public class ExtInfoPacket extends ExtendPacket {
     }
 
 }
-
