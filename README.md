@@ -31,6 +31,8 @@ Please follow these rules when making pull requests
 
 5. Follow Oracle Code Convention [10.5.1][4], [10.5.2][5], and [10.5.3][6]
 
+6. Use 4 spaces
+
 ##Required Dependencies
 - [MySQL Driver][7]
 - [SQLite Driver][8]
