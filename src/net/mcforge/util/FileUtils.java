@@ -85,6 +85,22 @@ public abstract class FileUtils {
     }
     
     /**
+     * Create all child directories contained in <b>filepath</b> if they
+     * do not exist
+     * @param filepath
+     *                The full filepath to create child directories for
+     */
+    public static void createChildDirectories(String filepath) {
+        String[] dirs = filepath.split("\\/"); 
+        String path = "";
+        for (String directory : dirs) {
+            path += (path.equals("") ? directory : "/" + directory);
+            if (directory.indexOf(".") == -1 && !new File(path).exists())
+                new File(path).mkdir();
+        }
+    }
+    
+    /**
      * Creates a file if it does not exists.
      * 
      * @param path - The directory of the file

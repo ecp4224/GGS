@@ -23,6 +23,11 @@ public abstract class Console implements CommandExecutor {
         m = new Messages(server);
     }
     
+    /**
+     * Have the console send a global message
+     * @param message
+     *              The message for the console to send
+     */
     public void sendGlobalMessage(String message) {
         ServerChatEvent event = new ServerChatEvent(this, message);
         server.getEventSystem().callEvent(event);

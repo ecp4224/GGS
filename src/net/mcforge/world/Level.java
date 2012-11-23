@@ -21,9 +21,9 @@ import net.mcforge.iomodel.Player;
 import net.mcforge.server.Server;
 import net.mcforge.server.Tick;
 import net.mcforge.util.properties.Properties;
-import net.mcforge.world.blocks.convert.OldBlocks;
 import net.mcforge.world.converter.MojangLevel;
 import net.mcforge.world.converter.MojangLevelInputStream;
+import net.mcforge.world.converter.OldBlocks;
 import net.mcforge.world.generator.*;
 
 public class Level implements Serializable {
@@ -36,19 +36,19 @@ public class Level implements Serializable {
     private transient Thread physics;
 
     private boolean run;
-    
+
     private transient boolean saving;
 
     ArrayList<Tick> ticks = new ArrayList<Tick>();
 
     private boolean autosave;
-    
+
     private int physicsspeed;
-    
+
     private transient Properties levelprop;
 
     public Block[] blocks;
-    
+
     private boolean unloading;
 
     /**
@@ -85,7 +85,7 @@ public class Level implements Serializable {
      * The name of the level
      */
     public String name;
-    
+
     /**
      * The MoTD for this level
      */
@@ -222,7 +222,7 @@ public class Level implements Serializable {
                 addTick(pos[0], pos[1], pos[2] - 1, getTile(pos[0], pos[1], pos[2] - 1), server);
         } catch (Exception e) { }
     }
-    
+
     public PhysicsBlock addTick(int x, int y, int z, Block b, Server server) {
         if (!(b instanceof PhysicsBlock))
             return null;
@@ -240,7 +240,7 @@ public class Level implements Serializable {
         Thread t = new StartPhysics(server, this);
         t.start();
     }
-    
+
     public void loadProperties() {
         levelprop = new Properties();
         try {
@@ -253,21 +253,21 @@ public class Level implements Serializable {
             levelprop.addSetting("Physics speed", physicsspeed);
         else
             this.physicsspeed = levelprop.getInt("Physics speed");
-        
+
         this.motd = "ignore";
         if (!levelprop.hasValue("MOTD"))
             levelprop.addSetting("MOTD", "ignore");
         else
             this.motd = levelprop.getValue("MOTD");    
-        
+
         try {
             levelprop.save("levels/properties/" + name + ".properties");
         } catch (IOException e) {
             e.printStackTrace();
         }
-    
+
     }
-    
+
     public Properties getLevelProperties() {
         return levelprop;
     }
@@ -377,7 +377,7 @@ public class Level implements Serializable {
         if (!new File("levels").exists())
             new File("levels").mkdir();
         saving = true;
-        
+
         Kryo poni = new Kryo();
         FileOutputStream fos = new FileOutputStream("levels/" + name + ".ggs");
         GZIPOutputStream gos = new GZIPOutputStream(fos);
@@ -430,6 +430,7 @@ public class Level implements Serializable {
         }
         blocks = null;
     }
+    
     /**
      * Load a level and return the level
      * @param filename
@@ -470,66 +471,69 @@ public class Level implements Serializable {
         }
         return l;
     }
-        /**
-         * Converts a .dat file to a .ggs file
-         * @param filename - The filename of the file to load and convert.
-         * @return - The converted level object.
-         * @throws IOException - An IOException is thrown if there is a problem reading the file.
-         */
-        public static Level convertDat(String filename) throws IOException{
-            FileInputStream fileIn = new FileInputStream(filename);
-            GZIPInputStream gzipDecompressor = new GZIPInputStream(fileIn);
-            DataInputStream dataInput = new DataInputStream(gzipDecompressor);
-                if((dataInput.readInt() != 0x271bb788)) {
-                    System.out.println("Error! Bad Magic: Invalid .dat file!");
-                    fileIn.close();
-                    gzipDecompressor.close();
-                    dataInput.close();
-                    return null;
-                }
-                if((dataInput.readByte() > 2)) {
-                    System.out.println("Error! Bad Version: .dat Level version is greater than 2.");
-                    fileIn.close();
-                    gzipDecompressor.close();
-                    dataInput.close();
-                    return null;
-                }
-                ObjectInputStream objectIn = new MojangLevelInputStream(gzipDecompressor);
-                try {
-                    MojangLevel l = (MojangLevel)objectIn.readObject();
-                    Level levelToReturn = getFromMojangLevel(l);
-                    levelToReturn.name = new File(filename).getName().split("\\.")[0];
-                    levelToReturn.save();
-                    new File(filename).delete();
-                    return levelToReturn;
-                } catch (ClassNotFoundException ex) {
-                    System.out.println(filename + ": Internal Error. Did not find MojangLevel. Cannot convert .dat level!. Report to a Developer!");
-                } catch(SecurityException e) {
-                    e.printStackTrace();
-                }
-                finally{
-                    fileIn.close();
-                    gzipDecompressor.close();
-                    dataInput.close();
-                    objectIn.close();
-                }
-                return null;
+    
+    /**
+     * Converts a .dat file to a .ggs file
+     * @param filename - The filename of the file to load and convert.
+     * @return - The converted level object.
+     * @throws IOException - An IOException is thrown if there is a problem reading the file.
+     */
+    public static Level convertDat(String filename) throws IOException{
+        FileInputStream fileIn = new FileInputStream(filename);
+        GZIPInputStream gzipDecompressor = new GZIPInputStream(fileIn);
+        DataInputStream dataInput = new DataInputStream(gzipDecompressor);
+        if((dataInput.readInt() != 0x271bb788)) {
+            System.out.println("Error! Bad Magic: Invalid .dat file!");
+            fileIn.close();
+            gzipDecompressor.close();
+            dataInput.close();
+            return null;
         }
-        /**
-         * Converts a MojangLevel to a GGS Level.
-         * @param m - The MojangLevel to convert.
-         * @return  - Converted level!
-         */
-        private static Level getFromMojangLevel(MojangLevel m){
-            Level l = new Level((short)m.width, (short)m.depth, (short)m.height); // TODO: Test this change! Switched Depth and Height
-            l.spawnx = m.xSpawn;
-            l.spawny = m.zSpawn; // TODO: Test this change! Y to Z
-            l.spawnz = m.ySpawn; // TODO: Test this change! Z to Y
-            for(int i = 0; i < m.blocks.length; i++){
-                l.blocks[i] = Block.getBlock(m.blocks[i]); // Did I do this right?
-            }
-            return l;
+        if((dataInput.readByte() > 2)) {
+            System.out.println("Error! Bad Version: .dat Level version is greater than 2.");
+            fileIn.close();
+            gzipDecompressor.close();
+            dataInput.close();
+            return null;
         }
+        ObjectInputStream objectIn = new MojangLevelInputStream(gzipDecompressor);
+        try {
+            MojangLevel l = (MojangLevel)objectIn.readObject();
+            Level levelToReturn = getFromMojangLevel(l);
+            levelToReturn.name = new File(filename).getName().split("\\.")[0];
+            levelToReturn.save();
+            new File(filename).delete();
+            return levelToReturn;
+        } catch (ClassNotFoundException ex) {
+            System.out.println(filename + ": Internal Error. Did not find MojangLevel. Cannot convert .dat level!. Report to a Developer!");
+        } catch(SecurityException e) {
+            e.printStackTrace();
+        }
+        finally{
+            fileIn.close();
+            gzipDecompressor.close();
+            dataInput.close();
+            objectIn.close();
+        }
+        return null;
+    }
+    
+    /**
+     * Converts a MojangLevel to a GGS Level.
+     * @param m - The MojangLevel to convert.
+     * @return  - Converted level!
+     */
+    private static Level getFromMojangLevel(MojangLevel m){
+        Level l = new Level((short)m.width, (short)m.depth, (short)m.height); // TODO: Test this change! Switched Depth and Height
+        l.spawnx = m.xSpawn;
+        l.spawny = m.zSpawn; // TODO: Test this change! Y to Z
+        l.spawnz = m.ySpawn; // TODO: Test this change! Z to Y
+        for(int i = 0; i < m.blocks.length; i++){
+            l.blocks[i] = Block.getBlock(m.blocks[i]); // Did I do this right?
+        }
+        return l;
+    }
+   
     /**
      * Converts a .lvl file to a .ggs file
      * @param file
@@ -567,7 +571,7 @@ public class Level implements Serializable {
         data.readByte();
         data.readByte();
         data.readByte();
-        
+
         for (int i = 0; i < level.blocks.length; i++) {
             level.blocks[i] = translateBlock(data.readByte(), s);
         }
@@ -697,7 +701,7 @@ public class Level implements Serializable {
     public void skipChange(int x, int y, int z, Block block, Server server) {
         skipChange(x, y, z, block, server, true);
     }
-    
+
     public void skipChange(int x, int y, int z, Block block, Server server, boolean addtick) {
         if (x < 0 || y < 0 || z < 0) return;
         if (x >= width || y >= depth || z >= height) return;
@@ -706,7 +710,7 @@ public class Level implements Serializable {
         if (block instanceof PhysicsBlock && addtick)
             skipTick(x, y, z, block, server);
     }
-    
+
     private void skipTick(int x, int y, int z, Block block, Server server) {
         PhysicsBlock pb = ((PhysicsBlock)block).clone(server);
         pb.setLevel(this);

@@ -29,8 +29,6 @@ import net.mcforge.system.updater.Updatable;
 
 public class PluginHandler {
     private ArrayList<Plugin> plugins = new ArrayList<Plugin>();
-
-    private ArrayList<Game> games = new ArrayList<Game>();
     
     private ArrayList<ClassicExtension> ext = new ArrayList<ClassicExtension>();
 
@@ -142,6 +140,8 @@ public class PluginHandler {
                                 loadPlugin(plugin, server);
                                 if (plugin instanceof Updatable)
                                     server.getUpdateService().getUpdateManager().add((Updatable)plugin);
+                                plugin.filename = arg0.getName();
+                                plugin.filepath = arg0.getAbsolutePath();
                             } else {
                                 if (!Command.class.isAssignableFrom(class_)) {
                                     continue;
@@ -175,12 +175,7 @@ public class PluginHandler {
     }
     
     public void loadPlugin(Plugin plugin, Server server) {
-        if (plugin instanceof Game) {
-            games.add((Game) plugin);
-            server.Add((Game) plugin);
-        } else {
-            plugins.add(plugin);
-        }
+        plugins.add(plugin);
         plugin.onLoad(new String[]{"-normal"}); //Load called after added so plugins can disable/unload in the load method.
         PluginLoadEvent ple = new PluginLoadEvent(plugin, server);
         server.getEventSystem().callEvent(ple);

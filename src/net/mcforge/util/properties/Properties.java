@@ -18,6 +18,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 
 import net.mcforge.server.Server;
+import net.mcforge.util.FileUtils;
 
 public class Properties {
     private ArrayList<String> settings = new ArrayList<String>();
@@ -103,6 +104,7 @@ public class Properties {
         p.addComment("SQLite-File", "If using SQLite, the filename it should save as.");
         return p;
     }
+    
     private static void makeDefaults(String filename, Server server, Properties p) {
         //TODO Fill in all defaults
         server.Log("System config not found..creating..");
@@ -128,23 +130,13 @@ public class Properties {
         String truefile = (filename.indexOf("properties/") != -1 ? filename : "properties/" + filename);
         if (new File(truefile).exists())
             new File(truefile).delete();
-        createChildDirectories(truefile);
+        FileUtils.createChildDirectories(truefile);
         new File(truefile).createNewFile();
         PrintWriter out = new PrintWriter(truefile);
         for (String s : settings) {
             out.println(s);
         }
         out.close();
-    }
-    
-    private void createChildDirectories(String filepath) {
-        String[] dirs = filepath.split("\\/"); 
-        String path = "";
-        for (String directory : dirs) {
-            path += (path.equals("") ? directory : "/" + directory);
-            if (directory.indexOf(".") == -1 && !new File(path).exists())
-                new File(path).mkdir();
-        }
     }
 
     /**

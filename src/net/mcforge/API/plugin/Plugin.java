@@ -27,24 +27,26 @@ public abstract class Plugin
     private Properties properties;
 
     private String internalName = "";
+    
+    String filename;
+    
+    String filepath;
 
-    public final void setInternalName(String name)
-    {
-        if (internalName == "")
-        {
+    public final void setInternalName(String name) {
+        if (internalName == "") {
             internalName = name;
         }
     }
-    public final String getInternalName()
-    {
+    
+    public final String getInternalName() {
         return internalName;
     }
 
-    public Plugin(Server server, Properties properties)
-    {
+    public Plugin(Server server, Properties properties) {
         this._server = server;
         this.properties = properties;
     }
+    
     public Plugin(Server server) {
         this._server = server;
     }
@@ -68,9 +70,26 @@ public abstract class Plugin
      * @return
      *        The name
      */
-    public String getName()
-    {
+    public String getName() {
         return (properties != null ? (properties.getProperty("name") != null ? properties.getProperty("name") : getClass().getSimpleName()) : getClass().getSimpleName());
+    }
+    
+    /**
+     * Return the filename of this plugin.
+     * @return
+     *        The filename of the plugin.
+     */
+    public String getFileName() {
+        return filename;
+    }
+    
+    /**
+     * Return the full system path to this plugin
+     * @return
+     *        The full system file path.
+     */
+    public String getFilePath() {
+        return filepath;
     }
     
     
@@ -83,8 +102,7 @@ public abstract class Plugin
      * @return
      *        The version
      */
-    public String getVersion()
-    {
+    public String getVersion() {
         return properties.getProperty("version");
     }
 
@@ -93,8 +111,7 @@ public abstract class Plugin
      * @return
      *        The author
      */
-    public String getAuthor()
-    {
+    public String getAuthor() {
         return properties.getProperty("author");
     }
 
@@ -103,8 +120,7 @@ public abstract class Plugin
      * @return
      *        The {@link Server} object
      */
-    public Server getServer()
-    {
+    public Server getServer() {
         return _server;
     }
 
@@ -113,8 +129,7 @@ public abstract class Plugin
      * @return
      *        The properties
      */
-    public Properties getProperties()
-    {
+    public Properties getProperties() {
         return properties;
     }
     

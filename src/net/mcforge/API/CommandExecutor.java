@@ -12,12 +12,32 @@ import net.mcforge.server.Server;
 
 public interface CommandExecutor {
     
+    /**
+     * Send a message to this client
+     * @param message
+     *               The message to send
+     */
     public void sendMessage(String message);
     
+    /**
+     * Get the server this client belongs to
+     * @return
+     *        The server
+     */
     public Server getServer();
     
+    /**
+     * Get the group this client belongs to
+     * @return
+     *        The group
+     */
     public Group getGroup();
     
+    /**
+     * Get the name of this client
+     * @return
+     *        The name
+     */
     public String getName();
 }
 

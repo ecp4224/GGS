@@ -8,8 +8,6 @@
 package net.mcforge.world.converter;
 
 import java.io.Serializable;
-import net.mcforge.world.Block;
-import net.mcforge.world.Level;
 
 /**
  *
