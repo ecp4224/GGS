@@ -13,18 +13,16 @@ import net.mcforge.iomodel.Player;
 import net.mcforge.networking.IOClient;
 import net.mcforge.networking.packets.Packet;
 import net.mcforge.networking.packets.PacketManager;
-import net.mcforge.networking.packets.PacketType;
 import net.mcforge.server.Server;
 
 public class UpdateUser extends Packet {
 
-    public UpdateUser(String name, byte ID, PacketManager parent,
-            PacketType packetType) {
-        super(name, ID, parent, packetType);
+    public UpdateUser(String name, byte ID, PacketManager parent) {
+        super(name, ID, parent);
     }
     
     public UpdateUser(PacketManager pm) {
-        super("UpdateUser", (byte)0x0f, pm, PacketType.Server_to_Client);
+        super("UpdateUser", (byte)0x0f, pm);
     }
 
     @Override

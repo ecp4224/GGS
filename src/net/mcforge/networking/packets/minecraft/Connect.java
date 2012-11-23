@@ -18,15 +18,14 @@ import net.mcforge.iomodel.Player;
 import net.mcforge.networking.IOClient;
 import net.mcforge.networking.packets.Packet;
 import net.mcforge.networking.packets.PacketManager;
-import net.mcforge.networking.packets.PacketType;
 import net.mcforge.server.Server;
 public class Connect extends Packet {
 
-    public Connect(String name, byte ID, PacketManager parent, PacketType packetType) {
-        super(name, ID, parent, packetType);
+    public Connect(String name, byte ID, PacketManager parent) {
+        super(name, ID, parent);
     }
     public Connect(PacketManager pm) {
-        super("Player Connect", (byte)0x00, pm, PacketType.Client_to_Server);
+        super("Player Connect", (byte)0x00, pm);
         this.length = 130;
     }
 

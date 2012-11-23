@@ -15,18 +15,16 @@ import net.mcforge.iomodel.Player;
 import net.mcforge.networking.IOClient;
 import net.mcforge.networking.packets.Packet;
 import net.mcforge.networking.packets.PacketManager;
-import net.mcforge.networking.packets.PacketType;
 import net.mcforge.server.Server;
 
 public class Kick extends Packet {
 
-    public Kick(String name, byte ID, PacketManager parent,
-            PacketType packetType) {
-        super(name, ID, parent, packetType);
+    public Kick(String name, byte ID, PacketManager parent) {
+        super(name, ID, parent);
     }
     
     public Kick(PacketManager pm) {
-        super("Kick", (byte)0x0e, pm, PacketType.Server_to_Client);
+        super("Kick", (byte)0x0e, pm);
     }
 
     @Override

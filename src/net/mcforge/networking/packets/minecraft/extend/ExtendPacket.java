@@ -12,14 +12,12 @@ import net.mcforge.networking.ClientType;
 import net.mcforge.networking.IOClient;
 import net.mcforge.networking.packets.Packet;
 import net.mcforge.networking.packets.PacketManager;
-import net.mcforge.networking.packets.PacketType;
 import net.mcforge.server.Server;
 
 public abstract class ExtendPacket extends Packet {
 
-    public ExtendPacket(String name, byte ID, PacketManager parent,
-            PacketType packetType) {
-        super(name, ID, parent, packetType);
+    public ExtendPacket(String name, byte ID, PacketManager parent) {
+        super(name, ID, parent);
         parent.server.getPluginHandler().addExtension(this);
     }
     

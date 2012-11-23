@@ -15,18 +15,16 @@ import net.mcforge.iomodel.Player;
 import net.mcforge.networking.IOClient;
 import net.mcforge.networking.packets.Packet;
 import net.mcforge.networking.packets.PacketManager;
-import net.mcforge.networking.packets.PacketType;
 import net.mcforge.server.Server;
 
 public class Message extends Packet {
 
-    public Message(String name, byte ID, PacketManager parent,
-            PacketType packetType) {
-        super(name, ID, parent, packetType);
+    public Message(String name, byte ID, PacketManager parent) {
+        super(name, ID, parent);
     }
     
     public Message(PacketManager pm) {
-        super("Message", (byte)0x0d, pm, PacketType.Client_to_Server);
+        super("Message", (byte)0x0d, pm);
         this.length = 65;
     }
 

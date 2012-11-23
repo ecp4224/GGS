@@ -13,19 +13,17 @@ import net.mcforge.API.ClassicExtension;
 import net.mcforge.iomodel.Player;
 import net.mcforge.networking.IOClient;
 import net.mcforge.networking.packets.PacketManager;
-import net.mcforge.networking.packets.PacketType;
 import net.mcforge.server.Server;
 
 @ClassicExtension(extName = "HoldThis")
 public class HoldThisPacket extends ExtendPacket {
 
-    public HoldThisPacket(String name, byte ID, PacketManager parent,
-            PacketType packetType) {
-        super(name, ID, parent, packetType);
+    public HoldThisPacket(String name, byte ID, PacketManager parent) {
+        super(name, ID, parent);
     }
     
     public HoldThisPacket(PacketManager parent) {
-        this("HoldThis", (byte)0x31, parent, PacketType.Client_to_Server);
+        this("HoldThis", (byte)0x31, parent);
     }
 
     @Override

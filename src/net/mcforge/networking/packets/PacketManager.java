@@ -192,7 +192,7 @@ public class PacketManager {
                     server.Log("Connection made from " + connection.getInetAddress().toString());
                     new AcceptThread(connection).start();
                 } catch (IOException e) {
-                    if (e.getMessage().indexOf("socket closed") == -1)
+                    if (e.getMessage().indexOf("socket closed") == -1) //Happens when the socket is shutdown
                         e.printStackTrace();
                 }
             }
@@ -208,7 +208,8 @@ public class PacketManager {
             try {
                 Accept(connection);
             } catch (IOException e) {
-                e.printStackTrace();
+                if (!e.getMessage().contains("Connection reset")) //Mostly happens when xwom connects
+                    e.printStackTrace();
             }
         }
     }

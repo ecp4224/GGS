@@ -17,18 +17,16 @@ import net.mcforge.iomodel.Player;
 import net.mcforge.networking.IOClient;
 import net.mcforge.networking.packets.Packet;
 import net.mcforge.networking.packets.PacketManager;
-import net.mcforge.networking.packets.PacketType;
 import net.mcforge.server.Server;
 
 public class SpawnPlayer extends Packet {
 
-    public SpawnPlayer(String name, byte ID, PacketManager parent,
-            PacketType packetType) {
-        super(name, ID, parent, packetType);
+    public SpawnPlayer(String name, byte ID, PacketManager parent) {
+        super(name, ID, parent);
     }
 
     public SpawnPlayer(PacketManager pm) {
-        super("Spawn Player", (byte)0x07, pm, PacketType.Server_to_Client);
+        super("Spawn Player", (byte)0x07, pm);
     }
 
     @Override

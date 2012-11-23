@@ -13,18 +13,16 @@ import net.mcforge.API.io.PacketPrepareEvent;
 import net.mcforge.networking.IOClient;
 import net.mcforge.networking.packets.Packet;
 import net.mcforge.networking.packets.PacketManager;
-import net.mcforge.networking.packets.PacketType;
 import net.mcforge.server.Server;
 
 public class DespawnPlayer extends Packet {
 
-    public DespawnPlayer(String name, byte ID, PacketManager parent,
-            PacketType packetType) {
-        super(name, ID, parent, packetType);
+    public DespawnPlayer(String name, byte ID, PacketManager parent) {
+        super(name, ID, parent);
     }
     
     public DespawnPlayer(PacketManager pm) {
-        super("DespawnPlayer", (byte)0x0c, pm, PacketType.Server_to_Client);
+        super("DespawnPlayer", (byte)0x0c, pm);
     }
 
     @Override

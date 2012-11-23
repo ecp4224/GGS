@@ -13,17 +13,16 @@ import net.mcforge.iomodel.Browser;
 import net.mcforge.networking.IOClient;
 import net.mcforge.networking.packets.Packet;
 import net.mcforge.networking.packets.PacketManager;
-import net.mcforge.networking.packets.PacketType;
 import net.mcforge.server.Server;
 
 public class GET extends Packet {
 
-    public GET(String name, byte ID, PacketManager parent, PacketType packetType) {
-        super(name, ID, parent, packetType);
+    public GET(String name, byte ID, PacketManager parent) {
+        super(name, ID, parent);
     }
     
     public GET(PacketManager parent) {
-        this("GET", (byte)'G', parent, PacketType.Client_to_Server);
+        this("GET", (byte)'G', parent);
     }
 
     @Override

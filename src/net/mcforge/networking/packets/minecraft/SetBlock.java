@@ -15,7 +15,6 @@ import net.mcforge.iomodel.Player;
 import net.mcforge.networking.IOClient;
 import net.mcforge.networking.packets.Packet;
 import net.mcforge.networking.packets.PacketManager;
-import net.mcforge.networking.packets.PacketType;
 import net.mcforge.server.Server;
 import net.mcforge.world.PlaceMode;
 
@@ -25,11 +24,11 @@ import net.mcforge.world.PlaceMode;
 *
 */
 public class SetBlock extends Packet {
-    public SetBlock(String name, byte ID, PacketManager parent, PacketType packetType) {
-        super(name, ID, parent, packetType);
+    public SetBlock(String name, byte ID, PacketManager parent) {
+        super(name, ID, parent);
     }
     public SetBlock(PacketManager pm) {
-        super("SetBlock", (byte)0x05, pm, PacketType.Client_to_Server);
+        super("SetBlock", (byte)0x05, pm);
         this.length = 8;
     }
     @Override

@@ -15,18 +15,16 @@ import net.mcforge.API.io.PacketPrepareEvent;
 import net.mcforge.networking.IOClient;
 import net.mcforge.networking.packets.Packet;
 import net.mcforge.networking.packets.PacketManager;
-import net.mcforge.networking.packets.PacketType;
 import net.mcforge.server.Server;
 
 public class LevelStartSend extends Packet {
 
-    public LevelStartSend(String name, byte ID, PacketManager parent,
-            PacketType packetType) {
-        super(name, ID, parent, packetType);
+    public LevelStartSend(String name, byte ID, PacketManager parent) {
+        super(name, ID, parent);
     }
     
     public LevelStartSend(PacketManager pm) {
-        super("Start Level Send", (byte)0x02, pm, PacketType.Server_to_Client);
+        super("Start Level Send", (byte)0x02, pm);
     }
 
     @Override

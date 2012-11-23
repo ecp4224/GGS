@@ -14,19 +14,17 @@ import net.mcforge.API.ClassicExtension;
 import net.mcforge.iomodel.Player;
 import net.mcforge.networking.IOClient;
 import net.mcforge.networking.packets.PacketManager;
-import net.mcforge.networking.packets.PacketType;
 import net.mcforge.server.Server;
 
 @ClassicExtension(extName = "ClickDistance")
 public class ClickDistancePacket extends ExtendPacket {
 
-    public ClickDistancePacket(String name, byte ID, PacketManager parent,
-            PacketType packetType) {
-        super(name, ID, parent, packetType);
+    public ClickDistancePacket(String name, byte ID, PacketManager parent) {
+        super(name, ID, parent);
     }
     
     public ClickDistancePacket(PacketManager parent) {
-        this("ClickDistance", (byte)0x20, parent, PacketType.Server_to_Client);
+        this("ClickDistance", (byte)0x20, parent);
     }
 
     @Override

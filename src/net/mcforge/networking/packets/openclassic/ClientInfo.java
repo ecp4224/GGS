@@ -10,17 +10,15 @@ package net.mcforge.networking.packets.openclassic;
 import net.mcforge.networking.IOClient;
 import net.mcforge.networking.packets.Packet;
 import net.mcforge.networking.packets.PacketManager;
-import net.mcforge.networking.packets.PacketType;
 import net.mcforge.server.Server;
 
 public class ClientInfo extends Packet {
 
-    public ClientInfo(String name, byte ID, PacketManager parent,
-            PacketType packetType) {
-        super(name, ID, parent, packetType);
+    public ClientInfo(String name, byte ID, PacketManager parent) {
+        super(name, ID, parent);
     }
     public ClientInfo(PacketManager parent) {
-        super("Client Info", (byte)16, parent, PacketType.Client_to_Server);
+        super("Client Info", (byte)16, parent);
     }
 
     @Override

@@ -14,19 +14,17 @@ import net.mcforge.API.ClassicExtension;
 import net.mcforge.iomodel.Player;
 import net.mcforge.networking.IOClient;
 import net.mcforge.networking.packets.PacketManager;
-import net.mcforge.networking.packets.PacketType;
 import net.mcforge.server.Server;
 
 @ClassicExtension(extName = "ExtPlayer")
 public class ExtPlayerPacket extends ExtendPacket {
 
-    public ExtPlayerPacket(String name, byte ID, PacketManager parent,
-            PacketType packetType) {
-        super(name, ID, parent, packetType);
+    public ExtPlayerPacket(String name, byte ID, PacketManager parent) {
+        super(name, ID, parent);
     }
 
     public ExtPlayerPacket(PacketManager packetManager) {
-        this("ExtPlayer", (byte)0x39, packetManager, PacketType.Server_to_Client);
+        this("ExtPlayer", (byte)0x39, packetManager);
     }
 
     @Override

@@ -15,18 +15,16 @@ import net.mcforge.iomodel.Player;
 import net.mcforge.networking.IOClient;
 import net.mcforge.networking.packets.Packet;
 import net.mcforge.networking.packets.PacketManager;
-import net.mcforge.networking.packets.PacketType;
 import net.mcforge.server.Server;
 
 public class Welcome extends Packet {
 
-    public Welcome(String name, byte ID, PacketManager parent,
-            PacketType packetType) {
-        super(name, ID, parent, packetType);
+    public Welcome(String name, byte ID, PacketManager parent) {
+        super(name, ID, parent);
     }
 
     public Welcome(PacketManager pm) {
-        super("Welcome", (byte)0x00, pm, PacketType.Server_to_Client);
+        super("Welcome", (byte)0x00, pm);
     }
 
     @Override

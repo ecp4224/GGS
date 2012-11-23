@@ -23,11 +23,6 @@ public abstract class Packet {
     public int length;
     
     /**
-     * The type of packet this is.
-     */
-    public PacketType packetType;
-    
-    /**
      * The packet manager that received this packet.
      */
     public PacketManager parent;
@@ -84,11 +79,10 @@ public abstract class Packet {
      *                  What type of packet this is. This isn't used in the PacketManager,
      *                  but its nice to be organized right :3 ?
      */
-    public Packet(String name, byte ID, PacketManager parent, PacketType packetType) {
+    public Packet(String name, byte ID, PacketManager parent) {
         this.name = name;
         this.ID = ID;
         this.parent = parent;
-        this.packetType = packetType;
     }
     
     

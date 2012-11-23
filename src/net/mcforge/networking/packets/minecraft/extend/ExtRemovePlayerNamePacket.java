@@ -14,19 +14,18 @@ import net.mcforge.API.ClassicExtension;
 import net.mcforge.iomodel.Player;
 import net.mcforge.networking.IOClient;
 import net.mcforge.networking.packets.PacketManager;
-import net.mcforge.networking.packets.PacketType;
 import net.mcforge.server.Server;
 
 @ClassicExtension(extName = "ExtRemovePlayerName")
 public class ExtRemovePlayerNamePacket extends ExtendPacket {
 
     public ExtRemovePlayerNamePacket(String name, byte ID,
-            PacketManager parent, PacketType packetType) {
-        super(name, ID, parent, packetType);
+            PacketManager parent) {
+        super(name, ID, parent);
     }
     
     public ExtRemovePlayerNamePacket(PacketManager parent) {
-        this("ExtRemovePlayerName", (byte)0x35, parent, PacketType.Server_to_Client);
+        this("ExtRemovePlayerName", (byte)0x35, parent);
     }
 
     @Override

@@ -14,18 +14,16 @@ import net.mcforge.API.io.PacketPrepareEvent;
 import net.mcforge.networking.IOClient;
 import net.mcforge.networking.packets.Packet;
 import net.mcforge.networking.packets.PacketManager;
-import net.mcforge.networking.packets.PacketType;
 import net.mcforge.server.Server;
 
 public class MOTD extends Packet {
 
-    public MOTD(String name, byte ID, PacketManager parent,
-            PacketType packetType) {
-        super(name, ID, parent, packetType);
+    public MOTD(String name, byte ID, PacketManager parent) {
+        super(name, ID, parent);
     }
 
     public MOTD(PacketManager pm) {
-        super("MOTD", (byte)0x00, pm, PacketType.Server_to_Client);
+        super("MOTD", (byte)0x00, pm);
     }
 
     @Override

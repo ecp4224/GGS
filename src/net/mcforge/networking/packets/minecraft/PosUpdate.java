@@ -16,21 +16,19 @@ import net.mcforge.iomodel.Player;
 import net.mcforge.networking.IOClient;
 import net.mcforge.networking.packets.Packet;
 import net.mcforge.networking.packets.PacketManager;
-import net.mcforge.networking.packets.PacketType;
 import net.mcforge.server.Server;
 
 @ClassicExtension(extName = "HeldBlock")
 public class PosUpdate extends Packet {
 
-    public PosUpdate(String name, byte ID, PacketManager parent,
-            PacketType packetType) {
-        super(name, ID, parent, packetType);
+    public PosUpdate(String name, byte ID, PacketManager parent) {
+        super(name, ID, parent);
         parent.server.getPluginHandler().addExtension(this);
         this.length = 9;
     }
     
     public PosUpdate(PacketManager pm) {
-        this("PosUpdate", (byte)0x08, pm, PacketType.Client_to_Server);
+        this("PosUpdate", (byte)0x08, pm);
     }
 
     @Override

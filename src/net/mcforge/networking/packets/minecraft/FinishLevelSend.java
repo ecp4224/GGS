@@ -16,18 +16,16 @@ import net.mcforge.iomodel.Player;
 import net.mcforge.networking.IOClient;
 import net.mcforge.networking.packets.Packet;
 import net.mcforge.networking.packets.PacketManager;
-import net.mcforge.networking.packets.PacketType;
 import net.mcforge.server.Server;
 
 public class FinishLevelSend extends Packet {
 
-    public FinishLevelSend(String name, byte ID, PacketManager parent,
-            PacketType packetType) {
-        super(name, ID, parent, packetType);
+    public FinishLevelSend(String name, byte ID, PacketManager parent) {
+        super(name, ID, parent);
     }
 
     public FinishLevelSend(PacketManager pm) {
-        super("Finish Level Send", (byte)0x04, pm, PacketType.Server_to_Client);
+        super("Finish Level Send", (byte)0x04, pm);
     }
 
     @Override
