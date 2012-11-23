@@ -30,14 +30,9 @@ import net.mcforge.API.plugin.CommandHandler;
 import net.mcforge.API.plugin.PluginHandler;
 import net.mcforge.API.server.ServerStartedEvent;
 import net.mcforge.chat.Messages;
-import net.mcforge.defaults.commands.Me;
 import net.mcforge.groups.Group;
 import net.mcforge.iomodel.Player;
 import net.mcforge.networking.packets.PacketManager;
-import net.mcforge.util.FileUtils;
-import net.mcforge.util.logger.LogInterface;
-import net.mcforge.util.logger.Logger;
-import net.mcforge.util.properties.Properties;
 import net.mcforge.sql.ISQL;
 import net.mcforge.sql.MySQL;
 import net.mcforge.sql.SQLite;
@@ -47,7 +42,12 @@ import net.mcforge.system.heartbeat.ForgeBeat;
 import net.mcforge.system.heartbeat.Heart;
 import net.mcforge.system.heartbeat.MBeat;
 import net.mcforge.system.heartbeat.WBeat;
+import net.mcforge.system.updater.Updatable;
 import net.mcforge.system.updater.UpdateService;
+import net.mcforge.util.FileUtils;
+import net.mcforge.util.logger.LogInterface;
+import net.mcforge.util.logger.Logger;
+import net.mcforge.util.properties.Properties;
 import net.mcforge.world.Level;
 import net.mcforge.world.LevelHandler;
 
@@ -443,16 +443,6 @@ public final class Server implements LogInterface {
         Log("Server url can be found in 'url.txt'");
         ServerStartedEvent sse = new ServerStartedEvent(this);
         es.callEvent(sse);
-        getCommandHandler().addCommand(new Me());
-        Log("Error loading server!");
-        //Debug
-        Level l;
-        try {
-            l = Level.convertDat("levels/Turbine.dat");
-            System.out.println(l.name + " converted.");
-        } catch (IOException ex) {
-            java.util.logging.Logger.getLogger(Server.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
     }
     
     /**
