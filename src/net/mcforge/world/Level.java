@@ -7,15 +7,16 @@
  ******************************************************************************/
 package net.mcforge.world;
 
-import java.io.*;
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
-
-import com.esotericsoftware.kryo.Kryo;
-import com.esotericsoftware.kryo.io.Input;
-import com.esotericsoftware.kryo.io.Output;
-import java.util.logging.Logger;
 
 import net.mcforge.iomodel.Player;
 import net.mcforge.server.Server;
@@ -24,7 +25,11 @@ import net.mcforge.util.properties.Properties;
 import net.mcforge.world.converter.MojangLevel;
 import net.mcforge.world.converter.MojangLevelInputStream;
 import net.mcforge.world.converter.OldBlocks;
-import net.mcforge.world.generator.*;
+import net.mcforge.world.generator.FlatGrass;
+
+import com.esotericsoftware.kryo.Kryo;
+import com.esotericsoftware.kryo.io.Input;
+import com.esotericsoftware.kryo.io.Output;
 
 public class Level implements Serializable {
 
