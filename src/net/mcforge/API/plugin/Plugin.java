@@ -12,7 +12,7 @@ import net.mcforge.server.Server;
 import java.util.Properties;
 
 /**
-* The plugin class allows dev's to extend GGS easily without
+* The plugin class allows dev's to extend MCForge easily without
 * needing to modify the source.
 * 
 * Simply extend the plugin class.
