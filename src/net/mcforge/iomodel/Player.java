@@ -680,7 +680,7 @@ public class Player extends IOClient implements CommandExecutor {
         else
             throw new NotSerializableException("The object that was stored in ExtraData cant be saved because it doesnt implement Serializable!");
     }
-    
+
     private <T> void saveToMySQL(String key, T o, boolean add) throws IOException, SQLException {
         PreparedStatement ps=null;
         String sql=null;
@@ -690,7 +690,7 @@ public class Player extends IOClient implements CommandExecutor {
         oos.flush();
         oos.close();
         bos.close();
-        
+
         byte[] data = bos.toByteArray();
         if (add) {
             sql = "INSERT INTO " + server.getSQL().getPrefix() + "_extra(name, setting, value) VALUES (?, ?, ?)";
@@ -707,7 +707,7 @@ public class Player extends IOClient implements CommandExecutor {
             ps.setString(3, key);
         }
         ps.executeUpdate();
-        
+
     }
 
     /**
@@ -838,7 +838,7 @@ public class Player extends IOClient implements CommandExecutor {
                 sb.Write(p, s, X, Y, Z, block.getVisibleBlock());
         }
     }
-    
+
     /**
      * Update a list of blocks for the level <b>l</b> in the server <b>s</b>
      * @param blockupdates
@@ -861,10 +861,10 @@ public class Player extends IOClient implements CommandExecutor {
             if (updateLevel)
                 l.setTile(b.getBlock(), b.getX(), b.getY(), b.getZ(), s);
         }
-        
-        for (int i = 0; i < cache.size(); i++) {
-            for (int pi = 0; pi < s.players.size(); pi++) {
-                final Player p = s.players.get(pi);
+
+        for (int pi = 0; pi < s.players.size(); pi++) {
+            final Player p = s.players.get(pi);
+            for (int i = 0; i < cache.size(); i++) {
                 if (p.getLevel() != l)
                     continue;
                 try {
@@ -875,9 +875,9 @@ public class Player extends IOClient implements CommandExecutor {
             }
         }
         cache.clear();
-        
+
     }
-    
+
     /**
      * Update a list of blocks for the level <b>l</b> in the server <b>s</b>
      * @param blockupdates
@@ -1290,7 +1290,7 @@ public class Player extends IOClient implements CommandExecutor {
             String formattedMessage = message;
             if(this.cc)
                 formattedMessage = ChatColor.convertColorCodes(message);
-            
+
             PlayerChatEvent event = new PlayerChatEvent(this, message);
             pm.server.getEventSystem().callEvent(event);
             if (event.isCancelled())
