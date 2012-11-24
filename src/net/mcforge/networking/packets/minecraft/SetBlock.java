@@ -31,6 +31,21 @@ public class SetBlock extends Packet {
         super("SetBlock", (byte)0x05, pm);
         this.length = 8;
     }
+    public byte[] getBytes(IOClient player, Server server, Object...parma) {
+        short X = ((Short)parma[0]).shortValue();
+        short Y = ((Short)parma[1]).shortValue();
+        short Z = ((Short)parma[2]).shortValue();
+        byte block = ((Byte)parma[3]).byteValue();
+        ByteBuffer bb = ByteBuffer.allocate(8);
+        bb.put((byte)0x06);
+        bb.putShort(X);
+        bb.putShort(Y);
+        bb.putShort(Z);
+        bb.put(block);
+        if (player instanceof Player)
+            ((Player)player).setHoldingBlock(block);
+        return bb.array();
+    }
     @Override
     public void Write(IOClient player, Server server, Object...parma) {
         PacketPrepareEvent event = new PacketPrepareEvent(player, this, server);

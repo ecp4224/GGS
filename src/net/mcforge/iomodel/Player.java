@@ -34,11 +34,13 @@ import net.mcforge.networking.IOClient;
 import net.mcforge.networking.packets.Packet;
 import net.mcforge.networking.packets.PacketManager;
 import net.mcforge.networking.packets.minecraft.GlobalPosUpdate;
+import net.mcforge.networking.packets.minecraft.SetBlock;
 import net.mcforge.networking.packets.minecraft.TP;
 import net.mcforge.server.Server;
 import net.mcforge.server.Tick;
 import net.mcforge.sql.MySQL;
 import net.mcforge.world.Block;
+import net.mcforge.world.BlockUpdate;
 import net.mcforge.world.Level;
 import net.mcforge.world.PlaceMode;
 import net.mcforge.API.CommandExecutor;
@@ -830,9 +832,63 @@ public class Player extends IOClient implements CommandExecutor {
             return;
         //Do this way to save on packet overhead
         Packet sb = s.getPacketManager().getPacket((byte)0x05);
-        for (Player p : s.players)
+        for (int i = 0; i < s.players.size(); i++) {
+            final Player p = s.players.get(i);
             if (p.level == l)
                 sb.Write(p, s, X, Y, Z, block.getVisibleBlock());
+        }
+    }
+    
+    /**
+     * Update a list of blocks for the level <b>l</b> in the server <b>s</b>
+     * @param blockupdates
+     *                    The array of block updates to do
+     * @param l
+     *         The level.
+     * @param s
+     *         The server
+     * @param updateLevel
+     *                  Weather the level should be updated
+     */
+    public static void GlobalBlockChange(BlockUpdate[] blockupdates, Level l, Server s, boolean updateLevel) {
+        final SetBlock sb = (SetBlock)s.getPacketManager().getPacket((byte)0x05);
+        ArrayList<byte[]> cache = new ArrayList<byte[]>();
+        for (BlockUpdate b : blockupdates) {
+            for (Player p : s.players) {
+                if (p.getLevel() == l)
+                    cache.add(sb.getBytes(p, s, (short)b.getX(), (short)b.getY(), (short)b.getZ(), b.getBlock().getVisibleBlock()));
+            }
+            if (updateLevel)
+                l.setTile(b.getBlock(), b.getX(), b.getY(), b.getZ(), s);
+        }
+        
+        for (int i = 0; i < cache.size(); i++) {
+            for (int pi = 0; pi < s.players.size(); pi++) {
+                final Player p = s.players.get(pi);
+                if (p.getLevel() != l)
+                    continue;
+                try {
+                    p.WriteData(cache.get(i));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        cache.clear();
+        
+    }
+    
+    /**
+     * Update a list of blocks for the level <b>l</b> in the server <b>s</b>
+     * @param blockupdates
+     *                    The array of block updates to do
+     * @param l
+     *         The level.
+     * @param s
+     *         The server
+     */
+    public static void GlobalBlockChange(BlockUpdate[] blockupdates, Level l, Server s) {
+        GlobalBlockChange(blockupdates, l, s, true);
     }
 
     /**
