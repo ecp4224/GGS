@@ -32,7 +32,7 @@ public class PluginHandler {
     
     private ArrayList<ClassicExtension> ext = new ArrayList<ClassicExtension>();
 
-    private final ClassLoader loader = URLClassLoader.newInstance(new URL[]{}, getClass().getClassLoader());
+    private final ClassLoader loader = Server.getDefaultClassLoader();
     /**
      * Unload a plugin from memory.
      * @param p

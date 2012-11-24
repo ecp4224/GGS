@@ -151,6 +151,11 @@ public abstract class Block implements Serializable {
     }
     
     /**
+     * Initialize a new block
+     */
+    public Block() { }
+    
+    /**
      * Get a block by ID
      * @param ID 
      *          The ID of the block to look for

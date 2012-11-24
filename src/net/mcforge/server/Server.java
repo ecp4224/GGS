@@ -176,6 +176,16 @@ public final class Server implements LogInterface {
     public final CommandHandler getCommandHandler() {
         return ch;
     }
+    
+    /**
+     * Get the default class loader that is used to load
+     * plugins and commands, write serialized objects, ect..
+     * @return
+     *        The default classloader used across the entire server.
+     */
+    public static final ClassLoader getDefaultClassLoader() {
+        return Level.getLoader().getClassLoader();
+    }
     /**
      * Get the handler that handles the plugins
      * @return

@@ -7,17 +7,14 @@
  ******************************************************************************/
 package net.mcforge.world;
 
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.Serializable;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
+import com.esotericsoftware.kryo.Kryo;
+import com.esotericsoftware.kryo.io.Input;
+import com.esotericsoftware.kryo.io.Output;
 import net.mcforge.iomodel.Player;
 import net.mcforge.server.Server;
 import net.mcforge.server.Tick;
@@ -25,11 +22,7 @@ import net.mcforge.util.properties.Properties;
 import net.mcforge.world.converter.MojangLevel;
 import net.mcforge.world.converter.MojangLevelInputStream;
 import net.mcforge.world.converter.OldBlocks;
-import net.mcforge.world.generator.FlatGrass;
-
-import com.esotericsoftware.kryo.Kryo;
-import com.esotericsoftware.kryo.io.Input;
-import com.esotericsoftware.kryo.io.Output;
+import net.mcforge.world.generator.*;
 
 public class Level implements Serializable {
 
@@ -37,6 +30,8 @@ public class Level implements Serializable {
      * 
      */
     private static final long serialVersionUID = -7297498370800056856L;
+    
+    private static final Kryo loader = new Kryo();
 
     private transient Thread physics;
 
@@ -95,6 +90,15 @@ public class Level implements Serializable {
      * The MoTD for this level
      */
     public String motd = "ignore";
+    
+    /**
+     * Get the {@link Kryo} object that loads/saves the level objects
+     * @return
+     *        The loader/saver
+     */
+    public static final Kryo getLoader() {
+        return loader;
+    }
 
     /**
      * The constructor for {@link Level}
@@ -382,13 +386,11 @@ public class Level implements Serializable {
         if (!new File("levels").exists())
             new File("levels").mkdir();
         saving = true;
-
-        Kryo poni = new Kryo();
         FileOutputStream fos = new FileOutputStream("levels/" + name + ".ggs");
         GZIPOutputStream gos = new GZIPOutputStream(fos);
         Output out = new Output(gos);
         out.writeLong(serialVersionUID);
-        poni.writeObject(out, this);
+        getLoader().writeObject(out, this);
         out.close();
         gos.close();
         fos.close();
@@ -452,13 +454,12 @@ public class Level implements Serializable {
         if (filename.endsWith(".lvl"))
             l = convertLVL(filename, server);
         else {
-            Kryo input = new Kryo();
             FileInputStream fis = new FileInputStream(filename);
             GZIPInputStream gis = new GZIPInputStream(fis);
             Input objInput = new Input(gis);
             long version = objInput.readLong();
             if (version == serialVersionUID){
-                l = (Level)input.readObject(objInput, Level.class);
+                l = (Level)getLoader().readObject(objInput, Level.class);
             }else{
                 objInput.close();
                 throw new IOException("The level version does not match the current");
