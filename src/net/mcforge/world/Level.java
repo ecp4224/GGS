@@ -369,8 +369,8 @@ public class Level implements Serializable {
 
     private int[] IntToPos(int index) {
         int[] toreturn = new int[3];
-        toreturn[1] = (index / width / height);
-        index -= toreturn[1]*width*height;
+        toreturn[1] = (index / width / depth);
+        index -= toreturn[1]*width*depth;
         toreturn[2] = (index/width);
         index -= toreturn[2]*width;
         toreturn[0] = index;
