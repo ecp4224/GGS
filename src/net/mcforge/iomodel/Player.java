@@ -496,6 +496,8 @@ public class Player extends IOClient implements CommandExecutor {
      * @return Returns true if the account is valid, otherwise it will return false
      */
     public boolean VerifyLogin() {
+        if (PacketManager.isLocalConnection(getInetAddress()))
+            return true;
         return server.VerifyNames ? mppass.equals(getRealmppass()) : true;
     }
 
@@ -519,6 +521,16 @@ public class Player extends IOClient implements CommandExecutor {
 
     public void setMoney(int amount) {
         this.money = amount;
+        setValue("mcf_money", this.money);
+        try {
+            saveValue("mcf_money");
+        } catch (NotSerializableException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**

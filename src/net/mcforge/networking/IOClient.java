@@ -10,6 +10,7 @@ package net.mcforge.networking;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.net.InetAddress;
 import java.net.Socket;
 
 import net.mcforge.API.io.PacketReceivedEvent;
@@ -31,16 +32,14 @@ public class IOClient {
     
     protected long readID;
     
-    protected String IP;
-    
-    protected String HostName;
+    protected InetAddress address;
     
     /**
      * Returns the IP address string in textual presentation.
      * @return the raw IP address in a string format.
      */
     public String getIP() {
-        return IP;
+        return getInetAddress().getHostAddress();
     }
     
     /**
@@ -50,7 +49,11 @@ public class IOClient {
      * @return the host name for this IP address, or if the operation is not allowed by the security check, the textual representation of the IP address.
      */
     public String getHostName() {
-        return HostName;
+        return getInetAddress().getHostName();
+    }
+    
+    public InetAddress getInetAddress() {
+        return address;
     }
     
     
@@ -83,8 +86,7 @@ public class IOClient {
             pm.server.Log("Error");
             e.printStackTrace();
         }
-        this.IP = client.getInetAddress().getHostAddress();
-        this.HostName = client.getInetAddress().getHostName();
+        this.address = client.getInetAddress();
     }
     
     /**

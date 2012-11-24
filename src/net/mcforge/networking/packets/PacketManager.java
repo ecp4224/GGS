@@ -9,8 +9,11 @@ package net.mcforge.networking.packets;
 
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 
 import net.mcforge.iomodel.Browser;
 import net.mcforge.iomodel.Player;
@@ -154,6 +157,24 @@ public class PacketManager {
             reader.join();
         } catch (InterruptedException e) {
             e.printStackTrace();
+        }
+    }
+    
+    /**
+     * Check if an IP is within the localhost range
+     * @param addr
+     *            The IP
+     * @return
+     *        True if the connection is local.
+     *        False if its not.
+     */
+    public static boolean isLocalConnection(InetAddress addr) {
+        if (addr.isAnyLocalAddress() || addr.isLoopbackAddress())
+            return true;
+        try {
+            return NetworkInterface.getByInetAddress(addr) != null;
+        } catch (SocketException e) {
+            return false;
         }
     }
 
