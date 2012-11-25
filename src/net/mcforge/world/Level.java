@@ -7,14 +7,17 @@
  ******************************************************************************/
 package net.mcforge.world;
 
-import java.io.*;
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
-import com.esotericsoftware.kryo.Kryo;
-import com.esotericsoftware.kryo.io.Input;
-import com.esotericsoftware.kryo.io.Output;
 import net.mcforge.iomodel.Player;
 import net.mcforge.server.Server;
 import net.mcforge.server.Tick;
@@ -22,13 +25,13 @@ import net.mcforge.util.properties.Properties;
 import net.mcforge.world.converter.MojangLevel;
 import net.mcforge.world.converter.MojangLevelInputStream;
 import net.mcforge.world.converter.OldBlocks;
-import net.mcforge.world.generator.*;
+
+import com.esotericsoftware.kryo.Kryo;
+import com.esotericsoftware.kryo.io.Input;
+import com.esotericsoftware.kryo.io.Output;
 
 public class Level implements Serializable {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = -7297498370800056856L;
     
     private static final Kryo loader = new Kryo();
@@ -45,7 +48,7 @@ public class Level implements Serializable {
 
     private int physicsspeed;
 
-    private transient Properties levelprop;
+	private transient Properties levelprop;
 
     public Block[] blocks;
 
@@ -132,15 +135,6 @@ public class Level implements Serializable {
     public Level() {
         this.ticks = new ArrayList<Tick>();
     }
-
-    /**
-     * Generate a flat world
-     */
-    public void FlatGrass(Server s) {
-        FlatGrass g = new FlatGrass(s);
-        generateWorld(g);
-    }
-
     /**
      * Generate a world
      * @param g
@@ -656,7 +650,23 @@ public class Level implements Serializable {
             server.Log("[" + name + "] Physics stopped.");
         }
     }
-
+    
+    /**
+     * Gets the level's physics speed
+     */
+    public int getPhysicsSpeed() {
+		return physicsspeed;
+	}
+    
+    /**
+     * Sets the level's physics speed
+     * 
+     * @param physicsspeed - the speed to set to
+     */
+	public void setPhysicsSpeed(int physicsspeed) {
+		this.physicsspeed = physicsspeed;
+	}
+	
     private class Ticker2 extends Thread implements Serializable {
         private static final long serialVersionUID = 1L;
 
