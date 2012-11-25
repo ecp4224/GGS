@@ -62,6 +62,7 @@ public class Player extends IOClient implements CommandExecutor {
     protected ArrayList<Player> seeable = new ArrayList<Player>();
     protected Ping tick = new Ping(this);
     protected ChatColor color = ChatColor.White;
+    protected String custom_name;
     private HashMap<String, Object> extra = new HashMap<String, Object>();
     /**
      * Weather or not the player is logged in
@@ -417,7 +418,47 @@ public class Player extends IOClient implements CommandExecutor {
      *        The username with the color at the beginning.
      */
     public String getDisplayName() {
-        return (isShowingPrefix() ? prefix : "") + color.toString() + username; 
+        return (isShowingPrefix() ? prefix : "") + (custom_name.equals("") || !custom_name.startsWith("&") ? color.toString() : "") + (custom_name.equals("") ? username : custom_name); 
+    }
+    
+    /**
+     * Get the custom nick this player is using
+     * @return
+     *        The custom nick
+     */
+    public String getCustomName() {
+        return custom_name;
+    }
+    
+    /**
+     * Check weather or not this player is using a custom
+     * nickname
+     * @return
+     *        True if the player is using a custom nick, false if he isn't
+     */
+    public boolean isUsingCustomNick() {
+        return !getCustomName().equals("");
+    }
+    
+    /**
+     * Give this player a custom nick name to replace his
+     * username.
+     * This method will also call {@link Player#respawn()}
+     * @param nick The new nick
+     */
+    public void setCustomNick(String nick) {
+        nick = ChatColor.convertColorCodes(nick);
+        custom_name = nick;
+        respawn();
+    }
+    
+    /**
+     * Remove the custom nickname from this player.
+     * This method will also call {@link Player#respawn()}
+     */
+    public void resetCustomNick() {
+        custom_name = "";
+        respawn();
     }
 
     /**
@@ -485,9 +526,13 @@ public class Player extends IOClient implements CommandExecutor {
 
     /**
      * Respawn this player.
+     * This will despawn the user for all the players in the same level
+     * and respawn the player.
      */
     public void respawn() {
         for (Player p : getServer().players) {
+            if (p.getLevel() != getLevel())
+                continue;
             p.Despawn(this);
             p.spawnPlayer(this);
         }
