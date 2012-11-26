@@ -989,6 +989,18 @@ public class Player extends IOClient implements CommandExecutor {
             data = getValue("lastLogin", username, server);
         return data;
     }
+    
+    /**
+     * Get the total number of times this user has been kicked
+     * @return
+     *        The number of times this user has been kicked
+     */
+    public int getTotalKicked() {
+        int data = 0;
+        if (hasValue("totalKicked"))
+            data = getValue("totalKicked");
+        return data;
+    }
 
     /**
      * Get the current group the player is in
@@ -1270,6 +1282,20 @@ public class Player extends IOClient implements CommandExecutor {
             reason = "You have been kicked!";
         else
             chat.serverBroadcast(username + " has been kicked (" + reason + ")");
+        int kicked = 0;
+        if (hasValue("totalKicked"))
+            kicked = getValue("totalKicked");
+        kicked++;
+        setValue("totalKicked", kicked);
+        try {
+            saveValue("totalKicked");
+        } catch (NotSerializableException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         Packet p = pm.getPacket("Kick");
         this.kickreason = reason;
         server.players.remove(this);
