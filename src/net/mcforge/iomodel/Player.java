@@ -15,7 +15,10 @@ import java.security.NoSuchAlgorithmException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 
 import net.mcforge.API.ClassicExtension;
@@ -65,6 +68,7 @@ public class Player extends IOClient implements CommandExecutor {
     protected ChatColor color = ChatColor.White;
     protected String custom_name;
     private HashMap<String, Object> extra = new HashMap<String, Object>();
+    private static final DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
     /**
      * Weather or not the player is logged in
      */
@@ -421,7 +425,7 @@ public class Player extends IOClient implements CommandExecutor {
     public String getDisplayName() {
         return (prefix != null && !prefix.equals("") ? prefix : "") + (custom_name != null && !custom_name.equals("") && custom_name.startsWith("&") ? "" : color.toString()) + (custom_name != null && !custom_name.equals("") ? custom_name : username); 
     }
-    
+
     /**
      * Get the custom nick this player is using
      * @return
@@ -432,7 +436,7 @@ public class Player extends IOClient implements CommandExecutor {
             return "";
         return custom_name;
     }
-    
+
     /**
      * Check weather or not this player is using a custom
      * nickname
@@ -442,7 +446,7 @@ public class Player extends IOClient implements CommandExecutor {
     public boolean isUsingCustomNick() {
         return !getCustomName().equals("");
     }
-    
+
     /**
      * Give this player a custom nick name to replace his
      * username.
@@ -467,7 +471,7 @@ public class Player extends IOClient implements CommandExecutor {
             e.printStackTrace();
         }
     }
-    
+
     /**
      * Remove the custom nickname from this player.
      * This method will also call {@link Player#respawn()}
@@ -508,7 +512,7 @@ public class Player extends IOClient implements CommandExecutor {
      */
     public void setPrefix(String prefix) {
         this.prefix = prefix;
-        
+
         this.setValue("mcf_prefix", this.prefix);
         try {
             this.saveValue("mcf_prefix");
@@ -643,83 +647,115 @@ public class Player extends IOClient implements CommandExecutor {
      * @param key 
      *           The name of the data
      * @return 
-     *        The data that was stored. 
-     * @throws SQLException
-     *                     If there was a problem executing the SQL statement to retieve the object
-     *                     from the Database. 
-     * @throws IOException 
-     *                    If there was a problem reading the object from the SQL Database.
-     * @throws ClassNotFoundException 
-     *                               If there was a problem casting the object.
+     *        The data that was stored.
      */
     @SuppressWarnings("unchecked")
     public <T> T getValue(String key) {
         if (!extra.containsKey(key)) {
-            T value = null;
-            ResultSet r = server.getSQL().fillData("SELECT count(*) FROM " + server.getSQL().getPrefix() + "_extra WHERE name='" + username + "' AND setting='" + key + "'");
-            int size = 0;
-            try {
-                if (server.getSQL() instanceof MySQL)
-                    r.next();
-                size = r.getInt(1);
-            } catch (SQLException e) {
-                e.printStackTrace();
-                return null;
-            }
-            if (size == 0)
-                return null;
-            else {
-                r = server.getSQL().fillData("SELECT * FROM " + server.getSQL().getPrefix() + "_extra WHERE name='" + username + "' AND setting='" + key + "'");
-                try {
-                    if (server.getSQL() instanceof MySQL) {
-                        r.next();
-                        ByteArrayInputStream bais;
-                        ObjectInputStream ins;
-                        bais = new ByteArrayInputStream(r.getBytes("value"));
-                        ins = new ObjectInputStream(bais);
-                        value = (T)ins.readObject();
-                        ins.close();
-                    }
-                    else
-                        value = (T)r.getObject("value");
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                    return null;
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
-                }
-                extra.put(key, value);
-                try {
-                    r.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-                return value;
-            }
+            T value = getValue(key, username, server);
+            extra.put(key, value);
+            return value;
         }
         return (T)extra.get(key);
     }
+    
+    /**
+     * Returns extra data stored in an offline player
+     * @param key
+     *           The name of the data
+     * @param username
+     *                The username
+     * @param server
+     *              The server the user belongs to
+     * @return
+     *         The data that was found, null if nothing was found or in an error occurred while getting the data.
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> T getValue(String key, String username, Server server) {
+        T value = null;
+        ResultSet r = server.getSQL().fillData("SELECT count(*) FROM " + server.getSQL().getPrefix() + "_extra WHERE name='" + username + "' AND setting='" + key + "'");
+        int size = 0;
+        try {
+            if (server.getSQL() instanceof MySQL)
+                r.next();
+            size = r.getInt(1);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+        if (size == 0)
+            return null;
+        else {
+            r = server.getSQL().fillData("SELECT * FROM " + server.getSQL().getPrefix() + "_extra WHERE name='" + username + "' AND setting='" + key + "'");
+            try {
+                if (server.getSQL() instanceof MySQL) {
+                    r.next();
+                    ByteArrayInputStream bais;
+                    ObjectInputStream ins;
+                    bais = new ByteArrayInputStream(r.getBytes("value"));
+                    ins = new ObjectInputStream(bais);
+                    value = (T)ins.readObject();
+                    ins.close();
+                }
+                else
+                    value = (T)r.getObject("value");
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return null;
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+            try {
+                r.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return value;
+        }
+    }
 
+    /**
+     * Check to see if this player has a value stored
+     * in extra data or in the SQL table
+     * @param key
+     *           The key
+     * @return
+     *        True if the user does have the value, false if he doesn't
+     */
     public boolean hasValue(String key) {
         if (extra.containsKey(key))
             return true;
-        else {
-            ResultSet r = server.getSQL().fillData("SELECT count(*) FROM " + server.getSQL().getPrefix() + "_extra WHERE name='" + username + "' AND setting='" + key + "'");
-            int size = 0;
-            try {
-                if (server.getSQL() instanceof MySQL)
-                    r.next();
-                size = r.getInt(1);
-            } catch (SQLException e) {
-                e.printStackTrace();
-                return false;
-            }
-            if (size == 0)
-                return false;
-            return true;
+        else
+            return hasValue(key, username, server);
+    }
+    
+    /**
+     * Checks to see if an offline player has a value
+     * @param key
+     *           The key
+     * @param username
+     *                The username
+     * @param server
+     *              The server the user belongs to
+     * @return
+     *        True if the user does have the value, false if he doesn't
+     */
+    public static boolean hasValue(String key, String username, Server server) {
+        ResultSet r = server.getSQL().fillData("SELECT count(*) FROM " + server.getSQL().getPrefix() + "_extra WHERE name='" + username + "' AND setting='" + key + "'");
+        int size = 0;
+        try {
+            if (server.getSQL() instanceof MySQL)
+                r.next();
+            size = r.getInt(1);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
         }
+        if (size == 0)
+            return false;
+        return true;
     }
 
     /**
@@ -734,6 +770,56 @@ public class Player extends IOClient implements CommandExecutor {
         if (extra.containsKey(key))
             extra.remove(key);
         extra.put(key, object);
+    }
+    
+    /**
+     * Set the value of an offline player
+     * @param key
+     *           The name of the value
+     * @param object
+     *              The value
+     * @param username
+     *                The username to save
+     * @param server
+     *              The server this user belongs to
+     * @throws SQLException
+     *                     If there was a problem executing the SQL statement to update/insert
+     *                     the object
+     * @throws IOException 
+     *                    If there was a problem writing the object to the SQL server.
+     * @throw NotSerializableException
+     *      
+     */
+    public static void setValue(String key, Object object, String username, Server server) throws SQLException, IOException, NotSerializableException {
+        if (object instanceof Serializable) {
+            ResultSet r = server.getSQL().fillData("SElECT count(*) FROM " + server.getSQL().getPrefix() + "_extra WHERE name='" + username + "' AND setting='" + key + "'");
+            int size = 0;
+            if (server.getSQL() instanceof MySQL)
+                r.next();
+            size = r.getInt(1);
+            if (server.getSQL() instanceof MySQL) {
+                saveToMySQL(key, object, size == 0, server, username);
+                return;
+            }
+            PreparedStatement pstmt = null;
+            if (size == 0) {
+                pstmt = server.getSQL().getConnection().prepareStatement("INSERT INTO " + server.getSQL().getPrefix() + "_extra(name, setting, value) VALUES (?, ?, ?)");
+                pstmt.setString(1, username);
+                pstmt.setString(2, key);
+                pstmt.setObject(3, object);
+                pstmt.executeUpdate();
+            }
+            else {
+                pstmt = server.getSQL().getConnection().prepareStatement("UPDATE " + server.getSQL().getPrefix() + "_extra SET value = ? WHERE name = ? AND setting = ?");
+                pstmt.setObject(1, object);
+                pstmt.setString(2, username);
+                pstmt.setString(3, key);
+                pstmt.executeUpdate();
+            }
+            pstmt.close();
+        }
+        else
+            throw new NotSerializableException("The object that was stored in ExtraData cant be saved because it doesnt implement Serializable!");
     }
 
     /**
@@ -753,38 +839,10 @@ public class Player extends IOClient implements CommandExecutor {
     public void saveValue(String key) throws SQLException, IOException, NotSerializableException {
         if (!extra.containsKey(key))
             return;
-        if (extra.get(key) instanceof Serializable) {
-            ResultSet r = server.getSQL().fillData("SElECT count(*) FROM " + server.getSQL().getPrefix() + "_extra WHERE name='" + username + "' AND setting='" + key + "'");
-            int size = 0;
-            if (server.getSQL() instanceof MySQL)
-                r.next();
-            size = r.getInt(1);
-            if (server.getSQL() instanceof MySQL) {
-                saveToMySQL(key, extra.get(key), size == 0);
-                return;
-            }
-            PreparedStatement pstmt = null;
-            if (size == 0) {
-                pstmt = server.getSQL().getConnection().prepareStatement("INSERT INTO " + server.getSQL().getPrefix() + "_extra(name, setting, value) VALUES (?, ?, ?)");
-                pstmt.setString(1, username);
-                pstmt.setString(2, key);
-                pstmt.setObject(3, extra.get(key));
-                pstmt.executeUpdate();
-            }
-            else {
-                pstmt = server.getSQL().getConnection().prepareStatement("UPDATE " + server.getSQL().getPrefix() + "_extra SET value = ? WHERE name = ? AND setting = ?");
-                pstmt.setObject(1, extra.get(key));
-                pstmt.setString(2, username);
-                pstmt.setString(3, key);
-                pstmt.executeUpdate();
-            }
-            pstmt.close();
-        }
-        else
-            throw new NotSerializableException("The object that was stored in ExtraData cant be saved because it doesnt implement Serializable!");
+        setValue(key, extra.get(key), username, getServer());
     }
 
-    private <T> void saveToMySQL(String key, T o, boolean add) throws IOException, SQLException {
+    private static <T> void saveToMySQL(String key, T o, boolean add, Server server, String username) throws IOException, SQLException {
         PreparedStatement ps=null;
         String sql=null;
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -797,14 +855,14 @@ public class Player extends IOClient implements CommandExecutor {
         byte[] data = bos.toByteArray();
         if (add) {
             sql = "INSERT INTO " + server.getSQL().getPrefix() + "_extra(name, setting, value) VALUES (?, ?, ?)";
-            ps = getServer().getSQL().getConnection().prepareStatement(sql);
+            ps = server.getSQL().getConnection().prepareStatement(sql);
             ps.setString(1, username);
             ps.setString(2, key);
             ps.setObject(3, data);
         }
         else {
             sql = "UPDATE " + server.getSQL().getPrefix() + "_extra SET value = ? WHERE name = ? AND setting = ?";
-            ps = getServer().getSQL().getConnection().prepareStatement(sql);
+            ps = server.getSQL().getConnection().prepareStatement(sql);
             ps.setObject(1, data);
             ps.setString(2, username);
             ps.setString(3, key);
@@ -837,16 +895,7 @@ public class Player extends IOClient implements CommandExecutor {
         oldX = X;
         oldY = Y;
         oldZ = Z;
-        
-        if (this.hasValue("mcf_prefix"))
-            this.prefix = this.getValue("mcf_prefix");
-        if (this.hasValue("mcf_color"))
-            this.color = this.getValue("mcf_color");
-        if (this.hasValue("mcf_showprefix"))
-            this.showprefix = this.getValue("mcf_showprefix");
-        if (this.hasValue("mcf_nick"))
-            this.custom_name = this.getValue("mcf_nick");
-        
+        loadExtraData();
         pm.server.Log(this.username + " has joined the server.");
         chat.serverBroadcast(this.username + " has joined the server.");
         spawnPlayer(this);
@@ -862,6 +911,83 @@ public class Player extends IOClient implements CommandExecutor {
         }
         setPos((short)((0.5 + level.spawnx) * 32), (short)((1 + level.spawny) * 32), (short)((0.5 + level.spawnz) * 32));
         isLoggedin = true;
+    }
+
+    private void loadExtraData() {
+        if (this.hasValue("mcf_prefix"))
+            this.prefix = this.getValue("mcf_prefix");
+        if (this.hasValue("mcf_color"))
+            this.color = this.getValue("mcf_color");
+        if (this.hasValue("mcf_showprefix"))
+            this.showprefix = this.getValue("mcf_showprefix");
+        if (this.hasValue("mcf_nick"))
+            this.custom_name = this.getValue("mcf_nick");
+        
+        
+        try {
+            final Calendar cal = Calendar.getInstance();
+            final String date = dateFormat.format(cal.getTime());
+            int login = 0;
+            if (hasValue("totalLogin"))
+                login = getValue("totalLogin");
+            login++;
+            setValue("totalLogin", login);
+            saveValue("totalLogin");
+            if (login == 1) {
+                setValue("firstLogin", date);
+                saveValue("firstLogin");
+            }
+            setValue("lastLogin", date);
+            saveValue("lastLogin");
+        } catch (NotSerializableException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    /**
+     * Get the total number of times this player
+     * logged in
+     * @return The number of times the player logged in
+     */
+    public int getTotalLogin() {
+        int count = 0;
+        if (hasValue("totalLogin"))
+            count = getValue("totalLogin");
+        return count;
+    }
+    
+    /**
+     * Get the data and time this player first logged in
+     * with the format "yyyy/MM/dd HH:mm:ss"
+     * @return
+     *        The date in the format of "yyyy/MM/dd HH:mm:ss"
+     */
+    public String getFirstLogin() {
+        String data = "";
+        if (hasValue("firstLogin"))
+            data = getValue("firstLogin");
+        return data;
+    }
+    
+    /**
+     * Get the last time the user with the username <b>username</b> logged in
+     * with the format "yyyy/MM/dd HH:mm:ss"
+     * @param username
+     *                The user to lookup
+     * @param server
+     *              The server this user belongs to
+     * @return
+     *        The date in the formate of "yyyy/MM/dd HH:mm:ss"
+     */
+    public static String getLastLogin(String username, Server server) {
+        String data = "";
+        if (hasValue("lastLogin", username, server))
+            data = getValue("lastLogin", username, server);
+        return data;
     }
 
     /**
@@ -1468,7 +1594,7 @@ public class Player extends IOClient implements CommandExecutor {
         seeable.clear();
         color = null;
         client = null;
-        
+
         pm.server.Remove(tick); //Do this last as this takes a while to remove
     }
 
