@@ -52,7 +52,7 @@ public class SpawnPlayer extends Packet {
             byte[] send = new byte[74];
             send[0] = ID;
             send[1] = (spawn == player) ? (byte)0xFF : spawn.getID();
-            String name = (spawn.isShowingPrefix() ? spawn.getDisplayName() : spawn.getDisplayColor().toString() + spawn.username);
+            String name = (spawn.isShowingPrefix() ? spawn.getDisplayName() : (spawn.isUsingCustomNick() && spawn.getCustomName().startsWith("&") ? "" : spawn.getDisplayColor().toString()) + (spawn.isUsingCustomNick() ? spawn.getCustomName() : spawn.username));
             while (name.length() < 64)
                 name += " ";
             byte[] nameb = name.getBytes("US-ASCII");

@@ -26,6 +26,7 @@ import net.mcforge.API.player.PlayerBlockChangeEvent;
 import net.mcforge.API.player.PlayerChatEvent;
 import net.mcforge.API.player.PlayerCommandEvent;
 import net.mcforge.API.player.PlayerDisconnectEvent;
+import net.mcforge.API.player.PlayerKickedEvent;
 import net.mcforge.chat.ChatColor;
 import net.mcforge.chat.Messages;
 import net.mcforge.groups.Group;
@@ -418,7 +419,7 @@ public class Player extends IOClient implements CommandExecutor {
      *        The username with the color at the beginning.
      */
     public String getDisplayName() {
-        return (isShowingPrefix() ? prefix : "") + (custom_name.equals("") || !custom_name.startsWith("&") ? color.toString() : "") + (custom_name.equals("") ? username : custom_name); 
+        return (prefix != null && !prefix.equals("") ? prefix : "") + (custom_name != null && !custom_name.equals("") && custom_name.startsWith("&") ? "" : color.toString()) + (custom_name != null && !custom_name.equals("") ? custom_name : username); 
     }
     
     /**
@@ -427,6 +428,8 @@ public class Player extends IOClient implements CommandExecutor {
      *        The custom nick
      */
     public String getCustomName() {
+        if (custom_name == null)
+            return "";
         return custom_name;
     }
     
@@ -443,13 +446,26 @@ public class Player extends IOClient implements CommandExecutor {
     /**
      * Give this player a custom nick name to replace his
      * username.
+     * 
      * This method will also call {@link Player#respawn()}
+     * 
+     * The nick assigned will also be saved as a extradata value with the key "mcf_nick"
      * @param nick The new nick
      */
     public void setCustomNick(String nick) {
         nick = ChatColor.convertColorCodes(nick);
         custom_name = nick;
         respawn();
+        this.setValue("mcf_nick", custom_name);
+        try {
+            this.saveValue("mcf_nick");
+        } catch (NotSerializableException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
     
     /**
@@ -457,8 +473,7 @@ public class Player extends IOClient implements CommandExecutor {
      * This method will also call {@link Player#respawn()}
      */
     public void resetCustomNick() {
-        custom_name = "";
-        respawn();
+        setCustomNick("");
     }
 
     /**
@@ -484,10 +499,26 @@ public class Player extends IOClient implements CommandExecutor {
      * This can be a title or a star.
      * This prefix wont appear above the players head, unless
      * {@link Player#isShowingPrefix()} is true.
+     * 
+     * The prefix will appear before the player's username in chat
+     * regardless of the value that is returned in {@link Player#isShowingPrefix()}
+     * 
+     * The prefix assigned will also be saved as a extradata value with the key "mcf_prefix"
      * @param prefix The prefix to set.
      */
     public void setPrefix(String prefix) {
         this.prefix = prefix;
+        
+        this.setValue("mcf_prefix", this.prefix);
+        try {
+            this.saveValue("mcf_prefix");
+        } catch (NotSerializableException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -505,23 +536,50 @@ public class Player extends IOClient implements CommandExecutor {
     /**
      * Set weather or not the user should show there prefix above
      * there player's head.
+     * 
      * This method will respawn the player using {@link Player#respawn()}
+     * 
+     * The boolean assigned will also be saved as a extradata value with the key "mcf_showprefix"
      * @param value
      *             True if they should, false if they should not.
      */
     public void setShowPrefix(boolean value) {
         this.showprefix = value;
         respawn();
+        this.setValue("mcf_showprefix", value);
+        try {
+            this.saveValue("mcf_showprefix");
+        } catch (NotSerializableException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
-     * Set the color for this player
+     * Set the color for this player.
+     * 
+     * This method will respawn the player using {@link Player#respawn()}
+     * 
+     * The color assigned will also be saved as a extradata value with the key "mcf_color"
      * @param color 
      *             The color
      */
     public void setDisplayColor(ChatColor color) {
         this.color = color;
         respawn();
+        this.setValue("mcf_color", this.color);
+        try {
+            this.saveValue("mcf_color");
+        } catch (NotSerializableException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -779,6 +837,16 @@ public class Player extends IOClient implements CommandExecutor {
         oldX = X;
         oldY = Y;
         oldZ = Z;
+        
+        if (this.hasValue("mcf_prefix"))
+            this.prefix = this.getValue("mcf_prefix");
+        if (this.hasValue("mcf_color"))
+            this.color = this.getValue("mcf_color");
+        if (this.hasValue("mcf_showprefix"))
+            this.showprefix = this.getValue("mcf_showprefix");
+        if (this.hasValue("mcf_nick"))
+            this.custom_name = this.getValue("mcf_nick");
+        
         pm.server.Log(this.username + " has joined the server.");
         chat.serverBroadcast(this.username + " has joined the server.");
         spawnPlayer(this);
@@ -1066,6 +1134,12 @@ public class Player extends IOClient implements CommandExecutor {
      * @param reason The reason why he was kicked
      */
     public void kick(String reason) {
+        PlayerKickedEvent pke = new PlayerKickedEvent(this, reason);
+        server.getEventSystem().callEvent(pke);
+        if (pke.isCancelled()) {
+            server.Log(username + " kicking has been canceled by a plugin!");
+            return;
+        }
         if (reason.equals(""))
             reason = "You have been kicked!";
         else
@@ -1387,6 +1461,14 @@ public class Player extends IOClient implements CommandExecutor {
         PlayerDisconnectEvent event = new PlayerDisconnectEvent(this);
         server.getEventSystem().callEvent(event);
         super.CloseConnection();
+        //Clear up data
+        extra.clear();
+        extend.clear();
+        chat = null;
+        seeable.clear();
+        color = null;
+        client = null;
+        
         pm.server.Remove(tick); //Do this last as this takes a while to remove
     }
 
