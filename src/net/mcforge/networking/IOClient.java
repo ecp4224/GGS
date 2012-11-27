@@ -88,7 +88,6 @@ public class IOClient {
         this.pm = pm;
         try {
             writer = new PrintStream(client.getOutputStream());
-            //writer.flush();
             reader = new DataInputStream(client.getInputStream());
         } catch (IOException e) {
             pm.server.Log("Error");

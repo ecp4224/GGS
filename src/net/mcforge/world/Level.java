@@ -223,6 +223,18 @@ public class Level implements Serializable {
 
             if (getTile(pos[0], pos[1], pos[2] - 1) instanceof PhysicsBlock && !ticks.contains(getTile(pos[0], pos[1], pos[2] - 1)))
                 addTick(pos[0], pos[1], pos[2] - 1, getTile(pos[0], pos[1], pos[2] - 1), server);
+            
+            if (getTile(pos[0], pos[1] + 1, pos[2] - 1) instanceof PhysicsBlock && !ticks.contains(getTile(pos[0], pos[1] + 1, pos[2] - 1)))
+                addTick(pos[0], pos[1] + 1, pos[2] - 1, getTile(pos[0], pos[1] + 1, pos[2] - 1), server);
+            
+            if (getTile(pos[0] + 1, pos[1] + 1, pos[2]) instanceof PhysicsBlock && !ticks.contains(getTile(pos[0] + 1, pos[1] + 1, pos[2])))
+                addTick(pos[0] + 1, pos[1] + 1, pos[2], getTile(pos[0] + 1, pos[1] + 1, pos[2]), server);
+
+            if (getTile(pos[0] - 1, pos[1] + 1, pos[2]) instanceof PhysicsBlock && !ticks.contains(getTile(pos[0] - 1, pos[1] + 1, pos[2])))
+                addTick(pos[0] - 1, pos[1] + 1, pos[2], getTile(pos[0] - 1, pos[1] + 1, pos[2]), server);
+
+            if (getTile(pos[0], pos[1] + 1, pos[2] + 1) instanceof PhysicsBlock && !ticks.contains(getTile(pos[0], pos[1] + 1, pos[2] + 1)))
+                addTick(pos[0], pos[1] + 1, pos[2] + 1, getTile(pos[0], pos[1] + 1, pos[2] + 1), server);
         } catch (Exception e) { }
     }
 

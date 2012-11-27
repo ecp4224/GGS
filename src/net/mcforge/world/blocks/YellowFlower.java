@@ -7,9 +7,10 @@
  ******************************************************************************/
 package net.mcforge.world.blocks;
 
-import net.mcforge.world.Block;
+import net.mcforge.server.Server;
+import net.mcforge.world.PhysicsBlock;
 
-public class YellowFlower extends Block {
+public class YellowFlower extends RedFlower {
 
     /**
      * 
@@ -22,6 +23,15 @@ public class YellowFlower extends Block {
     
     public YellowFlower() {
         super((byte)37, "YellowFlower");
+    }
+    
+    public YellowFlower(Server s) {
+        super(s);
+    }
+
+    @Override
+    public PhysicsBlock clone(Server s) {
+        return new YellowFlower(s);
     }
     
     @Override

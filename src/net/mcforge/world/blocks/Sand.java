@@ -90,7 +90,6 @@ public class Sand extends PhysicsBlock {
                     check.add(diag.get(i));
                     diag.remove(i);
                 }
-
                 for (int i = 0; i < check.size(); ++i)
                 {
                     int x = (int)check.get(i).x;
@@ -108,6 +107,7 @@ public class Sand extends PhysicsBlock {
                 check.clear();
                 diag.clear();
                 card.clear();
+                super.stopTick();
             }
         }
         else
