@@ -38,7 +38,7 @@ public class IOClient {
     
     protected long readID;
 
-    protected Queue<byte[]> packet_queue = new LinkedList<byte[]>();
+    protected List<byte[]> packet_queue = Collections.synchronizedList(new LinkedList<byte[]>());
 
     protected InetAddress address;
 
@@ -149,7 +149,7 @@ public class IOClient {
     protected boolean sendNextPacket() throws IOException {
         if (packet_queue.isEmpty())
             return false;
-        byte[] data = packet_queue.poll();
+        byte[] data = packet_queue.remove(0);
         if (data == null) //Safeguard
             return false;
         writer.write(data);
