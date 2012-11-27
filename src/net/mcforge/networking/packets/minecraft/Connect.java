@@ -58,7 +58,7 @@ public class Connect extends Packet {
                 player.kick("Invalid protocol version!");
                 return;
             }
-            if (player.VerifyLogin() && !connect.isCancelled() && !connect.getAutologin()) {
+            if (player.verifyLogin() && !connect.isCancelled() && !connect.getAutologin()) {
                 player.client = ClientType.parse(message[129]);
                 if (player.client == ClientType.Extend_Classic) {
                     Packet packet = server.getPacketManager().getPacket((byte)0x10);

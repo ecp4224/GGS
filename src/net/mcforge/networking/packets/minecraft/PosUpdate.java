@@ -63,7 +63,7 @@ public class PosUpdate extends Packet {
             return;
         }
         try {
-            player.UpdatePos();
+            player.updatePos();
         } catch (IOException e) {
             e.printStackTrace();
         }

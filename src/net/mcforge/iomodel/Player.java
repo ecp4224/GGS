@@ -658,7 +658,7 @@ public class Player extends IOClient implements CommandExecutor {
      * Verify the player is using a valid account
      * @return Returns true if the account is valid, otherwise it will return false
      */
-    public boolean VerifyLogin() {
+    public boolean verifyLogin() {
         if (PacketManager.isLocalConnection(getInetAddress()))
             return true;
         return server.VerifyNames ? mppass.equals(getRealmppass()) : true;
@@ -1097,7 +1097,7 @@ public class Player extends IOClient implements CommandExecutor {
         PlayerBlockChangeEvent event = new PlayerBlockChangeEvent(this, X, Y, Z, Block.getBlock(holding), level, pm.server, type);
         pm.server.getEventSystem().callEvent(event);
         if (event.isCancelled()) {
-            SendBlockChange(X, Y, Z, getOrginal);
+            sendBlockChange(X, Y, Z, getOrginal);
             return;
         }
         Block place = event.getBlock();
@@ -1190,7 +1190,7 @@ public class Player extends IOClient implements CommandExecutor {
      * @param Z The Z coord of the block
      * @param block The block to send
      */
-    public void SendBlockChange(short X, short Y, short Z, Block block) {
+    public void sendBlockChange(short X, short Y, short Z, Block block) {
         server.getPacketManager().getPacket((byte)0x05).Write(this, server, X, Y, Z, block.getVisibleBlock());
     }
 
@@ -1230,7 +1230,7 @@ public class Player extends IOClient implements CommandExecutor {
         pm.getPacket("MOTD").Write(this, pm.server, topline, bottomline);
     }
 
-    public void UpdatePos() throws IOException {
+    public void updatePos() throws IOException {
         if (!isLoggedin)
             return;
 
