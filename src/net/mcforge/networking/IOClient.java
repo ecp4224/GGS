@@ -122,6 +122,7 @@ public class IOClient {
             reader.close();
             client.close();
             connected = false;
+            packet_queue.clear();
         } catch (IOException e) {
             e.printStackTrace();
         }
