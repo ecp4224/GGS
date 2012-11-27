@@ -76,7 +76,7 @@ public class Browser extends IOClient {
             writer.println();
             writer.println(respond);
         }
-        CloseConnection();
+        closeConnection();
     }
 
 }

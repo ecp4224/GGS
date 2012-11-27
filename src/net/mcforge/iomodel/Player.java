@@ -592,11 +592,65 @@ public class Player extends IOClient implements CommandExecutor {
      * and respawn the player.
      */
     public void respawn() {
+        despawn();
+        spawn();
+    }
+    
+    /**
+     * Despawn this player.
+     * In other words, hide this player from all other players
+     */
+    public void despawn() {
         for (Player p : getServer().players) {
             if (p.getLevel() != getLevel())
                 continue;
-            p.Despawn(this);
+            p.despawn(this);
+        }
+    }
+    
+    /**
+     * Despawn this player for all players and despawn all players
+     * for this player
+     */
+    public void completeDespawn() {
+        for (Player p : getServer().players) {
+            if (p.getLevel() != getLevel())
+                continue;
+            p.despawn(this);
+            despawn(p);
+        }
+    }
+ 
+    /**
+     * Clear the list of players this player can see.
+     * This method doesnt despawn any players.
+     */
+    public void clearSeeableList() {
+        seeable.clear();
+    }
+    
+    /**
+     * Spawn this player
+     * In other words, show this player to all the other players in the same level
+     */
+    public void spawn() {
+        for (Player p : getServer().players) {
+            if (p.getLevel() != getLevel() || p == this)
+                continue;
             p.spawnPlayer(this);
+            
+        }
+    }
+    
+    /**
+     * Spawn this player for all players and spawn all players for this player.
+     */
+    public void completeSpawn() {
+        for (Player p : getServer().players) {
+            if (p.getLevel() != getLevel() || p == this)
+                continue;
+            p.spawnPlayer(this);
+            spawnPlayer(p);
         }
     }
 
@@ -887,29 +941,16 @@ public class Player extends IOClient implements CommandExecutor {
         if (Group.getGroup(this) == null)
             setGroup(Group.getDefault());
         SendWelcome();
-        setLevel(pm.server.getLevelHandler().findLevel(pm.server.MainLevel));
-        levelsender.join(); //Wait for finish
-        X = (short)((0.5 + level.spawnx) * 32);
-        Y = (short)((1 + level.spawny) * 32);
-        Z = (short)((0.5 + level.spawnz) * 32);
-        oldX = X;
-        oldY = Y;
-        oldZ = Z;
+        final Level level = pm.server.getLevelHandler().findLevel(pm.server.MainLevel);
+        if (level == null) {
+            kick("The main level hasnt loaded yet!");
+            return;
+        }
+        changeLevel(level, true);
         loadExtraData();
         pm.server.Log(this.username + " has joined the server.");
         chat.serverBroadcast(this.username + " has joined the server.");
-        spawnPlayer(this);
         updateAllLists(); //Update me in your list
-        setPos((short)((0.5 + level.spawnx) * 32), (short)((1 + level.spawny) * 32), (short)((0.5 + level.spawnz) * 32));
-        for (Player p : pm.server.players) {
-            if (this.hasExtension("ExtAddPlayerName"))
-                pm.getPacket((byte)0x33).Write(this, server, p); //Update mine for you
-            if (p.level == level) {
-                spawnPlayer(p); //Spawn p for me
-                p.spawnPlayer(this); //Spawn me for p
-            }
-        }
-        setPos((short)((0.5 + level.spawnx) * 32), (short)((1 + level.spawny) * 32), (short)((0.5 + level.spawnz) * 32));
         isLoggedin = true;
     }
 
@@ -1489,13 +1530,16 @@ public class Player extends IOClient implements CommandExecutor {
      */
     public void changeLevel(Level level, boolean threading)
     {
+        if (level == this.level)
+            return;
         if (!threading) {
+            completeDespawn();
             setLevel(level);
-            if (levelsender == null)
-                return;
-            try {
-                levelsender.join(); //Wait for finish
-            } catch (InterruptedException e) { } 
+            if (levelsender != null) {
+                try {
+                    levelsender.join(); //Wait for finish
+                } catch (InterruptedException e) { }
+            }
             X = (short)((0.5 + level.spawnx) * 32);
             Y = (short)((1 + level.spawny) * 32);
             Z = (short)((0.5 + level.spawnz) * 32);
@@ -1504,13 +1548,7 @@ public class Player extends IOClient implements CommandExecutor {
             oldZ = Z;
             spawnPlayer(this);
             setPos((short)((0.5 + level.spawnx) * 32), (short)((1 + level.spawny) * 32), (short)((0.5 + level.spawnz) * 32));
-            for (Player p : pm.server.players) {
-                if (p.level == level) {
-                    spawnPlayer(p); //Spawn p for me
-                    p.spawnPlayer(this); //Spawn me for p
-                }
-            }
-            setPos((short) ((0.5 + level.spawnx) * 32), (short) ((1 + level.spawny) * 32), (short) ((0.5 + level.spawnz) * 32));
+            completeSpawn();
             PlayerJoinedLevel event = new PlayerJoinedLevel(this, this.level);
             server.getEventSystem().callEvent(event);
         }
@@ -1585,10 +1623,12 @@ public class Player extends IOClient implements CommandExecutor {
      * Despawn a player for this player
      * @param p The player to despawn
      */
-    public void Despawn(Player p) {
+    public void despawn(Player p) {
         if (!seeable.contains(p))
             return;
         pm.getPacket((byte)0x0c).Write(this, pm.server, p.ID);
+        if (p.hasExtension("ExtRemovePlayerName"))
+            pm.getPacket((byte)0x35).Write(p, server, this);
         seeable.remove(p);
     }
 
@@ -1597,7 +1637,7 @@ public class Player extends IOClient implements CommandExecutor {
      * If you want to kick the player, use {@link #kick(String)}
      */
     @Override
-    public void CloseConnection() {
+    public void closeConnection() {
         if (pm.server.players.contains(this))
             pm.server.players.remove(this);
         if(this.username != null)
@@ -1605,14 +1645,10 @@ public class Player extends IOClient implements CommandExecutor {
             pm.server.Log(this.username + " has left the server.");
             chat.serverBroadcast(this.username + " has left the server.");        
         }
-        for (Player p : pm.server.players) {
-            p.Despawn(this);
-            if (p.hasExtension("ExtRemovePlayerName"))
-                pm.getPacket((byte)0x35).Write(p, server, this);
-        }
+        despawn();
         PlayerDisconnectEvent event = new PlayerDisconnectEvent(this);
         server.getEventSystem().callEvent(event);
-        super.CloseConnection();
+        super.closeConnection();
         //Clear up data
         extra.clear();
         extend.clear();

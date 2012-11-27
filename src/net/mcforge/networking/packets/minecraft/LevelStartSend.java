@@ -56,7 +56,7 @@ public class LevelStartSend extends Packet {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        player.CloseConnection();
+        player.closeConnection();
     }
 
 }

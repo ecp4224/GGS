@@ -104,7 +104,7 @@ public class IOClient {
     /**
      * Disconnect this client from the server
      */
-    public void CloseConnection() {
+    public void closeConnection() {
         try {
             pm.server.Log("Closing connection");
             writer.close();
@@ -162,14 +162,14 @@ public class IOClient {
                     }
                     packet.Handle(message, pm.server, (Player)client);
                 } catch (IOException e) {
-                    CloseConnection();
+                    closeConnection();
                     break;
                 }
                 catch (Exception e) {
                     e.printStackTrace();
                     if (client instanceof Player)
                         ((Player)client).kick("ERROR!");
-                    CloseConnection();
+                    closeConnection();
                     break;
                 }
             }
