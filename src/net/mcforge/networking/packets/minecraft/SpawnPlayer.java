@@ -62,7 +62,7 @@ public class SpawnPlayer extends Packet {
             System.arraycopy(HTNO(spawn.getZ()), 0, send, 70, 2);
             send[72] = spawn.yaw;
             send[73] = spawn.pitch;
-            player.WriteData(send);
+            player.writeData(send);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         } catch (IOException e) {

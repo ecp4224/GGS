@@ -1160,7 +1160,7 @@ public class Player extends IOClient implements CommandExecutor {
                 if (p.getLevel() != l)
                     continue;
                 try {
-                    p.WriteData(cache.get(i));
+                    p.writeData(cache.get(i));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -1245,7 +1245,7 @@ public class Player extends IOClient implements CommandExecutor {
             if (p == this)
                 continue;
             if (p.level == level)
-                p.WriteData(tosend);
+                p.writeData(tosend);
         }
     }
 

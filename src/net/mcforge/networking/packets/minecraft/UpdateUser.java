@@ -41,7 +41,7 @@ public class UpdateUser extends Packet {
         final1[0] = (byte)0x0f;
         final1[1] = (byte)(p.getGroup().isOP ? 0x64 : 0x00);
         try {
-            player.WriteData(final1);
+            player.writeData(final1);
         } catch (IOException e) {
             e.printStackTrace();
         }

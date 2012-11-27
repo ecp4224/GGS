@@ -43,7 +43,7 @@ public class ClickDistancePacket extends ExtendPacket {
         bf.put(ID);
         bf.putShort(Short.parseShort(para[0].toString()));
         try {
-            p.WriteData(bf.array());
+            p.writeData(bf.array());
         } catch (IOException e) {
             e.printStackTrace();
         }

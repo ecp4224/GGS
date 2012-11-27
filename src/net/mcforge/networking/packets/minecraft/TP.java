@@ -68,7 +68,7 @@ public class TP extends Packet {
             bb.putShort(tp.getZ());
             bb.put(tp.yaw);
             bb.put(tp.pitch);
-            player.WriteData(bb.array());
+            player.writeData(bb.array());
         } catch (IOException e) {
             e.printStackTrace();
         }

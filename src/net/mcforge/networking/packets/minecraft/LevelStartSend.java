@@ -34,7 +34,7 @@ public class LevelStartSend extends Packet {
         if (event.isCancelled())
             return;
         try {
-            player.WriteData(new byte[] { ID });
+            player.writeData(new byte[] { ID });
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -50,7 +50,7 @@ public class LevelStartSend extends Packet {
             bb.put((byte)255);
             bb.putShort((short)kickbyte.length);
             bb.put(kickbyte);
-            player.WriteData(bb.array());
+            player.writeData(bb.array());
         } catch (UnsupportedEncodingException e) {;
             e.printStackTrace();
         } catch (IOException e) {

@@ -47,7 +47,7 @@ public class ExtAddPlayerNamePacket extends ExtendPacket {
                 System.arraycopy(bdisname, 0, array, bname.length + 2, bdisname.length);
                 System.arraycopy(bgroup, 0, array, bname.length + bdisname.length + 2, bgroup.length);
                 array[194] = groupper;
-                client.WriteData(array);
+                client.writeData(array);
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             } catch (IOException e) {

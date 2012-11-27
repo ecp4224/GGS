@@ -47,7 +47,7 @@ public class FinishLevelSend extends Packet {
             bb.putShort(player.getLevel().width);
             bb.putShort(player.getLevel().height);
             bb.putShort(player.getLevel().depth);
-            player.WriteData(bb.array());
+            player.writeData(bb.array());
         }
         catch (IOException e) {
             e.printStackTrace();

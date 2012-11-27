@@ -69,7 +69,7 @@ public class LevelSend extends Packet {
                 tosend.add(send);
             }
             for (byte[] array : tosend) {
-                player.WriteData(array);
+                player.writeData(array);
                 if (!player.getIP().equals("127.0.0.1"))
                     Thread.sleep(10);
             }

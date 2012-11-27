@@ -38,7 +38,7 @@ public class ExtRemovePlayerNamePacket extends ExtendPacket {
             try {
                 byte[] bname = name.getBytes("US-ASCII");
                 System.arraycopy(bname, 0, array, 1, bname.length);
-                client.WriteData(array);
+                client.writeData(array);
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             } catch (IOException e) {

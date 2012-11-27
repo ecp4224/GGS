@@ -60,7 +60,7 @@ public class ExtInfoPacket extends ExtendPacket {
         }
         bf.putShort((short)servers.getPluginHandler().getExtensions().size());
         try {
-            p.WriteData(bf.array());
+            p.writeData(bf.array());
         } catch (IOException e) {
             e.printStackTrace();
         }

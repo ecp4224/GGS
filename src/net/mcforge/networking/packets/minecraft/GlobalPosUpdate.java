@@ -108,7 +108,7 @@ public class GlobalPosUpdate extends Packet {
             finals[0] = (byte)0x01;
         }
         try {
-            player.WriteData(finals);
+            player.writeData(finals);
         } catch (IOException e) {
             e.printStackTrace();
         }

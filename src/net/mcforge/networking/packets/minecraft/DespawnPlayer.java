@@ -40,7 +40,7 @@ public class DespawnPlayer extends Packet {
         finals[0] = ID;
         finals[1] = ((Byte)parrams[0]).byteValue();
         try {
-            player.WriteData(finals);
+            player.writeData(finals);
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -47,7 +47,7 @@ public class MOTD extends Packet {
             System.arraycopy(name, 0, finals, 2, name.length);
             System.arraycopy(motd, 0, finals, name.length + 2, motd.length);
             finals[130] = 0x00;
-            player.WriteData(finals);
+            player.writeData(finals);
             
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();

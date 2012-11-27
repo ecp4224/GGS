@@ -42,7 +42,7 @@ public class ExtEntryPacket extends ExtendPacket {
         }
         bf.putInt(((ClassicExtension)para[0]).version());
         try {
-            p.WriteData(bf.array());
+            p.writeData(bf.array());
         } catch (IOException e) {
             e.printStackTrace();
         }

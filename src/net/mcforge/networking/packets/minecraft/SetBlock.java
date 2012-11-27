@@ -65,7 +65,7 @@ public class SetBlock extends Packet {
         if (player instanceof Player)
             ((Player)player).setHoldingBlock(block);
         try {
-            player.WriteData(bb.array());
+            player.writeData(bb.array());
         } catch (IOException e) {
             e.printStackTrace();
         }

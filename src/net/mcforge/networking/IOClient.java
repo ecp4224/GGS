@@ -12,6 +12,8 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.util.LinkedList;
+import java.util.Queue;
 
 import net.mcforge.API.io.PacketReceivedEvent;
 import net.mcforge.API.io.PacketSentEvent;
@@ -21,19 +23,25 @@ import net.mcforge.networking.packets.PacketManager;
 
 public class IOClient {
     protected Socket client;
-    
+
     protected PrintStream writer;
-    
+
     protected DataInputStream reader;
-    
+
     protected Thread readerthread;
     
+    protected Thread writerthread;
+
     protected PacketManager pm;
     
+    protected boolean connected;
+    
     protected long readID;
-    
+
+    protected Queue<byte[]> packet_queue = new LinkedList<byte[]>();
+
     protected InetAddress address;
-    
+
     /**
      * Returns the IP address string in textual presentation.
      * @return the raw IP address in a string format.
@@ -41,7 +49,7 @@ public class IOClient {
     public String getIP() {
         return getInetAddress().getHostAddress();
     }
-    
+
     /**
      * Gets the host name for this IP address. 
      * If this InetAddress was created with a host name, this host name will be remembered and returned; otherwise, a reverse name lookup will be performed and the result will be returned based on the system configured name lookup service. If a lookup of the name service is required, call getCanonicalHostName. 
@@ -51,12 +59,12 @@ public class IOClient {
     public String getHostName() {
         return getInetAddress().getHostName();
     }
-    
+
     public InetAddress getInetAddress() {
         return address;
     }
-    
-    
+
+
     /**
      * Get the thread ID for the thread thats currently
      * reading packets.
@@ -88,7 +96,7 @@ public class IOClient {
         }
         this.address = client.getInetAddress();
     }
-    
+
     /**
      * Start listening and receiving packet from this
      * client.
@@ -96,11 +104,14 @@ public class IOClient {
     public void Listen() {
         if (reader == null)
             return;
+        connected = true;
         readerthread = new Reader(this);
         readerthread.start();
+        writerthread = new Writer();
+        writerthread.start();
         pm.server.Log("Listening..");
     }
-    
+
     /**
      * Disconnect this client from the server
      */
@@ -110,11 +121,12 @@ public class IOClient {
             writer.close();
             reader.close();
             client.close();
+            connected = false;
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-    
+
     /**
      * Send this client some data
      * (MMmmm...yummy data)
@@ -124,24 +136,51 @@ public class IOClient {
      *                    If there's an error sending the data to
      *                    the client.
      */
-    public void WriteData(byte[] data) throws IOException {
+    public void writeData(byte[] data) throws IOException {
         Packet p = pm.getPacket(data[0]);
         if (p != null) {
             PacketSentEvent event = new PacketSentEvent(this, pm.server, p);
             pm.server.getEventSystem().callEvent(event);
         }
-        writer.write(data);
-        writer.flush();
+        packet_queue.add(data);
     }
-    
+
+    protected boolean sendNextPacket() throws IOException {
+        if (packet_queue.isEmpty())
+            return false;
+        byte[] data = packet_queue.poll();
+        if (data == null) //Safeguard
+            return false;
+        writer.write(data);
+        return true;
+    }
+
+    private class Writer extends Thread {
+
+        @Override
+        public void run() {
+            while (pm.server.Running && connected) {
+                try {
+                    while (sendNextPacket());
+                    writer.flush();
+                    Thread.sleep(5);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
     private class Reader extends Thread {
         IOClient client;
-        
+
         public Reader(IOClient client) { this.client = client; }
         @Override
         public void run() {
             readID = Thread.currentThread().getId();
-            while (pm.server.Running && client.client.isConnected()) {
+            while (pm.server.Running && connected) {
                 try {
                     byte opCode = reader.readByte();
                     PacketReceivedEvent event = new PacketReceivedEvent(client, pm.server, reader, opCode);

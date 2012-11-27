@@ -34,7 +34,7 @@ public class HoldThisPacket extends ExtendPacket {
             array[1] = (Byte)para[0];
             array[2] = (Byte)para[1];
             try {
-                client.WriteData(array);
+                client.writeData(array);
             } catch (IOException e) {
                 e.printStackTrace();
             }

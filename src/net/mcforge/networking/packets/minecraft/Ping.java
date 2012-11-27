@@ -32,7 +32,7 @@ public class Ping extends Packet {
         if (event.isCancelled())
             return;
         try {
-            player.WriteData(new byte[] { ID });
+            player.writeData(new byte[] { ID });
         } catch (IOException e) {
             e.printStackTrace();
         }

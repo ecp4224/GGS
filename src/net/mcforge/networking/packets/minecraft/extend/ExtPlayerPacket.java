@@ -40,7 +40,7 @@ public class ExtPlayerPacket extends ExtendPacket {
                     cname += " ";
                 byte[] name = cname.getBytes("US-ASCII");
                 System.arraycopy(name, 0, array, 2, name.length);
-                client.WriteData(array);
+                client.writeData(array);
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             } catch (IOException e) {

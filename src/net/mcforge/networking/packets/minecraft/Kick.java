@@ -51,7 +51,7 @@ public class Kick extends Packet {
             byte[] finals = new byte[1 + temp.length];
             finals[0] = ID;
             System.arraycopy(temp, 0, finals, 1, temp.length);
-            player.WriteData(finals);
+            player.writeData(finals);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         } catch (IOException e) {

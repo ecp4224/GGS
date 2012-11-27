@@ -48,7 +48,7 @@ public class Message extends Packet {
             byte[] finals = new byte[2 + temp.length];
             finals[0] = ID; finals[1] = player.getID();
             System.arraycopy(temp, 0, finals, 2, temp.length);
-            player.WriteData(finals);
+            player.writeData(finals);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         } catch (IOException e) {
