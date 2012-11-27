@@ -26,7 +26,8 @@ public class YellowFlower extends RedFlower {
     }
     
     public YellowFlower(Server s) {
-        super(s);
+        super((byte)37, "YellowFlower", s);
+        
     }
 
     @Override

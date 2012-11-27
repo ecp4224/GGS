@@ -19,7 +19,6 @@ public class RedFlower extends PhysicsBlock {
 
     public RedFlower(byte ID, String name) {
         super(ID, name);
-        // TODO Auto-generated constructor stub
     }
     
     public RedFlower() {
@@ -28,6 +27,10 @@ public class RedFlower extends PhysicsBlock {
     
     public RedFlower(Server s) {
         super((byte)38, "RedFlower", s);
+    }
+
+    public RedFlower(byte b, String string, Server s) {
+        super(b, string, s);
     }
 
     @Override
