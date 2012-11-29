@@ -13,6 +13,8 @@ public enum ClientType {
     
     WoM(2), //Even though WoM does not send any extra packets, it will have its own type.
     
+    XWoM(3), //Even though XWoM does not send any extra packets, it will have its own type.
+    
     OpenClassic(1),
     
     Extend_Classic(42);

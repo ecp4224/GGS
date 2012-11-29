@@ -1585,9 +1585,13 @@ public class Player extends IOClient implements CommandExecutor {
     public void recieveMessage(String message){
         if(message.startsWith("/"))
         {
-            if (message.indexOf("/womid") != -1) {
-                setClientName("WoM");
-                client = ClientType.WoM;
+            if (message.startsWith("/womid")) {
+                String name = message.substring(7, 15);
+                setClientName(name);
+                if (name.indexOf("X") != -1 || name.indexOf("x") != -1)
+                    client = ClientType.XWoM;
+                else
+                    client = ClientType.WoM;
                 return;
             }
             PlayerCommandEvent event = new PlayerCommandEvent(this, message);

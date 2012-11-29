@@ -50,9 +50,12 @@ public class Level implements Serializable {
 
 	private transient Properties levelprop;
 
-    public Block[] blocks;
-
     private boolean unloading;
+    
+    /**
+     * All of the blocks in the level.
+     */
+    public Block[] blocks;
 
     /**
      * The width of the level (max X)
@@ -238,6 +241,21 @@ public class Level implements Serializable {
         } catch (Exception e) { }
     }
 
+    /**
+     * Add a block to the Physics Tick
+     * @param x
+     *         The X cord. of the block
+     * @param y
+     *         The Y cord. of the block
+     * @param z
+     *         The Z cord. of the block
+     * @param b
+     *         The block to add to ticking
+     * @param server
+     *              The server the block belongs to
+     * @return
+     *        A copy of the PhysicsBlock added to the tick.
+     */
     public PhysicsBlock addTick(int x, int y, int z, Block b, Server server) {
         if (!(b instanceof PhysicsBlock))
             return null;
@@ -251,11 +269,20 @@ public class Level implements Serializable {
         return pb;
     }
 
+    /**
+     * Check all blocks in the level to see if they require an update
+     * <b>WARNING</b> This uses alot of CPU, please only use if absolutly needed.
+     * @param server
+     *              The server this level belongs to.
+     */
     public void checkPhysics(Server server) {
         Thread t = new StartPhysics(server, this);
         t.start();
     }
 
+    /**
+     * Load the properties for the level.
+     */
     public void loadProperties() {
         levelprop = new Properties();
         try {
@@ -283,6 +310,11 @@ public class Level implements Serializable {
 
     }
 
+    /**
+     * The properties for this level
+     * @return
+     *        A {@link Properties} object for this level.
+     */
     public Properties getLevelProperties() {
         return levelprop;
     }
@@ -730,6 +762,18 @@ public class Level implements Serializable {
         skipChange(x, y, z, block, server, true);
     }
 
+    /**
+     * Changes the block at the specified coordinates to the specified block
+     * without checking for any physics changes
+     * If you change a block in a level, it won't be sent to clients
+     * 
+     * @param x - The x coordinate
+     * @param y - The y coordinate
+     * @param z - The z coordinate
+     * @param block - The block to change to
+     * @param server - The server
+     * @param addtick - Weather this block should be added to the tick.
+     */
     public void skipChange(int x, int y, int z, Block block, Server server, boolean addtick) {
         if (x < 0 || y < 0 || z < 0) return;
         if (x >= width || y >= depth || z >= height) return;
