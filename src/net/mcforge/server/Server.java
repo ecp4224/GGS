@@ -175,8 +175,8 @@ public final class Server implements LogInterface {
      * @return
      *        The default classloader used across the entire server.
      */
-    public static final ClassLoader getDefaultClassLoader() {
-        return Level.getLoader().getClassLoader();
+    public final ClassLoader getDefaultClassLoader() {
+        return getPluginHandler().getClassLoader();
     }
     /**
      * Get the handler that handles the plugins
@@ -409,6 +409,7 @@ public final class Server implements LogInterface {
         pm.StartReading();
         ph.loadplugins(this);
         Log("Loaded plugins");
+        Level.getLoader().setClassLoader(getDefaultClassLoader());
         lm = new LevelHandler(this);
         MainLevel = getSystemProperties().getValue("MainLevel");
         if (!new File("levels/" + MainLevel + ".ggs").exists()) {

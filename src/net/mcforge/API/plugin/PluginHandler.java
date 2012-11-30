@@ -31,8 +31,9 @@ public class PluginHandler {
     private ArrayList<Plugin> plugins = new ArrayList<Plugin>();
     
     private ArrayList<ClassicExtension> ext = new ArrayList<ClassicExtension>();
-
-    private final ClassLoader loader = Server.getDefaultClassLoader();
+    
+    private final ClassLoader loader = URLClassLoader.newInstance(new URL[] {}, getClass().getClassLoader());
+    
     /**
      * Unload a plugin from memory.
      * @param p
@@ -47,6 +48,10 @@ public class PluginHandler {
     
     public ArrayList<ClassicExtension> getExtensions() {
         return ext;
+    }
+    
+    public ClassLoader getClassLoader() {
+        return loader;
     }
     
     public void addExtension(ClassicExtension ce) {
@@ -69,7 +74,7 @@ public class PluginHandler {
         }
         if (file != null) {
             Enumeration<JarEntry> entries = file.entries();
-            addPath(arg0);
+            addPath(arg0, server);
             if (entries != null) {
                 while (entries.hasMoreElements()) {
                     JarEntry fileName = entries.nextElement();
@@ -196,23 +201,29 @@ public class PluginHandler {
     }
     
     @SuppressWarnings("deprecation")
-    private void addPath(File f) {
+    private void addPath(File f, Server server) {
         try {
             URL u = f.toURL();
-        Method method = URLClassLoader.class.getDeclaredMethod("addURL", new Class[] {URL.class });
-        method.setAccessible(true);
-        method.invoke(loader, u);
+            Method method = URLClassLoader.class.getDeclaredMethod("addURL", new Class[] {URL.class });
+            method.setAccessible(true);
+            method.invoke(loader, u);
         } catch (MalformedURLException e) {
+            server.Log(e.toString());
             e.printStackTrace();
         } catch (NoSuchMethodException e) {
+            server.Log(e.toString());
             e.printStackTrace();
         } catch (SecurityException e) {
+            server.Log(e.toString());
             e.printStackTrace();
         } catch (IllegalAccessException e) {
+            server.Log(e.toString());
             e.printStackTrace();
         } catch (IllegalArgumentException e) {
+            server.Log(e.toString());
             e.printStackTrace();
         } catch (InvocationTargetException e) {
+            server.Log(e.toString());
             e.printStackTrace();
         }
     }
