@@ -77,6 +77,7 @@ public class Properties {
         p.addSetting("Verify-Names", true);
         p.addComment("Verify-Names", "Check to see if players are logged in.");
         p.addSetting("Advanced-Sand", true);
+        p.addSetting("default_update_type", "auto_silent");
         p.addComment("Advanced-Sand", "Weather sand will use the new physics system or the old one. New - Looks nicer, Old - Saves on CPU/Memory");
         p.addSetting("WOM-Server-description", "A server");
         p.addComment("WOM-Server-description", "A description of the server");

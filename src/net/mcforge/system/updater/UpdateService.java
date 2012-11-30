@@ -42,7 +42,11 @@ public class UpdateService implements Tick {
     public UpdateService(Server server) {
         this.server = server;
         this.server.Add(this);
-        defaulttype = UpdateType.parse(this.server.getSystemProperties().getValue("default_update_type"));
+        defaulttype = UpdateType.Auto_Silent;
+        if (this.server.getSystemProperties().hasValue("default_update_type"))
+            defaulttype = UpdateType.parse(this.server.getSystemProperties().getValue("default_update_type"));
+        else
+            this.server.getSystemProperties().addSetting("default_update_type", "auto_silent");
         try {
             load();
         } catch (IOException e) {
