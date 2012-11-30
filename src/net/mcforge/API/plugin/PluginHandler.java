@@ -46,6 +46,20 @@ public class PluginHandler {
         }
     }
     
+    /**
+     * Gets the currently loaded MCForge plugins
+     * 
+     * @return An ArrayList containing all the MCForge plugins currently loaded
+     */
+    public ArrayList<Plugin> getLoadedPlugins() {
+    	return plugins;
+    }
+    
+    /**
+     * Gets the currently loaded Classic extensions
+     * 
+     * @return An ArrayList containing all the Classic extensions currently loaded
+     */
     public ArrayList<ClassicExtension> getExtensions() {
         return ext;
     }

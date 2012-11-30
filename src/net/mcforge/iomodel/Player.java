@@ -958,7 +958,7 @@ public class Player extends IOClient implements CommandExecutor {
         if (this.hasValue("mcf_prefix"))
             this.prefix = this.getValue("mcf_prefix");
         if (this.hasValue("mcf_color"))
-            this.color = this.getValue("mcf_color");
+            this.color = ChatColor.parse(this.getValue("mcf_color").toString());
         if (this.hasValue("mcf_showprefix"))
             this.showprefix = this.getValue("mcf_showprefix");
         if (this.hasValue("mcf_nick"))
