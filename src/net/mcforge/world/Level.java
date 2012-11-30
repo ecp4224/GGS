@@ -333,7 +333,7 @@ public class Level implements Serializable {
         if (blocks[index] == null)
             return Block.getBlock((byte)0);
         if (blocks[index].name.equals("NULL"))
-            System.out.println("" + blocks[index].getVisibleBlock());
+            blocks[index] = Block.getBlock("Air");
         return blocks[index];
     }
 
