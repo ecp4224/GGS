@@ -18,8 +18,8 @@ public enum ChatColor {
     Dark_Red('&','4'),
     Purple('&','5'),
     Orange('&','6'),
-    Grey('&', '7'),
-    Dark_Grey('&','8'),
+    Gray('&', '7'),
+    Dark_Gray('&','8'),
     Indigo('&','9'),
     Bright_Green('&','a'),
     Aqua('&', 'b'),
@@ -96,9 +96,9 @@ public enum ChatColor {
         else if (color == '6')
             return ChatColor.Orange;
         else if (color == '7')
-            return ChatColor.Grey;
+            return ChatColor.Gray;
         else if (color == '8')
-            return ChatColor.Dark_Grey;
+            return ChatColor.Dark_Gray;
         else if (color == '9')
             return ChatColor.Indigo;
         else if (color == 'a')
