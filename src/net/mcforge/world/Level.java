@@ -14,6 +14,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
@@ -489,6 +490,9 @@ public class Level implements Serializable {
      */
     public static Level Load(String filename, Server server) throws IOException, ClassNotFoundException {
         Level l = null;
+        if (new File(filename).isDirectory()) {
+        	throw new InvalidParameterException("Server tried to load the level \"" + filename + "\" but it's a directory, not a file");
+        }
         if (filename.endsWith(".lvl"))
             l = convertLVL(filename, server);
         else {
