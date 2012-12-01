@@ -726,6 +726,7 @@ public class Player extends IOClient implements CommandExecutor {
      */
     @SuppressWarnings("unchecked")
     public static <T> T getValue(String key, String username, Server server) {
+        Object object = null;
         T value = null;
         ResultSet r = server.getSQL().fillData("SELECT count(*) FROM " + server.getSQL().getPrefix() + "_extra WHERE name='" + username + "' AND setting='" + key + "'");
         int size = 0;
@@ -748,11 +749,11 @@ public class Player extends IOClient implements CommandExecutor {
                     ObjectInputStream ins;
                     bais = new ByteArrayInputStream(r.getBytes("value"));
                     ins = new ObjectInputStream(bais);
-                    value = (T)ins.readObject();
+                    object = ins.readObject();
                     ins.close();
                 }
                 else
-                    value = (T)r.getObject("value");
+                    object = r.getObject("value");
             } catch (SQLException e) {
                 e.printStackTrace();
                 return null;
@@ -766,6 +767,9 @@ public class Player extends IOClient implements CommandExecutor {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
+            if (object instanceof String && (object.equals("true") || object.equals("false")))
+                object = Boolean.parseBoolean((String)object);
+            value = (T)object;
             return value;
         }
     }
@@ -846,6 +850,8 @@ public class Player extends IOClient implements CommandExecutor {
      */
     public static void setValue(String key, Object object, String username, Server server) throws SQLException, IOException, NotSerializableException {
         if (object instanceof Serializable) {
+            if (object instanceof Boolean)
+                object = ((Boolean)object).toString();
             ResultSet r = server.getSQL().fillData("SElECT count(*) FROM " + server.getSQL().getPrefix() + "_extra WHERE name='" + username + "' AND setting='" + key + "'");
             int size = 0;
             if (server.getSQL() instanceof MySQL)
@@ -952,6 +958,20 @@ public class Player extends IOClient implements CommandExecutor {
         chat.serverBroadcast(this.username + " has joined the server.");
         updateAllLists(); //Update me in your list
         isLoggedin = true;
+        if (!hasValue("testing123")) {
+            setValue("testing123", false);
+            try {
+                saveValue("testing123");
+            } catch (NotSerializableException e) {
+                e.printStackTrace();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        boolean test = getValue("testing123");
+        System.out.println(test);
     }
 
     private void loadExtraData() {
