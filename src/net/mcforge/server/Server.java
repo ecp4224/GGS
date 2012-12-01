@@ -362,7 +362,7 @@ public final class Server implements LogInterface {
                 "CREATE TABLE if not exists " + sql.getPrefix() + "_extra (name VARCHAR(20), setting TEXT, value BLOB);",
         };
         sql.ExecuteQuery(commands);
-        Log("Set up SQL");
+        Log("SQL all set.");
     }
     
     /**
