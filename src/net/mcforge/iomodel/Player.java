@@ -958,20 +958,6 @@ public class Player extends IOClient implements CommandExecutor {
         chat.serverBroadcast(this.username + " has joined the server.");
         updateAllLists(); //Update me in your list
         isLoggedin = true;
-        if (!hasValue("testing123")) {
-            setValue("testing123", false);
-            try {
-                saveValue("testing123");
-            } catch (NotSerializableException e) {
-                e.printStackTrace();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        boolean test = getValue("testing123");
-        System.out.println(test);
     }
 
     private void loadExtraData() {
