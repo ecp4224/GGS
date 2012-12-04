@@ -16,6 +16,7 @@ import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
@@ -495,6 +496,8 @@ public class Level implements Serializable {
         }
         if (filename.endsWith(".lvl"))
             l = convertLVL(filename, server);
+        else if (filename.endsWith(".dat"))
+            l = convertDat(filename);
         else {
             FileInputStream fis = new FileInputStream(filename);
             GZIPInputStream gis = new GZIPInputStream(fis);
@@ -517,12 +520,32 @@ public class Level implements Serializable {
             gis.close();
             fis.close();
         }
+        if (l.getTile(l.spawnx, l.spawny, l.spawnz) != Block.getBlock("Air") || l.getTile(l.spawnx, l.spawny + 1, l.spawnz) != Block.getBlock("Air"))
+            l.setNewSpawn(l.height / 2);
         return l;
+    }
+    
+    /**
+     * Set a new random spawn for this level
+     * @param waterlevel
+     *                  The minium height for the spawn to be (y)
+     */
+    public void setNewSpawn(int waterlevel) {
+        final Random rand = new Random();
+        int tries = 100;
+        spawny = waterlevel + (int)(Math.random() * (((waterlevel + 8) - waterlevel) + 1));
+        while ((getTile(spawnx, spawny, spawnz).getVisibleBlock() != 0 || getTile(spawnx, spawny + 1, spawnz).getVisibleBlock() != 0 || getTile(spawnx, spawny - 1, spawnz).getVisibleBlock() == 0) && tries > 0) {
+            spawnx = rand.nextInt(width);
+            spawny = waterlevel + (int)(Math.random() * (((waterlevel + 8) - waterlevel) + 1));
+            spawnz = rand.nextInt(depth);
+            tries--;
+        }
     }
     
     /**
      * Converts a .dat file to a .ggs file
      * @param filename - The filename of the file to load and convert.
+     * @param server 
      * @return - The converted level object.
      * @throws IOException - An IOException is thrown if there is a problem reading the file.
      */

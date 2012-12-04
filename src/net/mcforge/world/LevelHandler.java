@@ -123,7 +123,7 @@ public class LevelHandler {
         File levelsFolder = new File("levels");
         File[] levelFiles = levelsFolder.listFiles();
         for(File f : levelFiles) {
-            if (f.getName().endsWith(".ggs") || f.getName().endsWith(".lvl"))
+            if (f.getName().endsWith(".ggs") || f.getName().endsWith(".lvl") || f.getName().endsWith(".dat"))
                 loadLevel(levelsFolder.getPath() + "/" + f.getName());
         }
     }
