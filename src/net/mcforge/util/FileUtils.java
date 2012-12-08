@@ -8,12 +8,14 @@
 package net.mcforge.util;
 
 import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.LineNumberReader;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Formatter;
 import java.util.List;
-import java.util.Scanner;
 
 /**
 * An abstract class used for easier file interaction.
@@ -148,7 +150,7 @@ public abstract class FileUtils {
      */
     public static void writeText(String filePath, String text) throws IOException {
         createIfNotExist(filePath);
-        Formatter formatter = new Formatter(new File(filePath));
+        Formatter formatter = new Formatter(new FileWriter(new File(filePath), true));
         formatter.out().append(text);
         formatter.close();
     }
@@ -163,7 +165,7 @@ public abstract class FileUtils {
      */
     public static void writeLines(String filePath, String... lines) throws IOException {
         createIfNotExist(filePath);
-        Formatter formatter = new Formatter(new File(filePath));
+        Formatter formatter = new Formatter(new FileWriter(new File(filePath), true));
         for (int i = 0; i < lines.length; i++) {
             formatter.out().append(lines[i]);
         }
@@ -192,15 +194,26 @@ public abstract class FileUtils {
      * @throws IOException If there's an error while reading from the file
      */
     public static List<String> readToList(String filePath) throws IOException {
-        Scanner scanner = new Scanner(new File(filePath));
-        List<String> lines = new ArrayList<String>();
-        while (scanner.hasNext()) {
-            lines.add(scanner.nextLine());
-        }
-        scanner.close();
+		LineNumberReader reader = new LineNumberReader(new FileReader(filePath));
+		List<String> lines = new ArrayList<String>();
+		String line;
+		while ((line = reader.readLine()) != null)
+			lines.add(line);
+		reader.close();
         return lines;
     }
 
+    /**
+     * Gets the total number of lines the specified file has
+     * 
+     * @param filePath - The path of the file to check for
+     * 
+     * @return An integer representing the number of lines the file has
+     * @throws IOException If there's an error while reading from the file
+     */
+    public static int getLineNumber(String filePath) throws IOException {
+    	return readToList(filePath).size();
+    }
     /**
      * Checks whether the specified file exists
      * 

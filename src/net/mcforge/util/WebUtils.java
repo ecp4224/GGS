@@ -8,10 +8,11 @@
 package net.mcforge.util;
 
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.LineNumberReader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 /**
 * An abstract class used for easier website interaction.
@@ -28,12 +29,12 @@ public abstract class WebUtils {
      * @throws IOException If there's an error while reading from the website
      */
 	public static List<String> readContentsToList(URL u) throws IOException {
-		Scanner scanner = new Scanner(u.openStream());
-        List<String> lines = new ArrayList<String>();
-        while (scanner.hasNext()) {
-            lines.add(scanner.nextLine());
-        }
-        scanner.close();
+		LineNumberReader reader = new LineNumberReader(new InputStreamReader(u.openStream()));
+		List<String> lines = new ArrayList<String>();
+		String line;
+		while ((line = reader.readLine()) != null)
+			lines.add(line);
+		reader.close();
         return lines;
 	}
 	
