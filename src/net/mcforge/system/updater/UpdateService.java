@@ -16,7 +16,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
@@ -30,6 +29,7 @@ public class UpdateService implements Tick {
     private final UpdateManager um = new UpdateManager();
     private ArrayList<Updatable> queue = new ArrayList<Updatable>();
     private ArrayList<String> restart = new ArrayList<String>();
+    private ArrayList<Updatable> ignore = new ArrayList<Updatable>();
     private int wait = 0;
     private Server server;
     private boolean update;
@@ -99,7 +99,7 @@ public class UpdateService implements Tick {
      *         The updatable object to check for updates on
      */
     public void check(Updatable u) {
-        if (isInRestartQueue(u) || queue.contains(u) || !um.checkUpdateServer(u))
+        if (isInRestartQueue(u) || queue.contains(u) || !um.checkUpdateServer(u) || ignore.contains(u))
             return;
         try {
             if (hasUpdate(u))
@@ -276,6 +276,8 @@ public class UpdateService implements Tick {
             else if (type == UpdateType.Ask) {
                 if (server.getConsole().askForUpdate(u))
                     forceUpdate(u);
+                else
+                    ignore.add(u);
             }
         }
     }
