@@ -98,7 +98,7 @@ public class UpdateService implements Tick {
      *         The updatable object to check for updates on
      */
     public void check(Updatable u) {
-        if (isInRestartQueue(u) || queue.contains(u))
+        if (isInRestartQueue(u) || queue.contains(u) || !um.checkUpdateServer(u))
             return;
         URL url;
         try {
