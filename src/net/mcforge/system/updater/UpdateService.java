@@ -30,6 +30,7 @@ public class UpdateService implements Tick {
     private ArrayList<Updatable> queue = new ArrayList<Updatable>();
     private ArrayList<String> restart = new ArrayList<String>();
     private ArrayList<Updatable> ignore = new ArrayList<Updatable>();
+    private ArrayList<Updatable> updating = new ArrayList<Updatable>();
     private int wait = 0;
     private Server server;
     private boolean update;
@@ -85,6 +86,8 @@ public class UpdateService implements Tick {
         queue.clear();
         for (int i = 0; i < um.getUpdateObjects().size(); i++) {
             Updatable u = um.getUpdateObjects().get(i);
+            if (updating.contains(u))
+                continue;
             check(u);
         }
         if (queue.size() > 0)
@@ -139,6 +142,8 @@ public class UpdateService implements Tick {
      *         The object to update
      */
     public void normalUpdate(Updatable u) {
+        if (updating.contains(u))
+            return;
         Thread t = new Updater(u);
         t.start();
     }
@@ -327,6 +332,7 @@ public class UpdateService implements Tick {
         public Updater(Updatable u) { this.u = u; }
         @Override
         public void run() {
+            updating.add(u);
             UpdateType type = u.getUpdateType();
             if (type.getType() < defaulttype.getType())
                 type = defaulttype;
@@ -340,6 +346,7 @@ public class UpdateService implements Tick {
                 else
                     ignore.add(u);
             }
+            updating.remove(u);
         }
     }
 }
