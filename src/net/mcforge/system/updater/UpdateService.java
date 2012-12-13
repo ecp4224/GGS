@@ -98,7 +98,7 @@ public class UpdateService implements Tick {
      *         The updatable object to check for updates on
      */
     public void check(Updatable u) {
-        if (restart.contains(u) || queue.contains(u))
+        if (isInRestartQueue(u) || queue.contains(u))
             return;
         URL url;
         try {
@@ -122,9 +122,27 @@ public class UpdateService implements Tick {
      * @param u
      *         The object to update
      */
-    public void update(Updatable u) {
+    public void normalUpdate(Updatable u) {
         Thread t = new Updater(u);
         t.start();
+    }
+    
+    public void forceUpdate(Updatable u) {
+        forceUpdate(u, true);
+    }
+    
+    public void forceUpdate(Updatable u, boolean notify) {
+        if (notify)
+            server.Log("Updating " + u.getDownloadPath() + "..");
+        u.unload();
+        try {
+            downloadFile(u.getDownloadURL(), u.getDownloadPath());
+            server.getPluginHandler().loadFile(server, new File(u.getDownloadPath()));
+            if (notify)
+                server.Log(u.getDownloadPath() + " has been updated!");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -138,10 +156,39 @@ public class UpdateService implements Tick {
             checkAll();
         else {
             for (int i = 0; i < queue.size(); i++) {
-                update(queue.get(i));
+                normalUpdate(queue.get(i));
             }
             update = false;
         }
+    }
+    
+    public void removeFromRestartQueue(Updatable object) {
+        int index;
+        if ((index = getRestartQueueIndex(object)) == -1)
+            return;
+        restart.remove(index);
+    }
+    
+    public int getRestartQueueIndex(Updatable object) {
+        if (!isInRestartQueue(object))
+            return -1;
+        for (int i = 0; i < restart.size(); i++) {
+            if (restart.get(i).split("\\@@")[0].equals(object.getDownloadURL()))
+                return i;
+        }
+        return -1;
+    }
+    
+    public boolean isInRestartQueue(Updatable object) {
+        return isInRestartQueue(object.getDownloadURL());
+    }
+    
+    public boolean isInRestartQueue(String dlurl) {
+        for (String s : restart) {
+            if (s.split("\\@@")[0].equals(dlurl))
+                return true;
+        }
+        return false;
     }
 
 
@@ -213,17 +260,8 @@ public class UpdateService implements Tick {
             UpdateType type = u.getUpdateType();
             if (type.getType() < defaulttype.getType())
                 type = defaulttype;
-            if (type == UpdateType.Auto_Silent || type == UpdateType.Auto_Notify) {
-                u.unload();
-                try {
-                    downloadFile(u.getDownloadURL(), u.getDownloadPath());
-                    server.getPluginHandler().loadFile(server, new File(u.getDownloadPath()));
-                    if (type == UpdateType.Auto_Notify)
-                        server.Log(u.getDownloadPath() + " has been updated!");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
+            if (type == UpdateType.Auto_Silent || type == UpdateType.Auto_Notify)
+                forceUpdate(u, type == UpdateType.Auto_Notify);
             else if (type == UpdateType.Auto_Silent_Restart || type == UpdateType.Auto_Notify_Restart) {
                 restart.add(u.getDownloadURL() + "@@" + u.getDownloadPath() + "@@" + type.getType());
                 if (type == UpdateType.Auto_Notify_Restart)
@@ -231,19 +269,8 @@ public class UpdateService implements Tick {
                 save();
             }
             else if (type == UpdateType.Ask) {
-                server.getConsole().sendMessage("An update for " + u.getDownloadPath() + " is ready for download.");
-                server.getConsole().sendMessage("Would you like to update?");
-                if (server.getConsole().nextBoolean()) {
-                    u.unload();
-                    try {
-                        downloadFile(u.getDownloadURL(), u.getDownloadPath());
-                        server.getPluginHandler().loadFile(server, new File(u.getDownloadPath()));
-                        if (type == UpdateType.Auto_Notify)
-                            server.Log(u.getDownloadPath() + " has been updated!");
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
+                if (server.getConsole().askForUpdate(u))
+                    forceUpdate(u);
             }
         }
     }

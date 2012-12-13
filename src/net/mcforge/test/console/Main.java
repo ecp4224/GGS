@@ -16,6 +16,7 @@ import net.mcforge.API.io.ServerLogEvent;
 import net.mcforge.groups.Group;
 import net.mcforge.server.Server;
 import net.mcforge.system.Console;
+import net.mcforge.system.updater.Updatable;
 
 public class Main extends Console implements Listener {
     Server s;
@@ -85,5 +86,12 @@ public class Main extends Console implements Listener {
     
     @EventHandler
     public void onLog(ServerLogEvent event) { }
+
+    @Override
+    public boolean askForUpdate(Updatable u) {
+        sendMessage("An update for " + u.getDownloadPath() + " is ready for download.");
+        sendMessage("Would you like to update?");
+        return nextBoolean();
+    }
 }
 

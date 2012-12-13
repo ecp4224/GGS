@@ -12,6 +12,7 @@ import net.mcforge.API.server.ServerChatEvent;
 import net.mcforge.chat.ChatColor;
 import net.mcforge.chat.Messages;
 import net.mcforge.server.Server;
+import net.mcforge.system.updater.Updatable;
 
 public abstract class Console implements CommandExecutor {
     private Server server;
@@ -60,6 +61,17 @@ public abstract class Console implements CommandExecutor {
      *        The string
      */
     public abstract String next();
+    
+    /**
+     * This method is called when the {@link UpdateService} detects an update </br>
+     * and needs to ask the console weather to update or not. </br>
+     * This method should block until an answer is given/found </br>
+     * and return whether the {@link UpdateService} should update or not.
+     * @param u The updatable object being updated.
+     * @return
+     *        Weather the {@link UpdateService} should update or not.
+     */
+    public abstract boolean askForUpdate(Updatable u);
     
     /**
      * Get a {@link Integer} from the console.
