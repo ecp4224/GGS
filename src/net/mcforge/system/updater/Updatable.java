@@ -80,6 +80,14 @@ public interface Updatable {
     public String getDownloadPath();
     
     /**
+     * The name of this updatable object. This can return
+     * {@link Plugin#getName()} or just return a normal string
+     * @return
+     *        The updatable object name.
+     */
+    public String getName();
+    
+    /**
      * This method will unload the object before it gets
      * updated. For plugins, you would call the {@link PluginHandler#unload(Plugin)} method.
      */
