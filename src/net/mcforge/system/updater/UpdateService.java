@@ -99,7 +99,7 @@ public class UpdateService implements Tick {
      *         The updatable object to check for updates on
      */
     public void check(Updatable u) {
-        if (isInRestartQueue(u) || queue.contains(u) || !um.checkUpdateServer(u) || ignore.contains(u))
+        if (isInRestartQueue(u) || queue.contains(u) || ignore.contains(u))
             return;
         try {
             if (hasUpdate(u))
@@ -109,7 +109,18 @@ public class UpdateService implements Tick {
         }
     }
     
+    /**
+     * Check to see if the Updatable object has any updates.
+     * @param u
+     *         The updatable object to check
+     * @return
+     *        True if updates are ready, false if no updates exist
+     * @throws IOException
+     *                   If there was an error checking for updates.
+     */
     public boolean hasUpdate(Updatable u) throws IOException {
+        if (!um.checkUpdateServer(u))
+            return false;
         boolean toreturn = false;
         URL url = new URL(u.getCheckURL());
         BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
@@ -132,10 +143,22 @@ public class UpdateService implements Tick {
         t.start();
     }
     
+    /**
+     * Force an updatable object to update
+     * @param u
+     *         The updatable object to update
+     */
     public void forceUpdate(Updatable u) {
         forceUpdate(u, true);
     }
     
+    /**
+     * Force an updatable object to update
+     * @param u
+     *         The updatable object to update
+     * @param notify
+     *             Whether to notify the server or not
+     */
     public void forceUpdate(Updatable u, boolean notify) {
         if (notify)
             server.Log("Updating " + u.getDownloadPath() + "..");
@@ -167,6 +190,11 @@ public class UpdateService implements Tick {
         }
     }
     
+    /**
+     * Remove an updatable object from the restart queue.
+     * @param object
+     *             The object to remove
+     */
     public void removeFromRestartQueue(Updatable object) {
         int index;
         if ((index = getRestartQueueIndex(object)) == -1)
@@ -174,7 +202,57 @@ public class UpdateService implements Tick {
         restart.remove(index);
     }
     
-    public int getRestartQueueIndex(Updatable object) {
+    /**
+     * Add an updatable object to the restart queue.
+     * This will update the object the next time the server starts up.
+     * @param object
+     *              The object to add.
+     * @param type
+     *            The {@link UpdateType} of the Updatable object
+     */
+    public void addToRestartQueue(Updatable object, UpdateType type) {
+        restart.add(object.getDownloadURL() + "@@" + object.getDownloadPath() + "@@" + type.getType());
+        if (type == UpdateType.Auto_Notify_Restart)
+            server.Log(object.getName() + " will be updated after a restart!");
+        save();
+    }
+    /**
+     * Add an updatable object to the restart queue.
+     * This will update the object the next time the server starts up.
+     * @param object
+     *             The object to add.
+     */
+    public void addToRestartQueue(Updatable object) {
+        addToRestartQueue(object, object.getUpdateType());
+    }
+    
+    /**
+     * Check to see if an updatable object will update after a restart.
+     * @param object 
+     *              The object check.
+     * @return
+     *        True if it is, false if it isn't.
+     */
+    public boolean isInRestartQueue(Updatable object) {
+        return isInRestartQueue(object.getDownloadURL());
+    }
+    
+    /**
+     * Check to see if a URL is in the restart queue
+     * @param dlurl
+     *             The URL to check
+     * @return
+     *       True if it is, false if it isn't.
+     */
+    public boolean isInRestartQueue(String dlurl) {
+        for (String s : restart) {
+            if (s.split("\\@@")[0].equals(dlurl))
+                return true;
+        }
+        return false;
+    }
+    
+    private int getRestartQueueIndex(Updatable object) {
         if (!isInRestartQueue(object))
             return -1;
         for (int i = 0; i < restart.size(); i++) {
@@ -184,19 +262,6 @@ public class UpdateService implements Tick {
         return -1;
     }
     
-    public boolean isInRestartQueue(Updatable object) {
-        return isInRestartQueue(object.getDownloadURL());
-    }
-    
-    public boolean isInRestartQueue(String dlurl) {
-        for (String s : restart) {
-            if (s.split("\\@@")[0].equals(dlurl))
-                return true;
-        }
-        return false;
-    }
-
-
     private void save() {
         try {
             if (!new File("system").exists())
@@ -267,12 +332,8 @@ public class UpdateService implements Tick {
                 type = defaulttype;
             if (type == UpdateType.Auto_Silent || type == UpdateType.Auto_Notify)
                 forceUpdate(u, type == UpdateType.Auto_Notify);
-            else if (type == UpdateType.Auto_Silent_Restart || type == UpdateType.Auto_Notify_Restart) {
-                restart.add(u.getDownloadURL() + "@@" + u.getDownloadPath() + "@@" + type.getType());
-                if (type == UpdateType.Auto_Notify_Restart)
-                    server.Log(u.getDownloadPath() + " will be updated after a restart!");
-                save();
-            }
+            else if (type == UpdateType.Auto_Silent_Restart || type == UpdateType.Auto_Notify_Restart)
+                addToRestartQueue(u, type);
             else if (type == UpdateType.Ask) {
                 if (server.getConsole().askForUpdate(u))
                     forceUpdate(u);
