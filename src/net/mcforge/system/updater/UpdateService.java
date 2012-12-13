@@ -16,6 +16,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
@@ -100,21 +101,25 @@ public class UpdateService implements Tick {
     public void check(Updatable u) {
         if (isInRestartQueue(u) || queue.contains(u) || !um.checkUpdateServer(u))
             return;
-        URL url;
         try {
-            url = new URL(u.getCheckURL());
-            BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
-            String str;
-            while ((str = in.readLine()) != null) {
-                if (!str.equals(u.getCurrentVersion())) {
-                    queue.add(u);
-                    break;
-                }
-            }
-            in.close();
+            if (hasUpdate(u))
+                queue.add(u);
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    
+    public boolean hasUpdate(Updatable u) throws IOException {
+        boolean toreturn = false;
+        URL url = new URL(u.getCheckURL());
+        BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
+        String str;
+        while ((str = in.readLine()) != null) {
+            if (!str.equals(u.getCurrentVersion()))
+                toreturn = true;
+        }
+        in.close();
+        return toreturn;
     }
 
     /**
