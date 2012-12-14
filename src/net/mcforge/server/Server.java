@@ -36,6 +36,7 @@ import net.mcforge.system.heartbeat.MBeat;
 import net.mcforge.system.heartbeat.WBeat;
 import net.mcforge.system.updater.Updatable;
 import net.mcforge.system.updater.UpdateService;
+import net.mcforge.system.updater.UpdateType;
 import net.mcforge.util.FileUtils;
 import net.mcforge.util.logger.LogInterface;
 import net.mcforge.util.logger.Logger;
@@ -43,7 +44,7 @@ import net.mcforge.util.properties.Properties;
 import net.mcforge.world.Level;
 import net.mcforge.world.LevelHandler;
 
-public final class Server implements LogInterface {
+public final class Server implements LogInterface, Updatable {
     private PacketManager pm;
     private final java.util.logging.Logger log = java.util.logging.Logger.getLogger("MCForge");
     private LevelHandler lm;
@@ -649,5 +650,39 @@ public final class Server implements LogInterface {
     */
     public Player getPlayer(String name) {
         return findPlayer(name);
+    }
+    @Override
+    public String getCheckURL() {
+       return "http://update.mcforge.net/mcf6/current.txt";
+    }
+    @Override
+    public String getDownloadURL() {
+        return "www.mcforge.net";
+    }
+    @Override
+    public UpdateType getUpdateType() {
+        return UpdateType.Manual;
+    }
+    @Override
+    public String getCurrentVersion() {
+        return VERSION;
+    }
+    @Override
+    public String getDownloadPath() {
+        return "";
+    }
+    @Override
+    public String getName() {
+        return "MCFroge";
+    }
+    @Override
+    public void unload() {
+        try {
+            Stop(); //This method shouldnt be called...
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
