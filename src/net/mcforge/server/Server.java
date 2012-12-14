@@ -420,6 +420,7 @@ public final class Server implements LogInterface, Updatable {
         lm.loadLevels();
         startTicker();
         Log("Loaded levels");
+        us.getUpdateManager().add(this);
         SecureRandom sr = null;
         try {
             sr = SecureRandom.getInstance("SHA1PRNG");
