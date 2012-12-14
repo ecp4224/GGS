@@ -346,6 +346,8 @@ public class UpdateService implements Tick {
                 else
                     ignore.add(u);
             }
+            else if (type == UpdateType.Manual)
+                server.getConsole().alertOfManualUpdate(u);
             updating.remove(u);
         }
     }

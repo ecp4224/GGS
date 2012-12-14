@@ -74,6 +74,14 @@ public abstract class Console implements CommandExecutor {
     public abstract boolean askForUpdate(Updatable u);
     
     /**
+     * This method is called when the {@link UpdateService} detects an update </br>
+     * and the end user must manually download the update. </br>
+     * @param u
+     *         The updatable object the user must download and install.
+     */
+    public abstract void alertOfManualUpdate(Updatable u);
+    
+    /**
      * Get a {@link Integer} from the console.
      * This method uses the {@link Console#next()} method and parse
      * the input to an integer.

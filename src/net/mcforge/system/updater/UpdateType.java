@@ -34,7 +34,12 @@ public enum UpdateType {
     /**
      * Ask the user if he wants to update this object.
      */
-    Ask(4);
+    Ask(4),
+    
+    /**
+     * The end-user must manually update the object.
+     */
+    Manual(5);
     
     
     byte type;
@@ -54,6 +59,8 @@ public enum UpdateType {
             return UpdateType.Auto_Notify;
         else if (type.equalsIgnoreCase("auto_notify_restart"))
             return UpdateType.Auto_Notify_Restart;
+        else if (type.equalsIgnoreCase("manual"))
+            return UpdateType.Manual;
         else
             return UpdateType.Ask;
     }
@@ -71,6 +78,8 @@ public enum UpdateType {
             return UpdateType.Auto_Notify;
         else if (type == (byte)3)
             return UpdateType.Auto_Notify_Restart;
+        else if (type == (byte)5)
+            return UpdateType.Manual;
         else
             return UpdateType.Ask;
     }
