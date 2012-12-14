@@ -129,7 +129,7 @@ public final class Server implements LogInterface {
     /**
      * The version of GGS this server runs
      */
-    public final String VERSION = "1.0.0";
+    public final String VERSION = "6.0.0b5";
     /**
      * The handler that handles level loading,
      * level unloading and finding loaded
