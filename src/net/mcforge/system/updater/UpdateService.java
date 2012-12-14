@@ -207,6 +207,15 @@ public class UpdateService implements Tick {
         restart.remove(index);
     }
     
+    public void ignoreUpdate(Updatable object) {
+        if (!ignore.contains(object))
+            ignore.add(object);
+    }
+    
+    public boolean isUpdateIgnored(Updatable object) {
+        return ignore.contains(object);
+    }
+    
     /**
      * Add an updatable object to the restart queue.
      * This will update the object the next time the server starts up.
@@ -221,6 +230,7 @@ public class UpdateService implements Tick {
             server.Log(object.getName() + " will be updated after a restart!");
         save();
     }
+    
     /**
      * Add an updatable object to the restart queue.
      * This will update the object the next time the server starts up.
