@@ -137,7 +137,10 @@ public class Properties {
         new File(truefile).createNewFile();
         PrintWriter out = new PrintWriter(truefile);
         for (String s : settings) {
+            if (s.trim().equals(""))
+                continue;
             out.println(s);
+            out.println(System.getProperty("line.separator"));
         }
         out.close();
     }
@@ -327,7 +330,6 @@ public class Properties {
     public void addSetting(String key, String value) {
         synchronized(settings) {
             settings.add(key + " = " + value);
-            settings.add(System.getProperty("line.separator"));
         }
     }
 

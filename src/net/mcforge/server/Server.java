@@ -412,6 +412,11 @@ public final class Server implements LogInterface, Updatable {
         FileUtils.createFilesAndDirs();
         Group.Load(this);
         p = Properties.init(this);
+        if (!p.getBool("Verify-Names")) {
+            Log(ChatColor.Dark_Red + "!!WARNING!! You are running the server with verify names off, this means");
+            Log(ChatColor.Dark_Red + "anyone can login to the server with any username. Its recommended to turn this");
+            Log(ChatColor.Dark_Red + "this option on, if you know what your doing, then ignore this message.");
+        }
         loadSystemProperties();
         us = new UpdateService(this);
         m = new Messages(this);
