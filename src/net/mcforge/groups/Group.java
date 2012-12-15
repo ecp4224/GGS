@@ -576,7 +576,7 @@ public class Group {
 		String name = getTextValue(e, "name");
 		boolean isOp = getTextValue(e, "isop").equalsIgnoreCase("true");
 		int permission = getIntValue(e, "permission");
-		ChatColor color = ChatColor.parse(getTextValue(e, "color"));
+		ChatColor color = ChatColor.White;
 		String[] exceptions = new String[0];
 		String parent = "null";
 		boolean defaultg = false;
@@ -584,6 +584,7 @@ public class Group {
 			parent = e.getAttribute("parent");
 			exceptions = getTextValue(e, "exceptions").split("\\:");
 			defaultg = getTextValue(e, "default").equalsIgnoreCase("true");
+			color = ChatColor.parse(getTextValue(e, "color"));
 		}
 		catch (Exception ee) {
 		}
