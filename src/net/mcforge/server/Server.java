@@ -420,10 +420,10 @@ public final class Server implements LogInterface, Updatable {
         loadSystemProperties();
         us = new UpdateService(this);
         m = new Messages(this);
-        ph = new PluginHandler();
+        ph = new PluginHandler(this);
         pm = new PacketManager(this);
         pm.StartReading();
-        ph.loadplugins(this);
+        ph.loadplugins();
         Log("Loaded plugins");
         Level.getLoader().setClassLoader(getDefaultClassLoader());
         lm = new LevelHandler(this);

@@ -170,7 +170,7 @@ public class UpdateService implements Tick {
         u.unload();
         try {
             downloadFile(u.getDownloadURL(), u.getDownloadPath());
-            server.getPluginHandler().loadFile(server, new File(u.getDownloadPath()));
+            server.getPluginHandler().loadFile(new File(u.getDownloadPath()));
             if (notify)
                 server.Log(u.getDownloadPath() + " has been updated!");
         } catch (IOException e) {

@@ -34,6 +34,10 @@ public class PluginHandler {
     
     private final ClassLoader loader = URLClassLoader.newInstance(new URL[] {}, getClass().getClassLoader());
     
+    private Server server;
+    
+    public PluginHandler(Server server) { this.server = server; }
+    
     /**
      * Unload a plugin from memory.
      * @param p
@@ -43,6 +47,13 @@ public class PluginHandler {
         if (plugins.contains(p)) {
             p.onUnload();
             plugins.remove(p);
+            if (p instanceof Updatable) {
+                try {
+                    server.getUpdateService().getUpdateManager().remove((Updatable)p);
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
     
@@ -79,7 +90,7 @@ public class PluginHandler {
             addExtension(ce);
     }
 
-    public void loadFile(Server server, File arg0) {
+    public void loadFile(File arg0) {
         JarFile file = null;
         try {
             file = new JarFile(arg0);
@@ -88,7 +99,7 @@ public class PluginHandler {
         }
         if (file != null) {
             Enumeration<JarEntry> entries = file.entries();
-            addPath(arg0, server);
+            addPath(arg0);
             if (entries != null) {
                 while (entries.hasMoreElements()) {
                     JarEntry fileName = entries.nextElement();
@@ -156,7 +167,7 @@ public class PluginHandler {
                                     System.out.println("Plugin could not be load: " + name);
                                     continue;
                                 }
-                                loadPlugin(plugin, server);
+                                loadPlugin(plugin);
                                 if (plugin instanceof Updatable)
                                     server.getUpdateService().getUpdateManager().add((Updatable)plugin);
                                 plugin.filename = arg0.getName();
@@ -193,14 +204,14 @@ public class PluginHandler {
         }
     }
     
-    public void loadPlugin(Plugin plugin, Server server) {
+    public void loadPlugin(Plugin plugin) {
         plugins.add(plugin);
         plugin.onLoad(new String[]{"-normal"}); //Load called after added so plugins can disable/unload in the load method.
         PluginLoadEvent ple = new PluginLoadEvent(plugin, server);
         server.getEventSystem().callEvent(ple);
     }
 
-    public void loadplugins(Server server) {
+    public void loadplugins() {
         File pluginFolder = new File("plugins/");
         if (!pluginFolder.exists()) {
             pluginFolder.mkdir();
@@ -209,13 +220,13 @@ public class PluginHandler {
         File[] pluginFiles = pluginFolder.listFiles();
         for (int i = 0; i < pluginFiles.length; i++) {
             if (pluginFiles[i].isFile() && pluginFiles[i].getName().endsWith(".jar")) {
-                loadFile(server, pluginFiles[i]);
+                loadFile(pluginFiles[i]);
             }
         }
     }
     
     @SuppressWarnings("deprecation")
-    private void addPath(File f, Server server) {
+    private void addPath(File f) {
         try {
             URL u = f.toURL();
             Method method = URLClassLoader.class.getDeclaredMethod("addURL", new Class[] {URL.class });

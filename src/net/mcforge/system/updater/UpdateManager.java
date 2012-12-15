@@ -13,12 +13,14 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
+import net.mcforge.API.plugin.PluginHandler;
+
 public class UpdateManager {
     private ArrayList<Updatable> updatelist = new ArrayList<Updatable>();
 
     /**
      * This method can only be called by the {@link Updateable} object being
-     * removed
+     * removed or by the {@link PluginHandler}
      * @param object
      * @throws IllegalAccessException
      */
@@ -36,8 +38,14 @@ public class UpdateManager {
         } catch (ClassNotFoundException e1) { }
         catch (ClassCastException e2) { }
         catch (ArrayIndexOutOfBoundsException e3) { }
+        
+        if (stacks[2].getClassName().equals("net.mcforge.API.plugin.PluginHandler")) {
+            if (updatelist.contains(object))
+                updatelist.remove(object);
+            return;
+        }
 
-        throw new IllegalAccessException("You can only call this method by the Updatable object being removed");
+        throw new IllegalAccessException("You can only call this method by the Updatable object being removed or through the PluginHandler");
     }
 
     /**
