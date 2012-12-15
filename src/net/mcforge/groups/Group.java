@@ -286,98 +286,16 @@ public class Group {
 		for (Group g : groups) {
 			if (g.name.equals(group.name)) { return false; }
 		}
-		String[] lines = new String[0];
-
-		try {
-			// trying to somehow add group to xml...
-			lines = FileUtils.readAllLines(FileUtils.PROPS_DIR + "groups.xml");
-		}
-		catch (IOException ex) {
-			return false;
-		}
-
-		String[] newlines = new String[lines.length + 6];
-		for (int i = 0; i < lines.length; i++) {
-			newlines[i] = lines[i];
-		}
-		newlines[newlines.length - 7] = "<Group>";
-		newlines[newlines.length - 6] = "<name>" + group.name + "</name>";
-		newlines[newlines.length - 5] = "<isop>" + group.isOP + "</isop>";
-		newlines[newlines.length - 4] = "<permission>" + Integer.toString(group.permissionlevel) + "</permission>";
-		newlines[newlines.length - 3] = "<color>" + group.color.toString().substring(1) + "</color>";
-		newlines[newlines.length - 2] = "</Group>";
-		newlines[newlines.length - 1] = "</Groups>";
-
-		BufferedWriter bw = null;
-		try {
-			bw = new BufferedWriter(new FileWriter(new File(FileUtils.PROPS_DIR
-					+ "groups.xml"), false));
-		}
-		catch (IOException ex) {
-			Logger.getLogger(Group.class.getName()).log(Level.SEVERE, null, ex);
-		}
-		for (int i = 0; i < newlines.length; i++) {
-			try {
-				bw.write(newlines[i]);
-			}
-			catch (IOException ex) {
-				Logger.getLogger(Group.class.getName()).log(Level.SEVERE, null, ex);
-			}
-			try {
-				bw.newLine();
-			}
-			catch (IOException ex) {
-				Logger.getLogger(Group.class.getName()).log(Level.SEVERE, null, ex);
-			}
-		}
-		try {
-			bw.close();
-		}
-		catch (IOException ex) {
-			Logger.getLogger(Group.class.getName()).log(Level.SEVERE, null, ex);
-		}
-
 		groups.add(group);
-		return true;
+		return saveGroups();
 	}
 
 	/**
 	 * Deletes this group.
 	 */
 	public boolean delete() {
-		String[] lines;
-		ArrayList<String> writelines = new ArrayList<String>();
 		groups.remove(this);
-		try {
-			lines = FileUtils.readAllLines(FileUtils.PROPS_DIR + "groups.xml");
-		}
-		catch (IOException ex) {
-			return false;
-		}
-		boolean ingroup = false;
-		for (int i = 0; i < lines.length; i++) {
-			if (lines[i].toLowerCase().indexOf(
-					"<name>" + this.name.toLowerCase() + "</name>") != -1) {
-				ingroup = true;
-				writelines.remove(writelines.size() - 1);
-			}
-			if (!ingroup) {
-				writelines.add(lines[i]);
-			}
-			if (ingroup) {
-				if (lines[i].toLowerCase().indexOf("</group>") != -1) {
-					ingroup = false;
-				}
-			}
-		}
-		String[] newlines = writelines.toArray(new String[writelines.size()]);
-		try {
-			FileUtils.writeLines(FileUtils.PROPS_DIR + "groups.xml", newlines);
-		}
-		catch (IOException e) {
-			return false;
-		}
-		return true;
+		return saveGroups();
 	}
 
 	/**
@@ -388,31 +306,8 @@ public class Group {
 	 * @return success true/false
 	 */
 	public boolean setName(String name) {
-		String[] lines;
-		try {
-			lines = FileUtils.readAllLines(FileUtils.PROPS_DIR + "groups.xml");
-		}
-		catch (IOException ex) {
-			return false;
-		}
-		String[] newlines = new String[lines.length];
-		for (int i = 0; i < lines.length; i++) {
-			if (lines[i].toLowerCase().indexOf(
-					"<name>" + this.name.toLowerCase() + "</name>") != -1) {
-				newlines[i] = "<name>" + name + "</name>";
-			}
-			else {
-				newlines[i] = lines[i];
-			}
-		}
-		try {
-			FileUtils.writeLines(FileUtils.PROPS_DIR + "groups.xml", newlines);
-		}
-		catch (IOException e) {
-			return false;
-		}
 		this.name = name;
-		return true;
+		return saveGroups();
 	}
 
 	/**
@@ -423,31 +318,8 @@ public class Group {
 	 * @return returns if action was successful
 	 */
 	public boolean setIsOp(boolean isop) {
-		String[] lines = null;
-		try {
-			lines = FileUtils.readAllLines(FileUtils.PROPS_DIR + "groups.xml");
-		}
-		catch (IOException ex) {
-			return false;
-		}
-		String[] newlines = new String[lines.length];
-		for (int i = 0; i < lines.length; i++) {
-			if (lines[i].toLowerCase().indexOf("<name>" + this.name.toLowerCase() + "</name>") != -1) {
-				newlines[i] = lines[i++];
-				newlines[i] = isop ? "<isop>true</isop>" : "<isop>false</isop>";
-			}
-			else {
-				newlines[i] = lines[i];
-			}
-		}
-		try {
-			FileUtils.writeLines(FileUtils.PROPS_DIR + "groups.xml", newlines);
-		}
-		catch (IOException e) {
-			return false;
-		}
 		this.isOP = isop;
-		return true;
+		return saveGroups();
 	}
 	
 	/**
@@ -458,31 +330,8 @@ public class Group {
 	 * @return returns if action was successful
 	 */
 	public boolean setColor(ChatColor color) {
-		String[] lines = null;
-		try {
-			lines = FileUtils.readAllLines(FileUtils.PROPS_DIR + "groups.xml");
-		}
-		catch (IOException ex) {
-			return false;
-		}
-		String[] newlines = new String[lines.length];
-		for (int i = 0; i < lines.length; i++) {
-			if (lines[i].toLowerCase().indexOf("<name>" + this.name.toLowerCase() + "</name>") != -1) {
-				newlines[i] = lines[i++];
-				newlines[i] = "<color>" + color.toString().substring(1) + "</color>";
-			}
-			else {
-				newlines[i] = lines[i];
-			}
-		}
-		try {
-			FileUtils.writeLines(FileUtils.PROPS_DIR + "groups.xml", newlines);
-		}
-		catch (IOException e) {
-			return false;
-		}
 		this.color = color;
-		return true;
+		return saveGroups();
 	}
 	
 	/**
@@ -493,33 +342,53 @@ public class Group {
 	 * @return returns if successful
 	 */
 	public boolean setPermission(int permissionlevel) {
-		String[] lines = null;
-		try {
-			lines = FileUtils.readAllLines(FileUtils.PROPS_DIR + "groups.xml");
-		}
-		catch (IOException ex) {
-			return false;
-		}
-		String[] newlines = new String[lines.length];
-		for (int i = 0; i < lines.length; i++) {
-			if (lines[i].toLowerCase().indexOf(
-					"<name>" + this.name.toLowerCase() + "</name>") != -1) {
-				newlines[i] = lines[i++];
-				newlines[i] = lines[i++];
-				newlines[i] = "<permission>" + Integer.toString(permissionlevel) + "</permission>";
-			}
-			else {
-				newlines[i] = lines[i];
-			}
-		}
-		try {
-			FileUtils.writeLines(FileUtils.PROPS_DIR + "groups.xml", newlines);
-		}
-		catch (IOException e) {
-			return false;
-		}
 		this.permissionlevel = permissionlevel;
-		return true;
+		return saveGroups();
+	}
+	
+	/**
+	 * Save all the group data into groups.xml
+	 * @return
+	 *        Returns true if the data was saved,
+	 *        returns false if the data could not be saved.
+	 */
+	public static boolean saveGroups() {
+	    ArrayList<String> lines = new ArrayList<String>();
+	    lines.add("<Groups>");
+	    for (Group g : groups) {
+	        lines.add("<Group " + (g.parent == null ? ">" : "\"" + g.parent.name + "\">"));
+	        lines.add("<name>" + g.name + "</name>");
+	        lines.add("<isop>" + g.isOP + "</isop>");
+	        lines.add("<permission>" + g.permissionlevel + "</permission>");
+	        lines.add("<color>" + g.color.getColor() + "</color>");
+	        if (Group.getDefault() == g)
+	            lines.add("<default>true</default>");
+	        lines.add("</Group>");
+	    }
+	    lines.add("</Groups>");
+	    
+	    FileUtils.deleteIfExist(FileUtils.PROPS_DIR + "/groups.xml");
+	    PrintWriter out = null;
+        try {
+            new File(FileUtils.PROPS_DIR + "/groups.xml").createNewFile();
+            out = new PrintWriter(FileUtils.PROPS_DIR + "/groups.xml");
+        }
+        catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return false;
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+        for (String s : lines) {
+            out.println(s);
+        }
+        out.flush();
+        out.close();
+        lines.clear();
+        return true;
+	    
 	}
 
 	/**
