@@ -410,7 +410,7 @@ public final class Server implements LogInterface, Updatable {
         Log("Starting MCForge v" + VERSION);
         ch = new CommandHandler(this);
         FileUtils.createFilesAndDirs();
-        Group.Load(this);
+        Group.load(this);
         p = Properties.init(this);
         if (!p.getBool("Verify-Names")) {
             Log(ChatColor.Dark_Red + "!!WARNING!! You are running the server with verify names off, this means");

@@ -344,7 +344,7 @@ public class Group {
 	/**
 	 * Deletes this group.
 	 */
-	public boolean Delete() {
+	public boolean delete() {
 		String[] lines;
 		ArrayList<String> writelines = new ArrayList<String>();
 		groups.remove(this);
@@ -387,7 +387,7 @@ public class Group {
 	 *            new name to set it to
 	 * @return success true/false
 	 */
-	public boolean SetName(String name) {
+	public boolean setName(String name) {
 		String[] lines;
 		try {
 			lines = FileUtils.readAllLines(FileUtils.PROPS_DIR + "groups.xml");
@@ -422,7 +422,7 @@ public class Group {
 	 *            if operator or not (true/false)
 	 * @return returns if action was successful
 	 */
-	public boolean SetIsOp(boolean isop) {
+	public boolean setIsOp(boolean isop) {
 		String[] lines = null;
 		try {
 			lines = FileUtils.readAllLines(FileUtils.PROPS_DIR + "groups.xml");
@@ -492,7 +492,7 @@ public class Group {
 	 *            the new level to set it to
 	 * @return returns if successful
 	 */
-	public boolean SetPermission(int permissionlevel) {
+	public boolean setPermission(int permissionlevel) {
 		String[] lines = null;
 		try {
 			lines = FileUtils.readAllLines(FileUtils.PROPS_DIR + "groups.xml");
@@ -528,7 +528,7 @@ public class Group {
 	 * @param server
 	 *            The server the groups will be loaded into
 	 */
-	public static void Load(Server server) {
+	public static void load(Server server) {
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		try {
 			FileUtils.createIfNotExist(FileUtils.PROPS_DIR, "groups.xml", DEFAULT_XML);
