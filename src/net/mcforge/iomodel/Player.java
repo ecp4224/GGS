@@ -1499,6 +1499,8 @@ public class Player extends IOClient implements CommandExecutor {
      */
     @Override
     public void sendMessage(String message){
+    	char c = message.charAt(0);
+    	message = (c == '&' || c == '%') ? message : server.defaultColor + message;
         Packet p = pm.getPacket("Message");
         String[] messages = chat.split(message);
         for (String m : messages) {
