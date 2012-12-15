@@ -72,7 +72,7 @@ public enum ChatColor {
      * @return The ChatColor object that equals the String
      */
     public static ChatColor parse(String color) {
-        return parse(color.toCharArray()[1]);
+        return parse(color.toCharArray()[(color.length() == 1) ? 0 : 1]);
     }
     
     /**

@@ -122,14 +122,22 @@ public final class Server implements LogInterface, Updatable {
     public String MainLevel;
     /**
      * Weather or not the server is public
-     */
+     */    
     public boolean Public;
+    
+    /**
+     * Server's default color.<br>
+     * Default color is shown before every message the players receive if it doesn't already
+     * have a color code in front 
+     */
+    public ChatColor defaultColor;
+    
     /**
      * The default filename for the system properties
      */
     public final String configpath = "system.config";
     /**
-     * The version of GGS this server runs
+     * The version of MCForge this server runs
      */
     public final String VERSION = "6.0.0b5";
     /**
@@ -298,6 +306,7 @@ public final class Server implements LogInterface, Updatable {
         VerifyNames = getSystemProperties().getBool("Verify-Names");
         newSand = getSystemProperties().getBool("Advanced-Sand");
         CurrencyName = getSystemProperties().getValue("Money-Name");
+        defaultColor = ChatColor.parse(getSystemProperties().getValue("defaultColor"));
     }
     
     /**
@@ -401,7 +410,7 @@ public final class Server implements LogInterface, Updatable {
         Log("Starting MCForge v" + VERSION);
         ch = new CommandHandler(this);
         FileUtils.createFilesAndDirs();
-        Group.Load(this);
+        Group.load(this);
         p = Properties.init(this);
         if (!p.getBool("Verify-Names")) {
             Log("!!WARNING!! You are running the server with verify names off, this means");
@@ -680,12 +689,12 @@ public final class Server implements LogInterface, Updatable {
     }
     @Override
     public String getName() {
-        return "MCFroge";
+        return "MCForge";
     }
     @Override
     public void unload() {
         try {
-            Stop(); //This method shouldnt be called...
+            Stop(); //This method shouldn't be called...
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (IOException e) {
