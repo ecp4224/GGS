@@ -306,7 +306,10 @@ public final class Server implements LogInterface, Updatable {
         VerifyNames = getSystemProperties().getBool("Verify-Names");
         newSand = getSystemProperties().getBool("Advanced-Sand");
         CurrencyName = getSystemProperties().getValue("Money-Name");
-        defaultColor = ChatColor.parse(getSystemProperties().getValue("defaultColor"));
+        if (getSystemProperties().hasValue("defaultColor"))
+            defaultColor = ChatColor.parse(getSystemProperties().getValue("defaultColor"));
+        else
+            defaultColor = ChatColor.White;
     }
     
     /**
