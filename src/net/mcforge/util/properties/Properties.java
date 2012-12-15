@@ -79,7 +79,7 @@ public class Properties {
         p.addSetting("Advanced-Sand", true);
         p.addComment("Advanced-Sand", "Weather sand will use the new physics system or the old one. New - Looks nicer, Old - Saves on CPU/Memory");
         p.addSetting("default_update_type", "auto_silent");
-        p.addSetting("defaultColor", "a");
+        p.addSetting("defaultColor", "&a");
         p.addComment("defaultColor", "The server's default color");
         p.addSetting("WOM-Server-description", "A server");
         p.addComment("WOM-Server-description", "A description of the server");
