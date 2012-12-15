@@ -295,6 +295,8 @@ public class Group {
 	 */
 	public boolean delete() {
 		groups.remove(this);
+		members.clear();
+		if (new File("ranks/" + name).exists()) new File("ranks/" + name).delete();
 		return saveGroups();
 	}
 
