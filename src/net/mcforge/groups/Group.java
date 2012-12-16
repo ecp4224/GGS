@@ -453,12 +453,13 @@ public class Group {
 		boolean defaultg = false;
 		try {
 			parent = e.getAttribute("parent");
-			exceptions = getTextValue(e, "exceptions").split("\\:");
-			defaultg = getTextValue(e, "default").equalsIgnoreCase("true");
-			color = ChatColor.parse(getTextValue(e, "color"));
 		}
 		catch (Exception ee) {
 		}
+		
+		exceptions = tryGetTextValue(e, "exceptions", "").split("\\:");
+		defaultg = tryGetTextValue(e, "default", "false").equalsIgnoreCase("true");
+		color = ChatColor.parse(tryGetTextValue(e, "color", ChatColor.White.toString()));
 
 		Group g = new Group(name, permission, isOp, color, server);
 		if (!parent.equals("null")) temp.put(g, parent);
@@ -473,6 +474,14 @@ public class Group {
 			e1.printStackTrace();
 		}
 		return g;
+	}
+	
+	private static String tryGetTextValue(Element e, String key, String defaultvalue) {
+	    try {
+	        return getTextValue(e, key);
+	    } catch (Exception ee) {
+	        return defaultvalue;
+	    }
 	}
 
 	/**
