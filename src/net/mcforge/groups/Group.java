@@ -478,7 +478,10 @@ public class Group {
 	
 	private static String tryGetTextValue(Element e, String key, String defaultvalue) {
 	    try {
-	        return getTextValue(e, key);
+	        String toreturn = getTextValue(e, key);
+	        if (toreturn == null)
+	            toreturn = defaultvalue;
+	        return toreturn;
 	    } catch (Exception ee) {
 	        return defaultvalue;
 	    }
