@@ -36,7 +36,7 @@ public class SQLite implements ISQL {
             statement.executeUpdate(command);
             statement.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            e.printStackTrace(server.getLoggerOutput());
         }
 
     }
@@ -73,13 +73,13 @@ public class SQLite implements ISQL {
                     statement.executeUpdate(s);
                 }
                 catch (SQLException e) {
-                    e.printStackTrace();
+                    e.printStackTrace(server.getLoggerOutput());
                 }
             }
             statement.close();
         }
         catch (SQLException e) {
-            e.printStackTrace();
+            e.printStackTrace(server.getLoggerOutput());
         }
     }
 
@@ -94,7 +94,7 @@ public class SQLite implements ISQL {
         try {
             return connection.prepareStatement(command).executeQuery();
         } catch (SQLException e) {
-            e.printStackTrace();
+            e.printStackTrace(server.getLoggerOutput());
             return null;
         }
     }
@@ -108,7 +108,7 @@ public class SQLite implements ISQL {
             DriverManager.registerDriver(new org.sqlite.JDBC());
             connection = DriverManager.getConnection(PATH + getFile());
         } catch (Exception e) {
-            e.printStackTrace();
+            e.printStackTrace(server.getLoggerOutput());
         }
     }
     /**

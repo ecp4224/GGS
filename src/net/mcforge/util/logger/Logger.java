@@ -9,6 +9,7 @@ package net.mcforge.util.logger;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.DateFormat;
@@ -136,7 +137,12 @@ public class Logger {
         if (out != null)
             out.close();
         FileUtils.createIfNotExist(directory, filename);
-        out = new PrintWriter(filepath);
+        FileOutputStream fos = new FileOutputStream(filepath, true);
+        out = new PrintWriter(fos);
+    }
+    
+    public PrintWriter getWriter() {
+        return out;
     }
     
     private class Log extends Thread {

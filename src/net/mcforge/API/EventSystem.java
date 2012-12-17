@@ -32,7 +32,7 @@ public class EventSystem {
             }
             catch (Exception e) {
                 server.Log("==!EVENT ERROR!==");
-                e.printStackTrace();
+                e.printStackTrace(server.getLoggerOutput());
             }
         }
     }
@@ -42,7 +42,7 @@ public class EventSystem {
                 getEventListeners(getRegistrationClass(entry.getKey())).registerAll(entry.getValue());
             } catch (IllegalAccessException e) {
                 server.Log("==!EVENT ERROR!==");
-                e.printStackTrace();
+                e.printStackTrace(server.getLoggerOutput());
             }
         }
     }
@@ -54,7 +54,7 @@ public class EventSystem {
             return (EventList) method.invoke(null);
         } catch (Exception e) {
         server.Log("==!EVENT ERROR!==");
-            e.printStackTrace();
+        e.printStackTrace(server.getLoggerOutput());
             return null;
         }
     }
@@ -101,7 +101,7 @@ public class EventSystem {
         return;
         m.invoke(listen, e);
         } catch (Exception e1) {
-        e1.printStackTrace();
+            e1.printStackTrace(server.getLoggerOutput());
         }
         }
         };

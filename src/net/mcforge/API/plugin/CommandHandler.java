@@ -102,7 +102,7 @@ public class CommandHandler {
                         c.execute(player, args);
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    e.printStackTrace(_server.getLoggerOutput());
                     player.sendMessage("An error occured while executing the command.");
                 }
             }
@@ -133,7 +133,7 @@ public class CommandHandler {
             loadPermissions();
             savePermissions();
         } catch (IOException e) {
-            e.printStackTrace();
+            e.printStackTrace(_server.getLoggerOutput());
         }
     }
     
@@ -203,10 +203,10 @@ public class CommandHandler {
             new File("properties/commands.config").createNewFile();
             out = new PrintWriter("properties/commands.config");
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            e.printStackTrace(_server.getLoggerOutput());
             return;
         } catch (IOException e) {
-            e.printStackTrace();
+            e.printStackTrace(_server.getLoggerOutput());
             return;
         }
         out.println("#Permission file for commands");
@@ -229,7 +229,7 @@ public class CommandHandler {
         try {
             out = new PrintWriter("properties/commands.config");
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            e.printStackTrace(_server.getLoggerOutput());
             return;
         }
         out.println("#Permission file for commands");

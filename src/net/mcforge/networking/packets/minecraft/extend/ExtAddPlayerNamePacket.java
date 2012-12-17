@@ -49,9 +49,9 @@ public class ExtAddPlayerNamePacket extends ExtendPacket {
                 array[194] = groupper;
                 client.writeData(array);
             } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
+                e.printStackTrace(servers.getLoggerOutput());
             } catch (IOException e) {
-                e.printStackTrace();
+                e.printStackTrace(servers.getLoggerOutput());
             }
         }
         else

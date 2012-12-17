@@ -41,7 +41,7 @@ public class ExtInfoPacket extends ExtendPacket {
         try {
             clientname = new String(name, "US-ASCII");
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            e.printStackTrace(server.getLoggerOutput());
         }
         p.setClientName(clientname);
     }
@@ -56,13 +56,13 @@ public class ExtInfoPacket extends ExtendPacket {
         try {
             bf.put(data.getBytes("US-ASCII"));
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            e.printStackTrace(servers.getLoggerOutput());
         }
         bf.putShort((short)servers.getPluginHandler().getExtensions().size());
         try {
             p.writeData(bf.array());
         } catch (IOException e) {
-            e.printStackTrace();
+            e.printStackTrace(servers.getLoggerOutput());
         }
     }
 

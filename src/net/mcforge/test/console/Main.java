@@ -40,11 +40,9 @@ public class Main extends Console implements Listener {
                 try {
                     s.Stop();
                 } catch (InterruptedException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
+                    e.printStackTrace(s.getLoggerOutput());
                 } catch (IOException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
+                    e.printStackTrace(s.getLoggerOutput());
                 }
             }
             else if (line.startsWith("/")) {

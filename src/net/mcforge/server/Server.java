@@ -10,6 +10,7 @@ package net.mcforge.server;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.ArrayList;
@@ -214,6 +215,10 @@ public final class Server implements LogInterface, Updatable {
     public final ISQL getSQL() {
         return sql;
     }
+    
+    public final PrintWriter getLoggerOutput() {
+        return getLogger().getWriter();
+    }
     /**
      * Get the properties for {@link Server#configpath} file
      * @return
@@ -410,6 +415,7 @@ public final class Server implements LogInterface, Updatable {
         console.setServer(this);
         startEvents();
         startLogger();
+        Log("=============================");
         Log("Starting MCForge v" + VERSION);
         ch = new CommandHandler(this);
         FileUtils.createFilesAndDirs();

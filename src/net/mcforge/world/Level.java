@@ -468,7 +468,7 @@ public class Level implements Serializable {
             physics.interrupt();
             physics.join(5000);
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            e.printStackTrace(server.getLoggerOutput());
         }
         server.Log("Unloading " + name);
         for (Player p : server.players) {
@@ -650,7 +650,7 @@ public class Level implements Serializable {
         try {
             f.delete();
         } catch(SecurityException e) {
-            e.printStackTrace();
+            e.printStackTrace(s.getLoggerOutput());
         }
         level.name = name;
         level.save();

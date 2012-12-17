@@ -38,13 +38,13 @@ public class ExtEntryPacket extends ExtendPacket {
         try {
             bf.put(name.getBytes("US-ASCII"));
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            e.printStackTrace(servers.getLoggerOutput());
         }
         bf.putInt(((ClassicExtension)para[0]).version());
         try {
             p.writeData(bf.array());
         } catch (IOException e) {
-            e.printStackTrace();
+            e.printStackTrace(servers.getLoggerOutput());
         }
     }
 
@@ -69,9 +69,9 @@ public class ExtEntryPacket extends ExtendPacket {
                 throw new ExtensionNotFoundException("The addon " + extname + " is not loaded!");
             p.addExtension(found);
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            e.printStackTrace(server.getLoggerOutput());
         } catch (ExtensionNotFoundException e) {
-            e.printStackTrace();
+            e.printStackTrace(server.getLoggerOutput());
         }
     }
 

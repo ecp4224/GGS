@@ -107,7 +107,7 @@ public class Ocean implements Generator {
         }
         catch (Exception e)
         {
-            e.printStackTrace();
+            e.printStackTrace(_server.getLoggerOutput());
         }
 
         terrain = new float[0]; //Derp

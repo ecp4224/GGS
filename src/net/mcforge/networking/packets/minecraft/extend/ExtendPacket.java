@@ -29,7 +29,7 @@ public abstract class ExtendPacket extends Packet {
         try {
             WriteData(p, servers, para);
         } catch (ExtensionNotSupportedException e) {
-            e.printStackTrace();
+            e.printStackTrace(servers.getLoggerOutput());
         }
     }
     
@@ -41,7 +41,7 @@ public abstract class ExtendPacket extends Packet {
         try {
             WriteData(p, servers);
         } catch (ExtensionNotSupportedException e) {
-            e.printStackTrace();
+            e.printStackTrace(servers.getLoggerOutput());
         }
     }
     

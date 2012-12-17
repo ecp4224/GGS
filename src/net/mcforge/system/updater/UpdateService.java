@@ -52,7 +52,7 @@ public class UpdateService implements Tick {
         try {
             load();
         } catch (IOException e) {
-            e.printStackTrace();
+            e.printStackTrace(server.getLoggerOutput());
         }
         applyUpdates();
     }
@@ -108,7 +108,7 @@ public class UpdateService implements Tick {
             if (hasUpdate(u))
                 queue.add(u);
         } catch (IOException e) {
-            e.printStackTrace();
+            e.printStackTrace(server.getLoggerOutput());
         }
     }
     
@@ -174,7 +174,7 @@ public class UpdateService implements Tick {
             if (notify)
                 server.Log(u.getDownloadPath() + " has been updated!");
         } catch (IOException e) {
-            e.printStackTrace();
+            e.printStackTrace(server.getLoggerOutput());
         }
     }
 
@@ -288,9 +288,9 @@ public class UpdateService implements Tick {
             }
             out.close();
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            e.printStackTrace(server.getLoggerOutput());
         } catch (IOException e) {
-            e.printStackTrace();
+            e.printStackTrace(server.getLoggerOutput());
         }
     }
     
@@ -320,7 +320,7 @@ public class UpdateService implements Tick {
             try {
                 downloadFile(url, path);
             } catch (IOException e) {
-                e.printStackTrace();
+                e.printStackTrace(server.getLoggerOutput());
             }
             //We dont need to load the plugin, the server will do that.
             if (ut == UpdateType.Auto_Notify_Restart)

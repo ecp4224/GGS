@@ -147,15 +147,15 @@ public class Beat extends Thread {
                                 try {
                                     h.onPump(reader, getServer());
                                 } catch (Exception e) {
-                                    e.printStackTrace();
+                                    e.printStackTrace(server.getLoggerOutput());
                                 }
                             } catch (Exception e) {
-                                e.printStackTrace();
+                                e.printStackTrace(server.getLoggerOutput());
                                 getServer().Log("Error pumping " + h.getURL() + " heart!");
                             }
                         }
                     } catch (MalformedURLException e) {
-                        e.printStackTrace();
+                        e.printStackTrace(server.getLoggerOutput());
                     } catch (IOException e) {
                         System.out.println("Unable to connect to " + h.getURL() + "!");
                     } finally {
