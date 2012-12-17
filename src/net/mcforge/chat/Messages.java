@@ -82,7 +82,7 @@ public class Messages {
                 temp.add(finals);
                 toadd = "";
                 finals = "";
-                if (currentcolor != ChatColor.White)
+                if (currentcolor != ChatColor.White && array[i] == '&')
                     toadd = currentcolor.toString();
             }
             //If the current letter is 1 before a multiply of 64
