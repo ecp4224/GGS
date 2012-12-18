@@ -677,6 +677,41 @@ public class Player extends IOClient implements CommandExecutor {
         }
         return new BigInteger(1, digest.digest()).toString(16);
     }
+    
+    /**
+     * Promote this player to the next highest rank </br>
+     * If the user already has the highest rank, then nothing happens
+     */
+    public void promote() {
+        final Group gg = getGroup();
+        Group lowestabove = null;
+        for (Group g : Group.getGroupList()) {
+            if (g.permissionlevel > gg.permissionlevel) {
+                if (lowestabove == null) { lowestabove = g; }
+                if (lowestabove.permissionlevel > g.permissionlevel) { lowestabove = g; }
+            }
+        }
+        if (lowestabove == null)
+            return;
+        setGroup(lowestabove);
+    }
+    
+    /**
+     * Demote the player to the next lowest rank </br>
+     * If the user already has the lowest rank, then nothing happens
+     */
+    public void demote() {
+        final Group gg = getGroup();
+        Group highestbelow = null;
+        for (Group g : Group.getGroupList()) {
+            if (g.permissionlevel < gg.permissionlevel) {
+                if (highestbelow == null) { highestbelow = g; }
+                if (highestbelow.permissionlevel < g.permissionlevel) { highestbelow = g; }
+            }
+        }
+        if (highestbelow == null) return;
+        setGroup(highestbelow);
+    }
 
     public int getMoney() {
         return money;
