@@ -108,9 +108,9 @@ public class LevelHandler {
      */
     public ArrayList<Player> getPlayers(Level level) {
         ArrayList<Player> temp = new ArrayList<Player>();
-        for (int i = 0; i < server.players.size(); i++)
-            if (server.players.get(i).getLevel() == level)
-                temp.add(server.players.get(i));
+        for (int i = 0; i < server.getPlayers().size(); i++)
+            if (server.getPlayers().get(i).getLevel() == level)
+                temp.add(server.getPlayers().get(i));
         return temp;
     }
     /**

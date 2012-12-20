@@ -52,7 +52,7 @@ public abstract class Action<T> implements Cancelable {
     }
     
     private boolean invalidCall(Server server, long ID) {
-        for (Player p : server.players) {
+        for (Player p : server.getPlayers()) {
             if (p.getReaderThreadID() == ID)
                 return true;
         }

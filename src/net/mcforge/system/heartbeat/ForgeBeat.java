@@ -15,7 +15,7 @@ public class ForgeBeat extends Heart {
     @Override
     public String Prepare(Server server) {
         return "name=" + server.Name.trim().replace(" ", "%20") +
-                "&users=" + server.players.size() +
+                "&users=" + server.getPlayers().size() +
                 "&max=" + server.MaxPlayers +
                 "&port=" + server.Port +
                 "&version=" + server.VERSION + 

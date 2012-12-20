@@ -24,7 +24,7 @@ public class Messages {
      */
     public void serverBroadcast(String message)
     {
-        for (Player p : server.players)
+        for (Player p : server.getPlayers())
             p.sendMessage(message);
     }
     
@@ -36,7 +36,7 @@ public class Messages {
      */
     public void worldBroadcast(String message, String world)
     {
-        for (Player p : server.players)
+        for (Player p : server.getPlayers())
         {
             if(p.world == world)
                 p.sendMessage(message);
@@ -51,7 +51,7 @@ public class Messages {
      */
     public void sendMessage(String message, String playerName)
     {
-        for (Player p : server.players)
+        for (Player p : server.getPlayers())
             if(p.username == playerName)
                 p.sendMessage(message);
     }

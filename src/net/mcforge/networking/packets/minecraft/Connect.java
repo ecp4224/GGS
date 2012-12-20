@@ -68,6 +68,7 @@ public class Connect extends Packet {
                         packet.Write(player, server, c);
                     }
                 }
+                //TODO Remove support for Server.players
                 server.players.add(player);
                 player.login();
                 PlayerLoginEvent login = new PlayerLoginEvent(player);

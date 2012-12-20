@@ -471,7 +471,7 @@ public class Level implements Serializable {
             e.printStackTrace(server.getLoggerOutput());
         }
         server.Log("Unloading " + name);
-        for (Player p : server.players) {
+        for (Player p : server.getPlayers()) {
             if (p.getLevel() == this)
                 p.changeLevel(server.getLevelHandler().findLevel(server.MainLevel), false);
         }
