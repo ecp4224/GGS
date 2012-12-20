@@ -192,6 +192,20 @@ public abstract class Block implements Serializable {
         }
         return new Unknown();
     }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Block) {
+            Block block = (Block)obj;
+            return block.name.equals(name) && block.getVisibleBlock() == getVisibleBlock();
+        }
+        return false;
+    }
+    
+    @Override
+    public int hashCode() {
+        return name.hashCode();
+    }
 
 }
 

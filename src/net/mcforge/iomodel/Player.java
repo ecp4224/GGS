@@ -1534,7 +1534,7 @@ public class Player extends IOClient implements CommandExecutor {
      */
     @Override
     public void sendMessage(String message){
-        if (!message.equals("")) {
+        if (!message.equals("") && message.length() > 0) {
             char c = message.charAt(0);
             message = (c == '&' || c == '%') ? message : server.defaultColor + message;
         }
