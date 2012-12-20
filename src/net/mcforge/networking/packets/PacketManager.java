@@ -14,11 +14,12 @@ import java.net.NetworkInterface;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.ArrayList;
 
-import net.mcforge.iomodel.Browser;
-import net.mcforge.iomodel.Player;
 import net.mcforge.networking.IOClient;
 import net.mcforge.networking.packets.browser.GET;
+import net.mcforge.networking.packets.clients.BrowserClient;
+import net.mcforge.networking.packets.clients.ClassicClient;
 import net.mcforge.networking.packets.minecraft.Connect;
 import net.mcforge.networking.packets.minecraft.DespawnPlayer;
 import net.mcforge.networking.packets.minecraft.FinishLevelSend;
@@ -47,10 +48,17 @@ import net.mcforge.server.Server;
 public class PacketManager {
 
     protected Packet[] packets;
+    
+    protected IClient[] clients = new IClient[] {
+            new BrowserClient(),
+            new ClassicClient()
+    };
 
     protected ServerSocket serverSocket;
 
     protected Thread reader;
+    
+    protected ArrayList<IOClient> connectedclients = new ArrayList<IOClient>();
 
     /**
      * The server this PacketManager belongs to
@@ -177,26 +185,46 @@ public class PacketManager {
             return false;
         }
     }
+    
+    /**
+     * Remove an {@link IOClient} from the {@link PacketManager#getConnectedClients()} list.
+     * @param client
+     *              The client to remove
+     * @return
+     *        Weather the client was removed or not.
+     */
+    public boolean disconnect(IOClient client) {
+       if (connectedclients.contains(client)) {
+           connectedclients.remove(client);
+           return true;
+       }
+       return false;
+    }
+    
+    /**
+     * Get all the connected clients
+     * @return
+     *        An {@link ArrayList} of IOClients
+     */
+    public ArrayList<IOClient> getConnectedClients() {
+        return connectedclients;
+    }
+    
+    private IClient findClient(byte OPCode) {
+        for (IClient c : clients) {
+            if (c.getOPCode() == OPCode)
+                return c;
+        }
+        return null;
+    }
 
     private void Accept(Socket connection) throws IOException {
         DataInputStream reader = new DataInputStream(connection.getInputStream());
         byte firstsend = (byte)reader.read();
-        switch (firstsend) {
-        case 0: //Minecraft player
-            new Player(connection, this, firstsend, server);
-            break;
-        case (byte)'G': //A browser or website is using GET
-            new Browser(connection, this, firstsend);
-        break;
-        case 2: //SMP Player
-            Packet p = this.getPacket(firstsend);
-            if (p == null)
-                connection.close();
-            IOClient ic = new IOClient(connection, this);
-            //ic.Listen();
-            p.Handle(new byte[0], server, ic);
-            break;
-        }
+        IClient client = findClient(firstsend);
+        if (client == null)
+            return;
+        connectedclients.add(client.create(connection, this));
     }
 
     private class Read extends Thread {

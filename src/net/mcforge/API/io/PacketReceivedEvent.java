@@ -7,7 +7,7 @@
  ******************************************************************************/
 package net.mcforge.API.io;
 
-import java.io.DataInputStream;
+import java.io.InputStream;
 
 import net.mcforge.API.Cancelable;
 import net.mcforge.API.EventList;
@@ -15,11 +15,11 @@ import net.mcforge.networking.IOClient;
 import net.mcforge.server.Server;
 
 public class PacketReceivedEvent extends IOEvent implements Cancelable {
-    private DataInputStream reader;
+    private InputStream reader;
     private byte opcode;
     private boolean _cancel;
     private static EventList events = new EventList();
-    public PacketReceivedEvent(IOClient client, Server server, DataInputStream reader, byte opcode) {
+    public PacketReceivedEvent(IOClient client, Server server, InputStream reader, byte opcode) {
         super(client, server);
         this.reader = reader;
         this.opcode = opcode;
@@ -50,7 +50,7 @@ public class PacketReceivedEvent extends IOEvent implements Cancelable {
      * Get a DataInputStream to read the bytes being sent by the client
      * @return A DataInputStream
      */
-    public DataInputStream getReader() {
+    public InputStream getReader() {
         return reader;
     }
     /**

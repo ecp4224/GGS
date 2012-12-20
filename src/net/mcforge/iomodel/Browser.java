@@ -7,49 +7,25 @@
  ******************************************************************************/
 package net.mcforge.iomodel;
 
-import java.io.IOException;
 import java.io.PrintStream;
-import java.io.UnsupportedEncodingException;
 import java.net.Socket;
 import java.util.Date;
 
 import net.mcforge.API.browser.BrowserGETRequestEvent;
 import net.mcforge.networking.IOClient;
-import net.mcforge.networking.packets.Packet;
 import net.mcforge.networking.packets.PacketManager;
 import net.mcforge.server.Server;
 
 public class Browser extends IOClient {
 
-    public Browser(Socket client, PacketManager pm, byte opcode) {
+    public Browser(Socket client, PacketManager pm) {
         super(client, pm);
-        writer = null;
-        try {
-            writer = new PrintStream(client.getOutputStream(), false, "US-ASCII");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        if (opcode != 255) {
-            Packet packet = pm.getPacket(opcode);
-            if (packet == null) {
-                pm.server.Log("Client sent " + opcode);
-                pm.server.Log("How do..?");
-            } else {
-                byte[] message = new byte[0xFF];
-                try {
-                    reader.read(message);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                if (message.length < packet.length) {
-                    pm.server.Log("Bad packet..");
-                }
-                else
-                    packet.Handle(message, pm.server, this);
-            }
-        }
+    }
+    
+    public PrintStream getWriter() {
+        if (writer instanceof PrintStream)
+            return (PrintStream)writer;
+        return null;
     }
     
     /**
@@ -67,14 +43,14 @@ public class Browser extends IOClient {
             return;
         String respond = bgre.getResponse();
         if (respond.equals("")) 
-            writer.println("HTTP/1.1 404 Not Found");
+            getWriter().println("HTTP/1.1 404 Not Found");
         else {
-            writer.println("HTTP/1.1 200 OK");
-            writer.println("Date: " + new Date().toLocaleString());
-            writer.println("Content-Type: " + (bgre.isHTML() ? "text/html" : "text/plain"));
-            writer.println("Content-Lenght: " + respond.getBytes().length);
-            writer.println();
-            writer.println(respond);
+            getWriter().println("HTTP/1.1 200 OK");
+            getWriter().println("Date: " + new Date().toLocaleString());
+            getWriter().println("Content-Type: " + (bgre.isHTML() ? "text/html" : "text/plain"));
+            getWriter().println("Content-Lenght: " + respond.getBytes().length);
+            getWriter().println();
+            getWriter().println(respond);
         }
         closeConnection();
     }

@@ -9,6 +9,8 @@ package net.mcforge.networking;
 
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.PrintStream;
 import java.net.InetAddress;
 import java.net.Socket;
@@ -24,9 +26,9 @@ import net.mcforge.networking.packets.PacketManager;
 public class IOClient {
     protected Socket client;
 
-    protected PrintStream writer;
+    protected OutputStream writer;
 
-    protected DataInputStream reader;
+    protected InputStream reader;
 
     protected Thread readerthread;
     
@@ -122,6 +124,7 @@ public class IOClient {
             client.close();
             connected = false;
             packet_queue.clear();
+            pm.disconnect(this);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -143,6 +146,22 @@ public class IOClient {
             pm.server.getEventSystem().callEvent(event);
         }
         packet_queue.add(data);
+    }
+    
+    public OutputStream getOutputStream() {
+        return writer;
+    }
+    
+    public void setOutputStream(OutputStream out) {
+        this.writer = out;
+    }
+    
+    public InputStream getInputStream() {
+        return reader;
+    }
+    
+    public void setInputStream(InputStream in) {
+        this.reader = in;
     }
 
     protected boolean sendNextPacket() throws IOException {
@@ -182,7 +201,7 @@ public class IOClient {
             readID = Thread.currentThread().getId();
             while (pm.server.Running && connected) {
                 try {
-                    byte opCode = reader.readByte();
+                    byte opCode = (byte)reader.read();
                     PacketReceivedEvent event = new PacketReceivedEvent(client, pm.server, reader, opCode);
                     pm.server.getEventSystem().callEvent(event);
                     if (event.isCancelled())
