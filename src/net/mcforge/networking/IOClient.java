@@ -201,7 +201,12 @@ public class IOClient {
             readID = Thread.currentThread().getId();
             while (pm.server.Running && connected) {
                 try {
-                    byte opCode = (byte)reader.read();
+                    int readvalue = (byte)reader.read();
+                    if (readvalue == -1) {
+                        closeConnection();
+                        break;
+                    }
+                    byte opCode = (byte)readvalue;
                     PacketReceivedEvent event = new PacketReceivedEvent(client, pm.server, reader, opCode);
                     pm.server.getEventSystem().callEvent(event);
                     if (event.isCancelled())
