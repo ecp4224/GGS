@@ -580,7 +580,7 @@ public class Player extends IOClient implements CommandExecutor {
      * In other words, hide this player from all other players
      */
     public void despawn() {
-        for (Player p : getServer().players) {
+        for (Player p : getServer().getPlayers()) {
             if (p.getLevel() != getLevel())
                 continue;
             p.despawn(this);
@@ -592,7 +592,7 @@ public class Player extends IOClient implements CommandExecutor {
      * for this player
      */
     public void completeDespawn() {
-        for (Player p : getServer().players) {
+        for (Player p : getServer().getPlayers()) {
             if (p.getLevel() != getLevel())
                 continue;
             p.despawn(this);
@@ -613,7 +613,7 @@ public class Player extends IOClient implements CommandExecutor {
      * In other words, show this player to all the other players in the same level
      */
     public void spawn() {
-        for (Player p : getServer().players) {
+        for (Player p : getServer().getPlayers()) {
             if (p.getLevel() != getLevel() || p == this)
                 continue;
             p.spawnPlayer(this);
@@ -625,7 +625,7 @@ public class Player extends IOClient implements CommandExecutor {
      * Spawn this player for all players and spawn all players for this player.
      */
     public void completeSpawn() {
-        for (Player p : getServer().players) {
+        for (Player p : getServer().getPlayers()) {
             if (p.getLevel() != getLevel() || p == this)
                 continue;
             p.spawnPlayer(this);
@@ -952,8 +952,8 @@ public class Player extends IOClient implements CommandExecutor {
     public void login() throws InterruptedException {
         if (isLoggedin)
             return;
-        for (int i = 0; i < getServer().players.size(); i++) {
-            Player p = getServer().players.get(i);
+        for (int i = 0; i < getServer().getPlayers().size(); i++) {
+            Player p = getServer().getPlayers().get(i);
             if ((username.equals(p.username)) && (!p.equals(this))) {
                 p.kick("Someone logged in as you!");
             }
@@ -968,8 +968,8 @@ public class Player extends IOClient implements CommandExecutor {
         }
         changeLevel(level, true);
         loadExtraData();
-        getServer().Log(this.username + " has joined the getServer().");
-        chat.serverBroadcast(this.username + " has joined the getServer().");
+        getServer().Log(this.username + " has joined the server.");
+        chat.serverBroadcast(this.username + " has joined the server.");
         updateAllLists(); //Update me in your list
         isLoggedin = true;
     }
@@ -1092,7 +1092,7 @@ public class Player extends IOClient implements CommandExecutor {
      * Change this player in all ext player's lists.
      */
     private void updateAllLists() {
-        for (Player p : getServer().players) {
+        for (Player p : getServer().getPlayers()) {
             if (p.hasExtension("ExtAddPlayerName"))
                 pm.getPacket((byte)0x33).Write(p, getServer(), this);
         }
@@ -1144,8 +1144,8 @@ public class Player extends IOClient implements CommandExecutor {
             return;
         //Do this way to save on packet overhead
         Packet sb = s.getPacketManager().getPacket((byte)0x05);
-        for (int i = 0; i < s.players.size(); i++) {
-            final Player p = s.players.get(i);
+        for (int i = 0; i < s.getPlayers().size(); i++) {
+            final Player p = s.getPlayers().get(i);
             if (p.level == l)
                 sb.Write(p, s, X, Y, Z, block.getVisibleBlock());
         }
@@ -1166,7 +1166,7 @@ public class Player extends IOClient implements CommandExecutor {
         final SetBlock sb = (SetBlock)s.getPacketManager().getPacket((byte)0x05);
         ArrayList<byte[]> cache = new ArrayList<byte[]>();
         for (BlockUpdate b : blockupdates) {
-            for (Player p : s.players) {
+            for (Player p : s.getPlayers()) {
                 if (p.getLevel() == l)
                     cache.add(sb.getBytes(p, s, (short)b.getX(), (short)b.getY(), (short)b.getZ(), b.getBlock().getVisibleBlock()));
             }
@@ -1174,8 +1174,8 @@ public class Player extends IOClient implements CommandExecutor {
                 l.setTile(b.getBlock(), b.getX(), b.getY(), b.getZ(), s);
         }
 
-        for (int pi = 0; pi < s.players.size(); pi++) {
-            final Player p = s.players.get(pi);
+        for (int pi = 0; pi < s.getPlayers().size(); pi++) {
+            final Player p = s.getPlayers().get(pi);
             for (int i = 0; i < cache.size(); i++) {
                 if (p.getLevel() != l)
                     continue;
@@ -1261,7 +1261,7 @@ public class Player extends IOClient implements CommandExecutor {
             tosend = t.toSend(this);
         else
             tosend = gps.toSend(this);
-        for (Player p : getServer().players) {
+        for (Player p : getServer().getPlayers()) {
             if (p == this)
                 continue;
             if (p.level == level)
@@ -1359,7 +1359,7 @@ public class Player extends IOClient implements CommandExecutor {
         }
         Packet p = pm.getPacket("Kick");
         this.kickreason = reason;
-        getServer().players.remove(this);
+        getServer().getPlayers().remove(this);
         p.Write(this, getServer());
     }
 
@@ -1368,7 +1368,7 @@ public class Player extends IOClient implements CommandExecutor {
         byte toreturn = 0;
         for (int i = 0; i < 255; i++) {
             found = true;
-            for (Player p : getServer().players) {
+            for (Player p : getServer().getPlayers()) {
                 if (p.ID == i) {
                     found = false;
                     break;
@@ -1498,7 +1498,7 @@ public class Player extends IOClient implements CommandExecutor {
 
     protected void TP() {
         Packet p = pm.getPacket("TP");
-        for (Player pp : getServer().players) {
+        for (Player pp : getServer().getPlayers()) {
             if (pp.level == level)
                 p.Write(pp, pp.getServer(), this, ID); //Tell all the other players as well...
         }
@@ -1656,12 +1656,13 @@ public class Player extends IOClient implements CommandExecutor {
      */
     @Override
     public void closeConnection() {
+        //TODO Remove support for players
         if (getServer().players.contains(this))
             getServer().players.remove(this);
         if(this.username != null)
         {
-            getServer().Log(this.username + " has left the getServer().");
-            chat.serverBroadcast(this.username + " has left the getServer().");        
+            getServer().Log(this.username + " has left the server.");
+            chat.serverBroadcast(this.username + " has left the server.");        
         }
         despawn();
         PlayerDisconnectEvent event = new PlayerDisconnectEvent(this);

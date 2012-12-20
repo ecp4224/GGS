@@ -26,6 +26,7 @@ import net.mcforge.chat.ChatColor;
 import net.mcforge.chat.Messages;
 import net.mcforge.groups.Group;
 import net.mcforge.iomodel.Player;
+import net.mcforge.networking.IOClient;
 import net.mcforge.networking.packets.PacketManager;
 import net.mcforge.sql.ISQL;
 import net.mcforge.sql.MySQL;
@@ -78,7 +79,9 @@ public final class Server implements LogInterface, Updatable {
     public boolean VerifyNames;
     /**
      * The players currently on the server
+     * @deprecated Use {@link Server#getPlayers()}
      */
+    @Deprecated
     public ArrayList<Player> players = new ArrayList<Player>();
     /**
      * Weather the server is running or not
@@ -472,6 +475,19 @@ public final class Server implements LogInterface, Updatable {
         Log("Server url can be found in 'url.txt'");
         ServerStartedEvent sse = new ServerStartedEvent(this);
         es.callEvent(sse);
+    }
+    
+    public ArrayList<IOClient> getClients() {
+        return pm.getConnectedClients();
+    }
+    
+    public ArrayList<Player> getPlayers() {
+        ArrayList<Player> p = new ArrayList<Player>();
+        for (IOClient i : getClients()) {
+            if (i instanceof Player)
+                p.add((Player)i);
+        }
+        return p;
     }
     
     /**
