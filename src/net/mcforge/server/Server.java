@@ -64,6 +64,9 @@ public final class Server implements LogInterface, Updatable {
     private ISQL sql;
     private Console console;
     private Messages m;
+    private int oldsize;
+    private ArrayList<IOClient> cache;
+    private ArrayList<Player> pcache;
     public static final String[] devs = new String []{"Dmitchell", "501st_commander", "Lavoaster", "Alem_Zupa", "bemacized", "Shade2010", "edh649", "hypereddie10", "Gamemakergm", "Serado", "Wouto1997", "cazzar", "givo"};
     /**
      * The name for currency on this server.
@@ -477,17 +480,31 @@ public final class Server implements LogInterface, Updatable {
         es.callEvent(sse);
     }
     
+    /**
+     * Get all the {@link IOClient} connected to the server
+     * @return
+     *        An {@link ArrayList} of {@link IOClient}
+     */
     public ArrayList<IOClient> getClients() {
         return pm.getConnectedClients();
     }
     
+    /**
+     * Get all the {@link Player} connected to the server
+     * @return
+     *         An {@link ArrayList} of {@link Player}
+     */
     public ArrayList<Player> getPlayers() {
-        ArrayList<Player> p = new ArrayList<Player>();
+        if (getClients().equals(cache) && getClients().size() == oldsize)
+            return pcache;
+        pcache = new ArrayList<Player>();
         for (IOClient i : getClients()) {
             if (i instanceof Player)
-                p.add((Player)i);
+                pcache.add((Player)i);
         }
-        return p;
+        cache = getClients();
+        oldsize = cache.size();
+        return pcache;
     }
     
     /**
