@@ -19,12 +19,10 @@ public class Handshake extends DynamicPacket {
 
     @Override
     public void handle(Server server, IOClient player, InputStream reader) {
-        
+        //TODO Handle handshake
     }
 
     @Override
-    public void write(Server server, IOClient player, OutputStream writer) {
-        
-    }
+    public void write(Server server, IOClient player, OutputStream writer) { }
 
 }

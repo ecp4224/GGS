@@ -121,6 +121,12 @@ public class IOClient {
     public void closeConnection() {
         try {
             pm.server.Log("Closing connection");
+            connected = false;
+            try {
+                writerthread.join(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             writer.close();
             reader.close();
             client.close();
