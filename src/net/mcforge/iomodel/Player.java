@@ -37,9 +37,9 @@ import net.mcforge.networking.ClientType;
 import net.mcforge.networking.IOClient;
 import net.mcforge.networking.packets.Packet;
 import net.mcforge.networking.packets.PacketManager;
-import net.mcforge.networking.packets.minecraft.GlobalPosUpdate;
-import net.mcforge.networking.packets.minecraft.SetBlock;
-import net.mcforge.networking.packets.minecraft.TP;
+import net.mcforge.networking.packets.classicminecraft.GlobalPosUpdate;
+import net.mcforge.networking.packets.classicminecraft.SetBlock;
+import net.mcforge.networking.packets.classicminecraft.TP;
 import net.mcforge.server.Server;
 import net.mcforge.server.Tick;
 import net.mcforge.sql.MySQL;
@@ -171,8 +171,6 @@ public class Player extends IOClient implements CommandExecutor {
         this.chat = new Messages(getServer());
 
         afk = false;
-
-        Listen();
         getServer().Add(tick);
     }
     

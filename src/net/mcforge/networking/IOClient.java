@@ -20,6 +20,7 @@ import java.util.List;
 import net.mcforge.API.io.PacketReceivedEvent;
 import net.mcforge.API.io.PacketSentEvent;
 import net.mcforge.iomodel.Player;
+import net.mcforge.networking.packets.DynamicPacket;
 import net.mcforge.networking.packets.Packet;
 import net.mcforge.networking.packets.PacketManager;
 
@@ -96,6 +97,8 @@ public class IOClient {
             e.printStackTrace();
         }
         this.address = client.getInetAddress();
+
+        Listen();
     }
 
     /**
@@ -110,7 +113,6 @@ public class IOClient {
         readerthread.start();
         writerthread = new Writer();
         writerthread.start();
-        pm.server.Log("Listening..");
     }
 
     /**
@@ -217,13 +219,19 @@ public class IOClient {
                         pm.server.Log("How do..?");
                         continue;
                     }
-                    byte[] message = new byte[packet.length];
-                    reader.read(message);
-                    if (message.length < packet.length) {
-                        pm.server.Log("Bad packet..");
-                        continue;
+                    if (!packet.dynamicSize() && !(packet instanceof DynamicPacket)) {
+                        byte[] message = new byte[packet.length];
+                        reader.read(message);
+                        if (message.length < packet.length && !packet.dynamicSize()) {
+                            pm.server.Log("Bad packet..");
+                            continue;
+                        }
+                        packet.Handle(message, pm.server, client);
                     }
-                    packet.Handle(message, pm.server, (Player)client);
+                    else if (packet instanceof DynamicPacket)
+                        ((DynamicPacket) packet).handle(pm.server, client, reader);
+                    else
+                        throw new RuntimeException("Packet " + packet.ID + " (" + packet.name + ") has a dynamicSize, but is not using a DynamicPacket!");
                 } catch (IOException e) {
                     closeConnection();
                     break;

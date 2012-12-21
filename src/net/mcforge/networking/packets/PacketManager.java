@@ -18,31 +18,34 @@ import java.util.ArrayList;
 
 import net.mcforge.networking.IOClient;
 import net.mcforge.networking.packets.browser.GET;
+import net.mcforge.networking.packets.classicminecraft.Connect;
+import net.mcforge.networking.packets.classicminecraft.DespawnPlayer;
+import net.mcforge.networking.packets.classicminecraft.FinishLevelSend;
+import net.mcforge.networking.packets.classicminecraft.GlobalPosUpdate;
+import net.mcforge.networking.packets.classicminecraft.Kick;
+import net.mcforge.networking.packets.classicminecraft.LevelSend;
+import net.mcforge.networking.packets.classicminecraft.LevelStartSend;
+import net.mcforge.networking.packets.classicminecraft.MOTD;
+import net.mcforge.networking.packets.classicminecraft.Message;
+import net.mcforge.networking.packets.classicminecraft.Ping;
+import net.mcforge.networking.packets.classicminecraft.PosUpdate;
+import net.mcforge.networking.packets.classicminecraft.SetBlock;
+import net.mcforge.networking.packets.classicminecraft.SpawnPlayer;
+import net.mcforge.networking.packets.classicminecraft.TP;
+import net.mcforge.networking.packets.classicminecraft.UpdateUser;
+import net.mcforge.networking.packets.classicminecraft.Welcome;
+import net.mcforge.networking.packets.classicminecraft.extend.ClickDistancePacket;
+import net.mcforge.networking.packets.classicminecraft.extend.ExtAddPlayerNamePacket;
+import net.mcforge.networking.packets.classicminecraft.extend.ExtEntryPacket;
+import net.mcforge.networking.packets.classicminecraft.extend.ExtInfoPacket;
+import net.mcforge.networking.packets.classicminecraft.extend.ExtPlayerPacket;
+import net.mcforge.networking.packets.classicminecraft.extend.ExtRemovePlayerNamePacket;
+import net.mcforge.networking.packets.classicminecraft.extend.HoldThisPacket;
 import net.mcforge.networking.packets.clients.BrowserClient;
 import net.mcforge.networking.packets.clients.ClassicClient;
-import net.mcforge.networking.packets.minecraft.Connect;
-import net.mcforge.networking.packets.minecraft.DespawnPlayer;
-import net.mcforge.networking.packets.minecraft.FinishLevelSend;
-import net.mcforge.networking.packets.minecraft.GlobalPosUpdate;
-import net.mcforge.networking.packets.minecraft.Kick;
-import net.mcforge.networking.packets.minecraft.LevelSend;
-import net.mcforge.networking.packets.minecraft.LevelStartSend;
-import net.mcforge.networking.packets.minecraft.MOTD;
-import net.mcforge.networking.packets.minecraft.Message;
-import net.mcforge.networking.packets.minecraft.Ping;
-import net.mcforge.networking.packets.minecraft.PosUpdate;
-import net.mcforge.networking.packets.minecraft.SetBlock;
-import net.mcforge.networking.packets.minecraft.SpawnPlayer;
-import net.mcforge.networking.packets.minecraft.TP;
-import net.mcforge.networking.packets.minecraft.UpdateUser;
-import net.mcforge.networking.packets.minecraft.Welcome;
-import net.mcforge.networking.packets.minecraft.extend.ClickDistancePacket;
-import net.mcforge.networking.packets.minecraft.extend.ExtAddPlayerNamePacket;
-import net.mcforge.networking.packets.minecraft.extend.ExtEntryPacket;
-import net.mcforge.networking.packets.minecraft.extend.ExtInfoPacket;
-import net.mcforge.networking.packets.minecraft.extend.ExtPlayerPacket;
-import net.mcforge.networking.packets.minecraft.extend.ExtRemovePlayerNamePacket;
-import net.mcforge.networking.packets.minecraft.extend.HoldThisPacket;
+import net.mcforge.networking.packets.clients.SMPClient;
+import net.mcforge.networking.packets.minecraft.Handshake;
+import net.mcforge.networking.packets.minecraft.SMPKick;
 import net.mcforge.server.Server;
 
 public class PacketManager {
@@ -51,7 +54,8 @@ public class PacketManager {
     
     protected IClient[] clients = new IClient[] {
             new BrowserClient(),
-            new ClassicClient()
+            new ClassicClient(),
+            new SMPClient()
     };
 
     protected ServerSocket serverSocket;
@@ -105,7 +109,9 @@ public class PacketManager {
                 new HoldThisPacket(this),
                 new ExtPlayerPacket(this),
                 new ExtAddPlayerNamePacket(this),
-                new ExtRemovePlayerNamePacket(this)
+                new ExtRemovePlayerNamePacket(this),
+                new Handshake(this),
+                new SMPKick(this)
         };
     }
 
@@ -224,7 +230,10 @@ public class PacketManager {
         IClient client = findClient(firstsend);
         if (client == null)
             return;
-        connectedclients.add(client.create(connection, this));
+        IOClient clientconnection = client.create(connection, this);
+        if (clientconnection == null)
+            return;
+        connectedclients.add(clientconnection);
     }
 
     private class Read extends Thread {

@@ -68,6 +68,16 @@ public abstract class Packet {
     }
     
     /**
+     * Weather this packet's byte size is dynamic, or has no defined size.
+     * This is usually the case if this packet includes a string.
+     * @return
+     *       True if this packet's size is dynamic.
+     */
+    public boolean dynamicSize() {
+        return false;
+    }
+    
+    /**
      * The constructor for this packet.
      * @param name
      *            The name of the packet
