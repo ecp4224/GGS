@@ -62,6 +62,8 @@ public class PacketManager {
 
     protected Thread reader;
     
+    protected boolean running;
+    
     protected ArrayList<IOClient> connectedclients = new ArrayList<IOClient>();
 
     /**
@@ -151,7 +153,10 @@ public class PacketManager {
      * Have the PacketManager start listening for clients
      * on the port provided by the {@link PacketManager#server}
      */
-    public void StartReading() {
+    public void startReading() {
+        if (running)
+            return;
+        running = true;
         reader = new Read();
         reader.start();
         server.Log("Listening on port " + server.Port);
@@ -160,7 +165,10 @@ public class PacketManager {
     /**
      * Stop listening for clients.
      */
-    public void StopReading() {
+    public void stopReading() {
+        if (!running)
+            return;
+        running = false;
         reader.interrupt();
         try {
             serverSocket.close();
@@ -172,6 +180,16 @@ public class PacketManager {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+    
+    public void restartReader() {
+        if (!running)
+            return;
+        stopReading();
+        try {
+            Thread.sleep(300);
+        } catch (InterruptedException e) { }
+        startReading();
     }
     
     /**
@@ -224,7 +242,7 @@ public class PacketManager {
         return null;
     }
 
-    private void Accept(Socket connection) throws IOException {
+    private void accept(Socket connection) throws IOException {
         DataInputStream reader = new DataInputStream(connection.getInputStream());
         byte firstsend = (byte)reader.read();
         IClient client = findClient(firstsend);
@@ -242,7 +260,7 @@ public class PacketManager {
         @Override
         public void run() {
             Socket connection = null;
-            while (server.Running) {
+            while (running) {
                 if (serverSocket.isClosed())
                     break;
                 try {
@@ -265,7 +283,7 @@ public class PacketManager {
         @Override
         public void run() {
             try {
-                Accept(connection);
+                accept(connection);
             } catch (IOException e) {
                 if (!e.getMessage().contains("Connection reset")) //Mostly happens when xwom connects
                     e.printStackTrace();

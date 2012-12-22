@@ -413,7 +413,7 @@ public final class Server implements LogInterface, Updatable {
     /**
      * Start the server
      */
-    public void Start(Console console, boolean startSQL) {
+    public void start(Console console, boolean startSQL) {
         if (Running)
             return;
         Running = true;
@@ -437,7 +437,7 @@ public final class Server implements LogInterface, Updatable {
         m = new Messages(this);
         ph = new PluginHandler(this);
         pm = new PacketManager(this);
-        pm.StartReading();
+        pm.startReading();
         ph.loadplugins();
         Log("Loaded plugins");
         Level.getLoader().setClassLoader(getDefaultClassLoader());
@@ -552,12 +552,12 @@ public final class Server implements LogInterface, Updatable {
      */
     public Player findPlayer(String name) {
         Player toreturn = null;
-        for (int i = 0; i < players.size(); i++) {
-            if (name.equalsIgnoreCase(players.get(i).username))
-                return players.get(i);
-            else if (players.get(i).username.toLowerCase().indexOf(name.toLowerCase()) != -1 && toreturn == null)
-                toreturn = players.get(i);
-            else if (players.get(i).username.toLowerCase().indexOf(name.toLowerCase()) != -1 && toreturn != null)
+        for (int i = 0; i < getPlayers().size(); i++) {
+            if (name.equalsIgnoreCase(getPlayers().get(i).username))
+                return getPlayers().get(i);
+            else if (getPlayers().get(i).username.toLowerCase().indexOf(name.toLowerCase()) != -1 && toreturn == null)
+                toreturn = getPlayers().get(i);
+            else if (getPlayers().get(i).username.toLowerCase().indexOf(name.toLowerCase()) != -1 && toreturn != null)
                 return null;
         }
         return toreturn;
@@ -590,7 +590,7 @@ public final class Server implements LogInterface, Updatable {
      * @throws IOException
      *                    If there is a problem saving the levels that are loaded
      */
-    public void Stop() throws InterruptedException, IOException {
+    public void stop() throws InterruptedException, IOException {
         if (!Running)
             return;
         Running = false;
@@ -611,16 +611,12 @@ public final class Server implements LogInterface, Updatable {
         logger.Stop();
         heartbeater.stopBeating();
         ArrayList<Player> players = new ArrayList<Player>();
-        for (Player p : this.players) {
+        for (Player p : getPlayers())
             players.add(p);
-        }
-        for(Player p : players)
-        {                        
-            p.kick("Server shut down. Thanks for playing!");
-        }
-        players.clear();
+        for (int i = 0; i < players.size(); i++)
+            players.get(i).kick("Server shutting down!");
         Properties.reset();
-        pm.StopReading();
+        pm.stopReading();
     }
     
     /**
@@ -736,7 +732,7 @@ public final class Server implements LogInterface, Updatable {
     @Override
     public void unload() {
         try {
-            Stop(); //This method shouldn't be called...
+            stop(); //This method shouldn't be called...
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (IOException e) {

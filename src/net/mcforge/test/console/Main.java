@@ -32,13 +32,13 @@ public class Main extends Console implements Listener {
     
     public void start() {
         s = new Server("[MCForge] Default", 25565, "Welcome!");
-        s.Start((Console)this, true);
+        s.start((Console)this, true);
         Scanner scanner = new Scanner(System.in);
         while (s.Running) {
             String line = scanner.nextLine();
             if (line.equals("/stop")) {
                 try {
-                    s.Stop();
+                    s.stop();
                 } catch (InterruptedException e) {
                     e.printStackTrace(s.getLoggerOutput());
                 } catch (IOException e) {

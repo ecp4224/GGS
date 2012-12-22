@@ -10,7 +10,7 @@ package net.mcforge.networking.packets.classicminecraft;
 import java.io.*;
 
 import net.mcforge.API.ClassicExtension;
-import net.mcforge.networking.ClientType;
+import net.mcforge.networking.ClassicClientType;
 
 import net.mcforge.API.player.PlayerConnectEvent;
 import net.mcforge.API.player.PlayerLoginEvent;
@@ -60,8 +60,8 @@ public class Connect extends Packet {
                 return;
             }
             if (player.verifyLogin() && !connect.isCancelled() && !connect.getAutologin()) {
-                player.client = ClientType.parse(message[129]);
-                if (player.client == ClientType.Extend_Classic) {
+                player.client = ClassicClientType.parse(message[129]);
+                if (player.client == ClassicClientType.Extend_Classic) {
                     Packet packet = server.getPacketManager().getPacket((byte)0x10);
                     packet.Write(player, player.getServer());
                     packet = server.getPacketManager().getPacket((byte)0x11);
@@ -69,7 +69,6 @@ public class Connect extends Packet {
                         packet.Write(player, server, c);
                     }
                 }
-                server.getPlayers().add(player);
                 player.login();
                 PlayerLoginEvent login = new PlayerLoginEvent(player);
                 server.getEventSystem().callEvent(login);

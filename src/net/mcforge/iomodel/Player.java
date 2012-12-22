@@ -33,7 +33,7 @@ import net.mcforge.API.player.PlayerKickedEvent;
 import net.mcforge.chat.ChatColor;
 import net.mcforge.chat.Messages;
 import net.mcforge.groups.Group;
-import net.mcforge.networking.ClientType;
+import net.mcforge.networking.ClassicClientType;
 import net.mcforge.networking.IOClient;
 import net.mcforge.networking.packets.Packet;
 import net.mcforge.networking.packets.PacketManager;
@@ -104,7 +104,7 @@ public class Player extends IOClient implements CommandExecutor {
     /**
      * What type of client the player is using.
      */
-    public ClientType client;
+    public ClassicClientType client;
     /**
      * The last X pos of the player
      */
@@ -202,13 +202,13 @@ public class Player extends IOClient implements CommandExecutor {
 
     /**
      * Add an extension this player can use.
-     * If the player is not using {@link ClientType#Extend_Classic} protocol, nothing will
+     * If the player is not using {@link ClassicClientType#Extend_Classic} protocol, nothing will
      * be added.
      * @param ext
      *           The Extension to add.
      */
     public void addExtension(ClassicExtension ext) {
-        if (client != ClientType.Extend_Classic)
+        if (client != ClassicClientType.Extend_Classic)
             return;
         extend.add(ext);
     }
@@ -390,7 +390,7 @@ public class Player extends IOClient implements CommandExecutor {
      *        True if the user is using the WoM client
      */
     public boolean isOnWom() {
-        return client == ClientType.WoM;
+        return client == ClassicClientType.WoM;
     }
 
 
@@ -1275,7 +1275,7 @@ public class Player extends IOClient implements CommandExecutor {
         if (seeable.contains(p))
             return;
         pm.getPacket((byte)0x07).Write(this, getServer(), p);
-        if (this.hasExtension("ExtPlayer") && p.client == ClientType.Extend_Classic)
+        if (this.hasExtension("ExtPlayer") && p.client == ClassicClientType.Extend_Classic)
             pm.getPacket((byte)0x39).Write(this, getServer(), p);
         seeable.add(p);
     }
@@ -1530,7 +1530,7 @@ public class Player extends IOClient implements CommandExecutor {
      */
     public void sendWoMMessage(String message)
     {
-        if (client == ClientType.WoM) {
+        if (client == ClassicClientType.WoM) {
             sendMessage("^detail.user=" + message);
         }
     }
@@ -1611,9 +1611,9 @@ public class Player extends IOClient implements CommandExecutor {
                 String name = message.substring(7, 15);
                 setClientName(name);
                 if (name.indexOf("X") != -1 || name.indexOf("x") != -1)
-                    client = ClientType.XWoM;
+                    client = ClassicClientType.XWoM;
                 else
-                    client = ClientType.WoM;
+                    client = ClassicClientType.WoM;
                 return;
             }
             PlayerCommandEvent event = new PlayerCommandEvent(this, message);
@@ -1654,9 +1654,6 @@ public class Player extends IOClient implements CommandExecutor {
      */
     @Override
     public void closeConnection() {
-        //TODO Remove support for players
-        if (getServer().getPlayers().contains(this))
-            getServer().getPlayers().remove(this);
         if(this.username != null)
         {
             getServer().Log(this.username + " has left the server.");
