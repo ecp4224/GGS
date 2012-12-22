@@ -294,7 +294,7 @@ public final class Server implements LogInterface, Updatable {
         catch (ClassCastException e2) { }
         catch (ArrayIndexOutOfBoundsException e3) { }
         try {
-            if (stacks[4].getClassName().equals("net.mcforge.networking.packets.minecraft.Connect"))
+            if (stacks[4].getClassName().equals("net.mcforge.networking.packets.classicminecraft.Connect"))
                 return Salt;
         }
         catch (ArrayIndexOutOfBoundsException e3) { }
