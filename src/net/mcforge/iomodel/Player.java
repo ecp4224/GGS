@@ -1655,8 +1655,8 @@ public class Player extends IOClient implements CommandExecutor {
     @Override
     public void closeConnection() {
         //TODO Remove support for players
-        if (getServer().players.contains(this))
-            getServer().players.remove(this);
+        if (getServer().getPlayers().contains(this))
+            getServer().getPlayers().remove(this);
         if(this.username != null)
         {
             getServer().Log(this.username + " has left the server.");
