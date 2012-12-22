@@ -80,8 +80,9 @@ public final class Server implements LogInterface, Updatable {
      * Weather or not to verify names when players connect
      */
     public boolean VerifyNames;
+    
     /**
-     * The players currently on the server
+     * The players currently on the server.
      * @deprecated Use {@link Server#getPlayers()}
      */
     @Deprecated
