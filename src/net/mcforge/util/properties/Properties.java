@@ -168,6 +168,24 @@ public class Properties {
         }
         in.close();
     }
+    
+    /**
+     * Get all the keys this properties file has.
+     * @return
+     *        A String array of keys.
+     */
+    public String[] getKeys() {
+        ArrayList<String> keys = new ArrayList<String>();
+        synchronized(settings) {
+            for (String k : settings) {
+                if (k.startsWith("#"))
+                    continue;
+                String finalk = k.split("=")[0].trim();
+                keys.add(finalk);
+            }
+        }
+        return keys.toArray(new String[keys.size()]);
+    }
 
     /**
      * Get the boolean value of the setting <b>key</b>
