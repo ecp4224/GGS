@@ -234,6 +234,7 @@ public class PacketManager {
         if (clientconnection == null)
             return;
         connectedclients.add(clientconnection);
+        clientconnection.Listen();
     }
 
     private class Read extends Thread {

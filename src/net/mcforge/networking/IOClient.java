@@ -97,8 +97,6 @@ public class IOClient {
             e.printStackTrace();
         }
         this.address = client.getInetAddress();
-
-        Listen();
     }
 
     /**
