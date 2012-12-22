@@ -11,26 +11,31 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public enum ChatColor {
-    Black('&', '0'),
-    Dark_Blue('&', '1'),
-    Dark_Green('&','2'),
-    Dark_Aqua('&','3'),
-    Dark_Red('&','4'),
-    Purple('&','5'),
-    Orange('&','6'),
-    Gray('&', '7'),
-    Dark_Gray('&','8'),
-    Indigo('&','9'),
-    Bright_Green('&','a'),
-    Aqua('&', 'b'),
-    Red('&', 'c'),
-    Pink('&', 'd'),
-    Yellow('&', 'e'),
-    White('&', 'f');
+    Black('&', '0', "Black"),
+    Dark_Blue('&', '1', "Navy"),
+    Dark_Green('&','2', "Green"),
+    Dark_Aqua('&','3', "Teal"),
+    Dark_Red('&','4', "Maroon"),
+    Purple('&','5', "Purple"),
+    Orange('&','6', "Gold"),
+    Gray('&', '7', "Silver"),
+    Dark_Gray('&','8', "Gray"),
+    Indigo('&','9', "Blue"),
+    Bright_Green('&','a', "Lime"),
+    Aqua('&', 'b', "Aqua"),
+    Red('&', 'c', "Red"),
+    Pink('&', 'd', "Pink"),
+    Yellow('&', 'e', "Yellow"),
+    White('&', 'f', "White");
     
     private char id;
     private char type;
-    ChatColor(char id, char type) { this.id = id; this.type = type; }
+    private String mcName;
+    ChatColor(char id, char type, String mcName) { 
+    	this.id = id; 
+    	this.type = type; 
+    	this.mcName = mcName;
+    	}
     
     public char getColor() {
         return type;
@@ -38,7 +43,12 @@ public enum ChatColor {
     public char getID() {
         return id;
     }
-    
+    /**
+     * Gets the color's minecraft name
+     */
+    public String getName() {
+    	return mcName;
+    }
     @Override
     public String toString() {
         return "" + id + type;
@@ -72,6 +82,9 @@ public enum ChatColor {
      * @return The ChatColor object that equals the String
      */
     public static ChatColor parse(String color) {
+    	if (color == null) {
+    		return null;
+    	}
         return parse(color.toCharArray()[(color.length() == 1) ? 0 : 1]);
     }
     
@@ -115,6 +128,47 @@ public enum ChatColor {
             return ChatColor.White;
         throw ColorFormatException.forInputString("" + color);
     }
-
+    
+    /**
+     * Gets a ChatColor by it's Minecraft name
+     * 
+     * @param color The char to parse
+     * @return The ChatColor object that equals the char
+     */
+    public static ChatColor fromName(String name) {
+        if (name.equalsIgnoreCase("Black"))
+            return ChatColor.Black;
+        else if (name.equalsIgnoreCase("Navy"))
+            return ChatColor.Dark_Blue;
+        else if (name.equalsIgnoreCase("Green"))
+            return ChatColor.Dark_Green;
+        else if (name.equalsIgnoreCase("Teal"))
+            return ChatColor.Dark_Aqua;
+        else if (name.equalsIgnoreCase("Maroon"))
+            return ChatColor.Dark_Red;
+        else if (name.equalsIgnoreCase("Purple"))
+            return ChatColor.Purple;
+        else if (name.equalsIgnoreCase("Gold"))
+            return ChatColor.Orange;
+        else if (name.equalsIgnoreCase("Silver"))
+            return ChatColor.Gray;
+        else if (name.equalsIgnoreCase("Gray"))
+            return ChatColor.Dark_Gray;
+        else if (name.equalsIgnoreCase("Blue"))
+            return ChatColor.Indigo;
+        else if (name.equalsIgnoreCase("Lime"))
+            return ChatColor.Bright_Green;
+        else if (name.equalsIgnoreCase("Aqua"))
+            return ChatColor.Aqua;
+        else if (name.equalsIgnoreCase("Red"))
+            return ChatColor.Red;
+        else if (name.equalsIgnoreCase("Pink"))
+            return ChatColor.Pink;
+        else if (name.equalsIgnoreCase("Yellow"))
+            return ChatColor.Yellow;
+        else if (name.equalsIgnoreCase("White"))
+            return ChatColor.White;
+        throw ColorFormatException.forInputString(name);
+    }
 }
 
