@@ -468,7 +468,7 @@ public class Level implements Serializable {
             physics.interrupt();
             physics.join(5000);
         } catch (InterruptedException e) {
-           s.logError(e);
+           server.logError(e);
         }
         server.Log("Unloading " + name);
         for (Player p : server.getPlayers()) {
