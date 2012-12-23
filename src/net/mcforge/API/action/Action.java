@@ -7,6 +7,8 @@
  ******************************************************************************/
 package net.mcforge.API.action;
 
+import java.util.ArrayList;
+
 import net.mcforge.API.Cancelable;
 import net.mcforge.iomodel.Player;
 import net.mcforge.server.Server;
@@ -20,6 +22,8 @@ import net.mcforge.server.Server;
 * a response is gotten.
 */
 public abstract class Action<T> implements Cancelable {
+    
+    private static ArrayList<Action<?>> pending = new ArrayList<Action<?>>();
     
     private boolean _cancel;
     
@@ -43,12 +47,50 @@ public abstract class Action<T> implements Cancelable {
         if (invalidCall(p.getServer(), Thread.currentThread().getId()))
             throw new IllegalAccessException("You cant use this method on the same thread as the packet reading thread!");
         setup();
+        pending.add(this);
         while (true) {
             if (isCompleted() || isCancelled())
                 break;
             super.wait(0L);
         }
+        pending.remove(this);
         return getResponse();
+    }
+    
+    /**
+     * Check to see if this player has a pending action.
+     * @param p
+     *        The player to check
+     * @return
+     *        Returns true if the player has a pending action
+     */
+    public static boolean hasPendingAction(Player p) {
+        for (Action<?> a : pending) {
+            if (a.getPlayer() == p)
+                return true;
+        }
+        return false;
+    }
+    
+    /**
+     * Abort any pending action this player has.
+     * @param p
+     *         The player
+     */
+    public static void abortPendingActions(Player p) {
+        if (!hasPendingAction(p))
+            return;
+        Action<?> action = null;
+        for (Action<?> a : pending) {
+            if (a.getPlayer() == p) {
+                action = a;
+                break;
+            }
+        }
+        if (action == null)
+            return;
+        
+        action.setCancel(true);
     }
     
     private boolean invalidCall(Server server, long ID) {
@@ -98,7 +140,7 @@ public abstract class Action<T> implements Cancelable {
     }
     
     @Override
-    public void setCancel(boolean cancel) {
+    public synchronized void setCancel(boolean cancel) {
         this._cancel = cancel;
         super.notify();
     }

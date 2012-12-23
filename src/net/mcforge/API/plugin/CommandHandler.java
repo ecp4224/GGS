@@ -18,6 +18,8 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 
 import net.mcforge.API.CommandExecutor;
+import net.mcforge.API.action.Action;
+import net.mcforge.iomodel.Player;
 import net.mcforge.server.Server;
 import net.mcforge.system.Console;
 
@@ -92,6 +94,16 @@ public class CommandHandler {
             if (!(player instanceof Console) && !player.getGroup().canExecute(c))
                 player.sendMessage("Sorry, you don't have permission to execute this command!");
             else {
+                if (!c.getName().equals("abort")) {
+                    if (player instanceof Player) {
+                        Player p = (Player)player;
+                        if (Action.hasPendingAction(p)) {
+                            p.sendMessage("You are currently using a command, please finish that command.");
+                            p.sendMessage("Or abort it using /abort");
+                            return;
+                        }
+                    }
+                }
                 try {
                     if (c.runInSeperateThread()) {
                         CommandExecute ce = new CommandExecute(player, c, args);
