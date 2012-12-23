@@ -71,7 +71,7 @@ public class LevelHandler {
             try {
                 level.save();
             } catch (IOException e) {
-                e.printStackTrace(server.getLoggerOutput());
+                server.logError(e);
             }
         }
     }
@@ -211,7 +211,7 @@ public class LevelHandler {
         try {
             level.unload(server, save);
         } catch (IOException e) {
-            e.printStackTrace(server.getLoggerOutput());
+            server.logError(e);
         }
         levels.remove(level);
         return true;
@@ -231,7 +231,7 @@ public class LevelHandler {
                     try {
                         levels.get(i).save();
                     } catch (IOException e) {
-                        e.printStackTrace(server.getLoggerOutput());
+                        server.logError(e);
                     }
                 }
             }

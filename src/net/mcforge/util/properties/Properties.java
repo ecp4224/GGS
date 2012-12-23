@@ -45,8 +45,7 @@ public class Properties {
                 p.load(server.configpath);
                 init = true;
             } catch (IOException e) {
-                server.Log("ERROR LOADING CONFIG!");
-                e.printStackTrace(server.getLoggerOutput());
+                server.logError(e);
             }
         }
         return p;
@@ -116,9 +115,9 @@ public class Properties {
             p.save(filename);
             init = true;
         } catch (FileNotFoundException e) {
-            e.printStackTrace(server.getLoggerOutput());
+            server.logError(e);
         } catch (IOException e) {
-            e.printStackTrace(server.getLoggerOutput());
+            server.logError(e);
         }
     }
 

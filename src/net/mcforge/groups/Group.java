@@ -411,19 +411,19 @@ public class Group {
 						groups.add(read(e, server));
 					}
 					catch (Exception ee) {
-					    ee.printStackTrace(server.getLoggerOutput());
+					    server.logError(ee);
 					}
 				}
 			}
 		}
 		catch (ParserConfigurationException pce) {
-		    pce.printStackTrace(server.getLoggerOutput());
+		    server.logError(pce);
 		}
 		catch (SAXException se) {
-		    se.printStackTrace(server.getLoggerOutput());
+		    server.logError(se);
 		}
 		catch (IOException ioe) {
-		    ioe.printStackTrace(server.getLoggerOutput());
+		    server.logError(ioe);
 		}
 		Set<Entry<Group, String>> set = temp.entrySet();
 		// Get an iterator
@@ -467,7 +467,7 @@ public class Group {
 			g.loadMembers();
 		}
 		catch (IOException e1) {
-		    e1.printStackTrace(server.getLoggerOutput());
+		    server.logError(e1);
 		}
 		return g;
 	}

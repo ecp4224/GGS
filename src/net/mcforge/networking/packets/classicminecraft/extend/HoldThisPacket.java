@@ -36,7 +36,7 @@ public class HoldThisPacket extends ExtendPacket {
             try {
                 client.writeData(array);
             } catch (IOException e) {
-                e.printStackTrace(servers.getLoggerOutput());
+                servers.logError(e);
             }
         }
         else

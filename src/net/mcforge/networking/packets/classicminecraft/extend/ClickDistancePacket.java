@@ -45,7 +45,7 @@ public class ClickDistancePacket extends ExtendPacket {
         try {
             p.writeData(bf.array());
         } catch (IOException e) {
-            e.printStackTrace(servers.getLoggerOutput());
+            servers.logError(e);
         }
     }
 

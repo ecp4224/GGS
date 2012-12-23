@@ -42,9 +42,9 @@ public class ExtPlayerPacket extends ExtendPacket {
                 System.arraycopy(name, 0, array, 2, name.length);
                 client.writeData(array);
             } catch (UnsupportedEncodingException e) {
-                e.printStackTrace(servers.getLoggerOutput());
+                servers.logError(e);
             } catch (IOException e) {
-                e.printStackTrace(servers.getLoggerOutput());
+                servers.logError(e);
             }
         }
         else

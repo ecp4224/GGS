@@ -18,6 +18,7 @@ import java.util.Calendar;
 import java.util.Random;
 
 import net.mcforge.API.EventSystem;
+import net.mcforge.API.action.CmdAbort;
 import net.mcforge.API.io.ServerLogEvent;
 import net.mcforge.API.plugin.CommandHandler;
 import net.mcforge.API.plugin.PluginHandler;
@@ -302,6 +303,11 @@ public final class Server implements LogInterface, Updatable {
         throw new IllegalAccessException("The salt can only be accessed by the heartbeaters and the Connect packet!");
     }
     
+    public void logError(Throwable t) {
+        t.printStackTrace(getLoggerOutput());
+        t.printStackTrace();
+    }
+    
     /**
      * Load the server properties such as the server {@link Server#Name}.
      * These properties will always load from the {@link Server#configpath}
@@ -477,6 +483,7 @@ public final class Server implements LogInterface, Updatable {
         heartbeater.startBeating();
         Log("Created heartbeat");
         Log("Server url can be found in 'url.txt'");
+        getCommandHandler().addCommand(new CmdAbort());
         ServerStartedEvent sse = new ServerStartedEvent(this);
         es.callEvent(sse);
     }
@@ -688,14 +695,16 @@ public final class Server implements LogInterface, Updatable {
     public void onLog(String message) {
         //TODO ..colors?
         ServerLogEvent sle = new ServerLogEvent(this, message, message.split("\\]")[1].trim());
-        this.es.callEvent(sle);
+        if (es != null)
+            this.es.callEvent(sle);
         System.out.println(message);
     }
     @Override
     public void onError(String message) {
         //TODO ..colors?
         ServerLogEvent sle = new ServerLogEvent(this, message, message.split("\\]")[1].trim());
-        this.es.callEvent(sle);
+        if (es != null)
+            this.es.callEvent(sle);
         System.out.println(message);
         log.log(java.util.logging.Level.SEVERE, message);
     }

@@ -38,7 +38,7 @@ public class MySQL implements ISQL {
             PreparedStatement pstm = connection.prepareStatement(command);
             pstm.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace(server.getLoggerOutput());
+            server.logError(e);
         }
     }
 
@@ -60,13 +60,13 @@ public class MySQL implements ISQL {
                     server.Log("ERROR EXECUTING STATEMENT!");
                     server.Log("Statement: ");
                     server.Log(s);
-                    e.printStackTrace(server.getLoggerOutput());
+                    server.logError(e);
                 }
             }
             statement.close();
         }
         catch (SQLException e) {
-            e.printStackTrace(server.getLoggerOutput());
+            server.logError(e);
         }
     }
 
@@ -81,7 +81,7 @@ public class MySQL implements ISQL {
         try {
             return connection.prepareStatement(command).executeQuery();
         } catch (SQLException e) {
-            e.printStackTrace(server.getLoggerOutput());
+            server.logError(e);
             return null;
         }
     }
@@ -93,7 +93,7 @@ public class MySQL implements ISQL {
             DriverManager.registerDriver(new com.mysql.jdbc.Driver());
             connection = DriverManager.getConnection(getURL() + DB + getProperties(), username, pass);
         } catch (Exception e) {
-            e.printStackTrace(server.getLoggerOutput());
+            server.logError(e);
         }
     }
     /**

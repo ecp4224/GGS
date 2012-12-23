@@ -54,7 +54,7 @@ public abstract class Heart {
                     url = line;
             }
         } catch (Exception e) {
-            e.printStackTrace(server.getLoggerOutput());
+            server.logError(e);
         } finally {
             rdr.close();
         }

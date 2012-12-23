@@ -139,7 +139,7 @@ public class Island implements Generator {
         }
         catch (Exception e)
         {
-            e.printStackTrace(_server.getLoggerOutput());
+            _server.logError(e);
         }
 
         terrain = new float[0]; //Derp

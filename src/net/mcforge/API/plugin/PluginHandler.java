@@ -51,7 +51,7 @@ public class PluginHandler {
                 try {
                     server.getUpdateService().getUpdateManager().remove((Updatable)p);
                 } catch (IllegalAccessException e) {
-                    e.printStackTrace(server.getLoggerOutput());
+                    server.logError(e);
                 }
             }
         }
@@ -95,7 +95,7 @@ public class PluginHandler {
         try {
             file = new JarFile(arg0);
         } catch (IOException e) {
-            e.printStackTrace(server.getLoggerOutput());
+            server.logError(e);
         }
         if (file != null) {
             Enumeration<JarEntry> entries = file.entries();
@@ -233,23 +233,17 @@ public class PluginHandler {
             method.setAccessible(true);
             method.invoke(loader, u);
         } catch (MalformedURLException e) {
-            server.Log(e.toString());
-            e.printStackTrace(server.getLoggerOutput());
+            server.logError(e);
         } catch (NoSuchMethodException e) {
-            server.Log(e.toString());
-            e.printStackTrace(server.getLoggerOutput());
+            server.logError(e);
         } catch (SecurityException e) {
-            server.Log(e.toString());
-            e.printStackTrace(server.getLoggerOutput());
+            server.logError(e);
         } catch (IllegalAccessException e) {
-            server.Log(e.toString());
-            e.printStackTrace(server.getLoggerOutput());
+            server.logError(e);
         } catch (IllegalArgumentException e) {
-            server.Log(e.toString());
-            e.printStackTrace(server.getLoggerOutput());
+            server.logError(e);
         } catch (InvocationTargetException e) {
-            server.Log(e.toString());
-            e.printStackTrace(server.getLoggerOutput());
+            server.logError(e);
         }
     }
 }
