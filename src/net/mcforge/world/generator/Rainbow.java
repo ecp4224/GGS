@@ -18,6 +18,15 @@ public class Rainbow implements Generator {
 
     private Server _server;
     
+    @Override
+    public String getName() {
+    	return "Rainbow";
+    }
+	@Override
+	public String[] getShortcuts() {
+		return new String[0];
+	}
+    
     /**
      * The constructor for the rainbow level generator
      * 
@@ -26,6 +35,7 @@ public class Rainbow implements Generator {
     public Rainbow(Server server) {
         this._server = server;
     }
+    
     @Override
     public void generate(Level l) {
         Random rand = new Random(System.currentTimeMillis());

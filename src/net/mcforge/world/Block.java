@@ -182,7 +182,6 @@ public abstract class Block implements Serializable {
      * @param name 
      *            The name of the block to look for
      * @return 
-     * @return 
      *        An empty version of the block with the basic information in it </br>
      *        If the block specified isn't found, then a new Unknown block is return </br>
      *        You can check to see if an the Unknown block was returned by doing </br>

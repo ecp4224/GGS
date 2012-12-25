@@ -23,6 +23,15 @@ public class Island implements Generator {
     float[] overlay2;
     private Server _server;
 
+    @Override
+    public String getName() {
+    	return "Island";
+    }
+	@Override
+	public String[] getShortcuts() {
+		return new String[0];
+	}
+    
     /**
      * The constructor for the island level generator
      * @param server

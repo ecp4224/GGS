@@ -18,6 +18,15 @@ public class Space implements Generator {
 
     private Server _server;
     
+    @Override
+    public String getName() {
+    	return "Space";
+    }
+	@Override
+	public String[] getShortcuts() {
+		return new String[0];
+	}
+    
     /**
      * The constructor for the space level generator
      * 

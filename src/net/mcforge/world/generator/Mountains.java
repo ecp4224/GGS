@@ -24,6 +24,20 @@ public class Mountains implements Generator {
     float[] overlay2;
     private Server _server;
     
+    @Override
+    public String getName() {
+    	return "Mountains";
+    }
+	@Override
+	public String[] getShortcuts() {
+		return new String[] { "Mountain" };
+	}
+    
+    /**
+     * The constructor for the mountains level generator
+     * @param server
+     *              The server the level is in
+     */
     public Mountains(Server _server) {
         this._server = _server;
     }

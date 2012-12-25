@@ -139,7 +139,7 @@ public class MySQL implements ISQL {
     
     /**
      * Get the IP of the MySQL database
-     * @return
+     * @return the IP
      */
     public String getIP() {
         return IP;
@@ -147,7 +147,7 @@ public class MySQL implements ISQL {
     
     /**
      * Get the port of the MySQL database
-     * @return
+     * @return the port
      */
     public int getPort() {
         return port;

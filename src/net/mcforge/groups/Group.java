@@ -207,9 +207,8 @@ public class Group {
 	}
 
 	/**
-	 * Get a list of groups
-	 * 
-	 * @return
+	 * Retrieves the list of existing groups
+	 * @return An ArrayList containing the list of groups
 	 */
 	public static final ArrayList<Group> getGroupList() {
 		return groups;

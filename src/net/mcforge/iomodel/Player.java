@@ -731,8 +731,8 @@ public class Player extends IOClient implements CommandExecutor {
      *           The name of the data
      * @param username
      *                The username
-     * @param getServer()
-     *              The getServer() the user belongs to
+     * @param server
+     *              The server the user belongs to
      * @return
      *         The data that was found, null if nothing was found or in an error occurred while getting the data.
      */
@@ -807,8 +807,8 @@ public class Player extends IOClient implements CommandExecutor {
      *           The key
      * @param username
      *                The username
-     * @param getServer()
-     *              The getServer() the user belongs to
+     * @param server
+     *              The server the user belongs to
      * @return
      *        True if the user does have the value, false if he doesn't
      */
@@ -850,8 +850,8 @@ public class Player extends IOClient implements CommandExecutor {
      *              The value
      * @param username
      *                The username to save
-     * @param getServer()
-     *              The getServer() this user belongs to
+     * @param server
+     *              The server this user belongs to
      * @throws SQLException
      *                     If there was a problem executing the SQL statement to update/insert
      *                     the object
@@ -1037,10 +1037,10 @@ public class Player extends IOClient implements CommandExecutor {
      * with the format "yyyy/MM/dd HH:mm:ss"
      * @param username
      *                The user to lookup
-     * @param getServer()
-     *              The getServer() this user belongs to
+     * @param server
+     *              The server this user belongs to
      * @return
-     *        The date in the formate of "yyyy/MM/dd HH:mm:ss"
+     *        The date in the format of "yyyy/MM/dd HH:mm:ss"
      */
     public static String getLastLogin(String username, Server server) {
         String data = "";

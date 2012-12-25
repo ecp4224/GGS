@@ -16,6 +16,15 @@ public class Pixel implements Generator {
 
     private Server _server;
     
+    @Override
+    public String getName() {
+    	return "Pixel";
+    }
+	@Override
+	public String[] getShortcuts() {
+		return new String[0];
+	}
+	
     /**
      * The constructor for the pixel level generator
      * 

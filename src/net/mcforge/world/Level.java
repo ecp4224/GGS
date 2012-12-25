@@ -152,6 +152,9 @@ public class Level implements Serializable {
         g.generate(this);
     }
 
+    /**
+     * Starts the level's physics ticker
+     */
     public void startPhysics(Server server) {
         physics = new Ticker(server, this);
         run = true;

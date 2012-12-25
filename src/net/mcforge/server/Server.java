@@ -21,6 +21,7 @@ import net.mcforge.API.EventSystem;
 import net.mcforge.API.action.CmdAbort;
 import net.mcforge.API.io.ServerLogEvent;
 import net.mcforge.API.plugin.CommandHandler;
+import net.mcforge.API.plugin.GeneratorHandler;
 import net.mcforge.API.plugin.PluginHandler;
 import net.mcforge.API.server.ServerStartedEvent;
 import net.mcforge.chat.ChatColor;
@@ -47,6 +48,14 @@ import net.mcforge.util.logger.Logger;
 import net.mcforge.util.properties.Properties;
 import net.mcforge.world.Level;
 import net.mcforge.world.LevelHandler;
+import net.mcforge.world.generator.FlatGrass;
+import net.mcforge.world.generator.Forest;
+import net.mcforge.world.generator.Island;
+import net.mcforge.world.generator.Mountains;
+import net.mcforge.world.generator.Ocean;
+import net.mcforge.world.generator.Pixel;
+import net.mcforge.world.generator.Rainbow;
+import net.mcforge.world.generator.Space;
 
 public final class Server implements LogInterface, Updatable {
     private PacketManager pm;
@@ -54,6 +63,7 @@ public final class Server implements LogInterface, Updatable {
     private LevelHandler lm;
     private Logger logger;
     private CommandHandler ch;
+    private GeneratorHandler gh;
     private UpdateService us;
     private Properties p;
     private PluginHandler ph;
@@ -158,6 +168,14 @@ public final class Server implements LogInterface, Updatable {
      */
     public final LevelHandler getLevelHandler() {
         return lm;
+    }
+    /**
+     * Gets the server's generator handler.
+     * 
+     * @return The {@link GeneratorHandler}
+     */
+    public final GeneratorHandler getGeneratorHandler() {
+    	return gh;
     }
     /**
      * The handler that handles events.
@@ -443,6 +461,7 @@ public final class Server implements LogInterface, Updatable {
         us = new UpdateService(this);
         m = new Messages(this);
         ph = new PluginHandler(this);
+        gh = new GeneratorHandler();
         pm = new PacketManager(this);
         pm.startReading();
         ph.loadplugins();
@@ -483,6 +502,17 @@ public final class Server implements LogInterface, Updatable {
         heartbeater.startBeating();
         Log("Created heartbeat");
         Log("Server url can be found in 'url.txt'");
+        
+        
+        gh.addGenerator(new FlatGrass(this));
+        gh.addGenerator(new Forest(this));
+        gh.addGenerator(new Island(this));
+        gh.addGenerator(new Mountains(this));
+        gh.addGenerator(new Ocean(this));
+        gh.addGenerator(new Pixel(this));
+        gh.addGenerator(new Rainbow(this));
+        gh.addGenerator(new Space(this));
+        
         getCommandHandler().addCommand(new CmdAbort());
         ServerStartedEvent sse = new ServerStartedEvent(this);
         es.callEvent(sse);
@@ -545,8 +575,8 @@ public final class Server implements LogInterface, Updatable {
     public void sendWorldMessage(String message, String world) {
         m.worldBroadcast(message, world);
     }
-        
     
+
     /**
      * Search for a player based on the name given.
      * A part of the name will be given and will find

@@ -37,7 +37,7 @@ public class PlayerCommandEvent extends PlayerEvent implements Cancelable {
      * 
      * @url http://stackoverflow.com/a/366532/1509091 - Thanks!
      * @param command
-     * @return
+     * @return 
      */
     public List<String> parseCommand(String command)
     {

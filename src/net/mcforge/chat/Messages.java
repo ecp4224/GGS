@@ -113,7 +113,11 @@ public class Messages {
      * @param array - The string array to join
      */
     public static String join(String[] array, String separator) {
+    	if (array.length == 0) {
+    		return "";
+    	}
         String ret = "";
+
         for (int i = 0; i < array.length; i++) {
             ret += array[i] + separator;
         }

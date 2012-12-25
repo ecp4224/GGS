@@ -48,7 +48,7 @@ public abstract class PhysicsBlock extends Block implements Tick {
     /**
      * Create a clone of the Physics Block.
      * @param s
-     * @return
+     * @return The clone of the block
      */
     public abstract PhysicsBlock clone(Server s);
     

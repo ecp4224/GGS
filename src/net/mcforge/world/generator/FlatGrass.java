@@ -15,6 +15,14 @@ import net.mcforge.world.Level;
 public class FlatGrass implements Generator {
 
     private Server _server;
+    @Override
+    public String getName() {
+    	return "FlatGrass";
+    }
+	@Override
+	public String[] getShortcuts() {
+		return new String[] { "Flat" };
+	}
     
     /**
      * The constructor for the flatgrass level generator

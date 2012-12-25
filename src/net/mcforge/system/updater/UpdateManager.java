@@ -13,8 +13,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
-import net.mcforge.API.plugin.PluginHandler;
-
 public class UpdateManager {
     private ArrayList<Updatable> updatelist = new ArrayList<Updatable>();
 
@@ -61,7 +59,7 @@ public class UpdateManager {
     /**
      * Get a list of objects that will be updating
      * @return
-     *        An {@link ArrayList> of udpatable objects
+     *        An {@link ArrayList} of udpatable objects
      */
     public ArrayList<Updatable> getUpdateObjects() {
         return updatelist;

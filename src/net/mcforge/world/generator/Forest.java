@@ -24,6 +24,15 @@ public class Forest implements Generator {
     float[] overlay2;
     private Server _server;
 
+    @Override
+    public String getName() {
+    	return "Forest";
+    }
+	@Override
+	public String[] getShortcuts() {
+		return new String[0];
+	}
+	
     /**
      * The constructor for the island level generator
      * @param server
