@@ -8,8 +8,10 @@
 package net.mcforge.API.plugin;
 
 import java.io.File;
+import sun.misc.URLClassPath;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -19,6 +21,7 @@ import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Properties;
+import java.util.Stack;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -26,13 +29,16 @@ import net.mcforge.API.ClassicExtension;
 import net.mcforge.API.ManualLoad;
 import net.mcforge.server.Server;
 import net.mcforge.system.updater.Updatable;
+import net.mcforge.world.Level;
 
 public class PluginHandler {
     private ArrayList<Plugin> plugins = new ArrayList<Plugin>();
     
     private ArrayList<ClassicExtension> ext = new ArrayList<ClassicExtension>();
     
-    private final ClassLoader loader = URLClassLoader.newInstance(new URL[] {}, getClass().getClassLoader());
+    private ArrayList<URL> urls = new ArrayList<URL>();
+    
+    private ClassLoader loader = URLClassLoader.newInstance(new URL[] {}, getClass().getClassLoader());
     
     private Server server;
     
@@ -89,8 +95,12 @@ public class PluginHandler {
         if ((ce = class_.getAnnotation(ClassicExtension.class)) != null)
             addExtension(ce);
     }
+    
+    public void loadFile(File file) {
+        loadFile(file, false);
+    }
 
-    public void loadFile(File arg0) {
+    public void loadFile(File arg0, boolean update) {
         JarFile file = null;
         try {
             file = new JarFile(arg0);
@@ -99,6 +109,8 @@ public class PluginHandler {
         }
         if (file != null) {
             Enumeration<JarEntry> entries = file.entries();
+            if (update)
+                removePath(arg0);
             addPath(arg0);
             if (entries != null) {
                 while (entries.hasMoreElements()) {
@@ -209,6 +221,7 @@ public class PluginHandler {
         plugin.onLoad(new String[]{"-normal"}); //Load called after added so plugins can disable/unload in the load method.
         PluginLoadEvent ple = new PluginLoadEvent(plugin, server);
         server.getEventSystem().callEvent(ple);
+        server.Log(plugin.getName() + " v" + plugin.getVersion() + " was loaded.");
     }
 
     public void loadplugins() {
@@ -225,6 +238,17 @@ public class PluginHandler {
         }
     }
     
+    @SuppressWarnings({ "deprecation" })
+    private void removePath(File f) {
+        try {
+            urls.remove(f.toURL());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        loader = URLClassLoader.newInstance(urls.toArray(new URL[urls.size()]), getClass().getClassLoader());
+        Level.getLoader().setClassLoader(loader);
+    }
+    
     @SuppressWarnings("deprecation")
     private void addPath(File f) {
         try {
@@ -232,6 +256,7 @@ public class PluginHandler {
             Method method = URLClassLoader.class.getDeclaredMethod("addURL", new Class[] {URL.class });
             method.setAccessible(true);
             method.invoke(loader, u);
+            urls.add(u);
         } catch (MalformedURLException e) {
             server.logError(e);
         } catch (NoSuchMethodException e) {
