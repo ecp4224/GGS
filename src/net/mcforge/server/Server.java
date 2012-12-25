@@ -152,6 +152,10 @@ public final class Server implements LogInterface, Updatable {
     public ChatColor defaultColor;
     
     /**
+     * Whether levels will be loaded when /goto is used if they're not already loaded 
+     */
+    public boolean loadOnGoto = true;
+    /**
      * The default filename for the system properties
      */
     public final String configpath = "system.config";
@@ -342,6 +346,7 @@ public final class Server implements LogInterface, Updatable {
         VerifyNames = getSystemProperties().getBool("Verify-Names");
         newSand = getSystemProperties().getBool("Advanced-Sand");
         CurrencyName = getSystemProperties().getValue("Money-Name");
+        loadOnGoto = getSystemProperties().getBool("Load-On-Goto");
         if (getSystemProperties().hasValue("defaultColor"))
             defaultColor = ChatColor.parse(getSystemProperties().getValue("defaultColor"));
         else

@@ -263,7 +263,7 @@ public class Group {
 
 	/**
 	 * Get the default group the player is assigned to if the player is not
-	 * assiged to any group
+	 * assigned to any group
 	 * 
 	 * @return The default group
 	 */
@@ -327,7 +327,13 @@ public class Group {
 	 * @return returns if action was successful
 	 */
 	public boolean setColor(ChatColor color) {
+		for (int i = 0; i < online.size(); i++) {
+			Player who = online.get(i);
+			if (who.getDisplayColor().getName().equals(who.getGroup().color.getName()))
+				who.setDisplayColor(color);
+		}
 		this.color = color;
+		
 		return saveGroups();
 	}
 	

@@ -80,6 +80,8 @@ public class Properties {
         p.addSetting("default_update_type", "auto_silent");
         p.addSetting("defaultColor", "&a");
         p.addComment("defaultColor", "The server's default color");
+        p.addSetting("Load-On-Goto", true);
+        p.addComment("Load-On-Goto", "Whether levels will be loaded when /goto is used if they're not already loaded");
         p.addSetting("WOM-Server-description", "A server");
         p.addComment("WOM-Server-description", "A description of the server");
         p.addSetting("WOM-Server-Flags", "[MCForge]");
@@ -162,6 +164,7 @@ public class Properties {
         DataInputStream in = new DataInputStream(fstream);
         BufferedReader br = new BufferedReader(new InputStreamReader(in));
         String strLine;
+
         while ((strLine = br.readLine()) != null)   {
             settings.add(strLine);
         }
