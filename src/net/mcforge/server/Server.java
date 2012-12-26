@@ -162,7 +162,7 @@ public final class Server implements LogInterface, Updatable {
     /**
      * The version of MCForge this server runs
      */
-    public final String VERSION = "6.0.0b5";
+    public final String VERSION = "6.0.0b6";
     /**
      * The handler that handles level loading,
      * level unloading and finding loaded
