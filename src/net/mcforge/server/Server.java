@@ -78,7 +78,7 @@ public final class Server implements LogInterface, Updatable {
     private int oldsize;
     private ArrayList<IOClient> cache;
     private ArrayList<Player> pcache;
-    public static final String[] devs = new String []{"Dmitchell", "501st_commander", "Lavoaster", "Alem_Zupa", "QuantumHive", "bemacized", "Shade2010", "edh649", "hypereddie10", "Gamemakergm", "Serado", "Wouto1997", "cazzar", "givo"};
+    public static final String[] devs = new String []{"Dmitchell", "501st_commander", "Lavoaster", "Alem_Zupa", "QuantumParticle", "bemacized", "Shade2010", "edh649", "hypereddie10", "Gamemakergm", "Serado", "Wouto1997", "cazzar", "givo"};
     /**
      * The name for currency on this server.
      */
