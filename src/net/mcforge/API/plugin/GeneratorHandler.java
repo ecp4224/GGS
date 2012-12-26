@@ -2,6 +2,7 @@ package net.mcforge.API.plugin;
 
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import net.mcforge.world.Generator;
@@ -11,7 +12,7 @@ import net.mcforge.world.Generator;
  * managing the server's level generators.
  */
 public class GeneratorHandler {
-    private List<Generator> generators = new ArrayList<>();
+    private List<Generator> generators = new ArrayList<Generator>();
     
     /**
      * Gets a generator from the list of available generators by its name
@@ -21,7 +22,7 @@ public class GeneratorHandler {
      * @return The generator if found, otherwise null.
      */
     public Generator findGenerator(String name) {
-    	for (int i = 0; i < generators.size(); i++) {
+        for (int i = 0; i < generators.size(); i++) {
     		Generator g = generators.get(i);
     		if (g.getName().equals(name))
     				return g;
@@ -41,8 +42,10 @@ public class GeneratorHandler {
      * @param g - The generator to remove
      */
     public void removeGenerator(Generator g) {
-    	if (generators.contains(g))
-    		generators.remove(g);
+        synchronized (generators) {
+            if (generators.contains(g))
+                generators.remove(g);
+        }
     }
     
     /**
@@ -51,7 +54,7 @@ public class GeneratorHandler {
      * @param name - The name of the generator to remove
      */
     public void removeGenerator(String name) {
-    	Generator g = findGenerator(name);
+        Generator g = findGenerator(name);
     	if (g == null)
     		throw new InvalidParameterException("The specified generator name for the removeGenerator method is invalid! A generator with that name doesn't exist!");
     	removeGenerator(g);
@@ -64,8 +67,10 @@ public class GeneratorHandler {
      * @param g - The generator to add
      */
     public void addGenerator(Generator g) {
-    	if (!generators.contains(g))
-    		generators.add(g);
+        synchronized (generators) {
+            if (!generators.contains(g))
+                generators.add(g);
+        }
     }
     
     /**
@@ -73,7 +78,7 @@ public class GeneratorHandler {
      * 
      * @return A list containing the loaded generators
      */
-    public List<Generator> getGenerators() {
-    	return generators;
+    public final List<Generator> getGenerators() {
+    	return Collections.unmodifiableList(generators);
     }
 }
