@@ -150,7 +150,6 @@ public final class Server implements LogInterface, Updatable {
      * have a color code in front 
      */
     public ChatColor defaultColor;
-    
     /**
      * Whether levels will be loaded when /goto is used if they're not already loaded 
      */
