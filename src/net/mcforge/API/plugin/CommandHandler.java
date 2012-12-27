@@ -144,6 +144,8 @@ public class CommandHandler {
             setDefaults(cmd);
             loadPermissions();
             savePermissions();
+            CommandLoadEvent cle = new CommandLoadEvent(cmd, _server);
+            _server.getEventSystem().callEvent(cle);
         } catch (IOException e) {
             _server.logError(e);
         }

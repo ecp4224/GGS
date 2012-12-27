@@ -163,6 +163,12 @@ public final class Server implements LogInterface, Updatable {
      */
     public final String VERSION = "6.0.0b6";
     /**
+     * The version number of this MCForge server </br>
+     * Where 600 would be 6.0.0 </br>
+     * And where 600.6 would be 6.0.0b6
+     */
+    public final double VERSION_NUMBER = 600.6;
+    /**
      * The handler that handles level loading,
      * level unloading and finding loaded
      * levels

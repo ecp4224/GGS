@@ -192,8 +192,7 @@ public class PluginHandler {
                                     server.getCommandHandler().addCommand(c);
                                     if (c instanceof Updatable)
                                         server.getUpdateService().getUpdateManager().add((Updatable)c);
-                                    CommandLoadEvent cle = new CommandLoadEvent(c, server);
-                                    server.getEventSystem().callEvent(cle);
+                                    
                                 } catch (Exception ex) {
                                     ex.printStackTrace();
                                 }
