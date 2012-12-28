@@ -213,7 +213,6 @@ public class PluginHandler {
                                         if (findPlugin(s) == null) {
                                             canload = false;
                                             required.put(plugin, s);
-                                            break;
                                         }
                                     }
                                 }
