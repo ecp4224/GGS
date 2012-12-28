@@ -18,11 +18,15 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 import net.mcforge.API.ClassicExtension;
+import net.mcforge.API.Dependency;
 import net.mcforge.API.ManualLoad;
 import net.mcforge.server.Server;
 import net.mcforge.system.updater.Updatable;
@@ -70,6 +74,28 @@ public class PluginHandler {
     }
     
     /**
+     * Look for a loaded plugin using part of/the full name of the plugin
+     * @param name
+     *            part of or the full name of the plugin
+     * @return
+     *        If more than 1 plugin is found, then null is returned.
+     *        If no plugin is found, then null is returned.
+     *        If a plugin is found, then the loaded plugin is returned.
+     */
+    public Plugin findPlugin(String name) {
+        Plugin toreturn = null;
+        for (Plugin p : getLoadedPlugins()) {
+            if (p.getName().equals(name))
+                return p;
+            if (p.getName().indexOf(name) != -1 && toreturn == null)
+                toreturn = p;
+            else if (p.getName().indexOf(name) != -1 && toreturn != null)
+                return null;
+        }
+        return toreturn;
+    }
+    
+    /**
      * Gets the currently loaded Classic extensions
      * 
      * @return An ArrayList containing all the Classic extensions currently loaded
@@ -97,7 +123,8 @@ public class PluginHandler {
         loadFile(file, false);
     }
 
-    public void loadFile(File arg0, boolean update) {
+    public Map<Plugin, String> loadFile(File arg0, boolean update) {
+        Map<Plugin, String> required = new HashMap<Plugin, String>();
         JarFile file = null;
         try {
             file = new JarFile(arg0);
@@ -176,11 +203,24 @@ public class PluginHandler {
                                     System.out.println("Plugin could not be load: " + name);
                                     continue;
                                 }
-                                loadPlugin(plugin);
-                                if (plugin instanceof Updatable)
-                                    server.getUpdateService().getUpdateManager().add((Updatable)plugin);
                                 plugin.filename = arg0.getName();
                                 plugin.filepath = arg0.getAbsolutePath();
+                                boolean canload = true;
+                                if (class_.getAnnotation(Dependency.class) != null) {
+                                    Dependency requirements = class_.getAnnotation(Dependency.class);
+                                    String[] plugins = requirements.plugins();
+                                    for (String s : plugins) {
+                                        if (findPlugin(s) == null) {
+                                            canload = false;
+                                            required.put(plugin, s);
+                                            break;
+                                        }
+                                    }
+                                }
+                                if (!canload)
+                                    continue;
+                                loadPlugin(plugin);
+                                
                             } else {
                                 if (!Command.class.isAssignableFrom(class_)) {
                                     continue;
@@ -210,6 +250,7 @@ public class PluginHandler {
                 }
             }
         }
+        return required;
     }
     
     public void loadPlugin(Plugin plugin) {
@@ -218,9 +259,12 @@ public class PluginHandler {
         PluginLoadEvent ple = new PluginLoadEvent(plugin, server);
         server.getEventSystem().callEvent(ple);
         server.Log(plugin.getName() + " v" + plugin.getVersion() + " was loaded.");
+        if (plugin instanceof Updatable)
+            server.getUpdateService().getUpdateManager().add((Updatable)plugin);
     }
 
     public void loadplugins() {
+        Map<Plugin, String> require = new HashMap<Plugin, String>();
         File pluginFolder = new File("plugins/");
         if (!pluginFolder.exists()) {
             pluginFolder.mkdir();
@@ -229,8 +273,24 @@ public class PluginHandler {
         File[] pluginFiles = pluginFolder.listFiles();
         for (int i = 0; i < pluginFiles.length; i++) {
             if (pluginFiles[i].isFile() && pluginFiles[i].getName().endsWith(".jar")) {
-                loadFile(pluginFiles[i]);
+                Map<Plugin, String> temp = loadFile(pluginFiles[i], false);
+                for (Entry<Plugin, String> p : temp.entrySet()) {
+                    require.put(p.getKey(), p.getValue());
+                }
+                for (Entry<Plugin, String> p : require.entrySet()) {
+                    if (findPlugin(p.getValue()) != null) {
+                        loadPlugin(p.getKey());
+                        require.remove(p.getKey());
+                    }
+                }
             }
+        }
+        if (require.size() > 0) {
+            server.Log("The following plugins could not be loaded due to dependency issues:");
+            for (Entry<Plugin, String> p : require.entrySet()) {
+                server.Log(p.getKey().getFileName() + " requires " + p.getValue());
+            }
+            require.clear();
         }
     }
     
