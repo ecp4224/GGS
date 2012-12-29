@@ -16,13 +16,13 @@ import java.util.Set;
 import net.mcforge.server.Server;
 
 public class EventSystem {
-    
+
     private Server server;
-    
+
     public EventSystem(Server server) {
         this.server = server;
     }
-    
+
     public void callEvent(Event event) {
         EventList events = event.getEvents();
         RegisteredListener[] listeners = events.getRegisteredListeners();
@@ -46,19 +46,19 @@ public class EventSystem {
             }
         }
     }
-    
+
     private EventList getEventListeners(Class<? extends Event> type) {
         try {
             Method method = getRegistrationClass(type).getDeclaredMethod("getEventList");
             method.setAccessible(true);
             return (EventList) method.invoke(null);
         } catch (Exception e) {
-        server.Log("==!EVENT ERROR!==");
-        server.logError(e);
+            server.Log("==!EVENT ERROR!==");
+            server.logError(e);
             return null;
         }
     }
-    
+
     private Class<? extends Event> getRegistrationClass(Class<? extends Event> clazz) throws IllegalAccessException {
         try {
             clazz.getDeclaredMethod("getEventList");
@@ -73,7 +73,7 @@ public class EventSystem {
             }
         }
     }
-    
+
     public Map<Class<? extends Event>, Set<RegisteredListener>> addMuffins(Listener listen) {
         Map<Class<? extends Event>, Set<RegisteredListener>> ret = new HashMap<Class<? extends Event>, Set<RegisteredListener>>();
         Method[] methods;
@@ -83,29 +83,29 @@ public class EventSystem {
             return null;
         }
         for (final Method m : methods) {
-        if (m.getAnnotation(EventHandler.class) == null)
-        continue;
-        if (!Event.class.isAssignableFrom(m.getParameterTypes()[0]) || m.getParameterTypes().length > 1)
-        continue;
-        final Class<? extends Event> eventClass = m.getParameterTypes()[0].asSubclass(Event.class);
-        m.setAccessible(true);
-        Set<RegisteredListener> events = ret.get(eventClass);
-        if (events == null) {
-        events = new HashSet<RegisteredListener>();
-        ret.put(eventClass, events);
-        }
-        Executor exe = new Executor() {
-        public void execute(Listener listen, Event e) {
-        try {
-        if (!eventClass.isAssignableFrom(e.getClass()))
-        return;
-        m.invoke(listen, e);
-        } catch (Exception e1) {
-            server.logError(e1);
-        }
-        }
-        };
-        events.add(new RegisteredListener(listen, exe, m.getAnnotation(EventHandler.class).priority()));
+            if (m.getAnnotation(EventHandler.class) == null)
+                continue;
+            if (!Event.class.isAssignableFrom(m.getParameterTypes()[0]) || m.getParameterTypes().length > 1)
+                continue;
+            final Class<? extends Event> eventClass = m.getParameterTypes()[0].asSubclass(Event.class);
+            m.setAccessible(true);
+            Set<RegisteredListener> events = ret.get(eventClass);
+            if (events == null) {
+                events = new HashSet<RegisteredListener>();
+                ret.put(eventClass, events);
+            }
+            Executor exe = new Executor() {
+                public void execute(Listener listen, Event e) {
+                    try {
+                        if (!eventClass.isAssignableFrom(e.getClass()))
+                            return;
+                        m.invoke(listen, e);
+                    } catch (Exception e1) {
+                        server.logError(e1);
+                    }
+                }
+            };
+            events.add(new RegisteredListener(listen, exe, m.getAnnotation(EventHandler.class).priority()));
         }
         return ret;
     }

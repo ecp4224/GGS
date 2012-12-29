@@ -359,7 +359,7 @@ public class Group {
 	    ArrayList<String> lines = new ArrayList<String>();
 	    lines.add("<Groups>");
 	    for (Group g : groups) {
-	        lines.add("<Group " + (g.parent == null ? ">" : "\"" + g.parent.name + "\">"));
+	        lines.add("<Group" + (g.parent == null ? ">" : " parent=\"" + g.parent.name + "\">"));
 	        lines.add("<name>" + g.name + "</name>");
 	        lines.add("<isop>" + g.isOP + "</isop>");
 	        lines.add("<permission>" + g.permissionlevel + "</permission>");

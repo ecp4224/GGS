@@ -103,8 +103,8 @@ public class SQLite implements ISQL {
     public void Connect(Server server) {
         this.server = server;
         try {
-            if (!new File("MCForge.db").exists())
-                new File("MCForge.db").createNewFile();
+            if (!new File(getFile()).exists())
+                new File(getFile()).createNewFile();
             DriverManager.registerDriver(new org.sqlite.JDBC());
             connection = DriverManager.getConnection(PATH + getFile());
         } catch (Exception e) {
