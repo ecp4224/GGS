@@ -27,6 +27,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import net.mcforge.API.EventHandler;
 import net.mcforge.API.Listener;
+import net.mcforge.API.player.PlayerDisconnectEvent;
 import net.mcforge.API.player.PlayerLoginEvent;
 import net.mcforge.API.plugin.Command;
 import net.mcforge.chat.ChatColor;
@@ -214,7 +215,7 @@ public class Group {
 		return groups;
 	}
 
-	private class Listen implements Listener {
+	public class Listen implements Listener {
 		@EventHandler
 		public void connect(PlayerLoginEvent event) {
 			for (String member : members) {
@@ -223,6 +224,12 @@ public class Group {
 					return;
 				}
 			}
+		}
+		
+		@EventHandler
+		public void disconnect(PlayerDisconnectEvent event) {
+		    if (online.contains(event.getPlayer()))
+		        online.remove(event.getPlayer());
 		}
 	}
 

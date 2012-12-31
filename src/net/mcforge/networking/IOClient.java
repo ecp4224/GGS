@@ -66,6 +66,15 @@ public class IOClient {
     public InetAddress getInetAddress() {
         return address;
     }
+    
+    /**
+     * Returns the connection state of the IOClient 
+     * @return
+     *        return trues if this IOClient is connected to a client.
+     */
+    public boolean isConnected() {
+        return client.isConnected() && !client.isClosed() && connected;
+    }
 
 
     /**
@@ -77,6 +86,7 @@ public class IOClient {
     public long getReaderThreadID() {
         return readID;
     }
+    
     /**
      * The constructor for IOClient
      * @param client

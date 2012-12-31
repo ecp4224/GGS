@@ -448,6 +448,7 @@ public final class Server implements LogInterface, Updatable {
     /**
      * Start the server
      */
+    @SuppressWarnings("restriction")
     public void start(Console console, boolean startSQL) {
         if (Running)
             return;

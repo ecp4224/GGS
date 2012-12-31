@@ -69,6 +69,7 @@ public class Player extends IOClient implements CommandExecutor {
     protected String custom_name;
     private HashMap<String, Object> extra = new HashMap<String, Object>();
     private static final DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+    private static MessageDigest digest;
     /**
      * Weather or not the player is logged in
      */
@@ -133,19 +134,10 @@ public class Player extends IOClient implements CommandExecutor {
      * The old pitch of the player
      */
     public byte oldpitch;
-
-    public static MessageDigest digest;
-    /**
-     * Create a new Player object
-     * @param client The socket the player used to connect
-     * @param pm The PacketManager the player connected to
-     */
-
     /**
      * The activity of the player.
      */
     private boolean afk;
-
     /**
      * This is the last byte in the Connect Packet
      * sent by the client.
