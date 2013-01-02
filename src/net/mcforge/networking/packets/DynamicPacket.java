@@ -13,7 +13,7 @@ public abstract class DynamicPacket extends Packet {
 
     public abstract void handle(Server server, IOClient player, InputStream reader);
     
-    public abstract void write(Server server, IOClient player, OutputStream writer);
+    public abstract void write(Server server, IOClient player, OutputStream writer, Object... obj);
     
 
     @Override
@@ -23,7 +23,12 @@ public abstract class DynamicPacket extends Packet {
 
     @Override
     public void Write(IOClient client, Server servers) {
-        throw new InvalidPacketCall("This is a dynamic packet, you must provide an OutputStreamWriter.");
+        write(servers, client, client.getOutputStream());
+    }
+    
+    @Override
+    public void Write(IOClient client, Server server, Object... obj) {
+        write(server, client, client.getOutputStream(), obj);
     }
     
     @Override

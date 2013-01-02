@@ -23,6 +23,6 @@ public class Handshake extends DynamicPacket {
     }
 
     @Override
-    public void write(Server server, IOClient player, OutputStream writer) { }
+    public void write(Server server, IOClient player, OutputStream writer, Object... obj) { }
 
 }

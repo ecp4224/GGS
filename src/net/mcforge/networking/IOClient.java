@@ -127,6 +127,8 @@ public class IOClient {
      * Disconnect this client from the server
      */
     public void closeConnection() {
+        if (!connected)
+            return;
         try {
             pm.server.Log("Closing connection");
             connected = false;
@@ -258,6 +260,7 @@ public class IOClient {
                     break;
                 }
             }
+            closeConnection();
         }
     }
 }
