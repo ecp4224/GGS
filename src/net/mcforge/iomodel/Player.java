@@ -710,7 +710,7 @@ public class Player extends IOClient implements CommandExecutor {
     @SuppressWarnings("unchecked")
     public <T> T getAttribute(String key) {
         if (!extra.containsKey(key)) {
-            T value = (T)getAttribute(key, username, getServer());
+            T value = (T)getPlayerAttribute(key, username, getServer());
             extra.put(key, value);
             return (T)value;
         }
@@ -729,7 +729,7 @@ public class Player extends IOClient implements CommandExecutor {
      *         The data that was found, null if nothing was found or in an error occurred while getting the data.
      */
     @SuppressWarnings("unchecked")
-    public static <T> T getAttribute(String key, String username, Server server) {
+    public static <T> T getPlayerAttribute(String key, String username, Server server) {
         Object object = null;
         T value = null;
         ResultSet r = server.getSQL().fillData("SELECT count(*) FROM " + server.getSQL().getPrefix() + "_extra WHERE name='" + username + "' AND setting='" + key + "'");
@@ -1056,7 +1056,7 @@ public class Player extends IOClient implements CommandExecutor {
     public static String getLastLogin(String username, Server server) {
         String data = "";
         if (hasAttribute("lastLogin", username, server))
-            data = getAttribute("lastLogin", username, server);
+            data = getPlayerAttribute("lastLogin", username, server);
         return data;
     }
     
