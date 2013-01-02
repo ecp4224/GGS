@@ -429,9 +429,9 @@ public class Player extends IOClient implements CommandExecutor {
         nick = ChatColor.convertColorCodes(nick);
         custom_name = nick;
         respawn();
-        this.setValue("mcf_nick", custom_name);
+        this.setAttribute("mcf_nick", custom_name);
         try {
-            this.saveValue("mcf_nick");
+            this.saveAttribute("mcf_nick");
         } catch (NotSerializableException e) {
             e.printStackTrace();
         } catch (SQLException e) {
@@ -482,9 +482,9 @@ public class Player extends IOClient implements CommandExecutor {
     public void setPrefix(String prefix) {
         this.prefix = prefix;
 
-        this.setValue("mcf_prefix", this.prefix);
+        this.setAttribute("mcf_prefix", this.prefix);
         try {
-            this.saveValue("mcf_prefix");
+            this.saveAttribute("mcf_prefix");
         } catch (NotSerializableException e) {
             e.printStackTrace();
         } catch (SQLException e) {
@@ -519,9 +519,9 @@ public class Player extends IOClient implements CommandExecutor {
     public void setShowPrefix(boolean value) {
         this.showprefix = value;
         respawn();
-        this.setValue("mcf_showprefix", value);
+        this.setAttribute("mcf_showprefix", value);
         try {
-            this.saveValue("mcf_showprefix");
+            this.saveAttribute("mcf_showprefix");
         } catch (NotSerializableException e) {
             e.printStackTrace();
         } catch (SQLException e) {
@@ -543,9 +543,9 @@ public class Player extends IOClient implements CommandExecutor {
     public void setDisplayColor(ChatColor color) {
         this.color = color;
         respawn();
-        this.setValue("mcf_color", this.color);
+        this.setAttribute("mcf_color", this.color);
         try {
-            this.saveValue("mcf_color");
+            this.saveAttribute("mcf_color");
         } catch (NotSerializableException e) {
             e.printStackTrace();
         } catch (SQLException e) {
@@ -688,9 +688,9 @@ public class Player extends IOClient implements CommandExecutor {
 
     public void setMoney(int amount) {
         this.money = amount;
-        setValue("mcf_money", this.money);
+        setAttribute("mcf_money", this.money);
         try {
-            saveValue("mcf_money");
+            saveAttribute("mcf_money");
         } catch (NotSerializableException e) {
             e.printStackTrace();
         } catch (SQLException e) {
@@ -710,7 +710,7 @@ public class Player extends IOClient implements CommandExecutor {
     @SuppressWarnings("unchecked")
     public <T> T getValue(String key) {
         if (!extra.containsKey(key)) {
-            T value = (T)getValue(key, username, getServer());
+            T value = (T)getAttribute(key, username, getServer());
             extra.put(key, value);
             return (T)value;
         }
@@ -729,7 +729,7 @@ public class Player extends IOClient implements CommandExecutor {
      *         The data that was found, null if nothing was found or in an error occurred while getting the data.
      */
     @SuppressWarnings("unchecked")
-    public static <T> T getValue(String key, String username, Server server) {
+    public static <T> T getAttribute(String key, String username, Server server) {
         Object object = null;
         T value = null;
         ResultSet r = server.getSQL().fillData("SELECT count(*) FROM " + server.getSQL().getPrefix() + "_extra WHERE name='" + username + "' AND setting='" + key + "'");
@@ -786,11 +786,11 @@ public class Player extends IOClient implements CommandExecutor {
      * @return
      *        True if the user does have the value, false if he doesn't
      */
-    public boolean hasValue(String key) {
+    public boolean hasAttribute(String key) {
         if (extra.containsKey(key))
             return true;
         else
-            return hasValue(key, username, getServer());
+            return hasAttribute(key, username, getServer());
     }
     
     /**
@@ -804,7 +804,7 @@ public class Player extends IOClient implements CommandExecutor {
      * @return
      *        True if the user does have the value, false if he doesn't
      */
-    public static boolean hasValue(String key, String username, Server server) {
+    public static boolean hasAttribute(String key, String username, Server server) {
         ResultSet r = server.getSQL().fillData("SELECT count(*) FROM " + server.getSQL().getPrefix() + "_extra WHERE name='" + username + "' AND setting='" + key + "'");
         int size = 0;
         try {
@@ -828,10 +828,29 @@ public class Player extends IOClient implements CommandExecutor {
      * @param object 
      *              The object to save
      */
-    public void setValue(String key, Object object) {
+    public void setAttribute(String key, Object object) {
+        removeAttribute(key);
+        extra.put(key, object);
+    }
+    
+    /**
+     * Removes an attribute this player has stored. This will also remove the attribute from the SQL table if
+     * its saved
+     * @param key
+     *           The attribute to remove
+     */
+    public void removeAttribute(String key) {
         if (extra.containsKey(key))
             extra.remove(key);
-        extra.put(key, object);
+        PreparedStatement pstmt;
+        try {
+            pstmt = getServer().getSQL().getConnection().prepareStatement("DELETE FROM " + getServer().getSQL().getPrefix() + "_extra WHERE name = ? AND setting = ?");
+            pstmt.setString(1, username);
+            pstmt.setString(2, key);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
     
     /**
@@ -852,7 +871,7 @@ public class Player extends IOClient implements CommandExecutor {
      * @throw NotSerializableException
      *      
      */
-    public static void setValue(String key, Object object, String username, Server server) throws SQLException, IOException, NotSerializableException {
+    public static void setAttribute(String key, Object object, String username, Server server) throws SQLException, IOException, NotSerializableException {
         if (object instanceof Serializable) {
             if (object instanceof Boolean)
                 object = ((Boolean)object).toString();
@@ -900,10 +919,10 @@ public class Player extends IOClient implements CommandExecutor {
      * @throw NotSerializableException
      *                                
      */
-    public void saveValue(String key) throws SQLException, IOException, NotSerializableException {
+    public void saveAttribute(String key) throws SQLException, IOException, NotSerializableException {
         if (!extra.containsKey(key))
             return;
-        setValue(key, extra.get(key), username, getServer());
+        setAttribute(key, extra.get(key), username, getServer());
     }
 
     private static <T> void saveToMySQL(String key, T o, boolean add, Server server, String username) throws IOException, SQLException {
@@ -965,13 +984,13 @@ public class Player extends IOClient implements CommandExecutor {
     }
 
     private void loadExtraData() {
-        if (this.hasValue("mcf_prefix"))
+        if (this.hasAttribute("mcf_prefix"))
             this.prefix = (String)getValue("mcf_prefix");
-        if (this.hasValue("mcf_color"))
+        if (this.hasAttribute("mcf_color"))
             this.color = ChatColor.parse((String)getValue("mcf_color").toString());
-        if (this.hasValue("mcf_showprefix"))
+        if (this.hasAttribute("mcf_showprefix"))
             this.showprefix = ((Boolean)(getValue("mcf_showprefix"))).booleanValue();
-        if (this.hasValue("mcf_nick"))
+        if (this.hasAttribute("mcf_nick"))
             this.custom_name = getValue("mcf_nick");
         
         
@@ -979,17 +998,17 @@ public class Player extends IOClient implements CommandExecutor {
             final Calendar cal = Calendar.getInstance();
             final String date = dateFormat.format(cal.getTime());
             int login = 0;
-            if (hasValue("totalLogin"))
+            if (hasAttribute("totalLogin"))
                 login = ((Integer)(getValue("totalLogin"))).intValue();
             login++;
-            setValue("totalLogin", login);
-            saveValue("totalLogin");
+            setAttribute("totalLogin", login);
+            saveAttribute("totalLogin");
             if (login == 1) {
-                setValue("firstLogin", date);
-                saveValue("firstLogin");
+                setAttribute("firstLogin", date);
+                saveAttribute("firstLogin");
             }
-            setValue("lastLogin", date);
-            saveValue("lastLogin");
+            setAttribute("lastLogin", date);
+            saveAttribute("lastLogin");
         } catch (NotSerializableException e) {
             e.printStackTrace();
         } catch (SQLException e) {
@@ -1006,7 +1025,7 @@ public class Player extends IOClient implements CommandExecutor {
      */
     public int getTotalLogin() {
         int count = 0;
-        if (hasValue("totalLogin"))
+        if (hasAttribute("totalLogin"))
             count = ((Integer)(getValue("totalLogin"))).intValue();
         return count;
     }
@@ -1019,7 +1038,7 @@ public class Player extends IOClient implements CommandExecutor {
      */
     public String getFirstLogin() {
         String data = "";
-        if (hasValue("firstLogin"))
+        if (hasAttribute("firstLogin"))
             data = getValue("firstLogin");
         return data;
     }
@@ -1036,8 +1055,8 @@ public class Player extends IOClient implements CommandExecutor {
      */
     public static String getLastLogin(String username, Server server) {
         String data = "";
-        if (hasValue("lastLogin", username, server))
-            data = getValue("lastLogin", username, server);
+        if (hasAttribute("lastLogin", username, server))
+            data = getAttribute("lastLogin", username, server);
         return data;
     }
     
@@ -1048,7 +1067,7 @@ public class Player extends IOClient implements CommandExecutor {
      */
     public int getTotalKicked() {
         int data = 0;
-        if (hasValue("totalKicked"))
+        if (hasAttribute("totalKicked"))
             data = ((Integer)(getValue("totalKicked"))).intValue();
         return data;
     }
@@ -1334,12 +1353,12 @@ public class Player extends IOClient implements CommandExecutor {
         else
             chat.serverBroadcast(username + " has been kicked (" + reason + ")");
         int kicked = 0;
-        if (hasValue("totalKicked"))
+        if (hasAttribute("totalKicked"))
             kicked = ((Integer)(getValue("totalKicked"))).intValue();
         kicked++;
-        setValue("totalKicked", kicked);
+        setAttribute("totalKicked", kicked);
         try {
-            saveValue("totalKicked");
+            saveAttribute("totalKicked");
         } catch (NotSerializableException e) {
             e.printStackTrace();
         } catch (SQLException e) {
