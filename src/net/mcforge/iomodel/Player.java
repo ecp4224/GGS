@@ -966,13 +966,13 @@ public class Player extends IOClient implements CommandExecutor {
 
     private void loadExtraData() {
         if (this.hasValue("mcf_prefix"))
-            this.prefix = this.getValue("mcf_prefix");
+            this.prefix = (String)getValue("mcf_prefix");
         if (this.hasValue("mcf_color"))
-            this.color = ChatColor.parse(this.getValue("mcf_color").toString());
+            this.color = ChatColor.parse((String)getValue("mcf_color").toString());
         if (this.hasValue("mcf_showprefix"))
-            this.showprefix = this.getValue("mcf_showprefix");
+            this.showprefix = ((Boolean)(getValue("mcf_showprefix"))).booleanValue();
         if (this.hasValue("mcf_nick"))
-            this.custom_name = this.getValue("mcf_nick");
+            this.custom_name = getValue("mcf_nick");
         
         
         try {
@@ -980,7 +980,7 @@ public class Player extends IOClient implements CommandExecutor {
             final String date = dateFormat.format(cal.getTime());
             int login = 0;
             if (hasValue("totalLogin"))
-                login = getValue("totalLogin");
+                login = ((Integer)(getValue("totalLogin"))).intValue();
             login++;
             setValue("totalLogin", login);
             saveValue("totalLogin");
@@ -1007,7 +1007,7 @@ public class Player extends IOClient implements CommandExecutor {
     public int getTotalLogin() {
         int count = 0;
         if (hasValue("totalLogin"))
-            count = getValue("totalLogin");
+            count = ((Integer)(getValue("totalLogin"))).intValue();
         return count;
     }
     
@@ -1049,7 +1049,7 @@ public class Player extends IOClient implements CommandExecutor {
     public int getTotalKicked() {
         int data = 0;
         if (hasValue("totalKicked"))
-            data = getValue("totalKicked");
+            data = ((Integer)(getValue("totalKicked"))).intValue();
         return data;
     }
 
@@ -1335,7 +1335,7 @@ public class Player extends IOClient implements CommandExecutor {
             chat.serverBroadcast(username + " has been kicked (" + reason + ")");
         int kicked = 0;
         if (hasValue("totalKicked"))
-            kicked = getValue("totalKicked");
+            kicked = ((Integer)(getValue("totalKicked"))).intValue();
         kicked++;
         setValue("totalKicked", kicked);
         try {
