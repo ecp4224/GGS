@@ -417,11 +417,11 @@ public final class Server implements LogInterface, Updatable {
         }
         else
             sql = set;
-        sql.Connect(this);
+        sql.connect(this);
         final String[] commands = new String[] {
                 "CREATE TABLE if not exists " + sql.getPrefix() + "_extra (name VARCHAR(20), setting TEXT, value BLOB);",
         };
-        sql.ExecuteQuery(commands);
+        sql.executeQuery(commands);
         Log("SQL all set.");
     }
     

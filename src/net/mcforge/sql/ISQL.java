@@ -14,13 +14,13 @@ import net.mcforge.server.Server;
 
 public interface ISQL {
     
-    void ExecuteQuery(String command);
+    void executeQuery(String command);
     
-    void ExecuteQuery(String[] commands);
+    void executeQuery(String[] commands);
     
     ResultSet fillData(String command);
     
-    void Connect(Server server);
+    void connect(Server server);
     
     void setPrefix(String prefix);
     

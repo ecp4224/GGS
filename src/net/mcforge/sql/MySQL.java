@@ -27,12 +27,12 @@ public class MySQL implements ISQL {
     protected String pass;
     private Server server;
     @Override
-    public void ExecuteQuery(String command) {
+    public void executeQuery(String command) {
         try {
             if (connection.isClosed())
-                Connect(server);
+                connect(server);
         } catch (SQLException e) {
-            Connect(server);
+            connect(server);
         }
         try {
             PreparedStatement pstm = connection.prepareStatement(command);
@@ -43,12 +43,12 @@ public class MySQL implements ISQL {
     }
 
     @Override
-    public void ExecuteQuery(String[] commands) {
+    public void executeQuery(String[] commands) {
         try {
             if (connection.isClosed())
-                Connect(server);
+                connect(server);
         } catch (SQLException e) {
-            Connect(server);
+            connect(server);
         }
         try {
             Statement statement = connection.createStatement();
@@ -74,9 +74,9 @@ public class MySQL implements ISQL {
     public ResultSet fillData(String command) {
         try {
             if (connection.isClosed())
-                Connect(server);
+                connect(server);
         } catch (SQLException e) {
-            Connect(server);
+            connect(server);
         }
         try {
             return connection.prepareStatement(command).executeQuery();
@@ -87,7 +87,7 @@ public class MySQL implements ISQL {
     }
 
     @Override
-    public void Connect(Server server) {
+    public void connect(Server server) {
         this.server = server;
         try {
             DriverManager.registerDriver(new com.mysql.jdbc.Driver());

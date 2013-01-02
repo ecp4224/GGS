@@ -24,12 +24,12 @@ public class SQLite implements ISQL {
     private String file;
     private final String PATH = "jdbc:sqlite:";
     @Override
-    public void ExecuteQuery(String command) {
+    public void executeQuery(String command) {
         try {
             if (connection.isClosed())
-                Connect(server);
+                connect(server);
         } catch (SQLException e) {//
-            Connect(server);
+            connect(server);
         }
         try {
             Statement statement = connection.createStatement();
@@ -59,12 +59,12 @@ public class SQLite implements ISQL {
     }
 
     @Override
-    public void ExecuteQuery(String[] commands) {
+    public void executeQuery(String[] commands) {
         try {
             if (connection.isClosed())
-                Connect(server);
+                connect(server);
         } catch (SQLException e) {
-            Connect(server);
+            connect(server);
         }
         try {
             Statement statement = connection.createStatement();
@@ -87,9 +87,9 @@ public class SQLite implements ISQL {
     public ResultSet fillData(String command) {
         try {
             if (connection.isClosed())
-                Connect(server);
+                connect(server);
         } catch (SQLException e) {
-            Connect(server);
+            connect(server);
         }
         try {
             return connection.prepareStatement(command).executeQuery();
@@ -100,7 +100,7 @@ public class SQLite implements ISQL {
     }
 
     @Override
-    public void Connect(Server server) {
+    public void connect(Server server) {
         this.server = server;
         try {
             if (!new File(getFile()).exists())
