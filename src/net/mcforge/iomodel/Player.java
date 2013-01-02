@@ -708,7 +708,7 @@ public class Player extends IOClient implements CommandExecutor {
      *        The data that was stored.
      */
     @SuppressWarnings("unchecked")
-    public <T> T getValue(String key) {
+    public <T> T getAttribute(String key) {
         if (!extra.containsKey(key)) {
             T value = (T)getAttribute(key, username, getServer());
             extra.put(key, value);
@@ -822,7 +822,7 @@ public class Player extends IOClient implements CommandExecutor {
 
     /**
      * Store extra data into the player, you can get this data back by
-     * using the {@link Player#getValue(String)} method
+     * using the {@link Player#getAttribute(String)} method
      * @param key 
      *           The name of the data
      * @param object 
@@ -985,13 +985,13 @@ public class Player extends IOClient implements CommandExecutor {
 
     private void loadExtraData() {
         if (this.hasAttribute("mcf_prefix"))
-            this.prefix = (String)getValue("mcf_prefix");
+            this.prefix = (String)getAttribute("mcf_prefix");
         if (this.hasAttribute("mcf_color"))
-            this.color = ChatColor.parse((String)getValue("mcf_color").toString());
+            this.color = ChatColor.parse((String)getAttribute("mcf_color").toString());
         if (this.hasAttribute("mcf_showprefix"))
-            this.showprefix = ((Boolean)(getValue("mcf_showprefix"))).booleanValue();
+            this.showprefix = ((Boolean)(getAttribute("mcf_showprefix"))).booleanValue();
         if (this.hasAttribute("mcf_nick"))
-            this.custom_name = getValue("mcf_nick");
+            this.custom_name = getAttribute("mcf_nick");
         
         
         try {
@@ -999,7 +999,7 @@ public class Player extends IOClient implements CommandExecutor {
             final String date = dateFormat.format(cal.getTime());
             int login = 0;
             if (hasAttribute("totalLogin"))
-                login = ((Integer)(getValue("totalLogin"))).intValue();
+                login = ((Integer)(getAttribute("totalLogin"))).intValue();
             login++;
             setAttribute("totalLogin", login);
             saveAttribute("totalLogin");
@@ -1026,7 +1026,7 @@ public class Player extends IOClient implements CommandExecutor {
     public int getTotalLogin() {
         int count = 0;
         if (hasAttribute("totalLogin"))
-            count = ((Integer)(getValue("totalLogin"))).intValue();
+            count = ((Integer)(getAttribute("totalLogin"))).intValue();
         return count;
     }
     
@@ -1039,7 +1039,7 @@ public class Player extends IOClient implements CommandExecutor {
     public String getFirstLogin() {
         String data = "";
         if (hasAttribute("firstLogin"))
-            data = getValue("firstLogin");
+            data = getAttribute("firstLogin");
         return data;
     }
     
@@ -1068,7 +1068,7 @@ public class Player extends IOClient implements CommandExecutor {
     public int getTotalKicked() {
         int data = 0;
         if (hasAttribute("totalKicked"))
-            data = ((Integer)(getValue("totalKicked"))).intValue();
+            data = ((Integer)(getAttribute("totalKicked"))).intValue();
         return data;
     }
 
@@ -1354,7 +1354,7 @@ public class Player extends IOClient implements CommandExecutor {
             chat.serverBroadcast(username + " has been kicked (" + reason + ")");
         int kicked = 0;
         if (hasAttribute("totalKicked"))
-            kicked = ((Integer)(getValue("totalKicked"))).intValue();
+            kicked = ((Integer)(getAttribute("totalKicked"))).intValue();
         kicked++;
         setAttribute("totalKicked", kicked);
         try {
