@@ -710,9 +710,9 @@ public class Player extends IOClient implements CommandExecutor {
     @SuppressWarnings("unchecked")
     public <T> T getValue(String key) {
         if (!extra.containsKey(key)) {
-            T value = getValue(key, username, getServer());
+            T value = (T)getValue(key, username, getServer());
             extra.put(key, value);
-            return value;
+            return (T)value;
         }
         return (T)extra.get(key);
     }
