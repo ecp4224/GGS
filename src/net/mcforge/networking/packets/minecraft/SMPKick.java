@@ -28,7 +28,7 @@ public class SMPKick extends DynamicPacket {
     public void write(Server server, IOClient player, OutputStream writer,
             Object... obj) {
         try {
-            String reason = (String)obj[0];
+            String reason = obj.length == 0 ? "No reason given" : (String)obj[0];
             byte[] array = reason.getBytes("UTF-16BE");
             ByteBuffer b = ByteBuffer.allocate(3 + array.length);
             b.put(ID);
