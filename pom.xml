@@ -5,7 +5,6 @@
   <version>6.0.0-beta7-SNAPSHOT</version>
   <name>MCForge Core</name>
   <description>The Core for MCForge 6</description>
-
   <repositories>
     <repository>
       <id>maven-central</id>
