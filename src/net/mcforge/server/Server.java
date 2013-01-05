@@ -15,6 +15,8 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 
 import net.mcforge.API.EventSystem;
@@ -62,6 +64,7 @@ public final class Server implements LogInterface, Updatable {
     private PacketManager pm;
     private final java.util.logging.Logger log = java.util.logging.Logger.getLogger("MCForge");
     private LevelHandler lm;
+    private final SaveSettings ss = new SaveSettings();
     private Logger logger;
     private CommandHandler ch;
     private GeneratorHandler gh;
@@ -79,7 +82,7 @@ public final class Server implements LogInterface, Updatable {
     private int oldsize;
     private ArrayList<IOClient> cache;
     private ArrayList<Player> pcache;
-    public static final String[] devs = new String []{"Dmitchell", "501st_commander", "Lavoaster", "Alem_Zupa", "QuantumParticle", "bemacized", "Shade2010", "edh649", "hypereddie10", "Gamemakergm", "Serado", "Wouto1997", "cazzar", "givo"};
+    public static final String[] devs = new String []{"Dmitchell", "501st_commander", "Lavoaster", "Alem_Zupa", "QuantumParticle", "BeMacized", "Shade2010", "edh649", "hypereddie10", "Gamemakergm", "Serado", "Wouto1997", "cazzar", "givo"};
     /**
      * The name for currency on this server.
      */
@@ -92,7 +95,7 @@ public final class Server implements LogInterface, Updatable {
      * Weather or not to verify names when players connect
      */
     public boolean VerifyNames;
-    
+
     /**
      * The players currently on the server.
      * @deprecated Use {@link Server#getPlayers()}
@@ -103,7 +106,7 @@ public final class Server implements LogInterface, Updatable {
      * Weather the server is running or not
      */
     public boolean Running;
-    
+
     /**
      * Weather sand will use the new physics or old.
      */
@@ -122,7 +125,7 @@ public final class Server implements LogInterface, Updatable {
     public String Name;
     /**
      * The name of the server that will appear on the WoM list
-    */
+     */
     public String altName;
     /**
      * The description of the server
@@ -144,7 +147,7 @@ public final class Server implements LogInterface, Updatable {
      * Weather or not the server is public
      */    
     public boolean Public;
-    
+
     /**
      * Server's default color.<br>
      * Default color is shown before every message the players receive if it doesn't already
@@ -185,7 +188,7 @@ public final class Server implements LogInterface, Updatable {
      * @return The {@link GeneratorHandler}
      */
     public final GeneratorHandler getGeneratorHandler() {
-    	return gh;
+        return gh;
     }
     /**
      * The handler that handles events.
@@ -215,7 +218,7 @@ public final class Server implements LogInterface, Updatable {
     public final CommandHandler getCommandHandler() {
         return ch;
     }
-    
+
     /**
      * Get the default class loader that is used to load
      * plugins and commands, write serialized objects, ect..
@@ -233,7 +236,7 @@ public final class Server implements LogInterface, Updatable {
     public final PluginHandler getPluginHandler() {
         return ph;
     }
-    
+
     /**
      * Get the console object that is controlling the server
      * @return
@@ -251,7 +254,7 @@ public final class Server implements LogInterface, Updatable {
     public final ISQL getSQL() {
         return sql;
     }
-    
+
     public final PrintWriter getLoggerOutput() {
         return getLogger().getWriter();
     }
@@ -263,7 +266,7 @@ public final class Server implements LogInterface, Updatable {
     public final Properties getSystemProperties() {
         return p;
     }
-    
+
     /**
      * Get the object that controls the updating of plugins
      * and other {@link Updatable} objects.
@@ -273,7 +276,7 @@ public final class Server implements LogInterface, Updatable {
     public final UpdateService getUpdateService() {
         return us;
     }
-    
+
     /**
      * Gets the class that handles messages
      * @return The Message class
@@ -281,6 +284,15 @@ public final class Server implements LogInterface, Updatable {
     public final Messages getMessages() {
         return m;
     }
+
+    /**
+     * Save the system settings
+     * @throws IOException 
+     */
+    public void saveSystemSettings() throws IOException {
+        getSystemProperties().save("system.config");
+    }
+
     /**
      * The contructor to make a new {@link Server} object
      * @param Name
@@ -302,7 +314,7 @@ public final class Server implements LogInterface, Updatable {
         this.MOTD = MOTD;
         tick = new Ticker();
     }
-    
+
     /**
      * Get the salt.
      * <b>This method can only be called by heartbeaters and the Connect Packet.
@@ -330,12 +342,17 @@ public final class Server implements LogInterface, Updatable {
         catch (ArrayIndexOutOfBoundsException e3) { }
         throw new IllegalAccessException("The salt can only be accessed by the heartbeaters and the Connect packet!");
     }
-    
+
+    /**
+     * Log an exception to the logger
+     * This method will also invoke {@link Throwable#printStackTrace()}
+     * @param t The exception to log
+     */
     public void logError(Throwable t) {
         t.printStackTrace(getLoggerOutput());
         t.printStackTrace();
     }
-    
+
     /**
      * Load the server properties such as the server {@link Server#Name}.
      * These properties will always load from the {@link Server#configpath}
@@ -358,7 +375,7 @@ public final class Server implements LogInterface, Updatable {
         else
             defaultColor = ChatColor.White;
     }
-    
+
     /**
      * Start the logger.
      * The logger can be started before the server is started, but
@@ -385,7 +402,7 @@ public final class Server implements LogInterface, Updatable {
             e.printStackTrace();
         }
     }
-    
+
     /**
      * Start the SQL service
      * @param set
@@ -425,14 +442,14 @@ public final class Server implements LogInterface, Updatable {
         sql.executeQuery(commands);
         Log("SQL all set.");
     }
-    
+
     /**
      * Start the SQL service
      */
     public void startSQL() {
         startSQL(null);
     }
-    
+
     /**
      * Start the event system
      */
@@ -440,12 +457,12 @@ public final class Server implements LogInterface, Updatable {
         if (es == null)
             es = new EventSystem(this);
     }
-    
+
     public void startTicker() {
         if (!tick.isAlive())
             tick.start();
     }
-    
+
     /**
      * Start the server
      */
@@ -515,8 +532,8 @@ public final class Server implements LogInterface, Updatable {
         heartbeater.startBeating();
         Log("Created heartbeat");
         Log("Server url can be found in 'url.txt'");
-        
-        
+
+
         gh.addGenerator(new FlatGrass(this));
         gh.addGenerator(new Forest(this));
         gh.addGenerator(new Island(this));
@@ -525,12 +542,13 @@ public final class Server implements LogInterface, Updatable {
         gh.addGenerator(new Pixel(this));
         gh.addGenerator(new Rainbow(this));
         gh.addGenerator(new Space(this));
-        
+
         getCommandHandler().addCommand(new CmdAbort());
         ServerStartedEvent sse = new ServerStartedEvent(this);
         es.callEvent(sse);
+        Add(ss);
     }
-    
+
     /**
      * Get all the {@link IOClient} connected to the server
      * @return
@@ -539,15 +557,15 @@ public final class Server implements LogInterface, Updatable {
     public ArrayList<IOClient> getClients() {
         return pm.getConnectedClients();
     }
-    
+
     /**
      * Get all the {@link Player} connected to the server
      * @return
      *         An {@link ArrayList} of {@link Player}
      */
-    public ArrayList<Player> getPlayers() {
+    public List<Player> getPlayers() {
         if (getClients().equals(cache) && getClients().size() == oldsize)
-            return pcache;
+            return Collections.unmodifiableList(pcache);
         pcache = new ArrayList<Player>();
         for (IOClient i : getClients()) {
             if (i instanceof Player)
@@ -555,9 +573,9 @@ public final class Server implements LogInterface, Updatable {
         }
         cache = getClients();
         oldsize = cache.size();
-        return pcache;
+        return Collections.unmodifiableList(pcache);
     }
-    
+
     /**
      * Send a message to all the players on this server
      * @param message
@@ -566,7 +584,7 @@ public final class Server implements LogInterface, Updatable {
     public void sendGlobalMessage(String message) {
         m.serverBroadcast(message);
     }
-    
+
     /**
      * Send a message to all players on the level <b>world</b>
      * @param message
@@ -577,7 +595,7 @@ public final class Server implements LogInterface, Updatable {
     public void sendWorldMessage(String message, Level world) {
         sendWorldMessage(message, world.name);
     }
-    
+
     /**
      * Send a message to all the players on the level with the name <b>world</b>
      * @param message
@@ -588,7 +606,7 @@ public final class Server implements LogInterface, Updatable {
     public void sendWorldMessage(String message, String world) {
         m.worldBroadcast(message, world);
     }
-    
+
 
     /**
      * Search for a player based on the name given.
@@ -646,6 +664,7 @@ public final class Server implements LogInterface, Updatable {
             return;
         Running = false;
         Log("Stopping server...");
+        Remove(ss);
         for(Player p : players)
         {
             p.sendMessage("Stopping server...");
@@ -658,18 +677,19 @@ public final class Server implements LogInterface, Updatable {
             getLevelHandler().findLevel(MainLevel).save();
             getLevelHandler().findLevel(MainLevel).unload(this);
         }
+        lm.stopBackup();
         tick.join();
         logger.Stop();
         heartbeater.stopBeating();
         ArrayList<Player> players = new ArrayList<Player>();
         for (Player p : getPlayers())
             players.add(p);
-        for (int i = 0; i < players.size(); i++)
-            players.get(i).kick("Server shutting down!");
-        Properties.reset();
-        pm.stopReading();
+                for (int i = 0; i < players.size(); i++)
+                    players.get(i).kick("Server shutting down!");
+                Properties.reset();
+                pm.stopReading();
     }
-    
+
     /**
      * Log something to the logs
      * @param log
@@ -677,7 +697,7 @@ public final class Server implements LogInterface, Updatable {
     public void Log(String log) {
         logger.Log(log);
     }
-    
+
     /**
      * Get the logger object
      * @return
@@ -698,7 +718,7 @@ public final class Server implements LogInterface, Updatable {
                 ticks.add(t);
         }
     }
-    
+
     /**
      * Remove a task from the Tick list
      * @param t
@@ -733,7 +753,23 @@ public final class Server implements LogInterface, Updatable {
             }
         }
     }
-    
+
+    private class SaveSettings implements Tick {
+        int oldsize = 0;
+        @Override
+        public void tick() {
+            try {
+                if (oldsize != getSystemProperties().getKeys().length) {
+                    saveSystemSettings();
+                    oldsize = getSystemProperties().getKeys().length;
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
     @Override
     public void onLog(String message) {
         //TODO ..colors?
@@ -751,16 +787,16 @@ public final class Server implements LogInterface, Updatable {
         System.out.println(message);
         log.log(java.util.logging.Level.SEVERE, message);
     }
-    
+
     /**
      * Calls {@link Server#findPlayer(String)}
-    */
+     */
     public Player getPlayer(String name) {
         return findPlayer(name);
     }
     @Override
     public String getCheckURL() {
-       return "http://update.mcforge.net/mcf6/current.txt";
+        return "http://update.mcforge.net/mcf6/current.txt";
     }
     @Override
     public String getDownloadURL() {
