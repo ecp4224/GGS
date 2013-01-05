@@ -15,6 +15,8 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 
 import net.mcforge.API.EventSystem;
@@ -543,9 +545,9 @@ public final class Server implements LogInterface, Updatable {
      * @return
      *         An {@link ArrayList} of {@link Player}
      */
-    public ArrayList<Player> getPlayers() {
+    public List<Player> getPlayers() {
         if (getClients().equals(cache) && getClients().size() == oldsize)
-            return pcache;
+            return Collections.unmodifiableList(pcache);
         pcache = new ArrayList<Player>();
         for (IOClient i : getClients()) {
             if (i instanceof Player)
@@ -553,7 +555,7 @@ public final class Server implements LogInterface, Updatable {
         }
         cache = getClients();
         oldsize = cache.size();
-        return pcache;
+        return Collections.unmodifiableList(pcache);
     }
     
     /**
