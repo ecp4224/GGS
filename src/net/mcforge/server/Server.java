@@ -48,6 +48,7 @@ import net.mcforge.util.logger.Logger;
 import net.mcforge.util.properties.Properties;
 import net.mcforge.world.Level;
 import net.mcforge.world.LevelHandler;
+import net.mcforge.world.TreeGenerator;
 import net.mcforge.world.generator.FlatGrass;
 import net.mcforge.world.generator.Forest;
 import net.mcforge.world.generator.Island;
@@ -448,7 +449,6 @@ public final class Server implements LogInterface, Updatable {
     /**
      * Start the server
      */
-    @SuppressWarnings("restriction")
     public void start(Console console, boolean startSQL) {
         if (Running)
             return;
@@ -485,6 +485,8 @@ public final class Server implements LogInterface, Updatable {
             MainLevel = "Main";
         }
         lm.loadLevels();
+        Level lvlz = lm.findLevel(MainLevel);
+        TreeGenerator.generateJungleTree(this, lvlz, (short)32, (short)32, (short)32, new Random());
         startTicker();
         Log("Loaded levels");
         us.getUpdateManager().add(this);

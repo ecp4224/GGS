@@ -42,8 +42,6 @@ public class TP extends Packet {
 
     @Override
     public void Handle(byte[] message, Server server, IOClient player) {
-        // TODO Auto-generated method stub
-
     }
 
     @Override

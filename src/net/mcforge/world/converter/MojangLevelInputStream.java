@@ -7,7 +7,6 @@
  ******************************************************************************/
 package net.mcforge.world.converter;
 
-import net.mcforge.world.converter.MojangLevel;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;

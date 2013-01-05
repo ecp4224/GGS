@@ -7,7 +7,13 @@
  ******************************************************************************/
 package net.mcforge.iomodel;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.NotSerializableException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.math.BigInteger;
 import java.net.Socket;
 import java.security.MessageDigest;
@@ -22,7 +28,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 
 import net.mcforge.API.ClassicExtension;
-
+import net.mcforge.API.CommandExecutor;
 import net.mcforge.API.level.PlayerJoinedLevel;
 import net.mcforge.API.player.PlayerBanRequestEvent;
 import net.mcforge.API.player.PlayerBlockChangeEvent;
@@ -47,7 +53,6 @@ import net.mcforge.world.Block;
 import net.mcforge.world.BlockUpdate;
 import net.mcforge.world.Level;
 import net.mcforge.world.PlaceMode;
-import net.mcforge.API.CommandExecutor;
 
 public class Player extends IOClient implements CommandExecutor {
     protected short X;
