@@ -84,7 +84,7 @@ public class BlockChangeAction extends Action<BlockChangeAction> implements List
     }
     
     /**
-     * Get weather the player broke or placed a block
+     * Get Whether the player broke or placed a block
      * @return returns the PlaceMode of this event
      */
     public PlaceMode getMode() {

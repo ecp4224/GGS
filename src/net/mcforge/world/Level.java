@@ -163,7 +163,7 @@ public class Level implements Serializable {
     }
 
     /**
-     * Weather or not this level will autosave.
+     * Whether or not this level will autosave.
      * AutoSave will save the level every minute and save
      * when the level is unloaded.
      * @return
@@ -174,7 +174,7 @@ public class Level implements Serializable {
     }
 
     /**
-     * Set weather the level will autosave or not.
+     * Set Whether the level will autosave or not.
      * AutoSave will save the level every minute and save
      * when the level is unloaded.
      * @param set
@@ -458,7 +458,7 @@ public class Level implements Serializable {
      * @param server
      *             The server thats unloading the level
      * @param save
-     *           Weather the level should save before unloading
+     *           Whether the level should save before unloading
      * @throws IOException
      *                   An IOException will occur if there is a problem saving the level
      */
@@ -803,7 +803,7 @@ public class Level implements Serializable {
      * @param z - The z coordinate
      * @param block - The block to change to
      * @param server - The server
-     * @param addtick - Weather this block should be added to the tick.
+     * @param addtick - Whether this block should be added to the tick.
      */
     public void skipChange(int x, int y, int z, Block block, Server server, boolean addtick) {
         if (x < 0 || y < 0 || z < 0) return;

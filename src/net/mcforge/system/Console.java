@@ -64,12 +64,12 @@ public abstract class Console implements CommandExecutor {
     
     /**
      * This method is called when the {@link UpdateService} detects an update </br>
-     * and needs to ask the console weather to update or not. </br>
+     * and needs to ask the console Whether to update or not. </br>
      * This method should block until an answer is given/found </br>
      * and return whether the {@link UpdateService} should update or not.
      * @param u The updatable object being updated.
      * @return
-     *        Weather the {@link UpdateService} should update or not.
+     *        Whether the {@link UpdateService} should update or not.
      */
     public abstract boolean askForUpdate(Updatable u);
     

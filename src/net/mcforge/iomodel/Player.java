@@ -76,7 +76,7 @@ public class Player extends IOClient implements CommandExecutor {
     private static final DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
     private static MessageDigest digest;
     /**
-     * Weather or not the player is logged in
+     * Whether or not the player is logged in
      */
     public boolean isLoggedin;
     /**
@@ -100,11 +100,11 @@ public class Player extends IOClient implements CommandExecutor {
      */
     public String message;
     /**
-     * Weather or not the player is connected
+     * Whether or not the player is connected
      */
     public boolean isConnected;
     /**
-     * Weather or not the player can use color codes
+     * Whether or not the player can use color codes
      */
     public boolean cc = true; //Can Player use color codes
     /**
@@ -243,9 +243,9 @@ public class Player extends IOClient implements CommandExecutor {
      * @param reason
      *              The reason for banning this player
      * @param kick
-     *            Weather this player should be kicked as well.
+     *            Whether this player should be kicked as well.
      * @param banip
-     *             Weather to ban the player's IP as well.
+     *             Whether to ban the player's IP as well.
      */
     public void ban(CommandExecutor banner, String reason, boolean kick, boolean banip) {
         PlayerBanRequestEvent pbre = new PlayerBanRequestEvent(this, reason, kick, banner, banip);
@@ -382,7 +382,7 @@ public class Player extends IOClient implements CommandExecutor {
     }
 
     /**
-     * Weather the user is on wom
+     * Whether the user is on wom
      * @return
      *        True if the user is using the WoM client
      */
@@ -412,7 +412,7 @@ public class Player extends IOClient implements CommandExecutor {
     }
 
     /**
-     * Check weather or not this player is using a custom
+     * Check Whether or not this player is using a custom
      * nickname
      * @return
      *        True if the player is using a custom nick, false if he isn't
@@ -500,7 +500,7 @@ public class Player extends IOClient implements CommandExecutor {
     }
 
     /**
-     * Weather the user is showing there prefix
+     * Whether the user is showing there prefix
      * above there player.
      * @return
      *        True if they are, false if they are not.
@@ -512,7 +512,7 @@ public class Player extends IOClient implements CommandExecutor {
     }
 
     /**
-     * Set weather or not the user should show there prefix above
+     * Set Whether or not the user should show there prefix above
      * there player's head.
      * 
      * This method will respawn the player using {@link Player#respawn()}
@@ -1149,7 +1149,7 @@ public class Player extends IOClient implements CommandExecutor {
      * @param block The block to send
      * @param l The level the update happened in
      * @param s The getServer() the update happened in
-     * @param updateLevel Weather the level should be updated
+     * @param updateLevel Whether the level should be updated
      */
     public static void GlobalBlockChange(short X, short Y, short Z, Block block, Level l, Server s, boolean updateLevel) {
         if (updateLevel)
@@ -1174,7 +1174,7 @@ public class Player extends IOClient implements CommandExecutor {
      * @param s
      *         The getServer()
      * @param updateLevel
-     *                  Weather the level should be updated
+     *                  Whether the level should be updated
      */
     public static void GlobalBlockChange(BlockUpdate[] blockupdates, Level l, Server s, boolean updateLevel) {
         final SetBlock sb = (SetBlock)s.getPacketManager().getPacket((byte)0x05);
@@ -1318,7 +1318,7 @@ public class Player extends IOClient implements CommandExecutor {
     }
 
     /**
-     * Weather or not the player is loading the level
+     * Whether or not the player is loading the level
      * @return True if the player is loading the level, false if the player is not
      */
     public boolean isLoading() {
@@ -1564,7 +1564,7 @@ public class Player extends IOClient implements CommandExecutor {
      * block if threading is false. If threading is true, level sending will
      * begin in a separate thread and this method wont block.
      * @param level The new level the player will be moved to.
-     * @param threading Weather to make this call in a separate thread or not.
+     * @param threading Whether to make this call in a separate thread or not.
      */
     public void changeLevel(Level level, boolean threading)
     {

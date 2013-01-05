@@ -68,7 +68,7 @@ public abstract class Packet {
     }
     
     /**
-     * Weather this packet's byte size is dynamic, or has no defined size.
+     * Whether this packet's byte size is dynamic, or has no defined size.
      * This is usually the case if this packet includes a string.
      * @return
      *       True if this packet's size is dynamic.

@@ -92,7 +92,7 @@ public final class Server implements LogInterface, Updatable {
      */
     public String hash;
     /**
-     * Weather or not to verify names when players connect
+     * Whether or not to verify names when players connect
      */
     public boolean VerifyNames;
 
@@ -103,12 +103,12 @@ public final class Server implements LogInterface, Updatable {
     @Deprecated
     public ArrayList<Player> players = new ArrayList<Player>();
     /**
-     * Weather the server is running or not
+     * Whether the server is running or not
      */
     public boolean Running;
 
     /**
-     * Weather sand will use the new physics or old.
+     * Whether sand will use the new physics or old.
      */
     public boolean newSand;
     /**
@@ -144,7 +144,7 @@ public final class Server implements LogInterface, Updatable {
      */
     public String MainLevel;
     /**
-     * Weather or not the server is public
+     * Whether or not the server is public
      */    
     public boolean Public;
 

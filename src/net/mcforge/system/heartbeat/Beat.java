@@ -108,7 +108,7 @@ public class Beat extends Thread {
     }
 
     /**
-     * Weather or not this beater is running
+     * Whether or not this beater is running
      * @return
      *        Returns true if the beater is running, otherwise it will
      *        return false.
