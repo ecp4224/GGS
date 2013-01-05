@@ -658,6 +658,7 @@ public final class Server implements LogInterface, Updatable {
             getLevelHandler().findLevel(MainLevel).save();
             getLevelHandler().findLevel(MainLevel).unload(this);
         }
+        lm.stopBackup();
         tick.join();
         logger.Stop();
         heartbeater.stopBeating();

@@ -8,19 +8,23 @@
 package net.mcforge.util;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.LineNumberReader;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Formatter;
 import java.util.List;
 
 /**
-* An abstract class used for easier file interaction.
-* Almost all of the methods in the class throw {@link IOException}
-*/
+ * An abstract class used for easier file interaction.
+ * Almost all of the methods in the class throw {@link IOException}
+ */
 public abstract class FileUtils {
 
     /**
@@ -43,13 +47,13 @@ public abstract class FileUtils {
      * The filename for the rules file
      */
     public static final String RULES_FILE = "rules.txt";
-        /**
-         * The filename for the IRC Controllers file.
-         */
+    /**
+     * The filename for the IRC Controllers file.
+     */
     public static final String IRCCONTROLLERS_FILE = "ranks" + File.separator + "IRCControllers";
-        /**
-         * Creates all the files and directories that MCForge needs.
-         */
+    /**
+     * Creates all the files and directories that MCForge needs.
+     */
     public static void createFilesAndDirs() {
         try {
             createIfNotExist("ranks", "IRCControllers");
@@ -57,13 +61,13 @@ public abstract class FileUtils {
         catch (IOException e) {
         }
     }
-        /**
-         * Creates the directory/file if it doesn't exist.
-         * @param path - The directory to create.
-         * @param fileName - The file to create.
-         * @param contents - The contents inside the file.
-         * @throws IOException - Signals that an I/O exception has occurred.
-         */
+    /**
+     * Creates the directory/file if it doesn't exist.
+     * @param path - The directory to create.
+     * @param fileName - The file to create.
+     * @param contents - The contents inside the file.
+     * @throws IOException - Signals that an I/O exception has occurred.
+     */
     public static void createIfNotExist(String path, String fileName, String contents) throws IOException {
         File filePath = new File(path);
         File fileFile = new File(path, fileName);
@@ -72,10 +76,10 @@ public abstract class FileUtils {
 
         if (!fileFile.exists()) {
             fileFile.createNewFile();
-            
+
             PrintWriter writer = new PrintWriter(fileFile);
             writer.write(contents);
-            
+
             try {
                 writer.close();
                 writer.flush();
@@ -85,7 +89,7 @@ public abstract class FileUtils {
             }
         }
     }
-    
+
     /**
      * Create all child directories contained in <b>filepath</b> if they
      * do not exist
@@ -101,7 +105,7 @@ public abstract class FileUtils {
                 new File(path).mkdir();
         }
     }
-    
+
     /**
      * Creates a file if it does not exists.
      * 
@@ -139,7 +143,7 @@ public abstract class FileUtils {
             file.delete();
         }
     }
-    
+
     /**
      * Writes the specified line to the specified file, creating the file if doesn't exist
      * 
@@ -154,7 +158,7 @@ public abstract class FileUtils {
         formatter.out().append(text);
         formatter.close();
     }
-    
+
     /**
      * Writes the specified string array to the specified file, creating the file if it doesn't exist
      * 
@@ -171,7 +175,7 @@ public abstract class FileUtils {
         }
         formatter.close();
     }
-    
+
     /**
      * Reads the contents of the specified file
      * 
@@ -184,7 +188,7 @@ public abstract class FileUtils {
         List<String> lines = readToList(filePath);
         return lines.toArray(new String[lines.size()]);
     }
-    
+
     /**
      * Reads the contents of the specified file
      * 
@@ -194,13 +198,51 @@ public abstract class FileUtils {
      * @throws IOException If there's an error while reading from the file
      */
     public static List<String> readToList(String filePath) throws IOException {
-		LineNumberReader reader = new LineNumberReader(new FileReader(filePath));
-		List<String> lines = new ArrayList<String>();
-		String line;
-		while ((line = reader.readLine()) != null)
-			lines.add(line);
-		reader.close();
+        LineNumberReader reader = new LineNumberReader(new FileReader(filePath));
+        List<String> lines = new ArrayList<String>();
+        String line;
+        while ((line = reader.readLine()) != null)
+            lines.add(line);
+        reader.close();
         return lines;
+    }
+
+    /**
+     * Copy an existing file to a new location.
+     * 
+     * @param sourcePath The original file to be copied
+     * @param newPath The new location for the copy to go
+     * 
+     * @return Returns true if the copy was successful, returns false if an error occurred.
+     */
+    public static boolean copyFile(String sourcePath, String newPath) {
+        InputStream inStream = null;
+        OutputStream outStream = null;
+
+        try{
+
+            File afile =new File(sourcePath);
+            File bfile =new File(newPath);
+
+            inStream = new FileInputStream(afile);
+            outStream = new FileOutputStream(bfile);
+
+            byte[] buffer = new byte[1024];
+
+            int length;
+            while ((length = inStream.read(buffer)) > 0){
+                outStream.write(buffer, 0, length);
+            }
+
+            inStream.close();
+            outStream.close();
+
+            return true;
+
+        }catch(IOException e){
+            e.printStackTrace();
+            return false;
+        }
     }
 
     /**
@@ -212,7 +254,7 @@ public abstract class FileUtils {
      * @throws IOException If there's an error while reading from the file
      */
     public static int getLineNumber(String filePath) throws IOException {
-    	return readToList(filePath).size();
+        return readToList(filePath).size();
     }
     /**
      * Checks whether the specified file exists

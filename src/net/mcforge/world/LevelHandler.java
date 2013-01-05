@@ -19,14 +19,19 @@ import net.mcforge.API.level.LevelUnloadEvent;
 import net.mcforge.iomodel.Player;
 import net.mcforge.server.Server;
 import net.mcforge.server.Tick;
+import net.mcforge.util.FileUtils;
 import net.mcforge.world.generator.FlatGrass;
 
 public class LevelHandler {
 
     private List<Level> levels = new CopyOnWriteArrayList<Level>();
-    
+
     private Server server;
-    
+
+    private Backup thread;
+
+    private boolean runit;
+
     /**
      * The constructor for a new level handler
      * @param server
@@ -35,8 +40,30 @@ public class LevelHandler {
     public LevelHandler(Server server) {
         this.server = server;
         server.Add(new Saver());
+        startBackup();
     }
-    
+
+    public void startBackup() {
+        if (runit)
+            return;
+        if (thread == null)
+            thread = new Backup(server);
+        runit = true;
+        thread.start();
+    }
+
+    public void stopBackup() {
+        if (!runit)
+            return;
+        runit = false;
+        thread.interrupt();
+        try {
+            thread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * Get a list of levels
      * @return
@@ -61,7 +88,7 @@ public class LevelHandler {
     {
         newLevel(name, width, height, length, new FlatGrass(server));
     }
-    
+
     public void newLevel(String name, short width, short height, short length, Generator gen) {
         if(!new File("levels/" + name + ".ggs").exists())
         {
@@ -75,7 +102,7 @@ public class LevelHandler {
             }
         }
     }
-    
+
     /**
      * Find a level with the given name.
      * If part of a name is given, then it will try to find the
@@ -98,7 +125,7 @@ public class LevelHandler {
         }
         return temp;
     }
-    
+
     /**
      * Get the players in a particular level
      * @param level
@@ -127,7 +154,7 @@ public class LevelHandler {
                 loadLevel(levelsFolder.getPath() + "/" + f.getName());
         }
     }
-    
+
     /**
      * Load a level and have it return the loaded
      * level
@@ -216,9 +243,51 @@ public class LevelHandler {
         levels.remove(level);
         return true;
     }
-    
+
+    private class Backup extends Thread {
+        int backup;
+        String location;
+        public Backup(Server server) {
+            if (!server.getSystemProperties().hasValue("backup-time")) {
+                server.getSystemProperties().addSetting("backup-time", 300);
+                server.getSystemProperties().addComment("backup-time", "The number of seconds between automatic backups");
+            }
+            backup = server.getSystemProperties().getInt("backup-time") * 1000;
+            if (!server.getSystemProperties().hasValue("backup-location"))
+                server.getSystemProperties().addSetting("backup-location", "backups");
+            location = server.getSystemProperties().getValue("backup-location");
+        }
+
+        @Override
+        public void run() {
+            while (runit) {
+                for (int i = 0; i < levels.size(); i++) {
+                    try {
+                        final Level l = levels.get(i);
+                        if (!l.isAutoSaveEnabled())
+                            continue;
+                        if (!new File(location + "/" + l.name).exists())
+                            FileUtils.createChildDirectories(location + "/" + l.name);
+                        long backupnum = new File(location + "/" + l.name).length() + 1;
+                        new File(location + "/" + l.name + "/" + backupnum).mkdir();
+                        if (!FileUtils.copyFile("levels/" + l.name + ".ggs", location + "/" + l.name + "/" + backupnum + "/" + l.name + ".ggs")) {
+                            server.logError(new BackupFailedException("The level " + l.name + " could not be backed up!"));
+                            continue;
+                        }
+                    } catch (Exception e) {
+                        server.logError(e);
+                    }
+                }
+                try {
+                    Thread.sleep(backup);
+                } catch (InterruptedException e) { }
+            }
+        }
+    }
+
     private class Saver implements Tick {
-        int temp = 6000;
+        int temp = 600;
+
         @Override
         public void tick() {
             if (temp > 0) {

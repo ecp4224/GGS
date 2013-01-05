@@ -46,7 +46,7 @@ public class Level implements Serializable {
 
     ArrayList<Tick> ticks = new ArrayList<Tick>();
 
-    private boolean autosave;
+    private boolean autosave = true;
 
     private int physicsspeed;
 
