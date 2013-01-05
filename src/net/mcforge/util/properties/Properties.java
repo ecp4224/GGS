@@ -141,7 +141,8 @@ public class Properties {
             if (s.trim().equals(""))
                 continue;
             out.println(s);
-            out.println(System.getProperty("line.separator"));
+            if (!s.startsWith("#"))
+                out.println(System.getProperty("line.separator"));
         }
         out.close();
     }
@@ -166,7 +167,8 @@ public class Properties {
         String strLine;
 
         while ((strLine = br.readLine()) != null)   {
-            settings.add(strLine);
+            if (strLine.indexOf("=") != -1 || strLine.startsWith("#"))
+                settings.add(strLine);
         }
         in.close();
     }
