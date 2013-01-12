@@ -36,6 +36,7 @@ import net.mcforge.sql.ISQL;
 import net.mcforge.sql.MySQL;
 import net.mcforge.sql.SQLite;
 import net.mcforge.system.Console;
+import net.mcforge.system.PrivilegesHandler;
 import net.mcforge.system.heartbeat.Beat;
 import net.mcforge.system.heartbeat.ForgeBeat;
 import net.mcforge.system.heartbeat.Heart;
@@ -50,7 +51,6 @@ import net.mcforge.util.logger.Logger;
 import net.mcforge.util.properties.Properties;
 import net.mcforge.world.Level;
 import net.mcforge.world.LevelHandler;
-import net.mcforge.world.TreeGenerator;
 import net.mcforge.world.generator.FlatGrass;
 import net.mcforge.world.generator.Forest;
 import net.mcforge.world.generator.Island;
@@ -67,6 +67,7 @@ public final class Server implements LogInterface, Updatable {
     private final SaveSettings ss = new SaveSettings();
     private Logger logger;
     private CommandHandler ch;
+    private PrivilegesHandler prh;
     private GeneratorHandler gh;
     private UpdateService us;
     private Properties p;
@@ -82,7 +83,7 @@ public final class Server implements LogInterface, Updatable {
     private int oldsize;
     private ArrayList<IOClient> cache;
     private ArrayList<Player> pcache;
-    public static final String[] devs = new String []{"Dmitchell", "501st_commander", "Lavoaster", "Alem_Zupa", "QuantumParticle", "BeMacized", "Shade2010", "edh649", "hypereddie10", "Gamemakergm", "Serado", "Wouto1997", "cazzar", "givo"};
+    public static final String[] devs = new String []{ "Dmitchell", "501st_commander", "Lavoaster", "Alem_Zupa", "QuantumParticle", "BeMacized", "Shade2010", "edh649", "hypereddie10", "Gamemakergm", "Serado", "Wouto1997", "cazzar", "givo" };
     /**
      * The name for currency on this server.
      */
@@ -221,7 +222,7 @@ public final class Server implements LogInterface, Updatable {
 
     /**
      * Get the default class loader that is used to load
-     * plugins and commands, write serialized objects, ect..
+     * plugins and commands, write serialized objects, etc..
      * @return
      *        The default classloader used across the entire server.
      */
@@ -235,6 +236,13 @@ public final class Server implements LogInterface, Updatable {
      */
     public final PluginHandler getPluginHandler() {
         return ph;
+    }
+    
+    /**
+     * Get the handler that handles MCForge staff privileges
+     */
+    public final PrivilegesHandler getPrivilegesHandler() {
+    	return prh;
     }
 
     /**
@@ -490,9 +498,16 @@ public final class Server implements LogInterface, Updatable {
         m = new Messages(this);
         ph = new PluginHandler(this);
         gh = new GeneratorHandler();
+        prh = new PrivilegesHandler(this);
         pm = new PacketManager(this);
         pm.startReading();
         ph.loadplugins();
+        try {
+			prh.initialize();
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+		}
         Log("Loaded plugins");
         Level.getLoader().setClassLoader(getDefaultClassLoader());
         lm = new LevelHandler(this);
@@ -502,8 +517,6 @@ public final class Server implements LogInterface, Updatable {
             MainLevel = "Main";
         }
         lm.loadLevels();
-        Level lvlz = lm.findLevel(MainLevel);
-        TreeGenerator.generateJungleTree(this, lvlz, (short)32, (short)32, (short)32, new Random());
         startTicker();
         Log("Loaded levels");
         us.getUpdateManager().add(this);

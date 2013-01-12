@@ -479,12 +479,18 @@ public class Player extends IOClient implements CommandExecutor {
      * {@link Player#isShowingPrefix()} is true.
      * 
      * The prefix will appear before the player's username in chat
-     * regardless of the value that is returned in {@link Player#isShowingPrefix()}
+     * regardless of the value that is returned in {@link Player#isShowingPrefix()}.
+     * 
+     * Setting the player's prefix using this method will set the raw prefix. If the
+     * player has a title color it will be overwritten. Also, this method won't include
+     * the title brackets unless they're included in the prefix parameter. To cleanly
+     * set a prefix use the method {@link #setCleanPrefix}.
      * 
      * The prefix assigned will also be saved as a extradata value with the key "mcf_prefix"
-     * @param prefix The prefix to set.
+     * 
+     * @param prefix The prefix to set. You should include title brackets here.
      */
-    public void setPrefix(String prefix) {
+    public void setRawPrefix(String prefix) {
         this.prefix = prefix;
 
         this.setAttribute("mcf_prefix", this.prefix);
@@ -498,10 +504,49 @@ public class Player extends IOClient implements CommandExecutor {
             e.printStackTrace();
         }
     }
+    
+    /**
+     * Sets the player's prefix to the specified prefix.
+     * This method won't overwrite the player's title color and it will show the player's
+     * title brackets.
+     * To set the player's raw prefix use {@link #setRawPrefix(String)}
+     * 
+     * @param prefix - The prefix to set. Title brackets shouldn't be included here.
+     */
+    public void setCleanPrefix(String prefix) {
+    	prefix = prefix.replaceAll("%", "&");
+    	String currprefix = getPrefix();
+		if (currprefix == null) {
+			currprefix = "[" + prefix + "] ";
+		}
+		else {
+			if (currprefix.startsWith("[")) {
+				currprefix = currprefix.substring(1);
+			}
+			else if (currprefix.startsWith("&") && currprefix.charAt(2) == '[') {
+				currprefix = currprefix.substring(0, 2) + currprefix.substring(3, currprefix.length());
+			}
+			if (currprefix.endsWith("] ")) {
+				currprefix = currprefix.substring(0, currprefix.length() - 2);
+			}
+			if (!currprefix.startsWith("&") || currprefix.length() <= 1) {
+				currprefix = "[" + prefix + "] ";
+			}
+			else {
+				String color = currprefix.substring(0, 2);
+				if (currprefix.charAt(currprefix.length() - 2) == '&') {
+					currprefix = currprefix.substring(0, currprefix.length() - 2);
+				}
+				currprefix = color + "[" + prefix + color + "] ";
+			}
+		}
+		setRawPrefix(currprefix);
+    }
+    
 
     /**
-     * Whether the user is showing there prefix
-     * above there player.
+     * Whether the user is showing their prefix
+     * above their player's head.
      * @return
      *        True if they are, false if they are not.
      */
@@ -512,8 +557,8 @@ public class Player extends IOClient implements CommandExecutor {
     }
 
     /**
-     * Set Whether or not the user should show there prefix above
-     * there player's head.
+     * Set Whether or not the user should show their prefix above
+     * their player's head.
      * 
      * This method will respawn the player using {@link Player#respawn()}
      * 
@@ -1346,7 +1391,8 @@ public class Player extends IOClient implements CommandExecutor {
      * Kick the player from the getServer()
      * @param reason The reason why he was kicked
      */
-    public void kick(String reason) {
+    @SuppressWarnings("deprecation")
+	public void kick(String reason) {
         PlayerKickedEvent pke = new PlayerKickedEvent(this, reason);
         getServer().getEventSystem().callEvent(pke);
         if (pke.isCancelled()) {
@@ -1373,7 +1419,7 @@ public class Player extends IOClient implements CommandExecutor {
         }
         Packet p = pm.getPacket("Kick");
         this.kickreason = reason;
-        getServer().getPlayers().remove(this);
+        getServer().players.remove(this);
         p.Write(this, getServer());
     }
 

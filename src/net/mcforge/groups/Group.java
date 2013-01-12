@@ -18,6 +18,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 
@@ -213,6 +214,13 @@ public class Group {
 	 */
 	public static final ArrayList<Group> getGroupList() {
 		return groups;
+	}
+	
+	/**
+	 * Gets an ArrayList containing the online members of this group
+	 */
+	public List<Player> getOnlinePlayers() {
+		return online;
 	}
 
 	public class Listen implements Listener {

@@ -131,7 +131,7 @@ public class Properties {
      *                    This is thrown if there's an error saving the file
      */
     public void save(String filename) throws IOException {
-        String truefile = (filename.indexOf("properties/") != -1 ? filename : "properties/" + filename);
+        String truefile = (filename.indexOf("properties\\") != -1 ? filename : "properties\\" + filename);
         if (new File(truefile).exists())
             new File(truefile).delete();
         FileUtils.createChildDirectories(truefile);
