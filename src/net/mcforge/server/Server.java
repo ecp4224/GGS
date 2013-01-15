@@ -461,6 +461,11 @@ public final class Server implements LogInterface, Updatable {
         if (!tick.isAlive())
             tick.start();
     }
+    
+    public void startListening() {
+        pm = new PacketManager(this);
+        pm.startReading();
+    }
 
     /**
      * Start the server
@@ -490,8 +495,7 @@ public final class Server implements LogInterface, Updatable {
         m = new Messages(this);
         ph = new PluginHandler(this);
         gh = new GeneratorHandler();
-        pm = new PacketManager(this);
-        pm.startReading();
+        startListening();
         ph.loadplugins();
         Log("Loaded plugins");
         Level.getLoader().setClassLoader(getDefaultClassLoader());
@@ -693,6 +697,8 @@ public final class Server implements LogInterface, Updatable {
      * @param log
      */
     public void Log(String log) {
+        if (logger == null)
+            return;
         logger.Log(log);
     }
 
