@@ -54,7 +54,6 @@ public class ExtPlayerPacket extends ExtendPacket {
 
     @Override
     public void Handle(byte[] message, Server server, IOClient player) {
-        // TODO Auto-generated method stub
         
     }
 

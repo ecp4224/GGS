@@ -7,14 +7,13 @@
  ******************************************************************************/
 package net.mcforge.networking.packets.classicminecraft;
 
-import java.io.*;
+import java.io.UnsupportedEncodingException;
 
 import net.mcforge.API.ClassicExtension;
-import net.mcforge.networking.ClassicClientType;
-
 import net.mcforge.API.player.PlayerConnectEvent;
 import net.mcforge.API.player.PlayerLoginEvent;
 import net.mcforge.iomodel.Player;
+import net.mcforge.networking.ClassicClientType;
 import net.mcforge.networking.IOClient;
 import net.mcforge.networking.packets.Packet;
 import net.mcforge.networking.packets.PacketManager;

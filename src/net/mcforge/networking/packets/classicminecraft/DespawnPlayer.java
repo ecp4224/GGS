@@ -26,8 +26,7 @@ public class DespawnPlayer extends Packet {
     }
 
     @Override
-    public void Handle(byte[] message, Server server, IOClient player) {
-        // TODO Auto-generated method stub        
+    public void Handle(byte[] message, Server server, IOClient player) {    
     }
 
     @Override

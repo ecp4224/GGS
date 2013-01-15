@@ -215,7 +215,7 @@ public class PacketManager {
      * @param client
      *              The client to remove
      * @return
-     *        Weather the client was removed or not.
+     *        Whether the client was removed or not.
      */
     public boolean disconnect(IOClient client) {
        if (connectedclients.contains(client)) {

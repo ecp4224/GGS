@@ -31,7 +31,6 @@ public class SpawnPlayer extends Packet {
 
     @Override
     public void Handle(byte[] message, Server server, IOClient player) {
-        // TODO Auto-generated method stub
 
     }
 

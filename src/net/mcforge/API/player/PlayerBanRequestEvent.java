@@ -37,7 +37,7 @@ public class PlayerBanRequestEvent extends PlayerEvent {
     }
     
     /**
-     * Weather the request is a ip ban.
+     * Whether the request is a ip ban.
      * @return
      *        True if the requst is a IP ban.
      *        False if its not.
@@ -74,7 +74,7 @@ public class PlayerBanRequestEvent extends PlayerEvent {
     }
     
     /**
-     * Weather or not the player will be kicked
+     * Whether or not the player will be kicked
      * after the request.
      * @return
      *        True if the player will be kicked.

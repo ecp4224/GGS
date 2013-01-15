@@ -23,13 +23,13 @@ public abstract class WebUtils {
     /**
      * Reads the contents of the website at the specified URL
      * 
-     * @param filePath - The URL of the website to read from
+     * @param url - The URL of the website to read from
      * 
      * @return A string list with the contents of the read website
      * @throws IOException If there's an error while reading from the website
      */
-	public static List<String> readContentsToList(URL u) throws IOException {
-		LineNumberReader reader = new LineNumberReader(new InputStreamReader(u.openStream()));
+	public static List<String> readContentsToList(URL url) throws IOException {
+		LineNumberReader reader = new LineNumberReader(new InputStreamReader(url.openStream()));
 		List<String> lines = new ArrayList<String>();
 		String line;
 		while ((line = reader.readLine()) != null)
@@ -41,13 +41,13 @@ public abstract class WebUtils {
     /**
      * Reads the contents of the website at the specified URL
      * 
-     * @param filePath - The URL of the website to read from
+     * @param url - The URL of the website to read from
      * 
      * @return A string array with the contents of the read website
      * @throws IOException If there's an error while reading from the website
      */
-	public static String[] readContentsToArray(URL u) throws IOException {
-        List<String> lines = readContentsToList(u);
+	public static String[] readContentsToArray(URL url) throws IOException {
+        List<String> lines = readContentsToList(url);
         return lines.toArray(new String[lines.size()]);
 	}
 	

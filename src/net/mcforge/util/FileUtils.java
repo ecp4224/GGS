@@ -155,7 +155,7 @@ public abstract class FileUtils {
     public static void writeText(String filePath, String text) throws IOException {
         createIfNotExist(filePath);
         Formatter formatter = new Formatter(new FileWriter(new File(filePath), true));
-        formatter.out().append(text);
+        formatter.out().append(text  + "\r\n");
         formatter.close();
     }
 
@@ -171,7 +171,7 @@ public abstract class FileUtils {
         createIfNotExist(filePath);
         Formatter formatter = new Formatter(new FileWriter(new File(filePath), true));
         for (int i = 0; i < lines.length; i++) {
-            formatter.out().append(lines[i]);
+            formatter.out().append(lines[i] + "\r\n");
         }
         formatter.close();
     }

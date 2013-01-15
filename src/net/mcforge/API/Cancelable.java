@@ -11,7 +11,7 @@ public interface Cancelable {
     
     /**
      * Check to see if the event is canceled.
-     * @return Weather or not the event is canceled
+     * @return Whether or not the event is canceled
      */
     public boolean isCancelled();
     
@@ -19,7 +19,7 @@ public interface Cancelable {
      * Cancel the event.
      * This should be used when you want to stop the server from
      * doing the default action it would normally do.
-     * @param cancel If set to true, the event will cancel. If set to false, the event will not cancel
+     * @param cancel If set to true, the event will be canceled. If set to false, the event won't be canceled
      */
     public void setCancel(boolean cancel);
 

@@ -62,7 +62,7 @@ public class BrowserGETRequestEvent extends BrowserEvent implements Cancelable {
     }
     
     /**
-     * Weather or not the response is html
+     * Whether or not the response is html
      * You should call this event after setting the response
      * @param bool If true, then the response is html. If false, then the response is plain/text
      */
@@ -71,7 +71,7 @@ public class BrowserGETRequestEvent extends BrowserEvent implements Cancelable {
     }
     
     /**
-     * Weather or not the reponse is html
+     * Whether or not the reponse is html
      * @return If true, then the response is html. If false, then the response is plain/text
      */
     public boolean isHTML() {

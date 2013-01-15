@@ -7,9 +7,9 @@
  ******************************************************************************/
 package net.mcforge.API.plugin;
 
-import net.mcforge.server.Server;
-
 import java.util.Properties;
+
+import net.mcforge.server.Server;
 
 /**
 * The plugin class allows dev's to extend MCForge easily without

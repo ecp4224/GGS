@@ -7,7 +7,13 @@
  ******************************************************************************/
 package net.mcforge.iomodel;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.NotSerializableException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.math.BigInteger;
 import java.net.Socket;
 import java.security.MessageDigest;
@@ -22,7 +28,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 
 import net.mcforge.API.ClassicExtension;
-
+import net.mcforge.API.CommandExecutor;
 import net.mcforge.API.level.PlayerJoinedLevel;
 import net.mcforge.API.player.PlayerBanRequestEvent;
 import net.mcforge.API.player.PlayerBlockChangeEvent;
@@ -47,7 +53,6 @@ import net.mcforge.world.Block;
 import net.mcforge.world.BlockUpdate;
 import net.mcforge.world.Level;
 import net.mcforge.world.PlaceMode;
-import net.mcforge.API.CommandExecutor;
 
 public class Player extends IOClient implements CommandExecutor {
     protected short X;
@@ -71,7 +76,7 @@ public class Player extends IOClient implements CommandExecutor {
     private static final DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
     private static MessageDigest digest;
     /**
-     * Weather or not the player is logged in
+     * Whether or not the player is logged in
      */
     public boolean isLoggedin;
     /**
@@ -95,11 +100,11 @@ public class Player extends IOClient implements CommandExecutor {
      */
     public String message;
     /**
-     * Weather or not the player is connected
+     * Whether or not the player is connected
      */
     public boolean isConnected;
     /**
-     * Weather or not the player can use color codes
+     * Whether or not the player can use color codes
      */
     public boolean cc = true; //Can Player use color codes
     /**
@@ -238,9 +243,9 @@ public class Player extends IOClient implements CommandExecutor {
      * @param reason
      *              The reason for banning this player
      * @param kick
-     *            Weather this player should be kicked as well.
+     *            Whether this player should be kicked as well.
      * @param banip
-     *             Weather to ban the player's IP as well.
+     *             Whether to ban the player's IP as well.
      */
     public void ban(CommandExecutor banner, String reason, boolean kick, boolean banip) {
         PlayerBanRequestEvent pbre = new PlayerBanRequestEvent(this, reason, kick, banner, banip);
@@ -377,7 +382,7 @@ public class Player extends IOClient implements CommandExecutor {
     }
 
     /**
-     * Weather the user is on wom
+     * Whether the user is on wom
      * @return
      *        True if the user is using the WoM client
      */
@@ -407,7 +412,7 @@ public class Player extends IOClient implements CommandExecutor {
     }
 
     /**
-     * Check weather or not this player is using a custom
+     * Check Whether or not this player is using a custom
      * nickname
      * @return
      *        True if the player is using a custom nick, false if he isn't
@@ -474,12 +479,18 @@ public class Player extends IOClient implements CommandExecutor {
      * {@link Player#isShowingPrefix()} is true.
      * 
      * The prefix will appear before the player's username in chat
-     * regardless of the value that is returned in {@link Player#isShowingPrefix()}
+     * regardless of the value that is returned in {@link Player#isShowingPrefix()}.
+     * 
+     * Setting the player's prefix using this method will set the raw prefix. If the
+     * player has a title color it will be overwritten. Also, this method won't include
+     * the title brackets unless they're included in the prefix parameter. To cleanly
+     * set a prefix use the method {@link #setCleanPrefix}.
      * 
      * The prefix assigned will also be saved as a extradata value with the key "mcf_prefix"
-     * @param prefix The prefix to set.
+     * 
+     * @param prefix The prefix to set. You should include title brackets here.
      */
-    public void setPrefix(String prefix) {
+    public void setRawPrefix(String prefix) {
         this.prefix = prefix;
 
         this.setAttribute("mcf_prefix", this.prefix);
@@ -493,10 +504,49 @@ public class Player extends IOClient implements CommandExecutor {
             e.printStackTrace();
         }
     }
+    
+    /**
+     * Sets the player's prefix to the specified prefix.
+     * This method won't overwrite the player's title color and it will show the player's
+     * title brackets.
+     * To set the player's raw prefix use {@link #setRawPrefix(String)}
+     * 
+     * @param prefix - The prefix to set. Title brackets shouldn't be included here.
+     */
+    public void setCleanPrefix(String prefix) {
+    	prefix = prefix.replaceAll("%", "&");
+    	String currprefix = getPrefix();
+		if (currprefix == null) {
+			currprefix = "[" + prefix + "] ";
+		}
+		else {
+			if (currprefix.startsWith("[")) {
+				currprefix = currprefix.substring(1);
+			}
+			else if (currprefix.startsWith("&") && currprefix.charAt(2) == '[') {
+				currprefix = currprefix.substring(0, 2) + currprefix.substring(3, currprefix.length());
+			}
+			if (currprefix.endsWith("] ")) {
+				currprefix = currprefix.substring(0, currprefix.length() - 2);
+			}
+			if (!currprefix.startsWith("&") || currprefix.length() <= 1) {
+				currprefix = "[" + prefix + "] ";
+			}
+			else {
+				String color = currprefix.substring(0, 2);
+				if (currprefix.charAt(currprefix.length() - 2) == '&') {
+					currprefix = currprefix.substring(0, currprefix.length() - 2);
+				}
+				currprefix = color + "[" + prefix + color + "] ";
+			}
+		}
+		setRawPrefix(currprefix);
+    }
+    
 
     /**
-     * Weather the user is showing there prefix
-     * above there player.
+     * Whether the user is showing their prefix
+     * above their player's head.
      * @return
      *        True if they are, false if they are not.
      */
@@ -507,8 +557,8 @@ public class Player extends IOClient implements CommandExecutor {
     }
 
     /**
-     * Set weather or not the user should show there prefix above
-     * there player's head.
+     * Set Whether or not the user should show their prefix above
+     * their player's head.
      * 
      * This method will respawn the player using {@link Player#respawn()}
      * 
@@ -1144,7 +1194,7 @@ public class Player extends IOClient implements CommandExecutor {
      * @param block The block to send
      * @param l The level the update happened in
      * @param s The getServer() the update happened in
-     * @param updateLevel Weather the level should be updated
+     * @param updateLevel Whether the level should be updated
      */
     public static void GlobalBlockChange(short X, short Y, short Z, Block block, Level l, Server s, boolean updateLevel) {
         if (updateLevel)
@@ -1169,7 +1219,7 @@ public class Player extends IOClient implements CommandExecutor {
      * @param s
      *         The getServer()
      * @param updateLevel
-     *                  Weather the level should be updated
+     *                  Whether the level should be updated
      */
     public static void GlobalBlockChange(BlockUpdate[] blockupdates, Level l, Server s, boolean updateLevel) {
         final SetBlock sb = (SetBlock)s.getPacketManager().getPacket((byte)0x05);
@@ -1313,7 +1363,7 @@ public class Player extends IOClient implements CommandExecutor {
     }
 
     /**
-     * Weather or not the player is loading the level
+     * Whether or not the player is loading the level
      * @return True if the player is loading the level, false if the player is not
      */
     public boolean isLoading() {
@@ -1341,7 +1391,8 @@ public class Player extends IOClient implements CommandExecutor {
      * Kick the player from the getServer()
      * @param reason The reason why he was kicked
      */
-    public void kick(String reason) {
+    @SuppressWarnings("deprecation")
+	public void kick(String reason) {
         PlayerKickedEvent pke = new PlayerKickedEvent(this, reason);
         getServer().getEventSystem().callEvent(pke);
         if (pke.isCancelled()) {
@@ -1368,7 +1419,7 @@ public class Player extends IOClient implements CommandExecutor {
         }
         Packet p = pm.getPacket("Kick");
         this.kickreason = reason;
-        getServer().getPlayers().remove(this);
+        getServer().players.remove(this);
         p.Write(this, getServer());
     }
 
@@ -1559,7 +1610,7 @@ public class Player extends IOClient implements CommandExecutor {
      * block if threading is false. If threading is true, level sending will
      * begin in a separate thread and this method wont block.
      * @param level The new level the player will be moved to.
-     * @param threading Weather to make this call in a separate thread or not.
+     * @param threading Whether to make this call in a separate thread or not.
      */
     public void changeLevel(Level level, boolean threading)
     {

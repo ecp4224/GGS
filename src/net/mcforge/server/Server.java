@@ -36,6 +36,7 @@ import net.mcforge.sql.ISQL;
 import net.mcforge.sql.MySQL;
 import net.mcforge.sql.SQLite;
 import net.mcforge.system.Console;
+import net.mcforge.system.PrivilegesHandler;
 import net.mcforge.system.heartbeat.Beat;
 import net.mcforge.system.heartbeat.ForgeBeat;
 import net.mcforge.system.heartbeat.Heart;
@@ -66,6 +67,7 @@ public final class Server implements LogInterface, Updatable {
     private final SaveSettings ss = new SaveSettings();
     private Logger logger;
     private CommandHandler ch;
+    private PrivilegesHandler prh;
     private GeneratorHandler gh;
     private UpdateService us;
     private Properties p;
@@ -81,7 +83,7 @@ public final class Server implements LogInterface, Updatable {
     private int oldsize;
     private ArrayList<IOClient> cache;
     private ArrayList<Player> pcache;
-    public static final String[] devs = new String []{"Dmitchell", "501st_commander", "Lavoaster", "Alem_Zupa", "QuantumParticle", "bemacized", "Shade2010", "edh649", "hypereddie10", "Gamemakergm", "Serado", "Wouto1997", "cazzar", "givo"};
+    public static final String[] devs = new String []{ "Dmitchell", "501st_commander", "Lavoaster", "Alem_Zupa", "QuantumParticle", "BeMacized", "Shade2010", "edh649", "hypereddie10", "Gamemakergm", "Serado", "Wouto1997", "cazzar", "givo" };
     /**
      * The name for currency on this server.
      */
@@ -91,7 +93,7 @@ public final class Server implements LogInterface, Updatable {
      */
     public String hash;
     /**
-     * Weather or not to verify names when players connect
+     * Whether or not to verify names when players connect
      */
     public boolean VerifyNames;
 
@@ -102,12 +104,12 @@ public final class Server implements LogInterface, Updatable {
     @Deprecated
     public ArrayList<Player> players = new ArrayList<Player>();
     /**
-     * Weather the server is running or not
+     * Whether the server is running or not
      */
     public boolean Running;
 
     /**
-     * Weather sand will use the new physics or old.
+     * Whether sand will use the new physics or old.
      */
     public boolean newSand;
     /**
@@ -143,7 +145,7 @@ public final class Server implements LogInterface, Updatable {
      */
     public String MainLevel;
     /**
-     * Weather or not the server is public
+     * Whether or not the server is public
      */    
     public boolean Public;
 
@@ -220,7 +222,7 @@ public final class Server implements LogInterface, Updatable {
 
     /**
      * Get the default class loader that is used to load
-     * plugins and commands, write serialized objects, ect..
+     * plugins and commands, write serialized objects, etc..
      * @return
      *        The default classloader used across the entire server.
      */
@@ -234,6 +236,13 @@ public final class Server implements LogInterface, Updatable {
      */
     public final PluginHandler getPluginHandler() {
         return ph;
+    }
+    
+    /**
+     * Get the handler that handles MCForge staff privileges
+     */
+    public final PrivilegesHandler getPrivilegesHandler() {
+    	return prh;
     }
 
     /**
@@ -470,7 +479,6 @@ public final class Server implements LogInterface, Updatable {
     /**
      * Start the server
      */
-    @SuppressWarnings("restriction")
     public void start(Console console, boolean startSQL) {
         if (Running)
             return;
@@ -496,7 +504,14 @@ public final class Server implements LogInterface, Updatable {
         ph = new PluginHandler(this);
         gh = new GeneratorHandler();
         startListening();
+        prh = new PrivilegesHandler(this);
         ph.loadplugins();
+        try {
+			prh.initialize();
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+		}
         Log("Loaded plugins");
         Level.getLoader().setClassLoader(getDefaultClassLoader());
         lm = new LevelHandler(this);

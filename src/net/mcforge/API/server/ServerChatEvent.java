@@ -60,7 +60,7 @@ public class ServerChatEvent extends ServerEvent implements Cancelable  {
     }
     
     /**
-     * Weather this event is canceled or not.
+     * Whether this event is canceled or not.
      * 
      * @return boolean
      *                If true, the event has been canceled.

@@ -24,7 +24,7 @@ public class GeneratorHandler {
     public Generator findGenerator(String name) {
         for (int i = 0; i < generators.size(); i++) {
     		Generator g = generators.get(i);
-    		if (g.getName().equals(name))
+    		if (g.getName().equalsIgnoreCase(name))
     				return g;
     		else {
         		for (int j = 0; j < g.getShortcuts().length; j++) {

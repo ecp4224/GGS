@@ -89,9 +89,26 @@ public class CommandHandler {
         Command c = find(command);
         if (args.length == 1 && args[0].equals(""))
             args = new String[0];
+        
+        if (_server.getPrivilegesHandler().isProtectedCmd(c)) {
+        	for (int i = 0; i < args.length; i++) {
+        		Player p = _server.findPlayer(args[i]);
+        		if (p != null) {
+        			if (_server.getPrivilegesHandler().isProtected(p, c)) {
+        				int playerPerm = _server.getPrivilegesHandler().getStaffRank(player.getName()).getValue();
+        				int pPerm = _server.getPrivilegesHandler().getStaffRank(p).getValue();
+        				if (pPerm > playerPerm) {
+        					player.sendMessage("You can't use " + c.getName() + " on " + p.username);
+        					return;
+        				}
+        			}
+        		}
+        	}
+        }
+        
         if(c != null)
         {
-            if (!(player instanceof Console) && !player.getGroup().canExecute(c))
+            if (!(player instanceof Console) && !player.getGroup().canExecute(c) && !_server.getPrivilegesHandler().canOverride(player, c))
                 player.sendMessage("Sorry, you don't have permission to execute this command!");
             else {
                 if (!c.getName().equals("abort")) {

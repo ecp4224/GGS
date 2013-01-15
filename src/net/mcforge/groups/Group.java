@@ -18,6 +18,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 
@@ -214,6 +215,13 @@ public class Group {
 	public static final ArrayList<Group> getGroupList() {
 		return groups;
 	}
+	
+	/**
+	 * Gets an ArrayList containing the online members of this group
+	 */
+	public List<Player> getOnlinePlayers() {
+		return online;
+	}
 
 	public class Listen implements Listener {
 		@EventHandler
@@ -267,7 +275,26 @@ public class Group {
 		}
 		return null;
 	}
-
+	/**
+	 * Get the group the <b>playerName</b> is assigned to
+	 * 
+	 * @param playerName
+	 *            The player to search for
+	 * @return The group player <b>playerName</b> is in
+	 */
+	public static Group getGroup(String playerName) {
+		for (Group g : groups) {
+			for (Player pp : g.online) {
+				if (playerName.equals(pp.username)) return g;
+			}
+		}
+		for (Group g : groups) {
+			for (String pp : g.members) {
+				if (pp.equals(playerName)) return g;
+			}
+		}
+		return null;
+	}
 	/**
 	 * Get the default group the player is assigned to if the player is not
 	 * assigned to any group
@@ -448,7 +475,17 @@ public class Group {
 			if (parent != null) g.parent = parent;
 		}
 		temp.clear();
-		if (defaultgroup == null) defaultgroup = groups.get(0);
+		if (defaultgroup == null)
+			defaultgroup = groups.get(0);
+		
+		server.getEventSystem().registerEvents(new Listener() {
+			@EventHandler
+			public void connect(PlayerLoginEvent event) {
+				Group g = getGroup(event.getPlayer());
+				if (g == null)
+					Group.getDefault().addPlayer(event.getPlayer());
+			}
+		});
 	}
 
 	private static Group read(Element e, Server server) {

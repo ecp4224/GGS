@@ -37,7 +37,7 @@ public abstract class PhysicsBlock extends Block implements Tick {
     }
     
     /**
-     * Weather this block should be added to the tick
+     * Whether this block should be added to the tick
      * when the level loads.
      * @return
      *        True if this block should be added to the tick when the level loads.
@@ -53,7 +53,7 @@ public abstract class PhysicsBlock extends Block implements Tick {
     public abstract PhysicsBlock clone(Server s);
     
     /**
-     * Weather this physics block should tick
+     * Whether this physics block should tick
      * outside the physics thread.
      * @return
      *        True if it should tick outside the physics
@@ -201,7 +201,7 @@ public abstract class PhysicsBlock extends Block implements Tick {
     }
     
     /**
-     * Weather a physicsblock is active. When a physicsblock
+     * Whether a physicsblock is active. When a physicsblock
      * is inactive, it wont tick.
      * @param pb
      *          The block to check
@@ -215,7 +215,7 @@ public abstract class PhysicsBlock extends Block implements Tick {
     }
     
     /**
-     * Weather this block is active. If this block is
+     * Whether this block is active. If this block is
      * inactive, it wont tick
      * @return
      *        True if this block is active, false if its not

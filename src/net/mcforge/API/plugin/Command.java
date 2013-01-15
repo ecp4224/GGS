@@ -42,7 +42,7 @@ public abstract class Command {
     public abstract String getName();
     
     /**
-     * Weather this command is for ops only by default
+     * Whether this command is for ops only by default
      * @return
      *        True if only ops can use it, otherwise it will be false.
      */
@@ -68,7 +68,7 @@ public abstract class Command {
     public abstract void execute(CommandExecutor player, String[] args);
     
     /**
-     * Weather this command will run outside the CommandHandler thread.
+     * Whether this command will run outside the CommandHandler thread.
      * Override this method to set this option
      * @return
      *        True if the command will run in a separate thread.
@@ -111,7 +111,7 @@ public abstract class Command {
     public abstract void help(CommandExecutor executor);
 
     /**
-     * Set weather this command is an OP Command or not.
+     * Set Whether this command is an OP Command or not.
      * @param b
      *         True if this command is an op command.
      *         False if this command is not an op command.

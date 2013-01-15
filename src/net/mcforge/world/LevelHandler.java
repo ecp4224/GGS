@@ -221,7 +221,7 @@ public class LevelHandler {
      * @param level
      *             The level to unload
      * @param save
-     *            Weather the level should save before unloading
+     *            Whether the level should save before unloading
      * 
      * @return boolean
      *                Returns true if the level was unloaded, otherwise returns false.
