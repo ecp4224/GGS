@@ -162,5 +162,15 @@ public class Lava extends PhysicsBlock {
         return true;
     }
 
+    @Override
+    public boolean inSeperateThread() {
+        return false;
+    }
+
+    @Override
+    public int getTimeout() {
+        return 1;
+    }
+
 }
 

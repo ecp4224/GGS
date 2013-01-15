@@ -56,5 +56,16 @@ public class RedFlower extends PhysicsBlock {
         return true;
     }
 
+    @Override
+    public boolean inSeperateThread() {
+        return false;
+    }
+
+    @Override
+    public int getTimeout() {
+        // TODO Auto-generated method stub
+        return 1;
+    }
+
 }
 

@@ -47,14 +47,14 @@ import net.mcforge.networking.packets.classicminecraft.GlobalPosUpdate;
 import net.mcforge.networking.packets.classicminecraft.SetBlock;
 import net.mcforge.networking.packets.classicminecraft.TP;
 import net.mcforge.server.Server;
-import net.mcforge.server.Tick;
 import net.mcforge.sql.MySQL;
+import net.mcforge.system.ticker.Tick;
 import net.mcforge.world.Block;
 import net.mcforge.world.BlockUpdate;
 import net.mcforge.world.Level;
 import net.mcforge.world.PlaceMode;
 
-public class Player extends IOClient implements CommandExecutor {
+public class Player extends IOClient implements CommandExecutor, Tick {
     protected short X;
     protected short Y;
     protected short Z;
@@ -69,7 +69,6 @@ public class Player extends IOClient implements CommandExecutor {
     protected Messages chat;
     protected String clientName = "Minecraft";
     protected ArrayList<Player> seeable = new ArrayList<Player>();
-    protected Ping tick = new Ping(this);
     protected ChatColor color = ChatColor.White;
     protected String custom_name;
     private HashMap<String, Object> extra = new HashMap<String, Object>();
@@ -168,7 +167,7 @@ public class Player extends IOClient implements CommandExecutor {
         this.chat = new Messages(getServer());
 
         afk = false;
-        getServer().Add(tick);
+        getServer().getTicker().addTick(this);
     }
     
     @Override
@@ -1733,29 +1732,11 @@ public class Player extends IOClient implements CommandExecutor {
         color = null;
         client = null;
 
-        getServer().Remove(tick); //Do this last as this takes a while to remove
+        getServer().getTicker().removeTick(this); //Do this last as this takes a while to remove
     }
 
     protected void finishLevel() {
         levelsender = null;
-    }
-
-    protected class Ping implements Tick {
-
-        Player p;
-        public Ping(Player p) { this.p = p; }
-        @Override
-        public void tick() {
-            Packet pa;
-            pa = pm.getPacket((byte)0x01);
-            pa.Write(p, getServer());
-            pa = null;
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     protected class asyncLevel extends Thread {
@@ -1810,6 +1791,24 @@ public class Player extends IOClient implements CommandExecutor {
     @Override
     public String getName() {
         return username;
+    }
+
+    @Override
+    public void tick() {
+        Packet pa;
+        pa = pm.getPacket((byte)0x01);
+        pa.Write(this, getServer());
+        pa = null;
+    }
+
+    @Override
+    public boolean inSeperateThread() {
+        return true;
+    }
+
+    @Override
+    public int getTimeout() {
+        return 500;
     }
 }
 

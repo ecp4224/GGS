@@ -19,6 +19,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
+import javax.management.RuntimeErrorException;
+
 import net.mcforge.API.EventSystem;
 import net.mcforge.API.action.CmdAbort;
 import net.mcforge.API.io.ServerLogEvent;
@@ -42,6 +44,8 @@ import net.mcforge.system.heartbeat.ForgeBeat;
 import net.mcforge.system.heartbeat.Heart;
 import net.mcforge.system.heartbeat.MBeat;
 import net.mcforge.system.heartbeat.WBeat;
+import net.mcforge.system.ticker.Tick;
+import net.mcforge.system.ticker.Ticker;
 import net.mcforge.system.updater.Updatable;
 import net.mcforge.system.updater.UpdateService;
 import net.mcforge.system.updater.UpdateType;
@@ -66,14 +70,13 @@ public final class Server implements LogInterface, Updatable {
     private LevelHandler lm;
     private final SaveSettings ss = new SaveSettings();
     private Logger logger;
+    private Ticker ticker;
     private CommandHandler ch;
     private PrivilegesHandler prh;
     private GeneratorHandler gh;
     private UpdateService us;
     private Properties p;
     private PluginHandler ph;
-    private ArrayList<Tick> ticks = new ArrayList<Tick>();
-    private Thread tick;
     private Beat heartbeater;
     private EventSystem es;
     private String Salt;
@@ -320,7 +323,6 @@ public final class Server implements LogInterface, Updatable {
         this.Port = Port;
         this.Name = Name;
         this.MOTD = MOTD;
-        tick = new Ticker();
     }
 
     /**
@@ -465,12 +467,17 @@ public final class Server implements LogInterface, Updatable {
         if (es == null)
             es = new EventSystem(this);
     }
-
+    
+    
     public void startTicker() {
-        if (!tick.isAlive())
-            tick.start();
+        ticker = new Ticker();
+        ticker.startTick();
     }
     
+    /**
+     * Start listening to the port specified in {@link Server#Port}
+     * and start accepting new connections.
+     */
     public void startListening() {
         pm = new PacketManager(this);
         pm.startReading();
@@ -479,9 +486,11 @@ public final class Server implements LogInterface, Updatable {
     /**
      * Start the server
      */
+    @SuppressWarnings("restriction")
     public void start(Console console, boolean startSQL) {
         if (Running)
             return;
+        startTicker();
         Running = true;
         this.console = console;
         console.setServer(this);
@@ -695,7 +704,7 @@ public final class Server implements LogInterface, Updatable {
             getLevelHandler().findLevel(MainLevel).unload(this);
         }
         lm.stopBackup();
-        tick.join();
+        ticker.stopTick();
         logger.Stop();
         heartbeater.stopBeating();
         ArrayList<Player> players = new ArrayList<Player>();
@@ -730,47 +739,27 @@ public final class Server implements LogInterface, Updatable {
      * Add a task to be called every 10 milliseconds
      * @param t
      *         The {@link Tick} object to call
+     * 
+     * @deprecated Use {@link Server#getTicker()} and {@link Ticker#addTick(Tick)}
      */
+    @Deprecated
     public void Add(Tick t) {
-        synchronized(ticks) {
-            if (!ticks.contains(t))
-                ticks.add(t);
-        }
+        ticker.addTick(t);
+    }
+    
+    public Ticker getTicker() {
+        return ticker;
     }
 
     /**
      * Remove a task from the Tick list
      * @param t
      *         The {@link Tick} object to remove
+     * @deprecated Use {@link Server#getTicker()} and {@link Ticker#removeTick(Tick)}
      */
+    @Deprecated
     public void Remove(Tick t) {
-        synchronized(ticks) {
-            if (ticks.contains(t))
-                ticks.remove(t);
-        }
-    }
-
-    private class Ticker extends Thread {
-
-        @Override
-        public void run() {
-            while (Running) {
-                for (int i = 0; i < ticks.size(); i++) {
-                    Tick t = ticks.get(i);
-                    try {
-                        t.tick();
-                    } catch (Exception e) {
-                        Log("ERROR TICKING!");
-                        e.printStackTrace();
-                    }
-                }
-                try {
-                    Thread.sleep(10);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
+        ticker.removeTick(t);
     }
 
     private class SaveSettings implements Tick {
@@ -785,6 +774,14 @@ public final class Server implements LogInterface, Updatable {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+        @Override
+        public boolean inSeperateThread() {
+            return false;
+        }
+        @Override
+        public int getTimeout() {
+            return 10;
         }
 
     }

@@ -127,4 +127,14 @@ public class Sand extends PhysicsBlock {
     public boolean initAtStart() {
         return true;
     }
+
+    @Override
+    public boolean inSeperateThread() {
+        return false;
+    }
+
+    @Override
+    public int getTimeout() {
+        return 1;
+    }
 }

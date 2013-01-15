@@ -239,7 +239,9 @@ public class PluginHandler {
 
                         } catch (ClassNotFoundException ex) {
                             ex.printStackTrace();
-                        } 
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
                 try {
@@ -272,6 +274,7 @@ public class PluginHandler {
         File[] pluginFiles = pluginFolder.listFiles();
         for (int i = 0; i < pluginFiles.length; i++) {
             if (pluginFiles[i].isFile() && pluginFiles[i].getName().endsWith(".jar")) {
+                try {
                 Map<Plugin, String> temp = loadFile(pluginFiles[i], false);
                 for (Entry<Plugin, String> p : temp.entrySet()) {
                     require.put(p.getKey(), p.getValue());
@@ -281,6 +284,9 @@ public class PluginHandler {
                         loadPlugin(p.getKey());
                         require.remove(p.getKey());
                     }
+                }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         }

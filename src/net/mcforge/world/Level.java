@@ -22,7 +22,7 @@ import java.util.zip.GZIPOutputStream;
 
 import net.mcforge.iomodel.Player;
 import net.mcforge.server.Server;
-import net.mcforge.server.Tick;
+import net.mcforge.system.ticker.Tick;
 import net.mcforge.util.properties.Properties;
 import net.mcforge.world.converter.MojangLevel;
 import net.mcforge.world.converter.MojangLevelInputStream;

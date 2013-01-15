@@ -18,7 +18,7 @@ import net.mcforge.API.level.LevelPreLoadEvent;
 import net.mcforge.API.level.LevelUnloadEvent;
 import net.mcforge.iomodel.Player;
 import net.mcforge.server.Server;
-import net.mcforge.server.Tick;
+import net.mcforge.system.ticker.Tick;
 import net.mcforge.util.FileUtils;
 import net.mcforge.world.generator.FlatGrass;
 
@@ -39,7 +39,7 @@ public class LevelHandler {
      */
     public LevelHandler(Server server) {
         this.server = server;
-        server.Add(new Saver());
+        server.getTicker().addTick(new Saver());
         startBackup();
     }
 
@@ -286,15 +286,9 @@ public class LevelHandler {
     }
 
     private class Saver implements Tick {
-        int temp = 600;
 
         @Override
         public void tick() {
-            if (temp > 0) {
-                temp--;
-                return;
-            }
-            temp = 6000;
             for (int i = 0; i < levels.size(); i++) {
                 if (levels.get(i).isAutoSaveEnabled()) {
                     try {
@@ -304,6 +298,16 @@ public class LevelHandler {
                     }
                 }
             }
+        }
+
+        @Override
+        public boolean inSeperateThread() {
+            return true;
+        }
+
+        @Override
+        public int getTimeout() {
+            return 600;
         }
     }
 

@@ -22,7 +22,7 @@ import java.nio.channels.ReadableByteChannel;
 import java.util.ArrayList;
 
 import net.mcforge.server.Server;
-import net.mcforge.server.Tick;
+import net.mcforge.system.ticker.Tick;
 import net.mcforge.util.FileUtils;
 
 public class UpdateService implements Tick {
@@ -31,7 +31,6 @@ public class UpdateService implements Tick {
     private ArrayList<String> restart = new ArrayList<String>();
     private ArrayList<Updatable> ignore = new ArrayList<Updatable>();
     private ArrayList<Updatable> updating = new ArrayList<Updatable>();
-    private int wait = 0;
     private Server server;
     private boolean update;
     private UpdateType defaulttype;
@@ -43,7 +42,7 @@ public class UpdateService implements Tick {
      */
     public UpdateService(Server server) {
         this.server = server;
-        this.server.Add(this);
+        this.server.getTicker().addTick(this);
         defaulttype = UpdateType.Auto_Silent;
         if (this.server.getSystemProperties().hasValue("default_update_type"))
             defaulttype = UpdateType.parse(this.server.getSystemProperties().getValue("default_update_type"));
@@ -180,11 +179,6 @@ public class UpdateService implements Tick {
 
     @Override
     public void tick() {
-        if (wait < 3000 && !update) {
-            wait++;
-            return;
-        }
-        wait = 0;
         if (!update)
             checkAll();
         else {
@@ -360,6 +354,16 @@ public class UpdateService implements Tick {
                 server.getConsole().alertOfManualUpdate(u);
             updating.remove(u);
         }
+    }
+
+    @Override
+    public boolean inSeperateThread() {
+        return false;
+    }
+
+    @Override
+    public int getTimeout() {
+        return 3000;
     }
 }
 

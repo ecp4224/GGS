@@ -70,5 +70,15 @@ public class Dirt extends PhysicsBlock {
         return false;
     }
 
+    @Override
+    public boolean inSeperateThread() {
+        return false;
+    }
+
+    @Override
+    public int getTimeout() {
+        return 30;
+    }
+
 }
 

@@ -54,5 +54,15 @@ public class Grass extends PhysicsBlock {
         else
             super.stopTick();
     }
+
+    @Override
+    public boolean inSeperateThread() {
+        return false;
+    }
+
+    @Override
+    public int getTimeout() {
+        return 1;
+    }
 }
 

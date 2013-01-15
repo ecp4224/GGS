@@ -9,7 +9,7 @@ package net.mcforge.world;
 
 import net.mcforge.iomodel.Player;
 import net.mcforge.server.Server;
-import net.mcforge.server.Tick;
+import net.mcforge.system.ticker.Tick;
 
 public abstract class PhysicsBlock extends Block implements Tick {
     private static final long serialVersionUID = 3223381644534019388L;
