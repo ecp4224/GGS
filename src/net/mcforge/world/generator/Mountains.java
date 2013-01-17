@@ -15,6 +15,11 @@ import net.mcforge.world.Generator;
 import net.mcforge.world.Level;
 import net.mcforge.world.TreeGenerator;
 
+/**
+ * A generator that creates a mountainous level.
+ * @author MCForgeTeam
+ *
+ */
 public class Mountains implements Generator {
     
     final Random rand = new Random();

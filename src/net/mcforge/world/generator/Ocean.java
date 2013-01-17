@@ -14,6 +14,11 @@ import net.mcforge.world.Block;
 import net.mcforge.world.Generator;
 import net.mcforge.world.Level;
 
+/**
+ * A generator that creates an ocean.
+ * @author MCForgeTeam
+ *
+ */
 public class Ocean implements Generator {
 
     final Random rand = new Random();

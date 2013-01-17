@@ -14,6 +14,11 @@ import net.mcforge.world.Block;
 import net.mcforge.world.Generator;
 import net.mcforge.world.Level;
 
+/**
+ * Creates a Space level where the walls are made of Bedrock.
+ * @author MCForge Team
+ *
+ */
 public class Space implements Generator {
 
     private Server _server;

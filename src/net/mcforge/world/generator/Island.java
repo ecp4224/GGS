@@ -14,6 +14,11 @@ import net.mcforge.world.Block;
 import net.mcforge.world.Generator;
 import net.mcforge.world.Level;
 
+/**
+ * A generator that creates an island like level.
+ * @author MCForgeTeam
+ *
+ */
 public class Island implements Generator {
 
     final Random rand = new Random();

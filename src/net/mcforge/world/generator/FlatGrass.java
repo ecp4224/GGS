@@ -12,6 +12,11 @@ import net.mcforge.world.Block;
 import net.mcforge.world.Generator;
 import net.mcforge.world.Level;
 
+/**
+ * A generator that creates a flat grass area, perfect for freebuild!
+ * @author MCForgeTeam
+ *
+ */
 public class FlatGrass implements Generator {
 
     private Server _server;

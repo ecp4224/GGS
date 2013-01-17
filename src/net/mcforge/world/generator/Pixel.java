@@ -12,6 +12,12 @@ import net.mcforge.world.Block;
 import net.mcforge.world.Generator;
 import net.mcforge.world.Level;
 
+/**
+ * Create a level where the walls are made of white wool, perfect
+ * for pixel art!
+ * @author MCForgeTeam
+ *
+ */
 public class Pixel implements Generator {
 
     private Server _server;

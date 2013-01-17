@@ -15,6 +15,11 @@ import net.mcforge.world.Generator;
 import net.mcforge.world.Level;
 import net.mcforge.world.TreeGenerator;
 
+/**
+ * A generator that creates a forest like level.
+ * @author MCForgeTeam
+ *
+ */
 public class Forest implements Generator {
 
     final Random rand = new Random();

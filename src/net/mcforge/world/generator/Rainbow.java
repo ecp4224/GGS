@@ -14,6 +14,12 @@ import net.mcforge.world.Block;
 import net.mcforge.world.Generator;
 import net.mcforge.world.Level;
 
+/**
+ * Creates a rainbow level where the level is a giant box with a
+ * rainbow patterned wall
+ * @author MCForge Team
+ *
+ */
 public class Rainbow implements Generator {
 
     private Server _server;
