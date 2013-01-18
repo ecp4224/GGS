@@ -10,7 +10,8 @@ package net.mcforge.world.converter;
 import java.io.Serializable;
 
 /**
- *
+ * A clone MojangLevel, used to trick the serialize to load the object
+ * @author Gamemakergm
  *
  */
 public class MojangLevel implements Serializable {

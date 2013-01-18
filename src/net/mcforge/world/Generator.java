@@ -7,6 +7,11 @@
  ******************************************************************************/
 package net.mcforge.world;
 
+/**
+ * A Generator that generators a level.
+ * @author MCForgeTeam
+ *
+ */
 public interface Generator {
 	
 	/**

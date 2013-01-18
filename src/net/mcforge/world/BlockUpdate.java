@@ -1,6 +1,13 @@
 package net.mcforge.world;
 
+import net.mcforge.iomodel.Player;
 
+/**
+ * This class represents data for a Block Update. The only method that </br>
+ * uses this in the core is {@link Player#GlobalBlockChange(BlockUpdate[], Level, net.mcforge.server.Server)} and {@link Player#GlobalBlockChange(BlockUpdate[], Level, net.mcforge.server.Server, boolean)}.
+ * @author MCForgeTeam
+ *
+ */
 public class BlockUpdate {
     private int x;
     private int y;

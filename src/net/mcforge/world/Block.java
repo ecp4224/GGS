@@ -63,7 +63,14 @@ import net.mcforge.world.blocks.WoodenPlank;
 import net.mcforge.world.blocks.Yellow;
 import net.mcforge.world.blocks.YellowFlower;
 
-
+/**
+ * This abstract class represents a block that can be placed in the level. </br>
+ * This class can be extended to create custom blocks, if you wish to create a physics block, then try using a {@linkplain PhysicsBlock#PhysicsBlock(byte, String)} </br>
+ * To add a block, you would call the static method {@link Block#addBlock(Block)}. This will allow other plugins, commands </br>
+ * to find your block, be sure to use a unused ID, otherwise you will throw an {@linkplain InvalidBlockAddException#InvalidBlockAddException()}. </br>
+ * @author MCForgeTeam
+ *
+ */
 public abstract class Block implements Serializable {
     private static final long serialVersionUID = 1L;
 

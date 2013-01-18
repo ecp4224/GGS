@@ -10,6 +10,11 @@ package net.mcforge.world.converter;
 import net.mcforge.API.level.BlockConvertEvent;
 import net.mcforge.server.Server;
 
+/**
+ * Converts old blocks from MCForge5 into new blocks for MCForge6
+ * @author MCForgeTeam
+ *
+ */
 public class OldBlocks {
     
     private static final byte air = (byte)0;
