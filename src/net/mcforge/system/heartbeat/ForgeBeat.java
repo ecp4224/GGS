@@ -34,7 +34,7 @@ public class ForgeBeat extends Heart {
     public String getLevels(Server server) {
         String worlds = "";
         for (Level l : server.getLevelHandler().getLevelList()) {
-            worlds += ", " + l.name;
+            worlds += ", " + l.getName();
         }
         return worlds;
     }

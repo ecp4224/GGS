@@ -43,13 +43,13 @@ public class Space implements Generator {
     @Override
     public void generate(Level l) {
         Random rand = new Random(System.currentTimeMillis());
-        for (int x = 0; x < l.width; x++) {
-            for (int y = 0; y < l.height; y++) {
-                for (int z = 0; z < l.depth; z++) {
+        for (int x = 0; x < l.getWidth(); x++) {
+            for (int y = 0; y < l.getHeight(); y++) {
+                for (int z = 0; z < l.getDepth(); z++) {
                     if (y == 0)
-                        l.skipChange(x, y, z, Block.getBlock("Bedrock"), _server);
-                    else if (x == 0 || x == l.width - 1 || z == 0 || z == l.depth - 1 || y == 1 || y == l.height - 1)
-                        l.skipChange(x, y, z, Block.getBlock( rand.nextInt(100) == 0 ? "IronOre" : "Obsidian"), _server);
+                        l.rawSetTile(x, y, z, Block.getBlock("Bedrock"), _server, false);
+                    else if (x == 0 || x == l.getWidth() - 1 || z == 0 || z == l.getDepth() - 1 || y == 1 || y == l.getHeight() - 1)
+                        l.rawSetTile(x, y, z, Block.getBlock( rand.nextInt(100) == 0 ? "IronOre" : "Obsidian"), _server, false);
                 }
             }
         }

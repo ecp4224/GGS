@@ -1356,7 +1356,7 @@ public class Player extends IOClient implements CommandExecutor, Tick {
         if (this.level == level)
             return;
         this.level = level;
-        getServer().Log(username + " moved to " + level.name);
+        getServer().Log(username + " moved to " + level.getName());
         levelsender = new SendLevel(this);
         levelsender.start();
     }
@@ -1623,14 +1623,14 @@ public class Player extends IOClient implements CommandExecutor, Tick {
                     levelsender.join(); //Wait for finish
                 } catch (InterruptedException e) { }
             }
-            X = (short)((0.5 + level.spawnx) * 32);
-            Y = (short)((1 + level.spawny) * 32);
-            Z = (short)((0.5 + level.spawnz) * 32);
+            X = (short)((0.5 + level.getSpawnX()) * 32);
+            Y = (short)((1 + level.getSpawnY()) * 32);
+            Z = (short)((0.5 + level.getSpawnZ()) * 32);
             oldX = X;
             oldY = Y;
             oldZ = Z;
             spawnPlayer(this);
-            setPos((short)((0.5 + level.spawnx) * 32), (short)((1 + level.spawny) * 32), (short)((0.5 + level.spawnz) * 32));
+            setPos((short)((0.5 + level.getSpawnX()) * 32), (short)((1 + level.getSpawnY()) * 32), (short)((0.5 + level.getSpawnZ()) * 32));
             completeSpawn();
             PlayerJoinedLevel event = new PlayerJoinedLevel(this, this.level);
             getServer().getEventSystem().callEvent(event);

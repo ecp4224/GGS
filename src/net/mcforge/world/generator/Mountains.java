@@ -54,10 +54,10 @@ public class Mountains implements Generator {
 
     @Override
     public void generate(Level l, int sizex, int sizey, int sizez) {
-        terrain = new float[l.width * l.height];
-        overlay = new float[l.width * l.height];
-        overlay2 = new float[l.width * l.height]; 
-        short WaterLevel = (short)(l.depth / 2 + 2);
+        terrain = new float[l.getWidth() * l.getHeight()];
+        overlay = new float[l.getWidth() * l.getHeight()];
+        overlay2 = new float[l.getWidth() * l.getHeight()]; 
+        short WaterLevel = (short)(l.getDepth() / 2 + 2);
 
         GenerateFault(terrain, l);
         FilterAverage(l);
@@ -70,8 +70,8 @@ public class Mountains implements Generator {
         try {
             for (int bb = 0; bb < terrain.length; bb++)
             {
-                short x = (short)(bb % l.width);
-                short y = (short)(bb / l.width);
+                short x = (short)(bb % l.getWidth());
+                short y = (short)(bb / l.getWidth());
                 short z = Evaluate(l, Range(terrain[bb], RangeLow - NegateEdge(x, y, l), RangeHigh - NegateEdge(x, y, l)));
                 if (z > WaterLevel)
                 {
@@ -81,18 +81,18 @@ public class Mountains implements Generator {
                         {
                             if (z > WaterLevel + 2)
                             {
-                                if (zz == 0) { l.skipChange(x, z - zz, y, Block.getBlock("Grass"), _server); }      //top layer
-                                else if (zz < 3) { l.skipChange(x, (short)(z - zz), y, Block.getBlock("Dirt"), _server); }   //next few
-                                else { l.skipChange(x, (short)(z - zz), y, Block.getBlock("Stone"), _server); }               //ten rock it
+                                if (zz == 0) { l.rawSetTile(x, z - zz, y, Block.getBlock("Grass"), _server, false); }      //top layer
+                                else if (zz < 3) { l.rawSetTile(x, (short)(z - zz), y, Block.getBlock("Dirt"), _server, false); }   //next few
+                                else { l.rawSetTile(x, (short)(z - zz), y, Block.getBlock("Stone"), _server, false); }               //ten rock it
                             }
                             else
                             {
-                                l.skipChange(x, (short)(z - zz), y, Block.getBlock("Sand"), _server);                        //SAAAND extra for islands
+                                l.rawSetTile(x, (short)(z - zz), y, Block.getBlock("Sand"), _server, false);                        //SAAAND extra for islands
                             }
                         }
                         else
                         {
-                            l.skipChange(x, (short)(z - zz), y, Block.getBlock("Stone"), _server);    //zoned for above sea level rock floor
+                            l.rawSetTile(x, (short)(z - zz), y, Block.getBlock("Stone"), _server, false);    //zoned for above sea level rock floor
                         }
                     }
                     int temprand = rand.nextInt(12);
@@ -100,10 +100,10 @@ public class Mountains implements Generator {
                     switch (temprand)
                     {
                     case 10:
-                        l.skipChange(x, (short)(z + 1), y, Block.getBlock("RedFlower"), _server);
+                        l.rawSetTile(x, (short)(z + 1), y, Block.getBlock("RedFlower"), _server, false);
                         break;
                     case 11:
-                        l.skipChange(x, (short)(z + 1), y, Block.getBlock("YellowFlower"), _server);
+                        l.rawSetTile(x, (short)(z + 1), y, Block.getBlock("YellowFlower"), _server, false);
                         break;
                     default:
                         break;
@@ -131,21 +131,21 @@ public class Mountains implements Generator {
                     for (short zz = 0; WaterLevel - zz >= 0; zz++)
                     {
                         if (WaterLevel - zz > z)
-                        { l.skipChange(x, (short)(WaterLevel - zz), y, Block.getBlock("Water"), _server); }    //better fill the water aboce me
+                        { l.rawSetTile(x, (short)(WaterLevel - zz), y, Block.getBlock("Water"), _server, false); }    //better fill the water aboce me
                         else if (WaterLevel - zz > z - 3)
                         {
                             if (overlay[bb] < 0.75f)
                             {
-                                l.skipChange(x, (short)(WaterLevel - zz), y, Block.getBlock("Sand"), _server);   //sand top
+                                l.rawSetTile(x, (short)(WaterLevel - zz), y, Block.getBlock("Sand"), _server, false);   //sand top
                             }
                             else
                             {
-                                l.skipChange(x, (short)(WaterLevel - zz), y, Block.getBlock("Gravel"), _server);  //zoned for gravel
+                                l.rawSetTile(x, (short)(WaterLevel - zz), y, Block.getBlock("Gravel"), _server, false);  //zoned for gravel
                             }
                         }
                         else
                         { 
-                            l.skipChange(x, (short)(WaterLevel - zz), y, Block.getBlock("Stone"), _server); 
+                            l.rawSetTile(x, (short)(WaterLevel - zz), y, Block.getBlock("Stone"), _server, false); 
                         }
                     }
                 }
@@ -183,9 +183,9 @@ public class Mountains implements Generator {
         float disp = DispMax;
 
 
-        halfX = (short)(l.width / 2);
-        halfZ = (short)(l.height / 2);
-        int numIterations = (int)((l.width + l.height));
+        halfX = (short)(l.getWidth() / 2);
+        halfZ = (short)(l.getHeight() / 2);
+        int numIterations = (int)((l.getWidth() + l.getHeight()));
         for (k = 0; k < numIterations; k++)
         {
             //s.Log("itteration " + k.ToString());
@@ -196,15 +196,15 @@ public class Mountains implements Generator {
             b = (float)Math.sin(w);
 
             c = ((float)rand.nextDouble()) * 2 * d - d;
-            for (i = 0; i < l.height; i++)
+            for (i = 0; i < l.getHeight(); i++)
             {
-                for (j = 0; j < l.width; j++)
+                for (j = 0; j < l.getWidth(); j++)
                 {
                     if ((i - halfZ) * a + (j - halfX) * b + c > 0)
                         dispAux = disp;
                     else
                         dispAux = -disp;
-                    AddTerrainHeight(array, j, i, l.width, dispAux);
+                    AddTerrainHeight(array, j, i, (short)l.getWidth(), dispAux);
                 }
             }
 
@@ -231,8 +231,8 @@ public class Mountains implements Generator {
 
         for (int bb = 0; bb < terrain.length; bb++)
         {
-            short x = (short)(bb % l.width);
-            short y = (short)(bb / l.width);
+            short x = (short)(bb % l.getWidth());
+            short y = (short)(bb / l.getWidth());
             filtered[bb] = GetAverage9(x, y, l);
         }
 
@@ -274,11 +274,11 @@ public class Mountains implements Generator {
     float GetPixel(short x, short y, Level l)
     {
         if (x < 0) { return 0.0f; }
-        if (x >= l.width) { return 0.0f; }
+        if (x >= l.getWidth()) { return 0.0f; }
         if (y < 0) { return 0.0f; }
-        if (y >= l.height) { return 0.0f; }
+        if (y >= l.getHeight()) { return 0.0f; }
         divide += 1.0f;
-        return terrain[x + y * l.width];
+        return terrain[x + y * l.getWidth()];
     }
 
     float Range(float input, float low, float high)
@@ -292,8 +292,8 @@ public class Mountains implements Generator {
     {
         float tempx = 0.0f, tempy = 0.0f;
         float temp;
-        if (x != 0) { tempx = ((float)x / (float)l.width) * 0.5f; }
-        if (y != 0) { tempy = ((float)y / (float)l.height) * 0.5f; }
+        if (x != 0) { tempx = ((float)x / (float)l.getWidth()) * 0.5f; }
+        if (y != 0) { tempy = ((float)y / (float)l.getHeight()) * 0.5f; }
         tempx = Math.abs(tempx - 0.25f);
         tempy = Math.abs(tempy - 0.25f);
         if (tempx > tempy)
@@ -312,7 +312,7 @@ public class Mountains implements Generator {
 
     void GeneratePerlinNoise(float[] array, Level l, Random rand)
     {
-        GenerateNormalized(array, 0.7f, 8, l.width, l.height, rand.nextInt(), 64);
+        GenerateNormalized(array, 0.7f, 8, l.getWidth(), l.getHeight(), rand.nextInt(), 64);
     }
 
     void GenerateNormalized(float[] array, float persistence, int octaves, int width, int height, int seed, float zoom)
@@ -392,9 +392,9 @@ public class Mountains implements Generator {
 
     short Evaluate(Level lvl, float height)
     {
-        short temp = (short)(height * lvl.depth);
+        short temp = (short)(height * lvl.getDepth());
         if (temp < 0) return 0;
-        if (temp > lvl.depth - 1) return (short)(lvl.depth - 1);
+        if (temp > lvl.getDepth() - 1) return (short)(lvl.getDepth() - 1);
         return temp;
     }
 }

@@ -57,7 +57,7 @@ public class Dirt extends PhysicsBlock {
         if (!getLevel().getTile(getX(), getY() + 1, getZ()).canWalkThrough())
             return false;
         int y = getY() + 1;
-        for (; y < getLevel().height - 1; y++) {
+        for (; y < getLevel().getHeight() - 1; y++) {
             if (!getLevel().getTile(getX(), y + 1, getZ()).canWalkThrough()) {
                 return false;
             }

@@ -24,7 +24,7 @@ public class LevelStartSend extends Packet {
     }
     
     public LevelStartSend(PacketManager pm) {
-        super("Start Level Send", (byte)0x02, pm);
+        super("Start ClassicLevel Send", (byte)0x02, pm);
     }
 
     @Override

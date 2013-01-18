@@ -39,15 +39,15 @@ public class FlatGrass implements Generator {
     }
     @Override
     public void generate(Level l) {
-        for (int x = 0; x < l.width; x++) {
-            for (int y = 0; y < l.height; y++) {
-                for (int z = 0; z < l.depth; z++) {
-                    if (y < l.height / 2)
-                        l.skipChange(x, y, z,Block.getBlock("dirt"),  _server, false);
-                    else if (y == l.height / 2)
-                        l.skipChange(x, y, z,Block.getBlock("grass"),  _server, false);
+        for (int x = 0; x < l.getWidth(); x++) {
+            for (int y = 0; y < l.getHeight(); y++) {
+                for (int z = 0; z < l.getDepth(); z++) {
+                    if (y < l.getHeight() / 2)
+                        l.rawSetTile(x, y, z,Block.getBlock("dirt"),  _server, false);
+                    else if (y == l.getHeight() / 2)
+                        l.rawSetTile(x, y, z,Block.getBlock("grass"),  _server, false);
                     else
-                        l.skipChange( x, y, z,Block.getBlock("air"),  _server, false);
+                        l.rawSetTile( x, y, z,Block.getBlock("air"),  _server, false);
                 }
             }
         }

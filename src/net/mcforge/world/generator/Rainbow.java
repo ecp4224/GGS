@@ -45,11 +45,11 @@ public class Rainbow implements Generator {
     @Override
     public void generate(Level l) {
         Random rand = new Random(System.currentTimeMillis());
-        for (int x = 0; x < l.width; x++) {
-            for (int y = 0; y < l.height; y++) {
-                for (int z = 0; z < l.depth; z++) {
-                    if (y == 0 || y == l.height - 1 || x == 0 || x == l.width - 1 || z == 0 || z == l.depth - 1) 
-                        l.skipChange(x, y, z, Block.getBlock((byte)(rand.nextInt(36 - 21) + 21)), _server);
+        for (int x = 0; x < l.getWidth(); x++) {
+            for (int y = 0; y < l.getHeight(); y++) {
+                for (int z = 0; z < l.getDepth(); z++) {
+                    if (y == 0 || y == l.getHeight() - 1 || x == 0 || x == l.getWidth() - 1 || z == 0 || z == l.getDepth() - 1) 
+                        l.rawSetTile(x, y, z, Block.getBlock((byte)(rand.nextInt(36 - 21) + 21)), _server, false);
                 }
             }
         }

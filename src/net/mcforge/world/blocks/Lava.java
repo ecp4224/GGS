@@ -50,9 +50,9 @@ public class Lava extends PhysicsBlock {
     @Override
     public void tick() {
         //TODO Add better physics system.
-        if (!nearSponge(getLevel().posToInt(getX(), getY(), getZ()))) {
+        if (!nearSponge(posToInt(getX(), getY(), getZ()))) {
             if (time < random.nextInt(6)) {
-                if (type == 2 && check(getLevel().posToInt(getX(), getY() - 1, getZ())))
+                if (type == 2 && check(posToInt(getX(), getY() - 1, getZ())))
                     add(getX(), getY() - 1, getZ());
                 time++;
                 return;
@@ -68,7 +68,7 @@ public class Lava extends PhysicsBlock {
             int i = 0;
             while (i != x1 && (getLevel().getTile(getX() + i + 1, getY(), getZ()).getVisibleBlock() == 0 || getLevel().getTile(getX() + i + 1, getY(), getZ()).getVisibleBlock() == this.getVisibleBlock())) {
                 i++;
-                if (!check(getLevel().posToInt(getX() + i, getY(), getZ())))
+                if (!check(posToInt(getX() + i, getY(), getZ())))
                     break;
                 else {
                     add(getX() + i, getY(), getZ());
@@ -78,7 +78,7 @@ public class Lava extends PhysicsBlock {
             i = 0;
             while (i != x2 && (getLevel().getTile(getX() - i - 1, getY(), getZ()).getVisibleBlock() == 0 || getLevel().getTile(getX() - i - 1, getY(), getZ()).getVisibleBlock() == this.getVisibleBlock())) {
                 i++;
-                if (!check(getLevel().posToInt(getX() - i, getY(), getZ())))
+                if (!check(posToInt(getX() - i, getY(), getZ())))
                     break;
                 else {
                     add(getX() - i, getY(), getZ());
@@ -88,7 +88,7 @@ public class Lava extends PhysicsBlock {
             i = 0;
             while (i != z1 && (getLevel().getTile(getX(), getY(), getZ() + i + 1).getVisibleBlock() == 0 || getLevel().getTile(getX(), getY(), getZ() + i + 1).getVisibleBlock() == this.getVisibleBlock())) {
                 i++;
-                if (!check(getLevel().posToInt(getX(), getY(), getZ() + i)))
+                if (!check(posToInt(getX(), getY(), getZ() + i)))
                     break;
                 else {
                     add(getX(), getY(), getZ() + i);
@@ -98,21 +98,33 @@ public class Lava extends PhysicsBlock {
             i = 0;
             while (i != z2 && (getLevel().getTile(getX(), getY(), getZ() - i - 1).getVisibleBlock() == 0 || getLevel().getTile(getX(), getY(), getZ() - i - 1).getVisibleBlock() == this.getVisibleBlock())) {
                 i++;
-                if (!check(getLevel().posToInt(getX(), getY(), getZ() - i)))
+                if (!check(posToInt(getX(), getY(), getZ() - i)))
                     break;
                 else {
                     d = true;
                     add(getX(), getY(), getZ() - i);
                 }
             }
-            if (check(getLevel().posToInt(getX(), getY() - 1, getZ())))
+            if (check(posToInt(getX(), getY() - 1, getZ())))
                 add(getX(), getY() - 1, getZ());
             if (!a && !b && !c && !d)
                 super.stopTick();
         }
     }
+    
+    public int posToInt(int x, int y, int z) {
+        if (x < 0) { return -1; }
+        if (x >= getLevel().getWidth()) { return -1; }
+        if (y < 0) { return -1; }
+        if (y >= getLevel().getHeight()) { return -1; }
+        if (z < 0) { return -1; }
+        if (z >= getLevel().getDepth()) { return -1; }
+        return x + z * getLevel().getWidth() + y * getLevel().getWidth() * getLevel().getDepth();
+    }
+    
+    
     public boolean check(int x, int y, int z) {
-        return check(getLevel().posToInt(x, y, z));
+        return check(posToInt(x, y, z));
     }
     public boolean check(int b) {
         if (b < 0 || b >= getLevel().getLength())
@@ -147,7 +159,7 @@ public class Lava extends PhysicsBlock {
         return false;
     }
     public int IntOffset(int index, int x, int y, int z) {
-        return index + x + z * getLevel().width + y * getLevel().width * getLevel().height;
+        return index + x + z * getLevel().getWidth() + y * getLevel().getWidth() * getLevel().getHeight();
     }
 
     @Override

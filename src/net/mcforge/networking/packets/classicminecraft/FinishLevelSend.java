@@ -25,7 +25,7 @@ public class FinishLevelSend extends Packet {
     }
 
     public FinishLevelSend(PacketManager pm) {
-        super("Finish Level Send", (byte)0x04, pm);
+        super("Finish ClassicLevel Send", (byte)0x04, pm);
     }
 
     @Override
@@ -44,9 +44,9 @@ public class FinishLevelSend extends Packet {
             ByteBuffer bb = ByteBuffer.allocate(7);
             bb.order(ByteOrder.BIG_ENDIAN);
             bb.put(ID);
-            bb.putShort(player.getLevel().width);
-            bb.putShort(player.getLevel().height);
-            bb.putShort(player.getLevel().depth);
+            bb.putShort((short)player.getLevel().getWidth());
+            bb.putShort((short)player.getLevel().getHeight());
+            bb.putShort((short)player.getLevel().getDepth());
             player.writeData(bb.array());
         }
         catch (IOException e) {

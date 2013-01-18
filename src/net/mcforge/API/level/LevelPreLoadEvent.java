@@ -10,7 +10,7 @@ package net.mcforge.API.level;
 import net.mcforge.API.Cancelable;
 import net.mcforge.API.Event;
 import net.mcforge.API.EventList;
-import net.mcforge.world.Level;
+import net.mcforge.world.ClassicLevel;
 
 public class LevelPreLoadEvent extends Event implements Cancelable {
 
@@ -18,7 +18,7 @@ public class LevelPreLoadEvent extends Event implements Cancelable {
     
     private String filename;
     
-    private Level replace;
+    private ClassicLevel replace;
 
     private boolean cancel;
     
@@ -27,20 +27,20 @@ public class LevelPreLoadEvent extends Event implements Cancelable {
     }
     
     /**
-     * Set the level to be loaded
-     * In order for this level to be used, you must cancel the event.
-     * @param level The level to load
+     * Set the ClassicLevel to be loaded
+     * In order for this ClassicLevel to be used, you must cancel the event.
+     * @param ClassicLevel The ClassicLevel to load
      */
-    public void setLevel(Level level) {
-        this.replace = level;
+    public void setClassicLevel(ClassicLevel ClassicLevel) {
+        this.replace = ClassicLevel;
     }
     
     /**
-     * Get the replacement level that will be loaded.
+     * Get the replacement ClassicLevel that will be loaded.
      * If no replacement is set, then it will return null
-     * @return The replacement level to load
+     * @return The replacement ClassicLevel to load
      */
-    public Level getReplacement() {
+    public ClassicLevel getReplacement() {
         return replace;
     }
     

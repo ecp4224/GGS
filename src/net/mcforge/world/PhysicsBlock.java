@@ -31,7 +31,7 @@ public abstract class PhysicsBlock extends Block implements Tick {
     public void onDelete(Level l, int x, int y, int z, Server server) {
         if (_level != l)
             return;
-        _level.ticks.remove(this);
+        _level.getTicks().remove(this);
         _level = null;
         _server = null;
     }
@@ -155,10 +155,10 @@ public abstract class PhysicsBlock extends Block implements Tick {
     public void stopTick() {
         if (_level == null)
             return;
-        if (_level.ticks == null)
+        if (_level.getTicks() == null)
             return;
-        if (_level.ticks.contains(this))
-            _level.ticks.remove(this);
+        if (_level.getTicks().contains(this))
+            _level.getTicks().remove(this);
     }
     
     /**
@@ -211,7 +211,7 @@ public abstract class PhysicsBlock extends Block implements Tick {
     public boolean isBlockActive(PhysicsBlock pb) {
         if (pb == null)
             return false;
-        return _level.ticks.contains(pb);
+        return _level.getTicks().contains(pb);
     }
     
     /**

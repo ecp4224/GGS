@@ -241,7 +241,7 @@ public class CommandHandler {
             return;
         }
         out.println("#Permission file for commands");
-        out.println("#Name:Permission Level");
+        out.println("#Name:Permission ClassicLevel");
         for (Command c : commands) {
             out.println(c.getName() + ":" + c.getDefaultPermissionLevel() + ":" + (c.isOPCommand() ? "OP": "A"));
         }
@@ -264,7 +264,7 @@ public class CommandHandler {
             return;
         }
         out.println("#Permission file for commands");
-        out.println("#Name:Permission Level:[OP:A]");
+        out.println("#Name:Permission ClassicLevel:[OP:A]");
         out.println("#Example:");
         out.println("#OPCommand:100:OP");
         out.println("#NormalCommand:43:A");

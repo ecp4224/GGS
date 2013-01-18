@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import com.esotericsoftware.kryo.Kryo;
+
 import net.mcforge.API.level.LevelLoadEvent;
 import net.mcforge.API.level.LevelPreLoadEvent;
 import net.mcforge.API.level.LevelUnloadEvent;
@@ -26,12 +28,23 @@ public class LevelHandler {
 
     private List<Level> levels = new CopyOnWriteArrayList<Level>();
 
+    private static final Kryo loader = new Kryo();
+    
     private Server server;
 
     private Backup thread;
 
     private boolean runit;
 
+    /**
+     * Get the {@link Kryo} object that loads/saves the level objects
+     * @return
+     *        The loader/saver
+     */
+    public static Kryo getKryo() {
+        return loader;
+    }
+    
     /**
      * The constructor for a new level handler
      * @param server
@@ -84,16 +97,16 @@ public class LevelHandler {
      * @param depth
      *              The depth (Max Z) 
      */
-    public void newLevel(String name, short width, short height, short length)
+    public void newClassicLevel(String name, short width, short height, short length)
     {
-        newLevel(name, width, height, length, new FlatGrass(server));
+        newClassicLevel(name, width, height, length, new FlatGrass(server));
     }
 
-    public void newLevel(String name, short width, short height, short length, Generator gen) {
+    public void newClassicLevel(String name, short width, short height, short length, Generator gen) {
         if(!new File("levels/" + name + ".ggs").exists())
         {
-            Level level = new Level(width, height, length);
-            level.name = name;
+            Level level = new ClassicLevel(width, height, length);
+            level.setName(name);
             level.generateWorld(gen);
             try {
                 level.save();
@@ -116,11 +129,11 @@ public class LevelHandler {
     public Level findLevel(String name) {
         Level temp = null;
         for (int i = 0; i < levels.size(); i++) {
-            if ((levels.get(i).name).equalsIgnoreCase(name))
+            if ((levels.get(i).getName()).equalsIgnoreCase(name))
                 return levels.get(i);
-            if ((levels.get(i).name).contains(name) && temp == null)
+            if ((levels.get(i).getName()).contains(name) && temp == null)
                 temp = levels.get(i);
-            else if ((levels.get(i).name).contains(name) && temp != null)
+            else if ((levels.get(i).getName()).contains(name) && temp != null)
                 return null;
         }
         return temp;
@@ -144,14 +157,14 @@ public class LevelHandler {
      * Load all the levels in the 
      * "levels" folder
      */
-    public void loadLevels()
+    public void loadClassicLevels()
     {
         levels.clear();
         File levelsFolder = new File("levels");
         File[] levelFiles = levelsFolder.listFiles();
         for(File f : levelFiles) {
             if (f.getName().endsWith(".ggs") || f.getName().endsWith(".lvl") || f.getName().endsWith(".dat"))
-                loadLevel(levelsFolder.getPath() + "/" + f.getName());
+                loadClassicLevel(levelsFolder.getPath() + "/" + f.getName());
         }
     }
 
@@ -165,8 +178,8 @@ public class LevelHandler {
      * @return
      *         The loaded level.
      */
-    public Level loadLevel(String filename) {
-        Level l = null;
+    public ClassicLevel loadClassicLevel(String filename) {
+        ClassicLevel l = new ClassicLevel();
         LevelPreLoadEvent event1 = new LevelPreLoadEvent(filename);
         server.getEventSystem().callEvent(event1);
         if (event1.isCancelled()) {
@@ -179,27 +192,24 @@ public class LevelHandler {
         }
         try {
             long startTime = System.nanoTime();
-            l = Level.Load(filename, server);
+            l.load(filename, server);
             long endTime = System.nanoTime();
             long duration = endTime - startTime;
             server.Log("Loading took: " + duration + "ms");
             LevelLoadEvent event = new LevelLoadEvent(l);
             server.getEventSystem().callEvent(event);
             if(event.isCancelled()) {
-                server.Log("Loading of level " + l.name + " was canceled by " + event.getCanceler());
+                server.Log("Loading of level " + l.getName() + " was canceled by " + event.getCanceler());
                 l.unload(server); //Dispose the level
                 l = null;
                 return null;
             }
-        } catch (ClassNotFoundException e) {
-            server.Log("ERROR LOADING LEVEL!");
-            e.printStackTrace();
         } catch (IOException e) {
             server.Log("ERROR LOADING LEVEL!");
             e.printStackTrace();
         }
         if (l != null) {
-            server.Log("[" + l.name + "] Loaded!");
+            server.Log("[" + l.getName()+ "] Loaded!");
             levels.add(l);
         }
         return l;
@@ -266,12 +276,12 @@ public class LevelHandler {
                         final Level l = levels.get(i);
                         if (!l.isAutoSaveEnabled())
                             continue;
-                        if (!new File(location + "/" + l.name).exists())
-                            FileUtils.createChildDirectories(location + "/" + l.name);
-                        long backupnum = new File(location + "/" + l.name).length() + 1;
-                        new File(location + "/" + l.name + "/" + backupnum).mkdir();
-                        if (!FileUtils.copyFile("levels/" + l.name + ".ggs", location + "/" + l.name + "/" + backupnum + "/" + l.name + ".ggs")) {
-                            server.logError(new BackupFailedException("The level " + l.name + " could not be backed up!"));
+                        if (!new File(location + "/" + l.getName()).exists())
+                            FileUtils.createChildDirectories(location + "/" + l.getName());
+                        long backupnum = new File(location + "/" + l.getName()).length() + 1;
+                        new File(location + "/" + l.getName() + "/" + backupnum).mkdir();
+                        if (!FileUtils.copyFile("levels/" + l.getName() + ".ggs", location + "/" + l.getName() + "/" + backupnum + "/" + l.getName() + ".ggs")) {
+                            server.logError(new BackupFailedException("The level " + l.getName() + " could not be backed up!"));
                             continue;
                         }
                     } catch (Exception e) {

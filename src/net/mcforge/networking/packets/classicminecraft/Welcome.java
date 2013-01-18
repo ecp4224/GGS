@@ -16,6 +16,7 @@ import net.mcforge.networking.IOClient;
 import net.mcforge.networking.packets.Packet;
 import net.mcforge.networking.packets.PacketManager;
 import net.mcforge.server.Server;
+import net.mcforge.world.ClassicLevel;
 
 public class Welcome extends Packet {
 
@@ -42,8 +43,8 @@ public class Welcome extends Packet {
             finals[0] = ID;
             finals[1] = 0x07;
             String smotd = server.MOTD;
-            if (((Player)player).getLevel() != null && ((Player)player).getLevel().name.equals(server.MainLevel) && !((Player)player).getLevel().motd.equals("ignore"))
-                smotd = ((Player)player).getLevel().motd;
+            if (((Player)player).getLevel() != null && ((Player)player).getLevel().getName().equals(server.MainLevel) && !((Player)player).getLevel().getName().equals("ignore") && ((Player)player).getLevel() instanceof ClassicLevel)
+                smotd = ((ClassicLevel)((Player)player).getLevel()).motd;
             while (server.Name.length() < 64)
                 server.Name += " ";
             while (smotd.length() < 64)

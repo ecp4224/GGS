@@ -41,13 +41,13 @@ public class Pixel implements Generator {
     }
     @Override
     public void generate(Level l) {
-        for (int x = 0; x < l.width; x++) {
-            for (int y = 0; y < l.height; y++) {
-                for (int z = 0; z < l.depth; z++) {
+        for (int x = 0; x < l.getWidth(); x++) {
+            for (int y = 0; y < l.getHeight(); y++) {
+                for (int z = 0; z < l.getDepth(); z++) {
                     if (y == 0)
-                        l.skipChange(x, y, z, Block.getBlock("Bedrock"), _server);
-                    else if (x == 0 || x == l.width - 1 || z == 0 || z == l.depth - 1)
-                        l.skipChange(x, y, z, Block.getBlock("White"), _server);
+                        l.rawSetTile(x, y, z, Block.getBlock("Bedrock"), _server, false);
+                    else if (x == 0 || x == l.getWidth() - 1 || z == 0 || z == l.getDepth() - 1)
+                        l.rawSetTile(x, y, z, Block.getBlock("White"), _server, false);
                 }
             }
         }

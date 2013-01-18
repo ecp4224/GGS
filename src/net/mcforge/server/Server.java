@@ -19,8 +19,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-import javax.management.RuntimeErrorException;
-
 import net.mcforge.API.EventSystem;
 import net.mcforge.API.action.CmdAbort;
 import net.mcforge.API.io.ServerLogEvent;
@@ -522,14 +520,14 @@ public final class Server implements LogInterface, Updatable {
 			e.printStackTrace();
 		}
         Log("Loaded plugins");
-        Level.getLoader().setClassLoader(getDefaultClassLoader());
+        LevelHandler.getKryo().setClassLoader(getDefaultClassLoader());
         lm = new LevelHandler(this);
         MainLevel = getSystemProperties().getValue("MainLevel");
         if (!new File("levels/" + MainLevel + ".ggs").exists()) {
-            lm.newLevel("Main", (short)64, (short)64, (short)64);
+            lm.newClassicLevel("Main", (short)64, (short)64, (short)64);
             MainLevel = "Main";
         }
-        lm.loadLevels();
+        lm.loadClassicLevels();
         startTicker();
         Log("Loaded levels");
         us.getUpdateManager().add(this);
@@ -619,7 +617,7 @@ public final class Server implements LogInterface, Updatable {
      *             The world to send to
      */
     public void sendWorldMessage(String message, Level world) {
-        sendWorldMessage(message, world.name);
+        sendWorldMessage(message, world.getName());
     }
 
     /**
@@ -696,7 +694,7 @@ public final class Server implements LogInterface, Updatable {
             p.sendMessage("Stopping server...");
         }
         for (Level l : this.getLevelHandler().getLevelList()) {
-            if (!l.name.equals(MainLevel))
+            if (!l.getName().equals(MainLevel))
                 l.unload(this);
         }
         if (getLevelHandler().findLevel(MainLevel) != null) {
