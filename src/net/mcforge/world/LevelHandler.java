@@ -21,7 +21,7 @@ import net.mcforge.API.level.LevelUnloadEvent;
 import net.mcforge.iomodel.Player;
 import net.mcforge.server.Server;
 import net.mcforge.system.ticker.Tick;
-import net.mcforge.util.FileUtils;
+import net.mcforge.world.backup.BackupRunner;
 import net.mcforge.world.generator.FlatGrass;
 
 public class LevelHandler {
@@ -32,9 +32,7 @@ public class LevelHandler {
     
     private Server server;
 
-    private Backup thread;
-
-    private boolean runit;
+    private BackupRunner backup;
 
     /**
      * Get the {@link Kryo} object that loads/saves the level objects
@@ -53,28 +51,24 @@ public class LevelHandler {
     public LevelHandler(Server server) {
         this.server = server;
         server.getTicker().addTick(new Saver());
+        backup = new BackupRunner(server);
         startBackup();
     }
-
+    
+    /**
+     * Start running the backup runner.
+     * @see BackupRunner#startRunning()
+     */
     public void startBackup() {
-        if (runit)
-            return;
-        if (thread == null)
-            thread = new Backup(server);
-        runit = true;
-        thread.start();
+        backup.startRunning();
     }
-
+    
+    /**
+     * Stop running the backup runner.
+     * @see BackupRunner#stopRunning()
+     */
     public void stopBackup() {
-        if (!runit)
-            return;
-        runit = false;
-        thread.interrupt();
-        try {
-            thread.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        backup.stopRunning();
     }
 
     /**
@@ -252,47 +246,6 @@ public class LevelHandler {
         }
         levels.remove(level);
         return true;
-    }
-
-    private class Backup extends Thread {
-        int backup;
-        String location;
-        public Backup(Server server) {
-            if (!server.getSystemProperties().hasValue("backup-time")) {
-                server.getSystemProperties().addSetting("backup-time", 300);
-                server.getSystemProperties().addComment("backup-time", "The number of seconds between automatic backups");
-            }
-            backup = server.getSystemProperties().getInt("backup-time") * 1000;
-            if (!server.getSystemProperties().hasValue("backup-location"))
-                server.getSystemProperties().addSetting("backup-location", "backups");
-            location = server.getSystemProperties().getValue("backup-location");
-        }
-
-        @Override
-        public void run() {
-            while (runit) {
-                for (int i = 0; i < levels.size(); i++) {
-                    try {
-                        final Level l = levels.get(i);
-                        if (!l.isAutoSaveEnabled())
-                            continue;
-                        if (!new File(location + "/" + l.getName()).exists())
-                            FileUtils.createChildDirectories(location + "/" + l.getName());
-                        long backupnum = new File(location + "/" + l.getName()).length() + 1;
-                        new File(location + "/" + l.getName() + "/" + backupnum).mkdir();
-                        if (!FileUtils.copyFile("levels/" + l.getName() + ".ggs", location + "/" + l.getName() + "/" + backupnum + "/" + l.getName() + ".ggs")) {
-                            server.logError(new BackupFailedException("The level " + l.getName() + " could not be backed up!"));
-                            continue;
-                        }
-                    } catch (Exception e) {
-                        server.logError(e);
-                    }
-                }
-                try {
-                    Thread.sleep(backup);
-                } catch (InterruptedException e) { }
-            }
-        }
     }
 
     private class Saver implements Tick {

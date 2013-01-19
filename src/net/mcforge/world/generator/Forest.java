@@ -13,7 +13,6 @@ import net.mcforge.server.Server;
 import net.mcforge.world.Block;
 import net.mcforge.world.Generator;
 import net.mcforge.world.Level;
-import net.mcforge.world.TreeGenerator;
 
 /**
  * A generator that creates a forest like level.

@@ -23,10 +23,12 @@ import java.util.zip.GZIPOutputStream;
 import net.mcforge.iomodel.Player;
 import net.mcforge.server.Server;
 import net.mcforge.system.ticker.Tick;
+import net.mcforge.util.FileUtils;
 import net.mcforge.util.properties.Properties;
 import net.mcforge.world.converter.MojangLevel;
 import net.mcforge.world.converter.MojangLevelInputStream;
 import net.mcforge.world.converter.OldBlocks;
+import net.mcforge.world.exceptions.BackupFailedException;
 
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
@@ -129,45 +131,26 @@ public class ClassicLevel implements Level, Serializable {
         this.ticks = new ArrayList<Tick>();
     }
     
-    /**
-     * Generate a world
-     * @param g
-     *         The {@link Generator} object that will
-     *         generate the world.
-     */
+    @Override
     public void generateWorld(Generator g) {
         if (blocks == null)
             blocks = new Block[width*height*depth];
         g.generate(this);
     }
 
-    /**
-     * Starts the level's physics ticker
-     */
+    @Override
     public void startPhysics(Server server) {
         physics = new Ticker(server, this);
         run = true;
         physics.start();
     }
 
-    /**
-     * Whether or not this level will autosave.
-     * AutoSave will save the level every minute and save
-     * when the level is unloaded.
-     * @return
-     *        True if the level will autosave, false if it will not.
-     */
+    @Override
     public boolean isAutoSaveEnabled() {
         return autosave;
     }
 
-    /**
-     * Set Whether the level will autosave or not.
-     * AutoSave will save the level every minute and save
-     * when the level is unloaded.
-     * @param set
-     *           True if the level will autosave, false if it will not.
-     */
+    @Override
     public void setAutoSave(boolean set) {
         autosave = set;
     }
@@ -235,21 +218,7 @@ public class ClassicLevel implements Level, Serializable {
         } catch (Exception e) { }
     }
 
-    /**
-     * Add a block to the Physics Tick
-     * @param x
-     *         The X cord. of the block
-     * @param y
-     *         The Y cord. of the block
-     * @param z
-     *         The Z cord. of the block
-     * @param b
-     *         The block to add to ticking
-     * @param server
-     *              The server the block belongs to
-     * @return
-     *        A copy of the PhysicsBlock added to the tick.
-     */
+    @Override
     public PhysicsBlock addTick(int x, int y, int z, Block b, Server server) {
         if (!(b instanceof PhysicsBlock))
             return null;
@@ -274,9 +243,7 @@ public class ClassicLevel implements Level, Serializable {
         t.start();
     }
 
-    /**
-     * Load the properties for the level.
-     */
+    @Override
     public void loadProperties() {
         levelprop = new Properties();
         try {
@@ -304,22 +271,12 @@ public class ClassicLevel implements Level, Serializable {
 
     }
 
-    /**
-     * The properties for this level
-     * @return
-     *        A {@link Properties} object for this level.
-     */
+    @Override
     public Properties getLevelProperties() {
         return levelprop;
     }
 
-    /**
-     * Get a block in this level
-     * @param index
-     *            Which block to get
-     * @return
-     *        The block at that index
-     */
+    @Override
     public Block getTile(int index) {
         if (index < 0) index = 0;
         if (index >= blocks.length) index = blocks.length - 1;
@@ -330,47 +287,17 @@ public class ClassicLevel implements Level, Serializable {
         return blocks[index];
     }
 
-    /**
-     * Get a block at the X, Y, Z coordinates
-     * @param x
-     *        The X coordinate
-     * @param y
-     *        The Y coordinate
-     * @param z
-     *        The Z coordinate
-     * @return
-     *        The block at those coordinates
-     */
+    @Override
     public Block getTile(int x, int y, int z) {
         return getTile(posToInt(x, y, z));
     }
 
-    /**
-     * Get how big the block array is
-     * @return
-     *       The size of the block array
-     */
+    @Override
     public int getLength() {
         return blocks.length;
     }
 
-    /**
-     * Set a block in this world.
-     * If the block is a physicsblock, it will be added
-     * to the physics tick.
-     * This method wont send out a change to the clients.
-     * To do this, use {@link Player#GlobalBlockChange(short, short, short, Block, ClassicLevel, Server)} instead
-     * @param b
-     *         The block to add
-     * @param x
-     *        The X coordinate
-     * @param y
-     *        The Y coordinate
-     * @param z
-     *        The Z coordinate
-     * @param server
-     *              The server this blockchange is happening in
-     */
+    @Override
     public void setTile(Block b, int x, int y, int z, Server server) {
         setTile(b, posToInt(x, y, z), server, true);
     }
@@ -409,11 +336,7 @@ public class ClassicLevel implements Level, Serializable {
         return toreturn;
     }
 
-    /**
-     * Save the level
-     * @throws IOException
-     *                   An IOExceptoin is thrown if there is a problem writing to the file
-     */
+    @Override
     public void save() throws IOException {
         if (!new File("levels").exists())
             new File("levels").mkdir();
@@ -429,27 +352,12 @@ public class ClassicLevel implements Level, Serializable {
         saving = false;
     }
 
-    /**
-     * Unload this level.
-     * All players who are in this level will be sent to the {@link Server#MainLevel}
-     * @param server
-     *             The server thats unloading the level
-     * @throws IOException
-     *                   An IOException will occur if there is a problem saving the level
-     */
+    @Override
     public void unload(Server server) throws IOException {
         unload(server, autosave);
     }
-    /**
-     * Unload this level.
-     * All players who are in this level will be sent to the {@link Server#MainLevel}
-     * @param server
-     *             The server thats unloading the level
-     * @param save
-     *           Whether the level should save before unloading
-     * @throws IOException
-     *                   An IOException will occur if there is a problem saving the level
-     */
+    
+    @Override
     public void unload(Server server, boolean save) throws IOException {
         if (save)
             save();
@@ -770,31 +678,15 @@ public class ClassicLevel implements Level, Serializable {
     }
 
     /**
-     * Changes the block at the specified coordinates to the specified block
-     * without checking for any physics changes
-     * If you change a block in a level, it won't be sent to clients
-     * 
-     * @param x - The x coordinate
-     * @param y - The y coordinate
-     * @param z - The z coordinate
-     * @param block - The block to change to
-     * @param server - The server
+     * @see Level#rawSetTile(int, int, int, Block, Server, boolean)
+     * The last parameter is assumed as true.
      */
     public void skipChange(int x, int y, int z, Block block, Server server) {
         skipChange(x, y, z, block, server, true);
     }
 
     /**
-     * Changes the block at the specified coordinates to the specified block
-     * without checking for any physics changes
-     * If you change a block in a level, it won't be sent to clients
-     * 
-     * @param x - The x coordinate
-     * @param y - The y coordinate
-     * @param z - The z coordinate
-     * @param block - The block to change to
-     * @param server - The server
-     * @param addtick - Whether this block should be added to the tick.
+     * @see Level#rawSetTile(int, int, int, Block, Server, boolean)
      */
     public void skipChange(int x, int y, int z, Block block, Server server, boolean addtick) {
         if (x < 0 || y < 0 || z < 0) return;
@@ -865,17 +757,32 @@ public class ClassicLevel implements Level, Serializable {
 
     @Override
     public void setSpawnX(int spawnx) {
-        this.spawnx = spawnx;
+        if (spawnx > getWidth())
+            this.spawnx = getWidth();
+        else if (spawnx < 0)
+            this.spawnx = 0;
+        else
+            this.spawnx = spawnx;
     }
 
     @Override
     public void setSpawnY(int spawny) {
-        this.spawny = spawny;
+        if (spawny > getHeight())
+            this.spawny = getHeight();
+        else if (spawny < 0)
+            this.spawny = 0;
+        else
+            this.spawny = spawny;
     }
 
     @Override
     public void setSpawnZ(int spawnz) {
-        this.spawnz = spawnz;
+        if (spawnz > getDepth())
+            this.spawnz = getDepth();
+        else if (spawnz < 0)
+            this.spawnz = 0;
+        else
+            this.spawnz = spawnz;
     }
 
     @Override
@@ -894,8 +801,17 @@ public class ClassicLevel implements Level, Serializable {
     }
 
     @Override
-    public void rawSetTile(int x, int y, int z, Block block, Server server,
-            boolean addToTick) {
+    public void rawSetTile(int x, int y, int z, Block block, Server server, boolean addToTick) {
         this.skipChange(x, y, z, block, server, addToTick);
+    }
+
+    @Override
+    public void backup(Server server, String location) throws BackupFailedException {
+        if (!new File(location + "/" + getName()).exists())
+            FileUtils.createChildDirectories(location + "/" + getName());
+        long backupnum = new File(location + "/" + getName()).length() + 1;
+        new File(location + "/" + getName() + "/" + backupnum).mkdir();
+        if (!FileUtils.copyFile("levels/" + getName() + ".ggs", location + "/" + getName() + "/" + backupnum + "/" + getName() + ".ggs"))
+            throw new BackupFailedException("Backup for " + getName() + " failed!");
     }
 }

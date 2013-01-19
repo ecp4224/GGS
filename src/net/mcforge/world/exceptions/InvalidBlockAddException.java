@@ -1,4 +1,6 @@
-package net.mcforge.world;
+package net.mcforge.world.exceptions;
+
+import net.mcforge.world.Block;
 
 public class InvalidBlockAddException extends IllegalAccessException {
     private static final long serialVersionUID = 2064347592399788357L;

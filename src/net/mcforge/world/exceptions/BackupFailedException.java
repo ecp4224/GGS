@@ -1,4 +1,4 @@
-package net.mcforge.world;
+package net.mcforge.world.exceptions;
 
 import java.io.IOException;
 

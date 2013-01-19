@@ -62,6 +62,7 @@ import net.mcforge.world.blocks.Wood;
 import net.mcforge.world.blocks.WoodenPlank;
 import net.mcforge.world.blocks.Yellow;
 import net.mcforge.world.blocks.YellowFlower;
+import net.mcforge.world.exceptions.InvalidBlockAddException;
 
 /**
  * This abstract class represents a block that can be placed in the level. </br>
