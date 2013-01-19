@@ -39,7 +39,8 @@ Please follow these rules when making pull requests
 - [Kryo][10]
 
 ##Building with Maven
-The source has a maven script for required dependencies, so just run 'mvn clean install'
+The source has a maven script for required dependencies, so just run 'mvn clean install' in the source directory
+to build the source.
 
 ##Copyright/License
 
