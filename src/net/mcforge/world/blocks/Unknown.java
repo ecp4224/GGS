@@ -7,7 +7,6 @@
  ******************************************************************************/
 package net.mcforge.world.blocks;
 
-import net.mcforge.world.Block;
 
 public class Unknown extends Block {
 

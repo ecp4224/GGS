@@ -7,7 +7,10 @@ import net.mcforge.iomodel.Player;
 import net.mcforge.server.Server;
 import net.mcforge.system.ticker.Tick;
 import net.mcforge.util.properties.Properties;
+import net.mcforge.world.blocks.Block;
+import net.mcforge.world.blocks.PhysicsBlock;
 import net.mcforge.world.exceptions.BackupFailedException;
+import net.mcforge.world.generator.Generator;
 
 public interface Level {
     

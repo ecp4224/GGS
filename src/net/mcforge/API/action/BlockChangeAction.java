@@ -11,8 +11,8 @@ import net.mcforge.API.EventHandler;
 import net.mcforge.API.Listener;
 import net.mcforge.API.player.PlayerBlockChangeEvent;
 import net.mcforge.iomodel.Player;
-import net.mcforge.world.Block;
 import net.mcforge.world.PlaceMode;
+import net.mcforge.world.blocks.Block;
 
 public class BlockChangeAction extends Action<BlockChangeAction> implements Listener {
 

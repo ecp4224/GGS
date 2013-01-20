@@ -53,14 +53,14 @@ import net.mcforge.util.logger.Logger;
 import net.mcforge.util.properties.Properties;
 import net.mcforge.world.Level;
 import net.mcforge.world.LevelHandler;
-import net.mcforge.world.generator.FlatGrass;
-import net.mcforge.world.generator.Forest;
-import net.mcforge.world.generator.Island;
-import net.mcforge.world.generator.Mountains;
-import net.mcforge.world.generator.Ocean;
-import net.mcforge.world.generator.Pixel;
-import net.mcforge.world.generator.Rainbow;
-import net.mcforge.world.generator.Space;
+import net.mcforge.world.generator.model.FlatGrass;
+import net.mcforge.world.generator.model.Forest;
+import net.mcforge.world.generator.model.Island;
+import net.mcforge.world.generator.model.Mountains;
+import net.mcforge.world.generator.model.Ocean;
+import net.mcforge.world.generator.model.Pixel;
+import net.mcforge.world.generator.model.Rainbow;
+import net.mcforge.world.generator.model.Space;
 
 public final class Server implements LogInterface, Updatable {
     private PacketManager pm;
@@ -488,15 +488,23 @@ public final class Server implements LogInterface, Updatable {
     
     //TODO Documentation
     public void start(boolean startsql) throws IllegalAccessException {
+        Console c = null;
         try {
             StackTraceElement[] stacks = Thread.currentThread().getStackTrace();
-            StackTraceElement e = stacks[2]; //The heartbeat class will always be the 3rd in the stacktrace if the heartbeat is being sent correctly
+            StackTraceElement e = stacks[2];
             Class<?> class_ = Class.forName(e.getClassName());
-            Console c = class_.asSubclass(Console.class).newInstance();
-            start(c, true);
+            c = class_.asSubclass(Console.class).newInstance();
         } catch (Exception e) {
-            throw new IllegalAccessException("Server started from outside a console object!");
+            try {
+                StackTraceElement[] stacks = Thread.currentThread().getStackTrace();
+                StackTraceElement ste = stacks[3];
+                Class<?> class_ = Class.forName(ste.getClassName());
+                c = class_.asSubclass(Console.class).newInstance();
+            } catch (Exception ee) {
+                throw new IllegalAccessException("Server started from outside a console object!");
+            }
         }
+        start(c, startsql);
     }
 
     /**

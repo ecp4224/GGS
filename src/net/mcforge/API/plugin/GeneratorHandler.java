@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import net.mcforge.world.Generator;
+import net.mcforge.world.generator.Generator;
 
 /**
  * The GeneratorHandler is responsible for

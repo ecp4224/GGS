@@ -49,10 +49,10 @@ import net.mcforge.networking.packets.classicminecraft.TP;
 import net.mcforge.server.Server;
 import net.mcforge.sql.MySQL;
 import net.mcforge.system.ticker.Tick;
-import net.mcforge.world.Block;
-import net.mcforge.world.BlockUpdate;
 import net.mcforge.world.Level;
 import net.mcforge.world.PlaceMode;
+import net.mcforge.world.blocks.Block;
+import net.mcforge.world.blocks.BlockUpdate;
 
 public class Player extends IOClient implements CommandExecutor, Tick {
     protected short X;
@@ -1718,7 +1718,7 @@ public class Player extends IOClient implements CommandExecutor, Tick {
         if(this.username != null)
         {
             getServer().Log(this.username + " has left the server.");
-            chat.serverBroadcast(this.username + " has left the server.");        
+            getServer().sendGlobalMessage(this.username + " has left the server.");        
         }
         despawn();
         PlayerDisconnectEvent event = new PlayerDisconnectEvent(this);

@@ -11,9 +11,9 @@ import net.mcforge.API.Cancelable;
 import net.mcforge.API.EventList;
 import net.mcforge.iomodel.Player;
 import net.mcforge.server.Server;
-import net.mcforge.world.Block;
 import net.mcforge.world.Level;
 import net.mcforge.world.PlaceMode;
+import net.mcforge.world.blocks.Block;
 
 public class PlayerBlockChangeEvent extends PlayerEvent implements Cancelable {
 

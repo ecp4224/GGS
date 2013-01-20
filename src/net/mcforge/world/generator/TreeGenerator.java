@@ -11,8 +11,8 @@ import java.util.Random;
 
 import net.mcforge.iomodel.Player;
 import net.mcforge.server.Server;
-import net.mcforge.world.Block;
 import net.mcforge.world.Level;
+import net.mcforge.world.blocks.Block;
 
 public abstract class TreeGenerator {
     /**

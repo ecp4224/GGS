@@ -16,7 +16,7 @@ import net.mcforge.networking.IOClient;
 import net.mcforge.networking.packets.Packet;
 import net.mcforge.networking.packets.PacketManager;
 import net.mcforge.server.Server;
-import net.mcforge.world.ClassicLevel;
+import net.mcforge.world.model.ClassicLevel;
 
 public class Welcome extends Packet {
 

@@ -22,7 +22,9 @@ import net.mcforge.iomodel.Player;
 import net.mcforge.server.Server;
 import net.mcforge.system.ticker.Tick;
 import net.mcforge.world.backup.BackupRunner;
-import net.mcforge.world.generator.FlatGrass;
+import net.mcforge.world.generator.Generator;
+import net.mcforge.world.generator.model.FlatGrass;
+import net.mcforge.world.model.ClassicLevel;
 
 public class LevelHandler {
 

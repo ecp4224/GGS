@@ -146,7 +146,6 @@ public class PluginHandler {
                             String path = fullName.substring(0, lastSlash + 1);
                             //System.out.println(fullName.length() + "-" + path.length() + "-" + ".class".length());
                             String name = fullName.substring(path.length(), fullName.length() - ".class".length());
-
                             Class<?> class_ = Class.forName(path.replace('/', '.') + name, true, loader);
                             if (class_.getAnnotation(ManualLoad.class) != null)
                                 continue;
