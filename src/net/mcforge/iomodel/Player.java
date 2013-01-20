@@ -434,15 +434,7 @@ public class Player extends IOClient implements CommandExecutor, Tick {
         custom_name = nick;
         respawn();
         this.setAttribute("mcf_nick", custom_name);
-        try {
-            this.saveAttribute("mcf_nick");
-        } catch (NotSerializableException e) {
-            e.printStackTrace();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        this.saveAttribute("mcf_nick");
     }
 
     /**
@@ -493,15 +485,7 @@ public class Player extends IOClient implements CommandExecutor, Tick {
         this.prefix = prefix;
 
         this.setAttribute("mcf_prefix", this.prefix);
-        try {
-            this.saveAttribute("mcf_prefix");
-        } catch (NotSerializableException e) {
-            e.printStackTrace();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        this.saveAttribute("mcf_prefix");
     }
     
     /**
@@ -569,15 +553,7 @@ public class Player extends IOClient implements CommandExecutor, Tick {
         this.showprefix = value;
         respawn();
         this.setAttribute("mcf_showprefix", value);
-        try {
-            this.saveAttribute("mcf_showprefix");
-        } catch (NotSerializableException e) {
-            e.printStackTrace();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        this.saveAttribute("mcf_showprefix");
     }
 
     /**
@@ -593,15 +569,7 @@ public class Player extends IOClient implements CommandExecutor, Tick {
         this.color = color;
         respawn();
         this.setAttribute("mcf_color", this.color);
-        try {
-            this.saveAttribute("mcf_color");
-        } catch (NotSerializableException e) {
-            e.printStackTrace();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        this.saveAttribute("mcf_color");
     }
 
     /**
@@ -738,15 +706,7 @@ public class Player extends IOClient implements CommandExecutor, Tick {
     public void setMoney(int amount) {
         this.money = amount;
         setAttribute("mcf_money", this.money);
-        try {
-            saveAttribute("mcf_money");
-        } catch (NotSerializableException e) {
-            e.printStackTrace();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        saveAttribute("mcf_money");
     }
 
     /**
@@ -953,11 +913,31 @@ public class Player extends IOClient implements CommandExecutor, Tick {
         else
             throw new NotSerializableException("The object that was stored in ExtraData cant be saved because it doesnt implement Serializable!");
     }
+    
+    /**
+     * Save the value <b>"key"</b> to the database.
+     * The object <b>"key"</b> represents will be serialized to the database.
+     * If an exception occurs, then the exception will just print to the server log and continue.
+     * No exceptions will be raised, if you need to know if an exception was caught, then please use
+     * {@link Player#saveAttributeRaised(String)}
+     * @param key
+     */
+    public void saveAttribute(String key) {
+        if (!extra.containsKey(key))
+            return;
+        try {
+            saveAttributeRaised(key);
+        } catch (Exception e) {
+            getServer().logError(e);
+        }
+    }
 
     /**
      * Save the value <b>key</b> to the database.
      * The object <b>key</b> represents will be serialized to the
      * database.
+     * This method will raise an exception when an exception occurs, this is good if you need
+     * to know if saving failed or not. Otherwise, use {@link Player#saveAttribute(String)}.
      * @param key
      *           The name of the data to save
      * @throws SQLException
@@ -968,7 +948,7 @@ public class Player extends IOClient implements CommandExecutor, Tick {
      * @throw NotSerializableException
      *                                
      */
-    public void saveAttribute(String key) throws SQLException, IOException, NotSerializableException {
+    public void saveAttributeRaised(String key) throws SQLException, IOException, NotSerializableException {
         if (!extra.containsKey(key))
             return;
         setAttribute(key, extra.get(key), username, getServer());
@@ -1043,28 +1023,20 @@ public class Player extends IOClient implements CommandExecutor, Tick {
             this.custom_name = getAttribute("mcf_nick");
         
         
-        try {
-            final Calendar cal = Calendar.getInstance();
-            final String date = dateFormat.format(cal.getTime());
-            int login = 0;
-            if (hasAttribute("totalLogin"))
-                login = ((Integer)(getAttribute("totalLogin"))).intValue();
-            login++;
-            setAttribute("totalLogin", login);
-            saveAttribute("totalLogin");
-            if (login == 1) {
-                setAttribute("firstLogin", date);
-                saveAttribute("firstLogin");
-            }
-            setAttribute("lastLogin", date);
-            saveAttribute("lastLogin");
-        } catch (NotSerializableException e) {
-            e.printStackTrace();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+        final Calendar cal = Calendar.getInstance();
+        final String date = dateFormat.format(cal.getTime());
+        int login = 0;
+        if (hasAttribute("totalLogin"))
+            login = ((Integer)(getAttribute("totalLogin"))).intValue();
+        login++;
+        setAttribute("totalLogin", login);
+        saveAttribute("totalLogin");
+        if (login == 1) {
+            setAttribute("firstLogin", date);
+            saveAttribute("firstLogin");
         }
+        setAttribute("lastLogin", date);
+        saveAttribute("lastLogin");
     }
     
     /**
@@ -1166,8 +1138,6 @@ public class Player extends IOClient implements CommandExecutor, Tick {
      */
     public void HandleBlockChange(short X, short Y, short Z, PlaceMode type, byte holding) {
         Block getOrginal = level.getTile(X, Y, Z);
-        //TODO Call event
-        //TODO Check other stuff
         if (holding > 49) {
             kick("Hack Client detected!");
             return;
@@ -1407,15 +1377,7 @@ public class Player extends IOClient implements CommandExecutor, Tick {
             kicked = ((Integer)(getAttribute("totalKicked"))).intValue();
         kicked++;
         setAttribute("totalKicked", kicked);
-        try {
-            saveAttribute("totalKicked");
-        } catch (NotSerializableException e) {
-            e.printStackTrace();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        saveAttribute("totalKicked");
         Packet p = pm.getPacket("Kick");
         this.kickreason = reason;
         getServer().players.remove(this);
