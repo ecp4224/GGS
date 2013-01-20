@@ -32,7 +32,11 @@ public class Main extends Console implements Listener {
     
     public void start() {
         s = new Server("[MCForge] Default", 25565, "Welcome!");
-        s.start((Console)this, true);
+        try {
+            s.start();
+        } catch (IllegalAccessException e1) {
+            e1.printStackTrace();
+        }
         Scanner scanner = new Scanner(System.in);
         while (s.Running) {
             String line = scanner.nextLine();

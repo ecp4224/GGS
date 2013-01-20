@@ -480,6 +480,24 @@ public final class Server implements LogInterface, Updatable {
         pm = new PacketManager(this);
         pm.startReading();
     }
+    
+    //TODO Documentation
+    public void start() throws IllegalAccessException {
+        start(true);
+    }
+    
+    //TODO Documentation
+    public void start(boolean startsql) throws IllegalAccessException {
+        try {
+            StackTraceElement[] stacks = Thread.currentThread().getStackTrace();
+            StackTraceElement e = stacks[2]; //The heartbeat class will always be the 3rd in the stacktrace if the heartbeat is being sent correctly
+            Class<?> class_ = Class.forName(e.getClassName());
+            Console c = class_.asSubclass(Console.class).newInstance();
+            start(c, true);
+        } catch (Exception e) {
+            throw new IllegalAccessException("Server started from outside a console object!");
+        }
+    }
 
     /**
      * Start the server
