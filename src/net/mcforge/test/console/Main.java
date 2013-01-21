@@ -8,16 +8,12 @@
 package net.mcforge.test.console;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Random;
 import java.util.Scanner;
 
 import net.mcforge.API.EventHandler;
 import net.mcforge.API.Listener;
 import net.mcforge.API.io.ServerLogEvent;
-import net.mcforge.API.player.PlayerConnectEvent;
 import net.mcforge.groups.Group;
-import net.mcforge.iomodel.Player;
 import net.mcforge.server.Server;
 import net.mcforge.system.Console;
 import net.mcforge.system.updater.Updatable;
@@ -36,12 +32,7 @@ public class Main extends Console implements Listener {
     
     public void start() {
         s = new Server("[MCForge] Default", 25565, "Welcome!");
-        try {
-            s.start();
-        } catch (IllegalAccessException e1) {
-            e1.printStackTrace();
-        }
-        s.getEventSystem().registerEvents(this);
+        s.start(this, true);
         Scanner scanner = new Scanner(System.in);
         while (s.Running) {
             String line = scanner.nextLine();
@@ -105,30 +96,6 @@ public class Main extends Console implements Listener {
     public void alertOfManualUpdate(Updatable u) {
         sendMessage("An update for " + u.getName() + " is available.");
         sendMessage("You must manually download and install this update, go to " + u.getDownloadURL() + " to download this update.");
-    }
-    
-    @EventHandler
-    public void connect(PlayerConnectEvent event) {
-        final Player p = event.getPlayer();
-        final Random rand = new Random();
-        
-        if (p.hasAttribute("block_data")) {
-            ArrayList<String> test = p.getAttribute("block_data");
-            for (String s : test) {
-                System.out.println(s);
-            }
-        }
-        else {
-            ArrayList<String> test = new ArrayList<String>();
-            int temp = rand.nextInt(10);
-            for (int i = 0; i < temp; i++) {
-                test.add(i + "ABC : LOLTHIS IS DATA");
-            }
-            System.out.println("Saving " + test.size() + "strings.");
-            
-            p.setAttribute("block_data", test);
-            p.saveAttribute("block_data");
-        }
     }
 }
 
