@@ -483,11 +483,19 @@ public final class Server implements LogInterface, Updatable {
     
     //TODO Documentation
     public void start() throws IllegalAccessException {
-        start(true);
+        start(true, new ServerStartupArgs());
+    }
+    
+    public void start(ServerStartupArgs args) throws IllegalAccessException {
+        start(true, args);
     }
     
     //TODO Documentation
     public void start(boolean startsql) throws IllegalAccessException {
+        start(startsql, new ServerStartupArgs());
+    }
+    
+    public void start(boolean startsql, ServerStartupArgs args) throws IllegalAccessException {
         Console c = null;
         try {
             StackTraceElement[] stacks = Thread.currentThread().getStackTrace();
@@ -504,59 +512,81 @@ public final class Server implements LogInterface, Updatable {
                 throw new IllegalAccessException("Server started from outside a console object!");
             }
         }
-        start(c, startsql);
+        start(c, startsql, args);
+    }
+    
+    public void start(Console c, ServerStartupArgs args) {
+        start(c, true, args);
+    }
+    
+    public void start(Console c, boolean startSQL) {
+        start(c, startSQL, new ServerStartupArgs());
     }
 
     /**
      * Start the server
      */
     @SuppressWarnings("restriction")
-    public void start(Console console, boolean startSQL) {
+    public void start(Console console, boolean startSQL, ServerStartupArgs args) {
         if (Running)
             return;
-        startTicker();
         Running = true;
+        startTicker();
         this.console = console;
         console.setServer(this);
-        startEvents();
-        startLogger();
+        if (args.isLoadingEvents())
+            startEvents();
+        if (args.isLoadingLogger())
+            startLogger();
         Log("=============================");
         Log("Starting MCForge v" + VERSION);
         ch = new CommandHandler(this);
         FileUtils.createFilesAndDirs();
-        Group.load(this);
-        p = Properties.init(this);
-        if (!p.getBool("Verify-Names")) {
-            Log("!!WARNING!! You are running the server with verify names off, this means");
-            Log("anyone can login to the server with any username. Its recommended to turn this");
-            Log("this option on, if you know what your doing, then ignore this message.");
+        if (args.isLoadingGroups())
+            Group.load(this);
+        if (args.isLoadingProperties()) {
+            p = Properties.init(this);
+            if (!p.getBool("Verify-Names")) {
+                Log("!!WARNING!! You are running the server with verify names off, this means");
+                Log("anyone can login to the server with any username. Its recommended to turn this");
+                Log("this option on, if you know what your doing, then ignore this message.");
+            }
+            loadSystemProperties();
         }
-        loadSystemProperties();
-        us = new UpdateService(this);
+        if (args.isLoadingUpdateService())
+            us = new UpdateService(this);
         m = new Messages(this);
-        ph = new PluginHandler(this);
-        gh = new GeneratorHandler();
+        if (args.isLoadingPlugins())
+            ph = new PluginHandler(this);
+        if (args.isLoadingGenerator())
+            gh = new GeneratorHandler();
         startListening();
-        prh = new PrivilegesHandler(this);
-        ph.loadplugins();
+        if (args.isLoadingPrivileges())
+            prh = new PrivilegesHandler(this);
+        if (args.isLoadingPlugins())
+            ph.loadplugins();
         try {
-			prh.initialize();
+            if (args.isLoadingPrivileges())
+                prh.initialize();
 		}
 		catch (IOException e) {
 			e.printStackTrace();
 		}
-        Log("Loaded plugins");
-        LevelHandler.getKryo().setClassLoader(getDefaultClassLoader());
-        lm = new LevelHandler(this);
-        MainLevel = getSystemProperties().getValue("MainLevel");
-        if (!new File("levels/" + MainLevel + ".ggs").exists()) {
-            lm.newClassicLevel("Main", (short)64, (short)64, (short)64);
-            MainLevel = "Main";
+        if (args.isLoadingPlugins())
+            Log("Loaded plugins");
+        if (args.isLoadingLevels()) {
+            LevelHandler.getKryo().setClassLoader(getDefaultClassLoader());
+            lm = new LevelHandler(this);
+            MainLevel = getSystemProperties().getValue("MainLevel");
+            if (!new File("levels/" + MainLevel + ".ggs").exists()) {
+                lm.newClassicLevel("Main", (short)64, (short)64, (short)64);
+                MainLevel = "Main";
+            }
+            lm.loadClassicLevels();
+            Log("Loaded levels");
         }
-        lm.loadClassicLevels();
-        startTicker();
-        Log("Loaded levels");
-        us.getUpdateManager().add(this);
+        if (args.isLoadingUpdateService())
+            us.getUpdateManager().add(this);
         SecureRandom sr = null;
         try {
             sr = SecureRandom.getInstance("SHA1PRNG");
@@ -575,28 +605,34 @@ public final class Server implements LogInterface, Updatable {
         Log("SALT: " + Salt);
         if (startSQL)
             startSQL();
-        heartbeater = new Beat(this);
-        heartbeater.addHeart(new MBeat());
-        heartbeater.addHeart(new WBeat());
-        heartbeater.addHeart(new ForgeBeat());
-        heartbeater.startBeating();
+        if (args.isLoadingHeartbeat()) {
+            heartbeater = new Beat(this);
+            heartbeater.addHeart(new MBeat());
+            heartbeater.addHeart(new WBeat());
+            heartbeater.addHeart(new ForgeBeat());
+            heartbeater.startBeating();
+        }
         Log("Created heartbeat");
         Log("Server url can be found in 'url.txt'");
+        
+        if (args.isLoadingGenerator()) {
+            gh.addGenerator(new FlatGrass(this));
+            gh.addGenerator(new Forest(this));
+            gh.addGenerator(new Island(this));
+            gh.addGenerator(new Mountains(this));
+            gh.addGenerator(new Ocean(this));
+            gh.addGenerator(new Pixel(this));
+            gh.addGenerator(new Rainbow(this));
+            gh.addGenerator(new Space(this));
+        }
 
-
-        gh.addGenerator(new FlatGrass(this));
-        gh.addGenerator(new Forest(this));
-        gh.addGenerator(new Island(this));
-        gh.addGenerator(new Mountains(this));
-        gh.addGenerator(new Ocean(this));
-        gh.addGenerator(new Pixel(this));
-        gh.addGenerator(new Rainbow(this));
-        gh.addGenerator(new Space(this));
-
-        getCommandHandler().addCommand(new CmdAbort());
-        ServerStartedEvent sse = new ServerStartedEvent(this);
-        es.callEvent(sse);
-        Add(ss);
+        if (args.isLoadingCommands())
+            getCommandHandler().addCommand(new CmdAbort());
+        if (args.isLoadingEvents()) {
+            ServerStartedEvent sse = new ServerStartedEvent(this);
+            es.callEvent(sse);
+        }
+        getTicker().addTick(ss);
     }
 
     /**
