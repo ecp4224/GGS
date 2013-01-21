@@ -153,7 +153,7 @@ public class Player extends IOClient implements CommandExecutor, Tick {
      * Most recent player this player has pm'd with.
      */
     public Player lastCommunication;
-    
+
     public Player(Socket client, PacketManager pm) {
         super(client, pm);
         if (digest == null) {
@@ -169,12 +169,12 @@ public class Player extends IOClient implements CommandExecutor, Tick {
         afk = false;
         getServer().getTicker().addTick(this);
     }
-    
+
     @Override
     public Server getServer() {
         return pm.server;
     }
-    
+
     /**
      * Get the name of the client the player is using.
      * Browser/Normal client = Minecraft
@@ -487,7 +487,7 @@ public class Player extends IOClient implements CommandExecutor, Tick {
         this.setAttribute("mcf_prefix", this.prefix);
         this.saveAttribute("mcf_prefix");
     }
-    
+
     /**
      * Sets the player's prefix to the specified prefix.
      * This method won't overwrite the player's title color and it will show the player's
@@ -497,35 +497,35 @@ public class Player extends IOClient implements CommandExecutor, Tick {
      * @param prefix - The prefix to set. Title brackets shouldn't be included here.
      */
     public void setCleanPrefix(String prefix) {
-    	prefix = prefix.replaceAll("%", "&");
-    	String currprefix = getPrefix();
-		if (currprefix == null) {
-			currprefix = "[" + prefix + "] ";
-		}
-		else {
-			if (currprefix.startsWith("[")) {
-				currprefix = currprefix.substring(1);
-			}
-			else if (currprefix.startsWith("&") && currprefix.charAt(2) == '[') {
-				currprefix = currprefix.substring(0, 2) + currprefix.substring(3, currprefix.length());
-			}
-			if (currprefix.endsWith("] ")) {
-				currprefix = currprefix.substring(0, currprefix.length() - 2);
-			}
-			if (!currprefix.startsWith("&") || currprefix.length() <= 1) {
-				currprefix = "[" + prefix + "] ";
-			}
-			else {
-				String color = currprefix.substring(0, 2);
-				if (currprefix.charAt(currprefix.length() - 2) == '&') {
-					currprefix = currprefix.substring(0, currprefix.length() - 2);
-				}
-				currprefix = color + "[" + prefix + color + "] ";
-			}
-		}
-		setRawPrefix(currprefix);
+        prefix = prefix.replaceAll("%", "&");
+        String currprefix = getPrefix();
+        if (currprefix == null) {
+            currprefix = "[" + prefix + "] ";
+        }
+        else {
+            if (currprefix.startsWith("[")) {
+                currprefix = currprefix.substring(1);
+            }
+            else if (currprefix.startsWith("&") && currprefix.charAt(2) == '[') {
+                currprefix = currprefix.substring(0, 2) + currprefix.substring(3, currprefix.length());
+            }
+            if (currprefix.endsWith("] ")) {
+                currprefix = currprefix.substring(0, currprefix.length() - 2);
+            }
+            if (!currprefix.startsWith("&") || currprefix.length() <= 1) {
+                currprefix = "[" + prefix + "] ";
+            }
+            else {
+                String color = currprefix.substring(0, 2);
+                if (currprefix.charAt(currprefix.length() - 2) == '&') {
+                    currprefix = currprefix.substring(0, currprefix.length() - 2);
+                }
+                currprefix = color + "[" + prefix + color + "] ";
+            }
+        }
+        setRawPrefix(currprefix);
     }
-    
+
 
     /**
      * Whether the user is showing their prefix
@@ -581,7 +581,7 @@ public class Player extends IOClient implements CommandExecutor, Tick {
         despawn();
         spawn();
     }
-    
+
     /**
      * Despawn this player.
      * In other words, hide this player from all other players
@@ -593,7 +593,7 @@ public class Player extends IOClient implements CommandExecutor, Tick {
             p.despawn(this);
         }
     }
-    
+
     /**
      * Despawn this player for all players and despawn all players
      * for this player
@@ -606,7 +606,7 @@ public class Player extends IOClient implements CommandExecutor, Tick {
             despawn(p);
         }
     }
- 
+
     /**
      * Clear the list of players this player can see.
      * This method doesnt despawn any players.
@@ -614,7 +614,7 @@ public class Player extends IOClient implements CommandExecutor, Tick {
     public void clearSeeableList() {
         seeable.clear();
     }
-    
+
     /**
      * Spawn this player
      * In other words, show this player to all the other players in the same level
@@ -624,10 +624,10 @@ public class Player extends IOClient implements CommandExecutor, Tick {
             if (p.getLevel() != getLevel() || p == this)
                 continue;
             p.spawnPlayer(this);
-            
+
         }
     }
-    
+
     /**
      * Spawn this player for all players and spawn all players for this player.
      */
@@ -663,7 +663,7 @@ public class Player extends IOClient implements CommandExecutor, Tick {
         }
         return new BigInteger(1, digest.digest()).toString(16);
     }
-    
+
     /**
      * Promote this player to the next highest rank </br>
      * If the user already has the highest rank, then nothing happens
@@ -681,7 +681,7 @@ public class Player extends IOClient implements CommandExecutor, Tick {
             return;
         setGroup(lowestabove);
     }
-    
+
     /**
      * Demote the player to the next lowest rank </br>
      * If the user already has the lowest rank, then nothing happens
@@ -725,7 +725,7 @@ public class Player extends IOClient implements CommandExecutor, Tick {
         }
         return (T)extra.get(key);
     }
-    
+
     /**
      * Returns extra data stored in an offline player
      * @param key
@@ -756,17 +756,14 @@ public class Player extends IOClient implements CommandExecutor, Tick {
         else {
             r = server.getSQL().fillData("SELECT * FROM " + server.getSQL().getPrefix() + "_extra WHERE name='" + username + "' AND setting='" + key + "'");
             try {
-                if (server.getSQL() instanceof MySQL) {
+                if (server.getSQL() instanceof MySQL)
                     r.next();
-                    ByteArrayInputStream bais;
-                    ObjectInputStream ins;
-                    bais = new ByteArrayInputStream(r.getBytes("value"));
-                    ins = new ObjectInputStream(bais);
-                    object = ins.readObject();
-                    ins.close();
-                }
-                else
-                    object = r.getObject("value");
+                ByteArrayInputStream bais;
+                ObjectInputStream ins;
+                bais = new ByteArrayInputStream(r.getBytes("value"));
+                ins = new ObjectInputStream(bais);
+                object = ins.readObject();
+                ins.close();
             } catch (SQLException e) {
                 e.printStackTrace();
                 return null;
@@ -801,7 +798,7 @@ public class Player extends IOClient implements CommandExecutor, Tick {
         else
             return hasAttribute(key, username, getServer());
     }
-    
+
     /**
      * Checks to see if an offline player has a value
      * @param key
@@ -841,7 +838,7 @@ public class Player extends IOClient implements CommandExecutor, Tick {
         removeAttribute(key);
         extra.put(key, object);
     }
-    
+
     /**
      * Removes an attribute this player has stored. This will also remove the attribute from the SQL table if
      * its saved
@@ -861,7 +858,7 @@ public class Player extends IOClient implements CommandExecutor, Tick {
             e.printStackTrace();
         }
     }
-    
+
     /**
      * Set the value of an offline player
      * @param key
@@ -884,6 +881,10 @@ public class Player extends IOClient implements CommandExecutor, Tick {
         if (object instanceof Serializable) {
             if (object instanceof Boolean)
                 object = ((Boolean)object).toString();
+            ByteArrayOutputStream output = new ByteArrayOutputStream();
+            ObjectOutputStream out = new ObjectOutputStream(output);
+            out.writeObject(object);
+            byte[] data = output.toByteArray();
             ResultSet r = server.getSQL().fillData("SElECT count(*) FROM " + server.getSQL().getPrefix() + "_extra WHERE name='" + username + "' AND setting='" + key + "'");
             int size = 0;
             if (server.getSQL() instanceof MySQL)
@@ -898,12 +899,12 @@ public class Player extends IOClient implements CommandExecutor, Tick {
                 pstmt = server.getSQL().getConnection().prepareStatement("INSERT INTO " + server.getSQL().getPrefix() + "_extra(name, setting, value) VALUES (?, ?, ?)");
                 pstmt.setString(1, username);
                 pstmt.setString(2, key);
-                pstmt.setObject(3, object);
+                pstmt.setBytes(3, data);
                 pstmt.executeUpdate();
             }
             else {
                 pstmt = server.getSQL().getConnection().prepareStatement("UPDATE " + server.getSQL().getPrefix() + "_extra SET value = ? WHERE name = ? AND setting = ?");
-                pstmt.setObject(1, object);
+                pstmt.setBytes(1, data);
                 pstmt.setString(2, username);
                 pstmt.setString(3, key);
                 pstmt.executeUpdate();
@@ -913,7 +914,7 @@ public class Player extends IOClient implements CommandExecutor, Tick {
         else
             throw new NotSerializableException("The object that was stored in ExtraData cant be saved because it doesnt implement Serializable!");
     }
-    
+
     /**
      * Save the value <b>"key"</b> to the database.
      * The object <b>"key"</b> represents will be serialized to the database.
@@ -970,12 +971,12 @@ public class Player extends IOClient implements CommandExecutor, Tick {
             ps = server.getSQL().getConnection().prepareStatement(sql);
             ps.setString(1, username);
             ps.setString(2, key);
-            ps.setObject(3, data);
+            ps.setBytes(3, data);
         }
         else {
             sql = "UPDATE " + server.getSQL().getPrefix() + "_extra SET value = ? WHERE name = ? AND setting = ?";
             ps = server.getSQL().getConnection().prepareStatement(sql);
-            ps.setObject(1, data);
+            ps.setBytes(1, data);
             ps.setString(2, username);
             ps.setString(3, key);
         }
@@ -1021,8 +1022,8 @@ public class Player extends IOClient implements CommandExecutor, Tick {
             this.showprefix = ((Boolean)(getAttribute("mcf_showprefix"))).booleanValue();
         if (this.hasAttribute("mcf_nick"))
             this.custom_name = getAttribute("mcf_nick");
-        
-        
+
+
         final Calendar cal = Calendar.getInstance();
         final String date = dateFormat.format(cal.getTime());
         int login = 0;
@@ -1038,7 +1039,7 @@ public class Player extends IOClient implements CommandExecutor, Tick {
         setAttribute("lastLogin", date);
         saveAttribute("lastLogin");
     }
-    
+
     /**
      * Get the total number of times this player
      * logged in
@@ -1050,7 +1051,7 @@ public class Player extends IOClient implements CommandExecutor, Tick {
             count = ((Integer)(getAttribute("totalLogin"))).intValue();
         return count;
     }
-    
+
     /**
      * Get the data and time this player first logged in
      * with the format "yyyy/MM/dd HH:mm:ss"
@@ -1063,7 +1064,7 @@ public class Player extends IOClient implements CommandExecutor, Tick {
             data = getAttribute("firstLogin");
         return data;
     }
-    
+
     /**
      * Get the last time the user with the username <b>username</b> logged in
      * with the format "yyyy/MM/dd HH:mm:ss"
@@ -1080,7 +1081,7 @@ public class Player extends IOClient implements CommandExecutor, Tick {
             data = getPlayerAttribute("lastLogin", username, server);
         return data;
     }
-    
+
     /**
      * Get the total number of times this user has been kicked
      * @return
@@ -1361,7 +1362,7 @@ public class Player extends IOClient implements CommandExecutor, Tick {
      * @param reason The reason why he was kicked
      */
     @SuppressWarnings("deprecation")
-	public void kick(String reason) {
+    public void kick(String reason) {
         PlayerKickedEvent pke = new PlayerKickedEvent(this, reason);
         getServer().getEventSystem().callEvent(pke);
         if (pke.isCancelled()) {
