@@ -41,7 +41,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-public class Group {
+public class Group implements Listener {
 	static ArrayList<Group> groups = new ArrayList<Group>();
 	static HashMap<Group, String> temp = new HashMap<Group, String>();
 	private ArrayList<String> members = new ArrayList<String>();
@@ -447,7 +447,9 @@ public class Group {
 				for (int i = 0; i < nl.getLength(); i++) {
 					Element e = (Element) nl.item(i);
 					try {
-						groups.add(read(e, server));
+					    Group g = read(e, server);
+					    server.getEventSystem().registerEvents(g);
+						groups.add(g);
 					}
 					catch (Exception ee) {
 					    server.logError(ee);
@@ -477,16 +479,14 @@ public class Group {
 		temp.clear();
 		if (defaultgroup == null)
 			defaultgroup = groups.get(0);
-		
-		server.getEventSystem().registerEvents(new Listener() {
-			@EventHandler
-			public void connect(PlayerLoginEvent event) {
-				Group g = getGroup(event.getPlayer());
-				if (g == null)
-					Group.getDefault().addPlayer(event.getPlayer());
-			}
-		});
 	}
+	
+    @EventHandler
+    public void connect(PlayerLoginEvent event) {
+        Group g = getGroup(event.getPlayer());
+        if (g == null)
+            Group.getDefault().addPlayer(event.getPlayer());
+    }
 
 	private static Group read(Element e, Server server) {
 		String name = getTextValue(e, "name");
