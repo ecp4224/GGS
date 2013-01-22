@@ -26,6 +26,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
 import net.mcforge.API.ClassicExtension;
 import net.mcforge.API.CommandExecutor;
@@ -710,7 +712,10 @@ public class Player extends IOClient implements CommandExecutor, Tick {
     }
 
     /**
-     * Returns extra data stored in the player
+     * Returns extra data stored in the player.
+     * If the extra data does not exist in the cache, and is <b>NOT</b> compressed in the database, then it will
+     * be gotten from the database. If your extra data value is compressed, then please use {@link Player#getCompressedAttribute(String)}, otherwise
+     * an exception might be thrown.
      * @param key 
      *           The name of the data
      * @return 
@@ -725,6 +730,59 @@ public class Player extends IOClient implements CommandExecutor, Tick {
         }
         return (T)extra.get(key);
     }
+    
+    /**
+     * Returns extra data stored in the player.
+     * If the extra data does not exist in the cache, and is compressed in the database, then it will be gotten
+     * from the database. </br>
+     * This method uses more CPU power, it not recommended to use this unless you need to save/get a big object.
+     * If this is not the case, then please use {@link Player#getAttribute(String)}
+     * @param key 
+     *           The name of the data
+     * @return 
+     *        The data that was stored.
+     */
+    @SuppressWarnings("unchecked")
+    public <T> T getCompressedAttribute(String key) {
+        if (!extra.containsKey(key)) {
+            T value = (T)getPlayerCompressedAttribute(key, username, getServer());
+            extra.put(key, value);
+            return (T)value;
+        }
+        return (T)extra.get(key);
+    }
+    
+    /**
+     * Returns compressed extra data stored in an offline player. </br>
+     * This method uses more CPU power, it not recommended to use this unless you need to save/get a big object.
+     * If this is not the case, then please use {@link Player#getPlayerAttribute(String, String, Server)}
+     * @param key
+     *           The name of the data
+     * @param username
+     *                The username
+     * @param server
+     *              The server the user belongs to
+     * @return
+     *         The data that was found, null if nothing was found or in an error occurred while getting the data.
+     */
+    public static <T> T getPlayerCompressedAttribute(String key, String username, Server server) {
+        return getPlayerAttribute(key, username, server, true);
+    }
+    
+    /**
+     * Returns extra data stored in an offline player
+     * @param key
+     *           The name of the data
+     * @param username
+     *                The username
+     * @param server
+     *              The server the user belongs to
+     * @return
+     *         The data that was found, null if nothing was found or in an error occurred while getting the data.
+     */
+    public static <T> T getPlayerAttribute(String key, String username, Server server) {
+        return getPlayerAttribute(key, username, server, false);
+    }
 
     /**
      * Returns extra data stored in an offline player
@@ -738,7 +796,7 @@ public class Player extends IOClient implements CommandExecutor, Tick {
      *         The data that was found, null if nothing was found or in an error occurred while getting the data.
      */
     @SuppressWarnings("unchecked")
-    public static <T> T getPlayerAttribute(String key, String username, Server server) {
+    public static <T> T getPlayerAttribute(String key, String username, Server server, boolean compressed) {
         Object object = null;
         T value = null;
         ResultSet r = server.getSQL().fillData("SELECT count(*) FROM " + server.getSQL().getPrefix() + "_extra WHERE name='" + username + "' AND setting='" + key + "'");
@@ -758,12 +816,26 @@ public class Player extends IOClient implements CommandExecutor, Tick {
             try {
                 if (server.getSQL() instanceof MySQL)
                     r.next();
-                ByteArrayInputStream bais;
-                ObjectInputStream ins;
-                bais = new ByteArrayInputStream(r.getBytes("value"));
-                ins = new ObjectInputStream(bais);
-                object = ins.readObject();
-                ins.close();
+                if (compressed) {
+                    ByteArrayInputStream bais;
+                    ObjectInputStream ins;
+                    bais = new ByteArrayInputStream(r.getBytes("value"));
+                    GZIPInputStream gis = new GZIPInputStream(bais);
+                    ins = new ObjectInputStream(gis);
+                    object = ins.readObject();
+                    ins.close();
+                    gis.close();
+                    bais.close();
+                }
+                else {
+                    ByteArrayInputStream bais;
+                    ObjectInputStream ins;
+                    bais = new ByteArrayInputStream(r.getBytes("value"));
+                    ins = new ObjectInputStream(bais);
+                    object = ins.readObject();
+                    ins.close(); 
+                    bais.close();
+                }
             } catch (SQLException e) {
                 e.printStackTrace();
                 return null;
@@ -858,9 +930,10 @@ public class Player extends IOClient implements CommandExecutor, Tick {
             e.printStackTrace();
         }
     }
-
+    
     /**
-     * Set the value of an offline player
+     * Set the value of an offline player and save it into the database. The object passed will be serialized and inserted into the database.
+     * If the object already exists in the database, then it will execute an UPDATE rather than executing an INSERT
      * @param key
      *           The name of the value
      * @param object
@@ -878,22 +951,81 @@ public class Player extends IOClient implements CommandExecutor, Tick {
      *      
      */
     public static void setAttribute(String key, Object object, String username, Server server) throws SQLException, IOException, NotSerializableException {
+        setAttribute(key, object, username, server, false);
+    }
+    
+    /**
+     * Set the value of an offline player and save it into the database. The object passed will be compressed, serialized and inserted into the database.
+     * If the object already exists in the database, then it will execute an UPDATE rather than executing an INSERT. </br>
+     * This method uses more CPU power, it not recommended to use this unless you need to save a big object.
+     * If this is not the case, then please use {@link Player#setAttribute(String, Object)}
+     * @param key
+     *           The name of the value
+     * @param object
+     *              The value
+     * @param username
+     *                The username to save
+     * @param server
+     *              The server this user belongs to
+     * @throws SQLException
+     *                     If there was a problem executing the SQL statement to update/insert
+     *                     the object
+     * @throws IOException 
+     *                    If there was a problem writing the object to the SQL getServer().
+     * @throw NotSerializableException
+     *      
+     */
+    public static void setCompressedAttribute(String key, Object object, String username, Server server) throws SQLException, IOException, NotSerializableException {
+        setAttribute(key, object, username, server, true);
+    }
+
+    /**
+     * Set the value of an offline player and save it into the database. The object passed will be serialized and inserted into the database.
+     * If the object already exists in the database, then it will execute an UPDATE rather than executing an INSERT
+     * @param key
+     *           The name of the value
+     * @param object
+     *              The value
+     * @param username
+     *                The username to save
+     * @param server
+     *              The server this user belongs to
+     * @param compressed
+     *                  Weather the serialized object should be compressed before saving it, this is good for large objects
+     * @throws SQLException
+     *                     If there was a problem executing the SQL statement to update/insert
+     *                     the object
+     * @throws IOException 
+     *                    If there was a problem writing the object to the SQL getServer().
+     * @throw NotSerializableException
+     *      
+     */
+    public static void setAttribute(String key, Object object, String username, Server server, boolean compressed) throws SQLException, IOException, NotSerializableException {
         if (object instanceof Serializable) {
             if (object instanceof Boolean)
                 object = ((Boolean)object).toString();
-            ByteArrayOutputStream output = new ByteArrayOutputStream();
-            ObjectOutputStream out = new ObjectOutputStream(output);
-            out.writeObject(object);
-            byte[] data = output.toByteArray();
+            byte[] data;
+            if (compressed) {
+                ByteArrayOutputStream output = new ByteArrayOutputStream();
+                GZIPOutputStream gos = new GZIPOutputStream(output);
+                ObjectOutputStream out = new ObjectOutputStream(gos);
+                out.writeObject(object);
+                out.close();
+                gos.close();
+                data = output.toByteArray();
+            }
+            else {
+                ByteArrayOutputStream output = new ByteArrayOutputStream();
+                ObjectOutputStream out = new ObjectOutputStream(output);
+                out.writeObject(object);
+                out.close();
+                data = output.toByteArray();
+            }
             ResultSet r = server.getSQL().fillData("SElECT count(*) FROM " + server.getSQL().getPrefix() + "_extra WHERE name='" + username + "' AND setting='" + key + "'");
             int size = 0;
             if (server.getSQL() instanceof MySQL)
                 r.next();
             size = r.getInt(1);
-            if (server.getSQL() instanceof MySQL) {
-                saveToMySQL(key, object, size == 0, server, username);
-                return;
-            }
             PreparedStatement pstmt = null;
             if (size == 0) {
                 pstmt = server.getSQL().getConnection().prepareStatement("INSERT INTO " + server.getSQL().getPrefix() + "_extra(name, setting, value) VALUES (?, ?, ?)");
@@ -932,6 +1064,26 @@ public class Player extends IOClient implements CommandExecutor, Tick {
             getServer().logError(e);
         }
     }
+    
+    /**
+     * Save the value <b>"key"</b> to the database.
+     * The object <b>"key"</b> represents will be compressed and serialized to the database using a {@link GZIPOutputStream} object.
+     * If an exception occurs, then the exception will just print to the server log and continue.
+     * No exceptions will be raised, if you need to know if an exception was caught, then please use
+     * {@link Player#saveCompressedAttributeRaised(String)} </br>
+     * This method uses more CPU power, it not recommended to use this unless you need to save a big object.
+     * If this is not the case, then please use {@link Player#saveAttribute(String)}
+     * @param key
+     */
+    public void saveCompressedAttribute(String key) {
+        if (!extra.containsKey(key))
+            return;
+        try {
+            saveCompressedAttributeRaised(key);
+        } catch (Exception e) {
+            getServer().logError(e);
+        }
+    }
 
     /**
      * Save the value <b>key</b> to the database.
@@ -954,34 +1106,29 @@ public class Player extends IOClient implements CommandExecutor, Tick {
             return;
         setAttribute(key, extra.get(key), username, getServer());
     }
-
-    private static <T> void saveToMySQL(String key, T o, boolean add, Server server, String username) throws IOException, SQLException {
-        PreparedStatement ps=null;
-        String sql=null;
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        ObjectOutputStream oos = new ObjectOutputStream(bos);
-        oos.writeObject(o);
-        oos.flush();
-        oos.close();
-        bos.close();
-
-        byte[] data = bos.toByteArray();
-        if (add) {
-            sql = "INSERT INTO " + server.getSQL().getPrefix() + "_extra(name, setting, value) VALUES (?, ?, ?)";
-            ps = server.getSQL().getConnection().prepareStatement(sql);
-            ps.setString(1, username);
-            ps.setString(2, key);
-            ps.setBytes(3, data);
-        }
-        else {
-            sql = "UPDATE " + server.getSQL().getPrefix() + "_extra SET value = ? WHERE name = ? AND setting = ?";
-            ps = server.getSQL().getConnection().prepareStatement(sql);
-            ps.setBytes(1, data);
-            ps.setString(2, username);
-            ps.setString(3, key);
-        }
-        ps.executeUpdate();
-
+    
+    /**
+     * Save the value <b>key</b> to the database.
+     * The object <b>key</b> represents will be compressed and serialized to the
+     * database using a {@link GZIPOutputStream} object.
+     * This method will raise an exception when an exception occurs, this is good if you need
+     * to know if saving failed or not. Otherwise, use {@link Player#saveCompressedAttribute(String)}. </br>
+     * This method uses more CPU power, it not recommended to use this unless you need to save a big object.
+     * If this is not the case, then please use {@link Player#saveAttributeRaised(String)}
+     * @param key
+     *           The name of the data to save
+     * @throws SQLException
+     *                     If there was a problem executing the SQL statement to update/insert
+     *                     the object
+     * @throws IOException 
+     *                    If there was a problem writing the object to the SQL getServer().
+     * @throw NotSerializableException
+     *                                
+     */
+    public void saveCompressedAttributeRaised(String key) throws SQLException, IOException, NotSerializableException {
+        if (!extra.containsKey(key))
+            return;
+        setCompressedAttribute(key, extra.get(key), username, getServer());
     }
 
     /**
