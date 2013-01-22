@@ -12,6 +12,7 @@ public class ServerStartupArgs {
     private boolean levels;
     private boolean heartbeat;
     private boolean generator;
+    private boolean tracker;
     
     public ServerStartupArgs() {
         setLoadingEvents(true);
@@ -25,6 +26,23 @@ public class ServerStartupArgs {
         setLoadingLevels(true);
         setLoadingHeartbeat(true);
         setLoadingGenerator(true);
+        setIsLoadingBlockTracking(true);
+    }
+    
+    /**
+     * Return if the server will load the block tracker.
+     * @return
+     */
+    public boolean isLoadingBlockTracking() {
+        return tracker;
+    }
+    
+    /**
+     * Set whether or not the server will load the block tracker.
+     * @param tracker
+     */
+    public void setIsLoadingBlockTracking(boolean tracker) {
+        this.tracker = tracker;
     }
 
     /**

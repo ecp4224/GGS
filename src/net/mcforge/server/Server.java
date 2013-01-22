@@ -53,6 +53,8 @@ import net.mcforge.util.logger.Logger;
 import net.mcforge.util.properties.Properties;
 import net.mcforge.world.Level;
 import net.mcforge.world.LevelHandler;
+import net.mcforge.world.blocks.tracking.BlockTracker;
+import net.mcforge.world.blocks.tracking.BlockData;
 import net.mcforge.world.generator.model.FlatGrass;
 import net.mcforge.world.generator.model.Forest;
 import net.mcforge.world.generator.model.Island;
@@ -66,7 +68,7 @@ public final class Server implements LogInterface, Updatable {
     private PacketManager pm;
     private final java.util.logging.Logger log = java.util.logging.Logger.getLogger("MCForge");
     private LevelHandler lm;
-    private final SaveSettings ss = new SaveSettings();
+    private SaveSettings ss;
     private Logger logger;
     private Ticker ticker;
     private CommandHandler ch;
@@ -83,6 +85,7 @@ public final class Server implements LogInterface, Updatable {
     private Messages m;
     private int oldsize;
     private ArrayList<IOClient> cache;
+    private BlockTracker bt;
     private ArrayList<Player> pcache;
     public static final String[] devs = new String []{ "Dmitchell", "501st_commander", "Lavoaster", "Alem_Zupa", "QuantumParticle", "BeMacized", "Shade2010", "edh649", "hypereddie10", "Gamemakergm", "Serado", "Wouto1997", "cazzar", "givo" };
     /**
@@ -267,13 +270,23 @@ public final class Server implements LogInterface, Updatable {
     public final PrintWriter getLoggerOutput() {
         return getLogger().getWriter();
     }
+    
     /**
-     * Get the properties for {@link Server#configpath} file
+     * Get the properties for the {@link Server#configpath} file
      * @return
      *        The {@link Properties} object
      */
     public final Properties getSystemProperties() {
         return p;
+    }
+    
+    /**
+     * Get the Block Tracker that is tracking all the block changes on the server.
+     * @return
+     *        The {@link BlockTracker} object
+     */
+    public final BlockTracker getBlockTracker() {
+        return bt;
     }
 
     /**
@@ -613,6 +626,10 @@ public final class Server implements LogInterface, Updatable {
             heartbeater.startBeating();
         }
         Log("Created heartbeat");
+        if (args.isLoadingBlockTracking()) {
+            bt = new BlockTracker(this);
+            Log("Created and Started the Block Tracker");
+        }
         Log("Server url can be found in 'url.txt'");
         
         if (args.isLoadingGenerator()) {
@@ -632,6 +649,7 @@ public final class Server implements LogInterface, Updatable {
             ServerStartedEvent sse = new ServerStartedEvent(this);
             es.callEvent(sse);
         }
+        ss = new SaveSettings(this);
         getTicker().addTick(ss);
     }
 
@@ -766,6 +784,7 @@ public final class Server implements LogInterface, Updatable {
         lm.stopBackup();
         ticker.stopTick();
         logger.Stop();
+        bt.dispose();
         heartbeater.stopBeating();
         ArrayList<Player> players = new ArrayList<Player>();
         for (Player p : getPlayers())
@@ -824,6 +843,9 @@ public final class Server implements LogInterface, Updatable {
 
     private class SaveSettings implements Tick {
         int oldsize = 0;
+        private Server server;
+        
+        public SaveSettings(Server server) { this.server = server; }
         @Override
         public void tick() {
             try {
@@ -841,7 +863,7 @@ public final class Server implements LogInterface, Updatable {
         }
         @Override
         public int getTimeout() {
-            return 10;
+            return 5000;
         }
 
     }
