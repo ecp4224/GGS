@@ -272,7 +272,7 @@ public class LevelHandler {
 
         @Override
         public int getTimeout() {
-            return 600;
+            return 6000;
         }
     }
 
