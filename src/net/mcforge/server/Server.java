@@ -54,7 +54,6 @@ import net.mcforge.util.properties.Properties;
 import net.mcforge.world.Level;
 import net.mcforge.world.LevelHandler;
 import net.mcforge.world.blocks.tracking.BlockTracker;
-import net.mcforge.world.blocks.tracking.BlockData;
 import net.mcforge.world.generator.model.FlatGrass;
 import net.mcforge.world.generator.model.Forest;
 import net.mcforge.world.generator.model.Island;
@@ -64,11 +63,10 @@ import net.mcforge.world.generator.model.Pixel;
 import net.mcforge.world.generator.model.Rainbow;
 import net.mcforge.world.generator.model.Space;
 
-public final class Server implements LogInterface, Updatable {
+public final class Server implements LogInterface, Updatable, Tick {
     private PacketManager pm;
     private final java.util.logging.Logger log = java.util.logging.Logger.getLogger("MCForge");
     private LevelHandler lm;
-    private SaveSettings ss;
     private Logger logger;
     private Ticker ticker;
     private CommandHandler ch;
@@ -241,12 +239,12 @@ public final class Server implements LogInterface, Updatable {
     public final PluginHandler getPluginHandler() {
         return ph;
     }
-    
+
     /**
      * Get the handler that handles MCForge staff privileges
      */
     public final PrivilegesHandler getPrivilegesHandler() {
-    	return prh;
+        return prh;
     }
 
     /**
@@ -270,7 +268,7 @@ public final class Server implements LogInterface, Updatable {
     public final PrintWriter getLoggerOutput() {
         return getLogger().getWriter();
     }
-    
+
     /**
      * Get the properties for the {@link Server#configpath} file
      * @return
@@ -279,7 +277,7 @@ public final class Server implements LogInterface, Updatable {
     public final Properties getSystemProperties() {
         return p;
     }
-    
+
     /**
      * Get the Block Tracker that is tracking all the block changes on the server.
      * @return
@@ -478,13 +476,13 @@ public final class Server implements LogInterface, Updatable {
         if (es == null)
             es = new EventSystem(this);
     }
-    
-    
+
+
     public void startTicker() {
         ticker = new Ticker();
         ticker.startTick();
     }
-    
+
     /**
      * Start listening to the port specified in {@link Server#Port}
      * and start accepting new connections.
@@ -493,21 +491,21 @@ public final class Server implements LogInterface, Updatable {
         pm = new PacketManager(this);
         pm.startReading();
     }
-    
+
     //TODO Documentation
     public void start() throws IllegalAccessException {
         start(true, new ServerStartupArgs());
     }
-    
+
     public void start(ServerStartupArgs args) throws IllegalAccessException {
         start(true, args);
     }
-    
+
     //TODO Documentation
     public void start(boolean startsql) throws IllegalAccessException {
         start(startsql, new ServerStartupArgs());
     }
-    
+
     public void start(boolean startsql, ServerStartupArgs args) throws IllegalAccessException {
         Console c = null;
         try {
@@ -527,11 +525,11 @@ public final class Server implements LogInterface, Updatable {
         }
         start(c, startsql, args);
     }
-    
+
     public void start(Console c, ServerStartupArgs args) {
         start(c, true, args);
     }
-    
+
     public void start(Console c, boolean startSQL) {
         start(c, startSQL, new ServerStartupArgs());
     }
@@ -581,10 +579,10 @@ public final class Server implements LogInterface, Updatable {
         try {
             if (args.isLoadingPrivileges())
                 prh.initialize();
-		}
-		catch (IOException e) {
-			e.printStackTrace();
-		}
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
         if (args.isLoadingPlugins())
             Log("Loaded plugins");
         if (args.isLoadingLevels()) {
@@ -631,7 +629,7 @@ public final class Server implements LogInterface, Updatable {
             Log("Created and Started the Block Tracker");
         }
         Log("Server url can be found in 'url.txt'");
-        
+
         if (args.isLoadingGenerator()) {
             gh.addGenerator(new FlatGrass(this));
             gh.addGenerator(new Forest(this));
@@ -649,8 +647,7 @@ public final class Server implements LogInterface, Updatable {
             ServerStartedEvent sse = new ServerStartedEvent(this);
             es.callEvent(sse);
         }
-        ss = new SaveSettings(this);
-        getTicker().addTick(ss);
+        getTicker().addTick(this);
     }
 
     /**
@@ -768,7 +765,7 @@ public final class Server implements LogInterface, Updatable {
             return;
         Running = false;
         Log("Stopping server...");
-        Remove(ss);
+        getTicker().removeTick(this);
         for(Player p : players)
         {
             p.sendMessage("Stopping server...");
@@ -825,7 +822,7 @@ public final class Server implements LogInterface, Updatable {
     public void Add(Tick t) {
         ticker.addTick(t);
     }
-    
+
     public Ticker getTicker() {
         return ticker;
     }
@@ -840,41 +837,36 @@ public final class Server implements LogInterface, Updatable {
     public void Remove(Tick t) {
         ticker.removeTick(t);
     }
-
-    private class SaveSettings implements Tick {
-        int oldsize = 0;
-        private Server server;
-        
-        public SaveSettings(Server server) { this.server = server; }
-        @Override
-        public void tick() {
-            try {
-                if (oldsize != getSystemProperties().getKeys().length) {
-                    saveSystemSettings();
-                    oldsize = getSystemProperties().getKeys().length;
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
+    
+    @Override
+    public void tick() {
+        try {
+            if (oldsize != getSystemProperties().getKeys().length) {
+                saveSystemSettings();
+                oldsize = getSystemProperties().getKeys().length;
             }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        @Override
-        public boolean inSeperateThread() {
-            return false;
-        }
-        @Override
-        public int getTimeout() {
-            return 5000;
-        }
-
+    }
+    
+    @Override
+    public boolean inSeperateThread() {
+        return false;
+    }
+    
+    @Override
+    public int getTimeout() {
+        return 50;
     }
 
     @Override
     public void onLog(String message) {
         //TODO ..colors?
-        ServerLogEvent sle = new ServerLogEvent(this, message, message.split("\\]")[1].trim());
-        if (es != null)
-            this.es.callEvent(sle);
-        System.out.println(message);
+                ServerLogEvent sle = new ServerLogEvent(this, message, message.split("\\]")[1].trim());
+                if (es != null)
+                    this.es.callEvent(sle);
+                System.out.println(message);
     }
     @Override
     public void onError(String message) {
