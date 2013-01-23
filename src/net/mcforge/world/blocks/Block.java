@@ -75,7 +75,7 @@ import net.mcforge.world.exceptions.InvalidBlockAddException;
 public abstract class Block implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    private static Block[] blocks = new Block[] {
+    private transient static Block[] blocks = new Block[] {
             new Air(),
             new Aqua(),
             new Bedrock(),
@@ -129,7 +129,7 @@ public abstract class Block implements Serializable {
             new YellowFlower()
     };
     
-    private static ArrayList<Block> custom = new ArrayList<Block>();
+    private transient static ArrayList<Block> custom = new ArrayList<Block>();
     
     /**
      * The ID of the block

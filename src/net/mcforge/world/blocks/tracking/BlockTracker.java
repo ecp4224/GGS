@@ -168,7 +168,7 @@ public class BlockTracker implements Listener, Tick {
         bd.z = event.getZ();
         bd.type = event.getPlaceType().getType();
         bd.before = p.getLevel().getTile(bd.x, bd.y, bd.z);
-        bd.milisecond = System.currentTimeMillis();
+        bd.milisecond = new Date().getTime();
         bd.level = p.getLevel().getName();
         
         if (!cache.containsKey(p)) {

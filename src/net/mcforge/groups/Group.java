@@ -32,6 +32,7 @@ import net.mcforge.API.player.PlayerDisconnectEvent;
 import net.mcforge.API.player.PlayerLoginEvent;
 import net.mcforge.API.plugin.Command;
 import net.mcforge.chat.ChatColor;
+import net.mcforge.groups.exceptions.GroupAttributeNotFoundException;
 import net.mcforge.iomodel.Player;
 import net.mcforge.server.Server;
 import net.mcforge.util.FileUtils;
@@ -46,6 +47,8 @@ public class Group implements Listener {
 	static HashMap<Group, String> temp = new HashMap<Group, String>();
 	private ArrayList<String> members = new ArrayList<String>();
 	private ArrayList<Player> online = new ArrayList<Player>();
+	private HashMap<String, String> extradata = new HashMap<String, String>();
+	private Element data;
 	private static Group defaultgroup;
 	/**
 	 * The permission level of this group
@@ -88,6 +91,50 @@ public class Group implements Listener {
 
 	public Group(String name, Group parent, Server server) {
 		this(name, parent.permissionlevel, parent.isOP, parent.color, parent, server);
+	}
+	
+	/**
+	 * Set a value to be saved for this group in the XML settings (groups.xml)
+	 * @param key
+	 *           The node name
+	 * @param value
+	 *             The value of the node
+	 */
+	public void setAttribute(String key, String value) {
+	    if (extradata.containsKey(key))
+	        extradata.remove(key);
+	    extradata.put(key, value);
+	}
+	
+	/**
+	 * Check to see if the setting <b>"key"</b> exists in the XML settings or in the cache.
+	 * @param key
+	 *           The key to lookup
+	 * @return
+	 *        Returns whether or not the setting exists
+	 */
+	public boolean hasAttribute(String key) {
+	    return extradata.containsKey(key) || getTextValue(data, key) != null;
+	}
+	
+	/**
+	 * Get a group setting that is stored in the cache or in the XML settings (groups.xml)
+	 * @param key
+	 *           The key to lookup
+	 * @return
+	 *        The value of the setting
+	 * @throws GroupAttributeNotFoundException
+	 *                                        This is thrown if the setting can't be found.
+	 */
+	public String getAttribute(String key) throws GroupAttributeNotFoundException {
+	    if (extradata.containsKey(key))
+	        return extradata.get(key);
+	    String d = getTextValue(data, key);
+	    if (d != null) {
+	        extradata.put(key, d);
+	        return d;
+	    }
+	    throw new GroupAttributeNotFoundException("The group attribute \"" + key + "\" does not exist!");
 	}
 
 	/**
@@ -400,6 +447,9 @@ public class Group implements Listener {
 	        lines.add("<color>" + g.color.getColor() + "</color>");
 	        if (Group.getDefault() == g)
 	            lines.add("<default>true</default>");
+	        for (String key : g.extradata.keySet()) {
+	            lines.add("<" + key + ">" + g.extradata.get(key) + "</" + key + ">");
+	        }
 	        lines.add("</Group>");
 	    }
 	    lines.add("</Groups>");
@@ -518,6 +568,7 @@ public class Group implements Listener {
 		catch (IOException e1) {
 		    server.logError(e1);
 		}
+		g.data = e;
 		return g;
 	}
 	

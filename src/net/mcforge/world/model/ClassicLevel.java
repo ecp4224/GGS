@@ -410,6 +410,10 @@ public class ClassicLevel implements Level, Serializable {
             height = l.height;
             autosave = l.autosave;
             blocks = l.blocks;
+            if (blocks == null) {
+                server.Log(l.name + " BLOCK DATA CORRUPT!");
+                blocks = new Block[width*height*depth];
+            }
             depth = l.depth;
             motd = l.motd;
             physicsspeed = l.physicsspeed;
