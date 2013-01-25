@@ -846,7 +846,6 @@ public final class Server implements LogInterface, Updatable, Tick {
                 oldsize = getSystemProperties().getKeys().length;
             }
         } catch (IOException e) {
-            e.printStackTrace();
         }
     }
     

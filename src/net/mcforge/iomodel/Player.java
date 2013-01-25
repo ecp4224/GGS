@@ -1302,6 +1302,102 @@ public class Player extends IOClient implements CommandExecutor, Tick {
         else if (type == PlaceMode.BREAK)
             GlobalBlockChange(X, Y, Z, Block.getBlock((byte)0), level, getServer());
     }
+    /**
+     * Cause this player to place a block in the current level this player is in.
+     * You can get the current level by calling {@link Player#getLevel()}.
+     * 
+     * This method will execute a {@link PlayerBlockChangeEvent} event, if the event is cancelled, then nothing happens.
+     * @param x
+     *         The block X cord. to place the block
+     * @param y
+     *         The block Y cord. to place the block
+     * @param z
+     *         The block Z cord. to place the block
+     * @param block
+     *             The new block to place
+     */
+    public void globalBlockChange(int x, int y, int z, Block block) {
+        globalBlockChange(x, y, z, block, true);
+    }
+    
+    /**
+     * Cause this player to place a block in the current level this player is in.
+     * You can get the current level by calling {@link Player#getLevel()}.
+     * 
+     * This method will execute a {@link PlayerBlockChangeEvent} event, if the event is cancelled, then nothing happens.
+     * @param x
+     *         The block X cord. to place the block
+     * @param y
+     *         The block Y cord. to place the block
+     * @param z
+     *         The block Z cord. to place the block
+     * @param block
+     *             The new block to place
+     * @param updatelevel
+     *                   Weather to update the level object or not.
+     */
+    public void globalBlockChange(int x, int y, int z, Block block, boolean updatelevel) {
+        PlayerBlockChangeEvent event = new PlayerBlockChangeEvent(this, (short)X, (short)Y, (short)Z, block, level, getServer(), (block.ID == 0 ? PlaceMode.BREAK : PlaceMode.PLACE));
+        getServer().getEventSystem().callEvent(event);
+        if (event.isCancelled())
+            return;
+        GlobalBlockChange((short)x, (short)y, (short)z, block, getLevel(), getServer(), updatelevel);
+    }
+    
+    /**
+     * Cause this player to place a series of blocks in the current level this player is in.
+     * You can get the current level by calling {@link Player#getLevel()}.
+     * 
+     * This method will execute a {@link PlayerBlockChangeEvent} event for each {@link BlockUpdate} object in the array passed in the parameter.
+     * If an event is canceled, then that block update will be skipped.
+     * @param blockupdates
+     *                   An array of {@link BlockUpdate} objects that contain the data for each block change.
+     */
+    public void globalBlockChange(BlockUpdate[] blockupdates) {
+        globalBlockChange(blockupdates, true);
+    }
+    
+    /**
+     * Cause this player to place a series of blocks in the current level this player is in.
+     * You can get the current level by calling {@link Player#getLevel()}.
+     * 
+     * This method will execute a {@link PlayerBlockChangeEvent} event for each {@link BlockUpdate} object in the array passed in the parameter.
+     * If an event is canceled, then that block update will be skipped.
+     * @param blockupdates
+     *                   An array of {@link BlockUpdate} objects that contain the data for each block change.
+     * @param updatelevel
+     *                  Whether or not the level should be updated as well.
+     */
+    public void globalBlockChange(BlockUpdate[] blockupdates, boolean updatelevel) {
+        final SetBlock sb = (SetBlock)getServer().getPacketManager().getPacket((byte)0x05);
+        ArrayList<byte[]> cache = new ArrayList<byte[]>();
+        for (BlockUpdate b : blockupdates) {
+            PlayerBlockChangeEvent event = new PlayerBlockChangeEvent(this, (short)b.getX(), (short)b.getY(), (short)b.getZ(), b.getBlock(), level, getServer(), (b.getBlock().ID == 0 ? PlaceMode.BREAK : PlaceMode.PLACE));
+            getServer().getEventSystem().callEvent(event);
+            if (event.isCancelled())
+                continue;
+            for (Player p : getServer().getPlayers()) {
+                if (p.getLevel() == getLevel())
+                    cache.add(sb.getBytes(p, getServer(), (short)b.getX(), (short)b.getY(), (short)b.getZ(), b.getBlock().getVisibleBlock()));
+            }
+            if (updatelevel)
+                getLevel().setTile(b.getBlock(), b.getX(), b.getY(), b.getZ(), getServer());
+        }
+
+        for (int pi = 0; pi < getServer().getPlayers().size(); pi++) {
+            final Player p = getServer().getPlayers().get(pi);
+            for (int i = 0; i < cache.size(); i++) {
+                if (p.getLevel() != getLevel())
+                    continue;
+                try {
+                    p.writeData(cache.get(i));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        cache.clear();
+    }
 
     /**
      * Send a block update to all the players on level "l" in getServer() "s"

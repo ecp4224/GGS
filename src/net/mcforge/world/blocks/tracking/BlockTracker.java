@@ -104,7 +104,7 @@ public class BlockTracker implements Listener, Tick {
         ArrayList<BlockData> data;
         if (!cache.containsKey(player)) {
             if (player.hasAttribute("mcf_blocktracking")) {
-                data = player.getAttribute("mcf_blocktracking");
+                data = player.getCompressedAttribute("mcf_blocktracking");
                 cache.put(player, data);
             }
             else
@@ -114,9 +114,64 @@ public class BlockTracker implements Listener, Tick {
             data = cache.get(player);
         
         ArrayList<BlockData> toreturn = new ArrayList<BlockData>();
-        for (BlockData d : data) {
+        for (int i = data.size() - 1; i >= 0; i--) {
+            final BlockData d = data.get(i);
             if (d.milisecond < milliseconds)
-                continue;
+                break;
+            toreturn.add(d);
+        }
+        return Collections.unmodifiableList(toreturn);
+    }
+    
+    /**
+     * Get the Block Change history of a player that is offline.
+     * With the first element being the current time and the last element being the block change that occurred on
+     * the date specified in the parameter <b>date</b> 
+     * @param player The player to get the data
+     * @param date The lowest date
+     * @return The block history in an unmodifiable list with the first date being the one specified in the parameter
+     */
+    public List<BlockData> getOfflineHistory(String player, Date date) {
+        return getOfflineHistory(player, date.getTime());
+    }
+    
+    /**
+     * Get the block change history of a player that is offline
+     * With the first element being the current time and the last element being <b>current time - seconds</b> (where seconds is specified in the parameter).
+     * @see Date#Date()
+     * @param player The player to get the data for
+     * @param seconds The amount of seconds to subtract from the current date
+     * @return The block history in an unmodifiable list with the last element being the (current time - the seconds specified in the parameter)
+     */
+    public List<BlockData> getOfflineHistory(String player, int seconds) {
+        Date d = new Date();
+        long miliseconds = d.getTime();
+        miliseconds -= (seconds * 1000);
+        return getOfflineHistory(player, miliseconds);
+    }
+    
+    /**
+     * Get the block change history of a player that is offline
+     * With the first element being the current time and the last element being <b>current time - seconds</b> (where seconds is specified in the parameter).
+     * @see Date#Date()
+     * @param player The player to get the data for
+     * @param seconds The amount of seconds to subtract from the current date
+     * @return The block history in an unmodifiable list with the last element being the (current time - the seconds specified in the parameter)
+     */
+    public List<BlockData> getOfflineHistory(String player, long milliseconds) {
+        ArrayList<BlockData> data = new ArrayList<BlockData>();
+        
+        if (Player.hasAttribute("mcf_blocktracking", player, server)) {
+            data = Player.getPlayerCompressedAttribute("mcf_blocktracking", player, server);
+        }
+        else
+            return Collections.unmodifiableList(data);
+        
+        ArrayList<BlockData> toreturn = new ArrayList<BlockData>();
+        for (int i = data.size() - 1; i >= 0; i--) {
+            final BlockData d = data.get(i);
+            if (d.milisecond < milliseconds)
+                break;
             toreturn.add(d);
         }
         return Collections.unmodifiableList(toreturn);

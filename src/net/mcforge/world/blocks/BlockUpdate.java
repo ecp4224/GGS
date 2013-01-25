@@ -4,7 +4,11 @@ import net.mcforge.iomodel.Player;
 
 /**
  * This class represents data for a Block Update. The only method that </br>
- * uses this in the core is {@link Player#GlobalBlockChange(BlockUpdate[], ClassicLevel, net.mcforge.server.Server)} and {@link Player#GlobalBlockChange(BlockUpdate[], ClassicLevel, net.mcforge.server.Server, boolean)}.
+ * The following methods use this class in the core: </br>
+ * {@link Player#GlobalBlockChange(BlockUpdate[], ClassicLevel, net.mcforge.server.Server)} </br>
+ * {@link Player#GlobalBlockChange(BlockUpdate[], ClassicLevel, net.mcforge.server.Server, boolean)} </br>
+ * {@link Player#globalBlockChange(BlockUpdate[])} </br>
+ * {@link Player#globalBlockChange(BlockUpdate[], boolean)}
  * @author MCForgeTeam
  *
  */
