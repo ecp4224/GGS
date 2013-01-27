@@ -730,7 +730,7 @@ public class Player extends IOClient implements CommandExecutor, Tick {
         }
         return (T)extra.get(key);
     }
-    
+
     /**
      * Returns extra data stored in the player.
      * If the extra data does not exist in the cache, and is compressed in the database, then it will be gotten
@@ -751,7 +751,7 @@ public class Player extends IOClient implements CommandExecutor, Tick {
         }
         return (T)extra.get(key);
     }
-    
+
     /**
      * Returns compressed extra data stored in an offline player. </br>
      * This method uses more CPU power, it not recommended to use this unless you need to save/get a big object.
@@ -768,7 +768,7 @@ public class Player extends IOClient implements CommandExecutor, Tick {
     public static <T> T getPlayerCompressedAttribute(String key, String username, Server server) {
         return getPlayerAttribute(key, username, server, true);
     }
-    
+
     /**
      * Returns extra data stored in an offline player
      * @param key
@@ -810,7 +810,7 @@ public class Player extends IOClient implements CommandExecutor, Tick {
             return null;
         }
         if (size == 0)
-            return null;
+            return null; 
         else {
             r = server.getSQL().fillData("SELECT * FROM " + server.getSQL().getPrefix() + "_extra WHERE name='" + username + "' AND setting='" + key + "'");
             try {
@@ -893,8 +893,18 @@ public class Player extends IOClient implements CommandExecutor, Tick {
             e.printStackTrace();
             return false;
         }
-        if (size == 0)
-            return false;
+        if (size == 0) {
+            r = server.getSQL().fillData("SELECT count(*) FROM `mcf_extra` WHERE name='" + username + "' AND setting LIKE '" + key + "_%' ORDER BY setting ASC");
+            try {
+                if (server.getSQL() instanceof MySQL)
+                    r.next();
+                size = r.getInt(1);
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return false;
+            }
+            return size != 0;
+        }
         return true;
     }
 
@@ -930,7 +940,7 @@ public class Player extends IOClient implements CommandExecutor, Tick {
             e.printStackTrace();
         }
     }
-    
+
     /**
      * Set the value of an offline player and save it into the database. The object passed will be serialized and inserted into the database.
      * If the object already exists in the database, then it will execute an UPDATE rather than executing an INSERT
@@ -953,7 +963,7 @@ public class Player extends IOClient implements CommandExecutor, Tick {
     public static void setAttribute(String key, Object object, String username, Server server) throws SQLException, IOException, NotSerializableException {
         setAttribute(key, object, username, server, false);
     }
-    
+
     /**
      * Set the value of an offline player and save it into the database. The object passed will be compressed, serialized and inserted into the database.
      * If the object already exists in the database, then it will execute an UPDATE rather than executing an INSERT. </br>
@@ -1064,7 +1074,7 @@ public class Player extends IOClient implements CommandExecutor, Tick {
             getServer().logError(e);
         }
     }
-    
+
     /**
      * Save the value <b>"key"</b> to the database.
      * The object <b>"key"</b> represents will be compressed and serialized to the database using a {@link GZIPOutputStream} object.
@@ -1106,7 +1116,7 @@ public class Player extends IOClient implements CommandExecutor, Tick {
             return;
         setAttribute(key, extra.get(key), username, getServer());
     }
-    
+
     /**
      * Save the value <b>key</b> to the database.
      * The object <b>key</b> represents will be compressed and serialized to the
@@ -1319,7 +1329,7 @@ public class Player extends IOClient implements CommandExecutor, Tick {
     public void globalBlockChange(int x, int y, int z, Block block) {
         globalBlockChange(x, y, z, block, true);
     }
-    
+
     /**
      * Cause this player to place a block in the current level this player is in.
      * You can get the current level by calling {@link Player#getLevel()}.
@@ -1343,7 +1353,7 @@ public class Player extends IOClient implements CommandExecutor, Tick {
             return;
         GlobalBlockChange((short)x, (short)y, (short)z, block, getLevel(), getServer(), updatelevel);
     }
-    
+
     /**
      * Cause this player to place a series of blocks in the current level this player is in.
      * You can get the current level by calling {@link Player#getLevel()}.
@@ -1356,7 +1366,7 @@ public class Player extends IOClient implements CommandExecutor, Tick {
     public void globalBlockChange(BlockUpdate[] blockupdates) {
         globalBlockChange(blockupdates, true);
     }
-    
+
     /**
      * Cause this player to place a series of blocks in the current level this player is in.
      * You can get the current level by calling {@link Player#getLevel()}.

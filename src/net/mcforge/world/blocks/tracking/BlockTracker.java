@@ -198,8 +198,8 @@ public class BlockTracker implements Listener, Tick {
             if (!cache.containsKey(player))
                 continue;
             checkData(player);
-            player.setAttribute("mcf_blocktracking", cache.get(player));
-            player.saveCompressedAttribute("mcf_blocktracking");
+            //player.setAttribute("mcf_blocktracking", cache.get(player));
+            //player.saveCompressedAttribute("mcf_blocktracking");
         }
     }
 
@@ -241,22 +241,22 @@ public class BlockTracker implements Listener, Tick {
     public void disconnect(PlayerDisconnectEvent event) {
         final Player p = event.getPlayer();
         
-        if (cache.containsKey(p)) {
+        /*if (cache.containsKey(p)) {
             checkData(p);
             p.setAttribute("mcf_blocktracking", cache.get(p));
             p.saveCompressedAttribute("mcf_blocktracking");
             cache.remove(p);
-        }
+        }*/
     }
     
     @EventHandler
     public void connect(PlayerConnectEvent event) {
         final Player p = event.getPlayer();
         
-        if (p.hasAttribute("mcf_blocktracking")) {
+        /*if (p.hasAttribute("mcf_blocktracking")) {
             ArrayList<BlockData> data = p.getCompressedAttribute("mcf_blocktracking");
             cache.put(p, data);
             System.out.println("Added " + data.size() + " elements!");
-        }
+        }*/
     }
 }
