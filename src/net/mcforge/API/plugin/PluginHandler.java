@@ -29,8 +29,8 @@ import net.mcforge.API.ClassicExtension;
 import net.mcforge.API.Dependency;
 import net.mcforge.API.ManualLoad;
 import net.mcforge.server.Server;
+import net.mcforge.system.Serializer;
 import net.mcforge.system.updater.Updatable;
-import net.mcforge.world.LevelHandler;
 
 public class PluginHandler {
     private ArrayList<Plugin> plugins = new ArrayList<Plugin>();
@@ -306,7 +306,7 @@ public class PluginHandler {
             e.printStackTrace();
         }
         loader = URLClassLoader.newInstance(urls.toArray(new URL[urls.size()]), getClass().getClassLoader());
-        LevelHandler.getKryo().setClassLoader(loader);
+        Serializer.getKryo().setClassLoader(loader);
     }
     
     @SuppressWarnings("deprecation")

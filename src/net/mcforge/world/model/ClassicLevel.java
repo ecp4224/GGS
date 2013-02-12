@@ -22,11 +22,12 @@ import java.util.zip.GZIPOutputStream;
 
 import net.mcforge.iomodel.Player;
 import net.mcforge.server.Server;
+import net.mcforge.system.Serializer;
+import net.mcforge.system.Serializer.SaveType;
 import net.mcforge.system.ticker.Tick;
 import net.mcforge.util.FileUtils;
 import net.mcforge.util.properties.Properties;
 import net.mcforge.world.Level;
-import net.mcforge.world.LevelHandler;
 import net.mcforge.world.blocks.Block;
 import net.mcforge.world.blocks.PhysicsBlock;
 import net.mcforge.world.converter.MojangLevel;
@@ -35,12 +36,11 @@ import net.mcforge.world.converter.OldBlocks;
 import net.mcforge.world.exceptions.BackupFailedException;
 import net.mcforge.world.generator.Generator;
 
-import com.esotericsoftware.kryo.io.Input;
-import com.esotericsoftware.kryo.io.Output;
-
 public class ClassicLevel implements Level, Serializable {
 
     private static final long serialVersionUID = -7297498370800056856L;
+    
+    private static final Serializer<ClassicLevel> saver = new Serializer<ClassicLevel>(SaveType.BYTE);
 
     private transient Thread physics;
 
@@ -348,10 +348,7 @@ public class ClassicLevel implements Level, Serializable {
         saving = true;
         FileOutputStream fos = new FileOutputStream("levels/" + name + ".ggs");
         GZIPOutputStream gos = new GZIPOutputStream(fos);
-        Output out = new Output(gos);
-        out.writeLong(serialVersionUID);
-        LevelHandler.getKryo().writeObject(out, this);
-        out.close();
+        saver.saveObject(this, gos);
         gos.close();
         fos.close();
         saving = false;
@@ -397,15 +394,7 @@ public class ClassicLevel implements Level, Serializable {
         else {
             FileInputStream fis = new FileInputStream(filename);
             GZIPInputStream gis = new GZIPInputStream(fis);
-            Input objInput = new Input(gis);
-            long version = objInput.readLong();
-            ClassicLevel l = null;
-            if (version == serialVersionUID){
-                l = (ClassicLevel)LevelHandler.getKryo().readObject(objInput, ClassicLevel.class);
-            }else{
-                objInput.close();
-                throw new IOException("The level version does not match the current");
-            }
+            ClassicLevel l = saver.getObject(gis);
             width = l.width;
             height = l.height;
             autosave = l.autosave;
@@ -428,7 +417,6 @@ public class ClassicLevel implements Level, Serializable {
             unloading = false;
             physics.start();
             saving = false;
-            objInput.close();
             gis.close();
             fis.close();
         }

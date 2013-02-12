@@ -7,10 +7,13 @@
  ******************************************************************************/
 package net.mcforge.server;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.URL;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.ArrayList;
@@ -37,6 +40,7 @@ import net.mcforge.sql.MySQL;
 import net.mcforge.sql.SQLite;
 import net.mcforge.system.Console;
 import net.mcforge.system.PrivilegesHandler;
+import net.mcforge.system.Serializer;
 import net.mcforge.system.heartbeat.Beat;
 import net.mcforge.system.heartbeat.ForgeBeat;
 import net.mcforge.system.heartbeat.Heart;
@@ -86,6 +90,11 @@ public final class Server implements LogInterface, Updatable, Tick {
     private BlockTracker bt;
     private ArrayList<Player> pcache;
     public static final String[] devs = new String []{ "Dmitchell", "501st_commander", "Lavoaster", "Alem_Zupa", "QuantumParticle", "BeMacized", "Shade2010", "edh649", "hypereddie10", "Gamemakergm", "Serado", "Wouto1997", "cazzar", "givo" };
+    /**
+     * The remote IP of this server. If there was an error finding the remote IP
+     * when the server started up, then this value may equal loopback IP (127.0.0.1)
+     */
+    public static String IP;
     /**
      * The name for currency on this server.
      */
@@ -175,6 +184,17 @@ public final class Server implements LogInterface, Updatable, Tick {
      * And where 600.6 would be 6.0.0b6
      */
     public final double VERSION_NUMBER = 600.6;
+    
+    static {
+        try {
+            URL url = new URL("http://server.mcforge.net/ip.php");
+            BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
+            IP = reader.readLine();
+        } catch (Exception e) {
+            IP = "127.0.0.1";
+        }
+    }
+    
     /**
      * The handler that handles level loading,
      * level unloading and finding loaded
@@ -586,7 +606,7 @@ public final class Server implements LogInterface, Updatable, Tick {
         if (args.isLoadingPlugins())
             Log("Loaded plugins");
         if (args.isLoadingLevels()) {
-            LevelHandler.getKryo().setClassLoader(getDefaultClassLoader());
+            Serializer.getKryo().setClassLoader(getDefaultClassLoader());
             lm = new LevelHandler(this);
             MainLevel = getSystemProperties().getValue("MainLevel");
             if (!new File("levels/" + MainLevel + ".ggs").exists()) {

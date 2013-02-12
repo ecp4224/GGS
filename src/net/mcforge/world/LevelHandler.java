@@ -29,21 +29,10 @@ import net.mcforge.world.model.ClassicLevel;
 public class LevelHandler {
 
     private List<Level> levels = new CopyOnWriteArrayList<Level>();
-
-    private static final Kryo loader = new Kryo();
     
     private Server server;
 
     private BackupRunner backup;
-
-    /**
-     * Get the {@link Kryo} object that loads/saves the level objects
-     * @return
-     *        The loader/saver
-     */
-    public static Kryo getKryo() {
-        return loader;
-    }
     
     /**
      * The constructor for a new level handler

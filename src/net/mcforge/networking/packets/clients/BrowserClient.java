@@ -46,7 +46,7 @@ public class BrowserClient implements IClient {
             }
             else
                 packet.Handle(message, pm.server, b);
-            return b;
+            return null;
         }
 
     }

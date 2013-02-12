@@ -43,7 +43,13 @@ public class Welcome extends Packet {
             finals[0] = ID;
             finals[1] = 0x07;
             String smotd = server.MOTD;
-            if (((Player)player).getLevel() != null && ((Player)player).getLevel().getName().equals(server.MainLevel) && !((Player)player).getLevel().getName().equals("ignore") && ((Player)player).getLevel() instanceof ClassicLevel)
+            if (!server.getSystemProperties().hasValue("use-textures")) {
+                server.getSystemProperties().addSetting("use-textures", false);
+                server.getSystemProperties().addComment("use-textures", "Whether or not to use WoM textures for XWoM and WoM users");
+            }
+            if (server.getSystemProperties().hasValue("use-textures") && server.getSystemProperties().getBool("use-textures") && ((Player)player).getLevel() == null)
+                smotd = "&0cfg=" + Server.IP + ":" + server.Port + "/" + server.MainLevel;
+            else if (((Player)player).getLevel() != null && !((Player)player).getLevel().getName().equals(server.MainLevel) && !((Player)player).getLevel().getName().equals("ignore") && ((Player)player).getLevel() instanceof ClassicLevel)
                 smotd = ((ClassicLevel)((Player)player).getLevel()).motd;
             while (server.Name.length() < 64)
                 server.Name += " ";

@@ -1,10 +1,17 @@
 package net.mcforge.world.blocks.tracking;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
 import net.mcforge.API.EventHandler;
 import net.mcforge.API.Listener;
@@ -13,10 +20,15 @@ import net.mcforge.API.player.PlayerConnectEvent;
 import net.mcforge.API.player.PlayerDisconnectEvent;
 import net.mcforge.iomodel.Player;
 import net.mcforge.server.Server;
+import net.mcforge.system.Serializer;
+import net.mcforge.system.Serializer.SaveType;
 import net.mcforge.system.ticker.Tick;
+import net.mcforge.util.FileUtils;
 
-public class BlockTracker implements Listener, Tick {
+public class BlockTracker implements Listener, Tick, Serializable {
+    private static final long serialVersionUID = 6L;
     private HashMap<Player, ArrayList<BlockData>> cache = new HashMap<Player, ArrayList<BlockData>>();
+    private Serializer<ArrayList<BlockData>> saver = new Serializer<ArrayList<BlockData>>(SaveType.JSON);
     private int wait = 60;
     private int oldest = 1;
     private Server server;
@@ -37,6 +49,46 @@ public class BlockTracker implements Listener, Tick {
         PlayerBlockChangeEvent.getEventList().unregister(this);
         PlayerDisconnectEvent.getEventList().unregister(this);
         PlayerConnectEvent.getEventList().unregister(this);
+    }
+    
+    private ArrayList<BlockData> load(Player p) throws IOException {
+        return load(p.getName());
+    }
+    
+    private ArrayList<BlockData> load(String username) throws IOException {
+        FileInputStream fis = new FileInputStream("system/undo_data/" + username + ".mcfu");
+        GZIPInputStream gis = new GZIPInputStream(fis);
+        ArrayList<BlockData> l = saver.getObject(gis);
+        return l;
+    }
+    
+    private boolean save(Player p) {
+        if (!cache.containsKey(p))
+            return false;
+        return save(cache.get(p), p.getName());
+    }
+    
+    private boolean save(ArrayList<BlockData> data, String username) {
+        try {
+            FileUtils.createChildDirectories("system/undo_data/" + username + ".mcfu");
+            FileOutputStream fos = new FileOutputStream("system/undo_data/" + username + ".mcfu");
+            GZIPOutputStream gos = new GZIPOutputStream(fos);
+            saver.saveObject(data, gos);
+            gos.close();
+            fos.close();
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    
+    private boolean hasUndoData(Player p) {
+        return hasUndoData(p.getName());
+    }
+    
+    private boolean hasUndoData(String username) {
+        return new File("system/undo_data/" + username + ".mcfu").exists();
     }
     
     /**
@@ -101,14 +153,19 @@ public class BlockTracker implements Listener, Tick {
      * @return
      */
     public List<BlockData> getHistory(Player player, long milliseconds) {
-        ArrayList<BlockData> data;
+        ArrayList<BlockData> data = new ArrayList<BlockData>();
         if (!cache.containsKey(player)) {
-            if (player.hasAttribute("mcf_blocktracking")) {
-                data = player.getCompressedAttribute("mcf_blocktracking");
-                cache.put(player, data);
+            if (hasUndoData(player)) {
+                try {
+                    data = load(player);
+                    cache.put(player, data);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return Collections.unmodifiableList(data);
+                }
             }
             else
-                return new ArrayList<BlockData>();
+                return Collections.unmodifiableList(data);
         }
         else
             data = cache.get(player);
@@ -161,8 +218,13 @@ public class BlockTracker implements Listener, Tick {
     public List<BlockData> getOfflineHistory(String player, long milliseconds) {
         ArrayList<BlockData> data = new ArrayList<BlockData>();
         
-        if (Player.hasAttribute("mcf_blocktracking", player, server)) {
-            data = Player.getPlayerCompressedAttribute("mcf_blocktracking", player, server);
+        if (hasUndoData(player)) {
+            try {
+                data = load(player);
+            } catch (IOException e) {
+                e.printStackTrace();
+                return Collections.unmodifiableList(data);
+            }
         }
         else
             return Collections.unmodifiableList(data);
@@ -177,8 +239,12 @@ public class BlockTracker implements Listener, Tick {
         return Collections.unmodifiableList(toreturn);
     }
     
+    @SuppressWarnings("deprecation")
     private void checkData(Player p) {
-        double old = ((((oldest * 24) * 60) * 60) * 1000);
+        double old = (((oldest * 24) * 60) * 60);
+        Date da = new Date();
+        da.setSeconds((int)(da.getSeconds() - old));
+        old = da.getTime();
         old = System.currentTimeMillis() - old;
         ArrayList<BlockData> data = cache.get(p);
         ArrayList<BlockData> toremove = new ArrayList<BlockData>(); //Prevent errors...
@@ -198,8 +264,7 @@ public class BlockTracker implements Listener, Tick {
             if (!cache.containsKey(player))
                 continue;
             checkData(player);
-            //player.setAttribute("mcf_blocktracking", cache.get(player));
-            //player.saveCompressedAttribute("mcf_blocktracking");
+            save(player);
         }
     }
 
@@ -241,22 +306,32 @@ public class BlockTracker implements Listener, Tick {
     public void disconnect(PlayerDisconnectEvent event) {
         final Player p = event.getPlayer();
         
-        /*if (cache.containsKey(p)) {
-            checkData(p);
-            p.setAttribute("mcf_blocktracking", cache.get(p));
-            p.saveCompressedAttribute("mcf_blocktracking");
-            cache.remove(p);
-        }*/
+        new Thread() {
+            @Override
+            public void run() {
+                System.out.println("Saving..");
+                save(p);
+                System.out.println("Disposing..");
+                cache.remove(p);
+                System.out.println("Done!");
+            }
+        }.start();
     }
     
     @EventHandler
     public void connect(PlayerConnectEvent event) {
         final Player p = event.getPlayer();
         
-        /*if (p.hasAttribute("mcf_blocktracking")) {
-            ArrayList<BlockData> data = p.getCompressedAttribute("mcf_blocktracking");
-            cache.put(p, data);
-            System.out.println("Added " + data.size() + " elements!");
-        }*/
+        if (!hasUndoData(p))
+            return;
+        
+        new Thread() {
+            @Override
+            public void run() {
+                System.out.println("Loading..");
+                //load(p);
+                System.out.println("Done!");
+            }
+        }.start();
     }
 }
