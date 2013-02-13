@@ -13,8 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import com.esotericsoftware.kryo.Kryo;
-
 import net.mcforge.API.level.LevelLoadEvent;
 import net.mcforge.API.level.LevelPreLoadEvent;
 import net.mcforge.API.level.LevelUnloadEvent;
