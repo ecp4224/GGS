@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -28,7 +29,7 @@ import net.mcforge.util.FileUtils;
 public class BlockTracker implements Listener, Tick, Serializable {
     private static final long serialVersionUID = 6L;
     private HashMap<Player, ArrayList<BlockData>> cache = new HashMap<Player, ArrayList<BlockData>>();
-    private Serializer<ArrayList<BlockData>> saver = new Serializer<ArrayList<BlockData>>(SaveType.JSON);
+    private Serializer<ArrayList<BlockData>> saver = new Serializer<ArrayList<BlockData>>(SaveType.BYTE);
     private int wait = 60;
     private int oldest = 1;
     private Server server;
@@ -116,7 +117,7 @@ public class BlockTracker implements Listener, Tick, Serializable {
             oldest = server.getSystemProperties().getInt("blocktracking_data-size");
         else {
             server.getSystemProperties().addSetting("blocktracking_data-size", 1);
-            server.getSystemProperties().addComment("blocktracking_data-size", "How long to keep block data in the database (in days, 1 day being the lowest)");
+            server.getSystemProperties().addComment("blocktracking_data-size", "How long to keep undo block data (in days, 1 day being the lowest)");
         }
     }
     
@@ -139,10 +140,9 @@ public class BlockTracker implements Listener, Tick, Serializable {
      * @return The block history in an unmodifiable list with the last element being the (current time - the seconds specified in the parameter)
      */
     public List<BlockData> getHistory(Player player, int seconds) {
-        Date d = new Date();
-        long miliseconds = d.getTime();
-        miliseconds -= (seconds * 1000);
-        return getHistory(player, miliseconds);
+        Calendar c = Calendar.getInstance();
+        c.add(Calendar.SECOND, -seconds);
+        return getHistory(player, c.getTime().getTime());
     }
     
     /**
@@ -201,10 +201,9 @@ public class BlockTracker implements Listener, Tick, Serializable {
      * @return The block history in an unmodifiable list with the last element being the (current time - the seconds specified in the parameter)
      */
     public List<BlockData> getOfflineHistory(String player, int seconds) {
-        Date d = new Date();
-        long miliseconds = d.getTime();
-        miliseconds -= (seconds * 1000);
-        return getOfflineHistory(player, miliseconds);
+        Calendar c = Calendar.getInstance();
+        c.add(Calendar.SECOND, -seconds);
+        return getOfflineHistory(player, c.getTime().getTime());
     }
     
     /**
@@ -239,13 +238,10 @@ public class BlockTracker implements Listener, Tick, Serializable {
         return Collections.unmodifiableList(toreturn);
     }
     
-    @SuppressWarnings("deprecation")
     private void checkData(Player p) {
-        double old = (((oldest * 24) * 60) * 60);
-        Date da = new Date();
-        da.setSeconds((int)(da.getSeconds() - old));
-        old = da.getTime();
-        old = System.currentTimeMillis() - old;
+        Calendar c = Calendar.getInstance();
+        c.add(Calendar.DAY_OF_YEAR, -oldest);
+        long old = c.getTime().getTime();
         ArrayList<BlockData> data = cache.get(p);
         ArrayList<BlockData> toremove = new ArrayList<BlockData>(); //Prevent errors...
         for (BlockData d : data) {
@@ -329,7 +325,11 @@ public class BlockTracker implements Listener, Tick, Serializable {
             @Override
             public void run() {
                 System.out.println("Loading..");
-                //load(p);
+                try {
+                    cache.put(p, load(p));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 System.out.println("Done!");
             }
         }.start();
