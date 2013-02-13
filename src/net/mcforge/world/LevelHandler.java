@@ -243,6 +243,8 @@ public class LevelHandler {
         public void tick() {
             for (int i = 0; i < levels.size(); i++) {
                 if (levels.get(i).isAutoSaveEnabled()) {
+                    if (!levels.get(i).hasUpdated())
+                        continue;
                     try {
                         levels.get(i).save();
                     } catch (IOException e) {

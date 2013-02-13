@@ -32,6 +32,14 @@ public interface Level {
     public boolean isAutoSaveEnabled();
     
     /**
+     * Returns whether or not this level has changed since the last time
+     * it was saved.
+     * @return
+     *        True if the level has changed, false if it has not.
+     */
+    public boolean hasUpdated();
+    
+    /**
      * Set Whether the level will autosave or not.
      * AutoSave will save the level every minute and save
      * when the level is unloaded.
