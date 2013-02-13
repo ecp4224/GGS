@@ -47,6 +47,8 @@ public class ClassicLevel implements Level, Serializable {
     private boolean run;
 
     private transient boolean saving;
+    
+    private transient boolean updated;
 
     ArrayList<Tick> ticks = new ArrayList<Tick>();
 
@@ -180,10 +182,13 @@ public class ClassicLevel implements Level, Serializable {
         int[] pos = IntToPos(index);
         if (b instanceof PhysicsBlock && physics) {
             blocks[index] = addTick(pos[0], pos[1], pos[2], b, server);
+            updated = true;
             return;
         }
-        else
+        else {
             blocks[index] = b;
+            updated = true;
+        }
         if(wasthere != null){
             wasthere.onDelete(this, pos[0], pos[1], pos[2], server);
         }
@@ -352,6 +357,7 @@ public class ClassicLevel implements Level, Serializable {
         gos.close();
         fos.close();
         saving = false;
+        updated = false;
     }
 
     @Override
@@ -810,5 +816,10 @@ public class ClassicLevel implements Level, Serializable {
         new File(location + "/" + getName() + "/" + backupnum).mkdir();
         if (!FileUtils.copyFile("levels/" + getName() + ".ggs", location + "/" + getName() + "/" + backupnum + "/" + getName() + ".ggs"))
             throw new BackupFailedException("Backup for " + getName() + " failed!");
+    }
+
+    @Override
+    public boolean hasUpdated() {
+        return updated;
     }
 }

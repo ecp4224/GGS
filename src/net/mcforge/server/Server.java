@@ -57,7 +57,6 @@ import net.mcforge.util.logger.Logger;
 import net.mcforge.util.properties.Properties;
 import net.mcforge.world.Level;
 import net.mcforge.world.LevelHandler;
-import net.mcforge.world.blocks.tracking.BlockTracker;
 import net.mcforge.world.generator.model.FlatGrass;
 import net.mcforge.world.generator.model.Forest;
 import net.mcforge.world.generator.model.Island;
@@ -87,7 +86,6 @@ public final class Server implements LogInterface, Updatable, Tick {
     private Messages m;
     private int oldsize;
     private ArrayList<IOClient> cache;
-    private BlockTracker bt;
     private ArrayList<Player> pcache;
     public static final String[] devs = new String []{ "Dmitchell", "501st_commander", "Lavoaster", "Alem_Zupa", "QuantumParticle", "BeMacized", "Shade2010", "edh649", "hypereddie10", "Gamemakergm", "Serado", "Wouto1997", "cazzar", "givo" };
     /**
@@ -296,15 +294,6 @@ public final class Server implements LogInterface, Updatable, Tick {
      */
     public final Properties getSystemProperties() {
         return p;
-    }
-
-    /**
-     * Get the Block Tracker that is tracking all the block changes on the server.
-     * @return
-     *        The {@link BlockTracker} object
-     */
-    public final BlockTracker getBlockTracker() {
-        return bt;
     }
 
     /**
@@ -644,10 +633,6 @@ public final class Server implements LogInterface, Updatable, Tick {
             heartbeater.startBeating();
         }
         Log("Created heartbeat");
-        if (args.isLoadingBlockTracking()) {
-            bt = new BlockTracker(this);
-            Log("Created and Started the Block Tracker");
-        }
         Log("Server url can be found in 'url.txt'");
 
         if (args.isLoadingGenerator()) {
@@ -801,7 +786,6 @@ public final class Server implements LogInterface, Updatable, Tick {
         lm.stopBackup();
         ticker.stopTick();
         logger.Stop();
-        bt.dispose();
         heartbeater.stopBeating();
         ArrayList<Player> players = new ArrayList<Player>();
         for (Player p : getPlayers())
