@@ -38,7 +38,7 @@ public class FlatGrass implements Generator {
         this._server = server;
     }
     @Override
-    public void generate(Level l) {
+    public void generate(final Level l) {
         for (int x = 0; x < l.getWidth(); x++) {
             for (int y = 0; y < l.getHeight(); y++) {
                 for (int z = 0; z < l.getDepth(); z++) {

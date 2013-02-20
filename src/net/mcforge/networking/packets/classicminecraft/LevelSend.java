@@ -37,7 +37,7 @@ public class LevelSend extends Packet {
         server.getEventSystem().callEvent(event);
         if (event.isCancelled())
             return;
-        Player player;
+        final Player player;
         if (p instanceof Player) {
             player = (Player)p;
         }

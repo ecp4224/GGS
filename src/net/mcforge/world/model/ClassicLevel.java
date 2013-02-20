@@ -16,6 +16,9 @@ import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
@@ -594,13 +597,12 @@ public class ClassicLevel implements Level, Serializable {
                     ticks.remove(t);
                 }
                 toremove.clear();
-                @SuppressWarnings("unchecked")
-                ArrayList<Tick> temp = (ArrayList<Tick>)ticks.clone();
-                for (int i = 0; i < temp.size(); i++) {
+                Tick[] temp = ticks.toArray(new Tick[ticks.size()]);
+                for (int i = 0; i < temp.length; i++) {
                     if (unloading || saving)
                         break;
-                    if (temp.get(i) instanceof PhysicsBlock) {
-                        PhysicsBlock pb = (PhysicsBlock)temp.get(i);
+                    if (temp[i] instanceof PhysicsBlock) {
+                        PhysicsBlock pb = (PhysicsBlock)temp[i];
                         if (pb.getLevel() == null)
                             pb.setLevel(level);
                         if (pb.getServer() == null)
@@ -615,11 +617,11 @@ public class ClassicLevel implements Level, Serializable {
                             continue;
                         }
                     }
-                    Tick t = temp.get(i);
+                    Tick t = temp[i];
                     if (t != null && !unloading)
                         t.tick();
                 }
-                temp.clear();
+                temp = null;
                 try {
                     Thread.sleep(physicsspeed);
                 } catch (InterruptedException e) { }
@@ -821,5 +823,10 @@ public class ClassicLevel implements Level, Serializable {
     @Override
     public boolean hasUpdated() {
         return updated;
+    }
+
+    @Override
+    public List<Block> getBlockList() {
+        return Collections.unmodifiableList(Arrays.asList(blocks));
     }
 }

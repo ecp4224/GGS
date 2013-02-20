@@ -2,6 +2,7 @@ package net.mcforge.world;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import net.mcforge.iomodel.Player;
 import net.mcforge.server.Server;
@@ -302,4 +303,10 @@ public interface Level {
      * @return
      */
     public ArrayList<Tick> getTicks();
+
+    /**
+     * Get an ArrayList of blocks in this level.
+     * @return
+     */
+    public List<Block> getBlockList();
 }
