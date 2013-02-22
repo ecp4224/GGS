@@ -263,6 +263,7 @@ public class PluginHandler {
             server.getUpdateService().getUpdateManager().add((Updatable)plugin);
     }
 
+    
     public void loadplugins() {
         Map<Plugin, String> require = new HashMap<Plugin, String>();
         File pluginFolder = new File("plugins/");

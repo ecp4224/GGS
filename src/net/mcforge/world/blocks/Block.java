@@ -75,8 +75,6 @@ import net.mcforge.world.exceptions.InvalidBlockAddException;
 public abstract class Block implements Serializable {
     private static final long serialVersionUID = 1L;
     
-    private int hashCode = -1;
-
     private transient static Block[] blocks = new Block[] {
             new Air(),
             new Aqua(),
@@ -150,7 +148,6 @@ public abstract class Block implements Serializable {
      * @param index 
      */
     public void onPlace(Level l, int x, int y, int z, Server server) {
-        hashCode = x + z * 9000 + y * 9000 * 9000;
     }
     
     /**

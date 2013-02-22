@@ -37,6 +37,7 @@ Please follow these rules when making pull requests
 - [MySQL Driver][7]
 - [SQLite Driver][8]
 - [Kryo][10]
+- [GSon][11]
 
 ##Building with Maven
 The source has a maven script for required dependencies, so just run 'mvn clean install' in the source directory
@@ -73,3 +74,4 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 [8]: http://mirror.nexua.org/Dependencies/sqlite-jdbc.jar
 [9]: http://www.minecraft.net/classic/list
 [10]: http://code.google.com/p/kryo/downloads/list
+[11]: http://code.google.com/p/google-gson/downloads/list
