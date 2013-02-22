@@ -150,7 +150,7 @@ public class ClassicLevel implements Level, Serializable {
 
     @Override
     public void startPhysics(Server server) {
-        physics = new Ticker(server, this);
+        physics = new Ticker(server);
         run = true;
         physics.start();
     }
@@ -199,35 +199,16 @@ public class ClassicLevel implements Level, Serializable {
         if (!physics)
             return;
         try {
-            if (getTile(pos[0] + 1, pos[1], pos[2]) instanceof PhysicsBlock && !ticks.contains(getTile(pos[0] + 1, pos[1], pos[2])))
-                addTick(pos[0] + 1, pos[1], pos[2], getTile(pos[0] + 1, pos[1], pos[2]), server);
-
-            if (getTile(pos[0] - 1, pos[1], pos[2]) instanceof PhysicsBlock && !ticks.contains(getTile(pos[0] - 1, pos[1], pos[2])))
-                addTick(pos[0] - 1, pos[1], pos[2], getTile(pos[0] - 1, pos[1], pos[2]), server);
-
-            if (getTile(pos[0], pos[1] + 1, pos[2]) instanceof PhysicsBlock && !ticks.contains(getTile(pos[0], pos[1] + 1, pos[2])))
-                addTick(pos[0], pos[1] + 1, pos[2], getTile(pos[0], pos[1] + 1, pos[2]), server);
-
-            if (getTile(pos[0], pos[1] - 1, pos[2]) instanceof PhysicsBlock && !ticks.contains(getTile(pos[0], pos[1] - 1, pos[2])))
-                addTick(pos[0], pos[1] - 1, pos[2], getTile(pos[0], pos[1] - 1, pos[2]), server);
-
-            if (getTile(pos[0], pos[1], pos[2] + 1) instanceof PhysicsBlock && !ticks.contains(getTile(pos[0], pos[1], pos[2] + 1)))
-                addTick(pos[0], pos[1], pos[2] + 1, getTile(pos[0], pos[1], pos[2] + 1), server);
-
-            if (getTile(pos[0], pos[1], pos[2] - 1) instanceof PhysicsBlock && !ticks.contains(getTile(pos[0], pos[1], pos[2] - 1)))
-                addTick(pos[0], pos[1], pos[2] - 1, getTile(pos[0], pos[1], pos[2] - 1), server);
-            
-            if (getTile(pos[0], pos[1] + 1, pos[2] - 1) instanceof PhysicsBlock && !ticks.contains(getTile(pos[0], pos[1] + 1, pos[2] - 1)))
-                addTick(pos[0], pos[1] + 1, pos[2] - 1, getTile(pos[0], pos[1] + 1, pos[2] - 1), server);
-            
-            if (getTile(pos[0] + 1, pos[1] + 1, pos[2]) instanceof PhysicsBlock && !ticks.contains(getTile(pos[0] + 1, pos[1] + 1, pos[2])))
-                addTick(pos[0] + 1, pos[1] + 1, pos[2], getTile(pos[0] + 1, pos[1] + 1, pos[2]), server);
-
-            if (getTile(pos[0] - 1, pos[1] + 1, pos[2]) instanceof PhysicsBlock && !ticks.contains(getTile(pos[0] - 1, pos[1] + 1, pos[2])))
-                addTick(pos[0] - 1, pos[1] + 1, pos[2], getTile(pos[0] - 1, pos[1] + 1, pos[2]), server);
-
-            if (getTile(pos[0], pos[1] + 1, pos[2] + 1) instanceof PhysicsBlock && !ticks.contains(getTile(pos[0], pos[1] + 1, pos[2] + 1)))
-                addTick(pos[0], pos[1] + 1, pos[2] + 1, getTile(pos[0], pos[1] + 1, pos[2] + 1), server);
+            for (int x = -1; x <= 1; x++) {
+                for (int y = -1; y <= 1; y++) {
+                    for (int z = -1; z <= 1; z++) {
+                        if (x == 0 && y == 0 && z == 0)
+                            continue;
+                        if (getTile(pos[0] + x, pos[1] + y, pos[2] + z) instanceof PhysicsBlock && !ticks.contains(getTile(pos[0] + x, pos[1] + y, pos[2] + z)))
+                            addTick(pos[0] + x, pos[1] + y, pos[2] + z, getTile(pos[0] + x, pos[1] + y, pos[2] + z), server);
+                    }
+                }
+            }
         } catch (Exception e) { }
     }
 
@@ -419,7 +400,7 @@ public class ClassicLevel implements Level, Serializable {
             spawny = l.spawny;
             spawnz = l.spawnz;
             ticks = (ArrayList<Tick>)l.ticks.clone();
-            physics = new Ticker(server, this);
+            physics = new Ticker(server);
             name = new File(filename).getName().split("\\.")[0];
             run = true;
             loadProperties();
@@ -583,8 +564,7 @@ public class ClassicLevel implements Level, Serializable {
     private class Ticker extends Thread implements Serializable {
         private static final long serialVersionUID = 1609185967611447514L;
         private transient Server server;
-        private transient ClassicLevel level;
-        public Ticker(Server server, ClassicLevel level) { this.level = level; this.server = server; }
+        public Ticker(Server server) { this.server = server; }
 
         @Override
         public void run() {
@@ -598,18 +578,18 @@ public class ClassicLevel implements Level, Serializable {
                 }
                 toremove.clear();
                 Tick[] temp = ticks.toArray(new Tick[ticks.size()]);
-                for (int i = 0; i < temp.length; i++) {
+                for (Tick t : temp) {
                     if (unloading || saving)
                         break;
-                    if (temp[i] instanceof PhysicsBlock) {
-                        PhysicsBlock pb = (PhysicsBlock)temp[i];
+                    if (t instanceof PhysicsBlock) {
+                        PhysicsBlock pb = (PhysicsBlock)t;
                         if (pb.getLevel() == null)
-                            pb.setLevel(level);
+                            pb.setLevel(ClassicLevel.this);
                         if (pb.getServer() == null)
                             pb.setServer(server);
                         if (pb.runInSeperateThread()) {
-                            Thread t = new Ticker2(pb);
-                            t.start();
+                            Thread tt = new Ticker2(pb);
+                            tt.start();
                             continue;
                         }
                         if (getTile(pb.getX(), pb.getY(), pb.getZ()).getVisibleBlock() != pb.getVisibleBlock()) {
@@ -617,7 +597,6 @@ public class ClassicLevel implements Level, Serializable {
                             continue;
                         }
                     }
-                    Tick t = temp[i];
                     if (t != null && !unloading)
                         t.tick();
                 }

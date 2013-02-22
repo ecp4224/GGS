@@ -74,6 +74,8 @@ import net.mcforge.world.exceptions.InvalidBlockAddException;
  */
 public abstract class Block implements Serializable {
     private static final long serialVersionUID = 1L;
+    
+    private int hashCode = -1;
 
     private transient static Block[] blocks = new Block[] {
             new Air(),
@@ -148,7 +150,7 @@ public abstract class Block implements Serializable {
      * @param index 
      */
     public void onPlace(Level l, int x, int y, int z, Server server) {
-        
+        hashCode = x + z * 9000 + y * 9000 * 9000;
     }
     
     /**
@@ -255,20 +257,6 @@ public abstract class Block implements Serializable {
                 return b;
         }
         return new Unknown();
-    }
-    
-    @Override
-    public boolean equals(Object obj) {
-        if (obj instanceof Block) {
-            Block block = (Block)obj;
-            return block.name.equals(name) && block.getVisibleBlock() == getVisibleBlock();
-        }
-        return false;
-    }
-    
-    @Override
-    public int hashCode() {
-        return name.hashCode();
     }
 
 }

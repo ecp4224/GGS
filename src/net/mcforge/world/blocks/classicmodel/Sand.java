@@ -46,8 +46,7 @@ public class Sand extends PhysicsBlock {
             wait++;
             return;
         }
-        if (getLevel().getTile(getX(), getY() - 1, getZ()).canWalkThrough())
-        {
+        if (getLevel().getTile(getX(), getY() - 1, getZ()).canWalkThrough()) {
             super.move(getX(), getY() - 1, getZ());
             return;
         }
@@ -109,6 +108,8 @@ public class Sand extends PhysicsBlock {
                 card.clear();
                 super.stopTick();
             }
+            else
+                super.stopTick();
         }
         else
             super.stopTick();

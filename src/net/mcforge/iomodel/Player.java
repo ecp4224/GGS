@@ -26,6 +26,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
@@ -1543,7 +1544,8 @@ public class Player extends IOClient implements CommandExecutor, Tick {
             tosend = t.toSend(this);
         else
             tosend = gps.toSend(this);
-        for (Player p : getServer().getPlayers()) {
+        Player[] players = getServer().getPlayers().toArray(new Player[getServer().getPlayers().size()]);
+        for (Player p : players) {
             if (p == this)
                 continue;
             if (p.level == level)
