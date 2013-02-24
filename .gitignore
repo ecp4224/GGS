@@ -47,6 +47,7 @@ plugins/*
 .project
 .classpath
 url.txt
+*.mcuf
 
 #NetBeans
 build/

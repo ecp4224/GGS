@@ -13,6 +13,7 @@ public class ServerStartupArgs {
     private boolean heartbeat;
     private boolean generator;
     private boolean tracker;
+    private boolean debug;
     
     public ServerStartupArgs() {
         setLoadingEvents(true);
@@ -27,6 +28,21 @@ public class ServerStartupArgs {
         setLoadingHeartbeat(true);
         setLoadingGenerator(true);
         setIsLoadingBlockTracking(true);
+    }
+    
+    /**
+     * Whether or not the server will run in debug mode or not.
+     * @return
+     */
+    public boolean isRunningInDebugMode() {
+        return debug;
+    }
+    
+    /**
+     * Set whether or not the server will run in debug mode or not.
+     */
+    public void runInDebugMode(boolean debug) {
+        this.debug = debug;
     }
     
     /**

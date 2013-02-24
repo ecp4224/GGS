@@ -1543,7 +1543,8 @@ public class Player extends IOClient implements CommandExecutor, Tick {
             tosend = t.toSend(this);
         else
             tosend = gps.toSend(this);
-        for (Player p : getServer().getPlayers()) {
+        Player[] players = getServer().getPlayers().toArray(new Player[getServer().getPlayers().size()]);
+        for (Player p : players) {
             if (p == this)
                 continue;
             if (p.level == level)

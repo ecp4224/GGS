@@ -57,6 +57,7 @@ import net.mcforge.util.logger.Logger;
 import net.mcforge.util.properties.Properties;
 import net.mcforge.world.Level;
 import net.mcforge.world.LevelHandler;
+import net.mcforge.world.blocks.tracking.BlockTracker;
 import net.mcforge.world.generator.model.FlatGrass;
 import net.mcforge.world.generator.model.Forest;
 import net.mcforge.world.generator.model.Island;
@@ -84,9 +85,11 @@ public final class Server implements LogInterface, Updatable, Tick {
     private ISQL sql;
     private Console console;
     private Messages m;
+    private boolean debug_mode;
     private int oldsize;
     private ArrayList<IOClient> cache;
     private ArrayList<Player> pcache;
+    private BlockTracker track;
     public static final String[] devs = new String []{ "Dmitchell", "501st_commander", "Lavoaster", "Alem_Zupa", "QuantumParticle", "BeMacized", "Shade2010", "edh649", "hypereddie10", "Gamemakergm", "Serado", "Wouto1997", "cazzar", "givo" };
     /**
      * The remote IP of this server. If there was an error finding the remote IP
@@ -182,7 +185,7 @@ public final class Server implements LogInterface, Updatable, Tick {
      * And where 600.6 would be 6.0.0b6
      */
     public final double VERSION_NUMBER = 600.6;
-    
+
     static {
         try {
             URL url = new URL("http://server.mcforge.net/ip.php");
@@ -192,7 +195,7 @@ public final class Server implements LogInterface, Updatable, Tick {
             IP = "127.0.0.1";
         }
     }
-    
+
     /**
      * The handler that handles level loading,
      * level unloading and finding loaded
@@ -274,6 +277,14 @@ public final class Server implements LogInterface, Updatable, Tick {
         return console;
     }
     /**
+     * Get the block tracker object that is keeping track of block tracking
+     * @return
+     *        The {@link BlockTracker} object
+     */
+    public final BlockTracker getBlockTracker() {
+        return track;
+    }
+    /**
      * The SQL object where you can execute
      * Queries
      * @return
@@ -320,6 +331,18 @@ public final class Server implements LogInterface, Updatable, Tick {
      */
     public void saveSystemSettings() throws IOException {
         getSystemProperties().save("system.config");
+    }
+
+    public boolean isLoggingDebugInfo() {
+        if (debug_mode)
+            return true;
+        if (getSystemProperties() == null)
+            return false;
+        if (!getSystemProperties().hasValue("debug-mode")) {
+            getSystemProperties().addSetting("debug-mode", false);
+            getSystemProperties().addComment("debug-mode", "Whether MCForge should print debug messages to the console.");
+        }
+        return getSystemProperties().getBool("debug-mode");
     }
 
     /**
@@ -495,8 +518,9 @@ public final class Server implements LogInterface, Updatable, Tick {
     /**
      * Start listening to the port specified in {@link Server#Port}
      * and start accepting new connections.
+     * @throws IOException 
      */
-    public void startListening() {
+    public void startListening() throws IOException {
         pm = new PacketManager(this);
         pm.startReading();
     }
@@ -546,7 +570,6 @@ public final class Server implements LogInterface, Updatable, Tick {
     /**
      * Start the server
      */
-    @SuppressWarnings("restriction")
     public void start(Console console, boolean startSQL, ServerStartupArgs args) {
         if (Running)
             return;
@@ -560,43 +583,95 @@ public final class Server implements LogInterface, Updatable, Tick {
             startLogger();
         Log("=============================");
         Log("Starting MCForge v" + VERSION);
+        if (args.isRunningInDebugMode()) {
+            debug_mode = true;
+            Log("MCForge running in debug mode", true);
+        }
+        Log("Starting Command Handler", true);
         ch = new CommandHandler(this);
+        Log("OK!", true);
+        Log("Creating default files and directories", true);
         FileUtils.createFilesAndDirs();
-        if (args.isLoadingGroups())
+        Log("OK!", true);
+        if (args.isLoadingGroups()) {
+            Log("Loading groups", true);
             Group.load(this);
+            Log("OK!", true);
+        }
         if (args.isLoadingProperties()) {
+            Log("Loading Properties", true);
             p = Properties.init(this);
+            Log("OK!", true);
             if (!p.getBool("Verify-Names")) {
                 Log("!!WARNING!! You are running the server with verify names off, this means");
                 Log("anyone can login to the server with any username. Its recommended to turn this");
                 Log("this option on, if you know what your doing, then ignore this message.");
             }
+            Log("Loading System Settings", true);
             loadSystemProperties();
+            Log("OK!", true);
         }
-        if (args.isLoadingUpdateService())
+        if (args.isLoadingBlockTracking()) {
+            Log("Loading block tracking", true);
+            track = new BlockTracker(this);
+            Log("OK!", true);
+        }
+        if (args.isLoadingUpdateService()) {
+            Log("Loading the Update Service", true);
             us = new UpdateService(this);
+            Log("OK!", true);
+        }
+        Log("Loading the Message Service", true);
         m = new Messages(this);
-        if (args.isLoadingPlugins())
+        Log("OK!", true);
+        if (args.isLoadingPlugins()) {
+            Log("Loading Plugin Service", true);
             ph = new PluginHandler(this);
-        if (args.isLoadingGenerator())
+            Log("OK!", true);
+        }
+        if (args.isLoadingGenerator()) {
+            Log("Loading Generator Service", true);
             gh = new GeneratorHandler();
-        startListening();
-        if (args.isLoadingPrivileges())
-            prh = new PrivilegesHandler(this);
-        if (args.isLoadingPlugins())
-            ph.loadplugins();
+            Log("OK!", true);
+        }
+        Log("Attempting to bind to port", true);
         try {
-            if (args.isLoadingPrivileges())
+            startListening();
+        } catch (IOException e2) {
+            e2.printStackTrace();
+            Log("FAILED!", true);
+            return;
+        }
+        Log("OK!", true);
+        if (args.isLoadingPrivileges()) {
+            Log("Loading Privileges Service", true);
+            prh = new PrivilegesHandler(this);
+            Log("OK!", true);
+        }
+        if (args.isLoadingPlugins()) {
+            Log("Loading plugins", true);
+            ph.loadplugins();
+            Log("Loaded plugins");
+            Log("OK!", true);
+        }
+        try {
+            if (args.isLoadingPrivileges()) {
+                Log("Initializing Privilieges Service", true);
                 prh.initialize();
+                Log("OK!", true);
+            }
         }
         catch (IOException e) {
             e.printStackTrace();
-        }
-        if (args.isLoadingPlugins())
-            Log("Loaded plugins");
+        }   
         if (args.isLoadingLevels()) {
+            Log("Setting default system wide class loader to " + getDefaultClassLoader(), true);
             Serializer.getKryo().setClassLoader(getDefaultClassLoader());
+            Log("OK!", true);
+            Log("Loading Level Service", true);
             lm = new LevelHandler(this);
+            Log("OK!", true);
+            Log("Loading Main Level", true);
             MainLevel = getSystemProperties().getValue("MainLevel");
             if (!new File("levels/" + MainLevel + ".ggs").exists()) {
                 lm.newClassicLevel("Main", (short)64, (short)64, (short)64);
@@ -604,55 +679,102 @@ public final class Server implements LogInterface, Updatable, Tick {
             }
             lm.loadClassicLevels();
             Log("Loaded levels");
+            Log("OK!", true);
         }
-        if (args.isLoadingUpdateService())
+        if (args.isLoadingUpdateService()) {
+            Log("Adding MCForge to Update Service", true);
             us.getUpdateManager().add(this);
+            Log("OK!", true);
+        }
+        Log("Creating Salt", true);
         SecureRandom sr = null;
         try {
             sr = SecureRandom.getInstance("SHA1PRNG");
         } catch (NoSuchAlgorithmException e1) {
             e1.printStackTrace();
         }
-        for (int i = 0; i < 100; i++) {
+        int i = 0;
+        for (; i < 100; i++) {
             byte[] seedb = new byte[16];
             sr.nextBytes(seedb);
             Salt = new sun.misc.BASE64Encoder().encode(seedb).replace("=", "" + ((Salt != null) ? Salt.toCharArray()[0] : "A"));
             if (new Random().nextDouble() < .3)
                 break;
         }
+        Log("Using " + i + " generated salt.", true);
+        Log("Formatting salt.", true);
         Salt = LetterOrNumber(Salt);
         Salt = Salt.substring(0, 16);
         Log("SALT: " + Salt);
-        if (startSQL)
+        Log("OK!", true);
+        if (startSQL) {
+            Log("Starting SQL Service", true);
             startSQL();
+            Log("OK!", true);
+        }
         if (args.isLoadingHeartbeat()) {
+            Log("Loading Heartbeat Service", true);
             heartbeater = new Beat(this);
+            Log("OK!", true);
+            Log("Adding Minecraft Heartbeat", true);
             heartbeater.addHeart(new MBeat());
+            Log("OK!", true);
+            Log("Adding WOM Heartbeat", true);
             heartbeater.addHeart(new WBeat());
+            Log("OK!", true);
+            Log("Adding MCForge Heartbeat", true);
             heartbeater.addHeart(new ForgeBeat());
+            Log("OK!", true);
+            Log("Starting Heartbeat Service", true);
             heartbeater.startBeating();
+            Log("OK!", true);
         }
         Log("Created heartbeat");
         Log("Server url can be found in 'url.txt'");
 
         if (args.isLoadingGenerator()) {
+            Log("Adding Flatgrass generator to Generator Service", true);
             gh.addGenerator(new FlatGrass(this));
+            Log("OK!", true);
+            Log("Adding Forest generator to Generator Service", true);
             gh.addGenerator(new Forest(this));
+            Log("OK!", true);
+            Log("Adding Island generator to Generator Service", true);
             gh.addGenerator(new Island(this));
+            Log("OK!", true);
+            Log("Adding Mountains generator to Generator Service", true);
             gh.addGenerator(new Mountains(this));
+            Log("OK!", true);
+            Log("Adding Ocean generator to Generator Service", true);
             gh.addGenerator(new Ocean(this));
+            Log("OK!", true);
+            Log("Adding Pixel generator to Generator Service", true);
             gh.addGenerator(new Pixel(this));
+            Log("OK!", true);
+            Log("Adding Rainbow generator to Generator Service", true);
             gh.addGenerator(new Rainbow(this));
+            Log("OK!", true);
+            Log("Adding Space generator to Generator Service", true);
             gh.addGenerator(new Space(this));
+            Log("OK!", true);
         }
 
-        if (args.isLoadingCommands())
+        if (args.isLoadingCommands()) {
+            Log("Adding /abort to Command Service", true);
             getCommandHandler().addCommand(new CmdAbort());
-        if (args.isLoadingEvents()) {
-            ServerStartedEvent sse = new ServerStartedEvent(this);
-            es.callEvent(sse);
+            Log("OK!", true);
         }
+        if (args.isLoadingEvents()) {
+            Log("Creating \"ServerStartedEvent\"", true);
+            ServerStartedEvent sse = new ServerStartedEvent(this);
+            Log("OK!", true);
+            Log("Calling event", true);
+            es.callEvent(sse);
+            Log("OK!", true);
+        }
+        Log("Adding Server to ticker", true);
         getTicker().addTick(this);
+        Log("OK!", true);
     }
 
     /**
@@ -801,9 +923,20 @@ public final class Server implements LogInterface, Updatable, Tick {
      * @param log
      */
     public void Log(String log) {
+        Log(log, false);
+    }
+
+    public void Log(String log, boolean debug) {
         if (logger == null)
             return;
-        logger.Log(log);
+        if (debug) {
+            if (!isLoggingDebugInfo())
+                return;
+            else
+                logger.Log("[DEBUG] " + log);
+        }
+        else
+            logger.Log(log);
     }
 
     /**
@@ -841,7 +974,7 @@ public final class Server implements LogInterface, Updatable, Tick {
     public void Remove(Tick t) {
         ticker.removeTick(t);
     }
-    
+
     @Override
     public void tick() {
         try {
@@ -852,12 +985,12 @@ public final class Server implements LogInterface, Updatable, Tick {
         } catch (IOException e) {
         }
     }
-    
+
     @Override
     public boolean inSeperateThread() {
         return false;
     }
-    
+
     @Override
     public int getTimeout() {
         return 50;
@@ -866,10 +999,10 @@ public final class Server implements LogInterface, Updatable, Tick {
     @Override
     public void onLog(String message) {
         //TODO ..colors?
-                ServerLogEvent sle = new ServerLogEvent(this, message, message.split("\\]")[1].trim());
-                if (es != null)
-                    this.es.callEvent(sle);
-                System.out.println(message);
+        ServerLogEvent sle = new ServerLogEvent(this, message, message.split("\\]")[1].trim());
+        if (es != null)
+            this.es.callEvent(sle);
+        System.out.println(message);
     }
     @Override
     public void onError(String message) {

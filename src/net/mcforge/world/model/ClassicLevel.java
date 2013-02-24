@@ -16,10 +16,11 @@ import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 import java.util.zip.GZIPInputStream;
-import java.util.zip.GZIPOutputStream;
-
 import net.mcforge.iomodel.Player;
 import net.mcforge.server.Server;
 import net.mcforge.system.Serializer;
@@ -40,7 +41,7 @@ public class ClassicLevel implements Level, Serializable {
 
     private static final long serialVersionUID = -7297498370800056856L;
     
-    private static final Serializer<ClassicLevel> saver = new Serializer<ClassicLevel>(SaveType.BYTE);
+    private static final Serializer<ClassicLevel> saver = new Serializer<ClassicLevel>(SaveType.GZIP_KRYO);
 
     private transient Thread physics;
 
@@ -147,7 +148,7 @@ public class ClassicLevel implements Level, Serializable {
 
     @Override
     public void startPhysics(Server server) {
-        physics = new Ticker(server, this);
+        physics = new Ticker(server);
         run = true;
         physics.start();
     }
@@ -196,35 +197,16 @@ public class ClassicLevel implements Level, Serializable {
         if (!physics)
             return;
         try {
-            if (getTile(pos[0] + 1, pos[1], pos[2]) instanceof PhysicsBlock && !ticks.contains(getTile(pos[0] + 1, pos[1], pos[2])))
-                addTick(pos[0] + 1, pos[1], pos[2], getTile(pos[0] + 1, pos[1], pos[2]), server);
-
-            if (getTile(pos[0] - 1, pos[1], pos[2]) instanceof PhysicsBlock && !ticks.contains(getTile(pos[0] - 1, pos[1], pos[2])))
-                addTick(pos[0] - 1, pos[1], pos[2], getTile(pos[0] - 1, pos[1], pos[2]), server);
-
-            if (getTile(pos[0], pos[1] + 1, pos[2]) instanceof PhysicsBlock && !ticks.contains(getTile(pos[0], pos[1] + 1, pos[2])))
-                addTick(pos[0], pos[1] + 1, pos[2], getTile(pos[0], pos[1] + 1, pos[2]), server);
-
-            if (getTile(pos[0], pos[1] - 1, pos[2]) instanceof PhysicsBlock && !ticks.contains(getTile(pos[0], pos[1] - 1, pos[2])))
-                addTick(pos[0], pos[1] - 1, pos[2], getTile(pos[0], pos[1] - 1, pos[2]), server);
-
-            if (getTile(pos[0], pos[1], pos[2] + 1) instanceof PhysicsBlock && !ticks.contains(getTile(pos[0], pos[1], pos[2] + 1)))
-                addTick(pos[0], pos[1], pos[2] + 1, getTile(pos[0], pos[1], pos[2] + 1), server);
-
-            if (getTile(pos[0], pos[1], pos[2] - 1) instanceof PhysicsBlock && !ticks.contains(getTile(pos[0], pos[1], pos[2] - 1)))
-                addTick(pos[0], pos[1], pos[2] - 1, getTile(pos[0], pos[1], pos[2] - 1), server);
-            
-            if (getTile(pos[0], pos[1] + 1, pos[2] - 1) instanceof PhysicsBlock && !ticks.contains(getTile(pos[0], pos[1] + 1, pos[2] - 1)))
-                addTick(pos[0], pos[1] + 1, pos[2] - 1, getTile(pos[0], pos[1] + 1, pos[2] - 1), server);
-            
-            if (getTile(pos[0] + 1, pos[1] + 1, pos[2]) instanceof PhysicsBlock && !ticks.contains(getTile(pos[0] + 1, pos[1] + 1, pos[2])))
-                addTick(pos[0] + 1, pos[1] + 1, pos[2], getTile(pos[0] + 1, pos[1] + 1, pos[2]), server);
-
-            if (getTile(pos[0] - 1, pos[1] + 1, pos[2]) instanceof PhysicsBlock && !ticks.contains(getTile(pos[0] - 1, pos[1] + 1, pos[2])))
-                addTick(pos[0] - 1, pos[1] + 1, pos[2], getTile(pos[0] - 1, pos[1] + 1, pos[2]), server);
-
-            if (getTile(pos[0], pos[1] + 1, pos[2] + 1) instanceof PhysicsBlock && !ticks.contains(getTile(pos[0], pos[1] + 1, pos[2] + 1)))
-                addTick(pos[0], pos[1] + 1, pos[2] + 1, getTile(pos[0], pos[1] + 1, pos[2] + 1), server);
+            for (int x = -1; x <= 1; x++) {
+                for (int y = -1; y <= 1; y++) {
+                    for (int z = -1; z <= 1; z++) {
+                        if (x == 0 && y == 0 && z == 0)
+                            continue;
+                        if (getTile(pos[0] + x, pos[1] + y, pos[2] + z) instanceof PhysicsBlock && !ticks.contains(getTile(pos[0] + x, pos[1] + y, pos[2] + z)))
+                            addTick(pos[0] + x, pos[1] + y, pos[2] + z, getTile(pos[0] + x, pos[1] + y, pos[2] + z), server);
+                    }
+                }
+            }
         } catch (Exception e) { }
     }
 
@@ -352,9 +334,7 @@ public class ClassicLevel implements Level, Serializable {
             new File("levels").mkdir();
         saving = true;
         FileOutputStream fos = new FileOutputStream("levels/" + name + ".ggs");
-        GZIPOutputStream gos = new GZIPOutputStream(fos);
-        saver.saveObject(this, gos);
-        gos.close();
+        saver.saveObject(this, fos);
         fos.close();
         saving = false;
         updated = false;
@@ -399,8 +379,13 @@ public class ClassicLevel implements Level, Serializable {
             convertDat(filename);
         else {
             FileInputStream fis = new FileInputStream(filename);
-            GZIPInputStream gis = new GZIPInputStream(fis);
-            ClassicLevel l = saver.getObject(gis);
+            ClassicLevel l;
+            try {
+                l = saver.getObject(fis);
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+                return;
+            }
             width = l.width;
             height = l.height;
             autosave = l.autosave;
@@ -416,14 +401,13 @@ public class ClassicLevel implements Level, Serializable {
             spawny = l.spawny;
             spawnz = l.spawnz;
             ticks = (ArrayList<Tick>)l.ticks.clone();
-            physics = new Ticker(server, this);
+            physics = new Ticker(server);
             name = new File(filename).getName().split("\\.")[0];
             run = true;
             loadProperties();
             unloading = false;
             physics.start();
             saving = false;
-            gis.close();
             fis.close();
         }
         if (getTile(spawnx, spawny, spawnz) != Block.getBlock("Air") || getTile(spawnx, spawny + 1, spawnz) != Block.getBlock("Air"))
@@ -580,46 +564,47 @@ public class ClassicLevel implements Level, Serializable {
     private class Ticker extends Thread implements Serializable {
         private static final long serialVersionUID = 1609185967611447514L;
         private transient Server server;
-        private transient ClassicLevel level;
-        public Ticker(Server server, ClassicLevel level) { this.level = level; this.server = server; }
+        public Ticker(Server server) { this.server = server; }
 
         @Override
         public void run() {
             Thread.currentThread().getId();
             ArrayList<Tick> toremove = new ArrayList<Tick>();
             while (run) {
-                if (ticks == null)
-                    ticks = new ArrayList<Tick>();
-                for (Tick t : toremove) {
-                    ticks.remove(t);
-                }
-                toremove.clear();
-                @SuppressWarnings("unchecked")
-                ArrayList<Tick> temp = (ArrayList<Tick>)ticks.clone();
-                for (int i = 0; i < temp.size(); i++) {
-                    if (unloading || saving)
-                        break;
-                    if (temp.get(i) instanceof PhysicsBlock) {
-                        PhysicsBlock pb = (PhysicsBlock)temp.get(i);
-                        if (pb.getLevel() == null)
-                            pb.setLevel(level);
-                        if (pb.getServer() == null)
-                            pb.setServer(server);
-                        if (pb.runInSeperateThread()) {
-                            Thread t = new Ticker2(pb);
-                            t.start();
-                            continue;
-                        }
-                        if (getTile(pb.getX(), pb.getY(), pb.getZ()).getVisibleBlock() != pb.getVisibleBlock()) {
-                            toremove.add(pb);
-                            continue;
-                        }
+                try {
+                    if (ticks == null)
+                        ticks = new ArrayList<Tick>();
+                    for (Tick t : toremove) {
+                        ticks.remove(t);
                     }
-                    Tick t = temp.get(i);
-                    if (t != null && !unloading)
-                        t.tick();
+                    toremove.clear();
+                    Tick[] temp = ticks.toArray(new Tick[ticks.size()]);
+                    for (Tick t : temp) {
+                        if (unloading || saving)
+                            break;
+                        if (t instanceof PhysicsBlock) {
+                            PhysicsBlock pb = (PhysicsBlock)t;
+                            if (pb.getLevel() == null)
+                                pb.setLevel(ClassicLevel.this);
+                            if (pb.getServer() == null)
+                                pb.setServer(server);
+                            if (pb.runInSeperateThread()) {
+                                Thread tt = new Ticker2(pb);
+                                tt.start();
+                                continue;
+                            }
+                            if (getTile(pb.getX(), pb.getY(), pb.getZ()).getVisibleBlock() != pb.getVisibleBlock()) {
+                                toremove.add(pb);
+                                continue;
+                            }
+                        }
+                        if (t != null && !unloading)
+                            t.tick();
+                    }
+                    temp = null;
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-                temp.clear();
                 try {
                     Thread.sleep(physicsspeed);
                 } catch (InterruptedException e) { }
@@ -821,5 +806,10 @@ public class ClassicLevel implements Level, Serializable {
     @Override
     public boolean hasUpdated() {
         return updated;
+    }
+
+    @Override
+    public List<Block> getBlockList() {
+        return Collections.unmodifiableList(Arrays.asList(blocks));
     }
 }

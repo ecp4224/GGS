@@ -18,7 +18,7 @@ public abstract class PhysicsBlock extends Block implements Tick {
     private int _x;
     private int _y;
     private int _z;
-    private Level _level;
+    private transient Level _level;
     private transient Server _server;
     public PhysicsBlock(byte ID, String name) {
         super(ID, name);

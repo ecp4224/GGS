@@ -250,18 +250,21 @@ public class IOClient {
                     else
                         throw new RuntimeException("Packet " + packet.ID + " (" + packet.name + ") has a dynamicSize, but is not using a DynamicPacket!");
                 } catch (IOException e) {
-                    closeConnection();
+                    if (isConnected())
+                        closeConnection();
                     break;
                 }
                 catch (Exception e) {
                     e.printStackTrace();
                     if (client instanceof Player)
                         ((Player)client).kick("ERROR!");
-                    closeConnection();
+                    if (isConnected())
+                        closeConnection();
                     break;
                 }
             }
-            closeConnection();
+            if (isConnected())
+                closeConnection();
         }
     }
 }

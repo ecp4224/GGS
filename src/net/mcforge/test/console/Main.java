@@ -15,6 +15,7 @@ import net.mcforge.API.Listener;
 import net.mcforge.API.io.ServerLogEvent;
 import net.mcforge.groups.Group;
 import net.mcforge.server.Server;
+import net.mcforge.server.ServerStartupArgs;
 import net.mcforge.system.Console;
 import net.mcforge.system.updater.Updatable;
 
@@ -32,7 +33,7 @@ public class Main extends Console implements Listener {
     
     public void start() {
         s = new Server("[MCForge] Default", 25565, "Welcome!");
-        s.start(this, true);
+        s.start(this, true, new ServerStartupArgs());
         Scanner scanner = new Scanner(System.in);
         while (s.Running) {
             String line = scanner.nextLine();
@@ -66,6 +67,11 @@ public class Main extends Console implements Listener {
     public Server getServer() {
         return s;
     }
+    
+    @Override
+    public void setServer(Server server) {
+        this.s = server;
+    }
 
     @Override
     public Group getGroup() {
@@ -79,7 +85,7 @@ public class Main extends Console implements Listener {
 
     @Override
     public String next() {
-        return scan.next();
+        return scan.nextLine();
     }
     
     @EventHandler
