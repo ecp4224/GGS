@@ -79,11 +79,6 @@ public class PacketManager {
     public PacketManager(Server instance) {
         this.server = instance;
         initPackets();
-        try {
-            serverSocket = new ServerSocket(this.server.Port);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     protected void initPackets() {
@@ -152,10 +147,13 @@ public class PacketManager {
     /**
      * Have the PacketManager start listening for clients
      * on the port provided by the {@link PacketManager#server}
+     * @throws IOException 
      */
-    public void startReading() {
+    public void startReading() throws IOException {
         if (running)
             return;
+        if (serverSocket == null)
+            serverSocket = new ServerSocket(this.server.Port);
         running = true;
         reader = new Read();
         reader.start();
@@ -172,6 +170,7 @@ public class PacketManager {
         reader.interrupt();
         try {
             serverSocket.close();
+            serverSocket = null;
         } catch (IOException e1) {
             e1.printStackTrace();
         }
@@ -182,7 +181,7 @@ public class PacketManager {
         }
     }
     
-    public void restartReader() {
+    public void restartReader() throws IOException {
         if (!running)
             return;
         stopReading();

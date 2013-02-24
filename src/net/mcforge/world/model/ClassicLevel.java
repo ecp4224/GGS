@@ -21,8 +21,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.zip.GZIPInputStream;
-import java.util.zip.GZIPOutputStream;
-
 import net.mcforge.iomodel.Player;
 import net.mcforge.server.Server;
 import net.mcforge.system.Serializer;
@@ -43,7 +41,7 @@ public class ClassicLevel implements Level, Serializable {
 
     private static final long serialVersionUID = -7297498370800056856L;
     
-    private static final Serializer<ClassicLevel> saver = new Serializer<ClassicLevel>(SaveType.BYTE);
+    private static final Serializer<ClassicLevel> saver = new Serializer<ClassicLevel>(SaveType.GZIP_KRYO);
 
     private transient Thread physics;
 
@@ -336,9 +334,7 @@ public class ClassicLevel implements Level, Serializable {
             new File("levels").mkdir();
         saving = true;
         FileOutputStream fos = new FileOutputStream("levels/" + name + ".ggs");
-        GZIPOutputStream gos = new GZIPOutputStream(fos);
-        saver.saveObject(this, gos);
-        gos.close();
+        saver.saveObject(this, fos);
         fos.close();
         saving = false;
         updated = false;
@@ -383,8 +379,13 @@ public class ClassicLevel implements Level, Serializable {
             convertDat(filename);
         else {
             FileInputStream fis = new FileInputStream(filename);
-            GZIPInputStream gis = new GZIPInputStream(fis);
-            ClassicLevel l = saver.getObject(gis);
+            ClassicLevel l;
+            try {
+                l = saver.getObject(fis);
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+                return;
+            }
             width = l.width;
             height = l.height;
             autosave = l.autosave;
@@ -407,7 +408,6 @@ public class ClassicLevel implements Level, Serializable {
             unloading = false;
             physics.start();
             saving = false;
-            gis.close();
             fis.close();
         }
         if (getTile(spawnx, spawny, spawnz) != Block.getBlock("Air") || getTile(spawnx, spawny + 1, spawnz) != Block.getBlock("Air"))
@@ -571,36 +571,40 @@ public class ClassicLevel implements Level, Serializable {
             Thread.currentThread().getId();
             ArrayList<Tick> toremove = new ArrayList<Tick>();
             while (run) {
-                if (ticks == null)
-                    ticks = new ArrayList<Tick>();
-                for (Tick t : toremove) {
-                    ticks.remove(t);
-                }
-                toremove.clear();
-                Tick[] temp = ticks.toArray(new Tick[ticks.size()]);
-                for (Tick t : temp) {
-                    if (unloading || saving)
-                        break;
-                    if (t instanceof PhysicsBlock) {
-                        PhysicsBlock pb = (PhysicsBlock)t;
-                        if (pb.getLevel() == null)
-                            pb.setLevel(ClassicLevel.this);
-                        if (pb.getServer() == null)
-                            pb.setServer(server);
-                        if (pb.runInSeperateThread()) {
-                            Thread tt = new Ticker2(pb);
-                            tt.start();
-                            continue;
-                        }
-                        if (getTile(pb.getX(), pb.getY(), pb.getZ()).getVisibleBlock() != pb.getVisibleBlock()) {
-                            toremove.add(pb);
-                            continue;
-                        }
+                try {
+                    if (ticks == null)
+                        ticks = new ArrayList<Tick>();
+                    for (Tick t : toremove) {
+                        ticks.remove(t);
                     }
-                    if (t != null && !unloading)
-                        t.tick();
+                    toremove.clear();
+                    Tick[] temp = ticks.toArray(new Tick[ticks.size()]);
+                    for (Tick t : temp) {
+                        if (unloading || saving)
+                            break;
+                        if (t instanceof PhysicsBlock) {
+                            PhysicsBlock pb = (PhysicsBlock)t;
+                            if (pb.getLevel() == null)
+                                pb.setLevel(ClassicLevel.this);
+                            if (pb.getServer() == null)
+                                pb.setServer(server);
+                            if (pb.runInSeperateThread()) {
+                                Thread tt = new Ticker2(pb);
+                                tt.start();
+                                continue;
+                            }
+                            if (getTile(pb.getX(), pb.getY(), pb.getZ()).getVisibleBlock() != pb.getVisibleBlock()) {
+                                toremove.add(pb);
+                                continue;
+                            }
+                        }
+                        if (t != null && !unloading)
+                            t.tick();
+                    }
+                    temp = null;
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-                temp = null;
                 try {
                     Thread.sleep(physicsspeed);
                 } catch (InterruptedException e) { }

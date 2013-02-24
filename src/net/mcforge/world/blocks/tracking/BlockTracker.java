@@ -29,7 +29,7 @@ import net.mcforge.util.FileUtils;
 public class BlockTracker implements Listener, Tick, Serializable {
     private static final long serialVersionUID = 6L;
     private HashMap<Player, ArrayList<BlockData>> cache = new HashMap<Player, ArrayList<BlockData>>();
-    private Serializer<ArrayList<BlockData>> saver = new Serializer<ArrayList<BlockData>>(SaveType.BYTE);
+    private Serializer<ArrayList<BlockData>> saver = new Serializer<ArrayList<BlockData>>(SaveType.GZIP_JAVA);
     private int wait = 60;
     private int oldest = 1;
     private Server server;
@@ -52,11 +52,11 @@ public class BlockTracker implements Listener, Tick, Serializable {
         PlayerConnectEvent.getEventList().unregister(this);
     }
     
-    private ArrayList<BlockData> load(Player p) throws IOException {
+    private ArrayList<BlockData> load(Player p) throws IOException, ClassNotFoundException {
         return load(p.getName());
     }
     
-    private ArrayList<BlockData> load(String username) throws IOException {
+    private ArrayList<BlockData> load(String username) throws IOException, ClassNotFoundException {
         FileInputStream fis = new FileInputStream("system/undo_data/" + username + ".mcfu");
         GZIPInputStream gis = new GZIPInputStream(fis);
         ArrayList<BlockData> l = saver.getObject(gis);
@@ -162,6 +162,8 @@ public class BlockTracker implements Listener, Tick, Serializable {
                 } catch (IOException e) {
                     e.printStackTrace();
                     return Collections.unmodifiableList(data);
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
                 }
             }
             else
@@ -221,6 +223,9 @@ public class BlockTracker implements Listener, Tick, Serializable {
             try {
                 data = load(player);
             } catch (IOException e) {
+                e.printStackTrace();
+                return Collections.unmodifiableList(data);
+            } catch (ClassNotFoundException e) {
                 e.printStackTrace();
                 return Collections.unmodifiableList(data);
             }
@@ -328,6 +333,8 @@ public class BlockTracker implements Listener, Tick, Serializable {
                 try {
                     cache.put(p, load(p));
                 } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (ClassNotFoundException e) {
                     e.printStackTrace();
                 }
                 System.out.println("Done!");
