@@ -110,7 +110,7 @@ public class BlockChangeAction extends Action<BlockChangeAction> implements List
     
     @EventHandler
     public void onChat(PlayerBlockChangeEvent event) {
-        if (event.getPlayer() == getPlayer()) {
+        if (event.getPlayer().getName().equals(getPlayer().getName())) {
             found = true;
             X = event.getX();
             Y = event.getY();

@@ -1,5 +1,7 @@
 package net.mcforge.world.blocks;
 
+import java.io.Serializable;
+
 import net.mcforge.iomodel.Player;
 
 /**
@@ -12,7 +14,8 @@ import net.mcforge.iomodel.Player;
  * @author MCForgeTeam
  *
  */
-public class BlockUpdate {
+public class BlockUpdate implements Serializable {
+    private static final long serialVersionUID = 5050640003932527908L;
     private int x;
     private int y;
     private int z;

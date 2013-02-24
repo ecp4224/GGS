@@ -310,11 +310,8 @@ public class BlockTracker implements Listener, Tick, Serializable {
         new Thread() {
             @Override
             public void run() {
-                System.out.println("Saving..");
                 save(p);
-                System.out.println("Disposing..");
                 cache.remove(p);
-                System.out.println("Done!");
             }
         }.start();
     }
@@ -329,7 +326,6 @@ public class BlockTracker implements Listener, Tick, Serializable {
         new Thread() {
             @Override
             public void run() {
-                System.out.println("Loading..");
                 try {
                     cache.put(p, load(p));
                 } catch (IOException e) {
@@ -337,7 +333,6 @@ public class BlockTracker implements Listener, Tick, Serializable {
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
                 }
-                System.out.println("Done!");
             }
         }.start();
     }

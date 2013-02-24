@@ -146,8 +146,9 @@ public class Serializer<E> {
     @SuppressWarnings("unchecked")
     private E getKryoStyle(InputStream in, boolean gzip) throws IOException {
         Input objInput;
+        GZIPInputStream g = null;
         if (gzip) {
-            GZIPInputStream g = new GZIPInputStream(in);
+            g = new GZIPInputStream(in);
             objInput = new Input(g);
         }
         else
@@ -158,10 +159,14 @@ public class Serializer<E> {
         if (version == getVersion(l)){
             l = (E)LOADER.readObject(objInput, class_);
             objInput.close();
+            if (g != null)
+                g.close();
             return l;
         }
         else {
             objInput.close();
+            if (g != null)
+                g.close();
             throw new IOException("Invalid class version. Expected version - " + getVersion(l) + ". Version got - " + version);
         }
     }
@@ -169,8 +174,9 @@ public class Serializer<E> {
     @SuppressWarnings("unchecked")
     private E getJavaStyle(InputStream in, boolean gzip) throws IOException, ClassNotFoundException {
         ObjectInputStream jin;
+        GZIPInputStream g = null;
         if (gzip) {
-            GZIPInputStream g = new GZIPInputStream(in);
+            g = new GZIPInputStream(in);
             jin = new ObjectInputStream(g);
         }
         else
@@ -180,18 +186,23 @@ public class Serializer<E> {
         if (version == getVersion(l)) {
             l = (E)jin.readObject();
             jin.close();
+            if (g != null)
+                g.close();
             return l;
         }
         else {
             jin.close();
+            if (g != null)
+                g.close();
             throw new IOException("Invalid class version. Expected version - " + getVersion(l) + ". Version got - " + version);
         }
     }
 
     private void saveJavaStyle(OutputStream out, E object, boolean gzip) throws IOException {
         ObjectOutputStream jout;
+        GZIPOutputStream g = null;
         if (gzip) {
-            GZIPOutputStream g = new GZIPOutputStream(out);
+            g = new GZIPOutputStream(out);
             jout = new ObjectOutputStream(g);
         }
         else
@@ -200,12 +211,15 @@ public class Serializer<E> {
         jout.writeLong(version);
         jout.writeObject(object);
         jout.close();
+        if (g != null)
+            g.close();
     }
 
     private void saveKryoStyle(OutputStream out, E object, boolean gzip) throws IOException {
         Output kout;
+        GZIPOutputStream g = null;
         if (gzip) {
-            GZIPOutputStream g = new GZIPOutputStream(out);
+            g = new GZIPOutputStream(out);
             kout = new Output(g);
         }
         else
@@ -216,6 +230,8 @@ public class Serializer<E> {
         LOADER.writeObject(kout, class_);
         LOADER.writeObject(kout, object);
         kout.close();
+        if (g != null)
+            g.close();
     }
 
     private void saveJsonStyle(OutputStream out, E object) throws IOException {
