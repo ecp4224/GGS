@@ -24,6 +24,8 @@ import java.util.Random;
 
 import net.mcforge.API.EventSystem;
 import net.mcforge.API.action.CmdAbort;
+import net.mcforge.API.help.Help;
+import net.mcforge.API.help.HelpItemManager;
 import net.mcforge.API.io.ServerLogEvent;
 import net.mcforge.API.plugin.CommandHandler;
 import net.mcforge.API.plugin.GeneratorHandler;
@@ -89,6 +91,7 @@ public final class Server implements LogInterface, Updatable, Tick {
     private int oldsize;
     private ArrayList<IOClient> cache;
     private ArrayList<Player> pcache;
+    private HelpItemManager hmanange;
     private BlockTracker track;
     public static final String[] devs = new String []{ "Dmitchell", "501st_commander", "Lavoaster", "Alem_Zupa", "QuantumParticle", "BeMacized", "Shade2010", "edh649", "hypereddie10", "Gamemakergm", "Serado", "Wouto1997", "cazzar", "givo" };
     /**
@@ -223,6 +226,13 @@ public final class Server implements LogInterface, Updatable, Tick {
      */
     public final EventSystem getEventSystem() {
         return es;
+    }
+    /**
+     * The service that helps with commands that implements the {@link HelpItem} interface
+     * @return
+     */
+    public final HelpItemManager getHelpService() {
+        return hmanange;
     }
     /**
      * Get the handler that handles the packets
@@ -590,6 +600,10 @@ public final class Server implements LogInterface, Updatable, Tick {
         Log("Starting Command Handler", true);
         ch = new CommandHandler(this);
         Log("OK!", true);
+        Log("Staring Help Service", true);
+        hmanange = new HelpItemManager();
+        hmanange.init(this);
+        Log("OK!", true);
         Log("Creating default files and directories", true);
         FileUtils.createFilesAndDirs();
         Log("OK!", true);
@@ -762,6 +776,9 @@ public final class Server implements LogInterface, Updatable, Tick {
         if (args.isLoadingCommands()) {
             Log("Adding /abort to Command Service", true);
             getCommandHandler().addCommand(new CmdAbort());
+            Log("OK!", true);
+            Log("Adding /help to Command Service", true);
+            getCommandHandler().addCommand(new Help());
             Log("OK!", true);
         }
         if (args.isLoadingEvents()) {

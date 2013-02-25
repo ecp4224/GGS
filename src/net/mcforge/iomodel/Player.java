@@ -236,13 +236,15 @@ public class Player extends IOClient implements CommandExecutor, Tick {
     }
 
     /**
-     * Ban this player.
-     * This method will execute a BanRequest Event. If the end-user does not
-     * have a ban plugin, then the player wont be banned.
+     * Ban this player. </br>
+     * This method will execute a BanRequest Event. <b>If this server does not
+     * have a ban plugin, then the player wont be banned.</b> </br>
+     * If the kick parameter is true, then the player will be kicked from the server with the message "Banned:  <b>reason</b>" where reason
+     * is specified in the reason parameter.
      * @param banner
-     *             The client who is doing the banning
+     *             The client who is doing the banning.
      * @param reason
-     *              The reason for banning this player
+     *              The reason for banning this player.
      * @param kick
      *            Whether this player should be kicked as well.
      * @param banip
@@ -1156,7 +1158,7 @@ public class Player extends IOClient implements CommandExecutor, Tick {
         }
         if (Group.getGroup(this) == null)
             setGroup(Group.getDefault());
-        SendWelcome();
+        sendWelcome();
         final Level level = getServer().getLevelHandler().findLevel(getServer().MainLevel);
         if (level == null) {
             kick("The main level hasnt loaded yet!");
@@ -1607,7 +1609,7 @@ public class Player extends IOClient implements CommandExecutor, Tick {
     }
 
 
-    protected void SendWelcome() {
+    protected void sendWelcome() {
         pm.getPacket("Welcome").Write(this, getServer());
     }
 
@@ -1615,7 +1617,6 @@ public class Player extends IOClient implements CommandExecutor, Tick {
      * Kick the player from the getServer()
      * @param reason The reason why he was kicked
      */
-    @SuppressWarnings("deprecation")
     public void kick(String reason) {
         PlayerKickedEvent pke = new PlayerKickedEvent(this, reason);
         getServer().getEventSystem().callEvent(pke);
@@ -1635,7 +1636,6 @@ public class Player extends IOClient implements CommandExecutor, Tick {
         saveAttribute("totalKicked");
         Packet p = pm.getPacket("Kick");
         this.kickreason = reason;
-        getServer().players.remove(this);
         p.Write(this, getServer());
     }
 
