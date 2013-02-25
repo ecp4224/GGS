@@ -220,6 +220,7 @@ public class PacketManager {
        if (connectedclients.contains(client)) {
            connectedclients.remove(client);
            server.Log("Removing IOClient connection", true);
+           server.rebuildPlayerCache();
            return true;
        }
        return false;

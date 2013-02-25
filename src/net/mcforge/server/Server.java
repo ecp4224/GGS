@@ -89,6 +89,7 @@ public final class Server implements LogInterface, Updatable, Tick {
     private Messages m;
     private boolean debug_mode;
     private int oldsize;
+    private int cachesize;
     private ArrayList<IOClient> cache;
     private ArrayList<Player> pcache;
     private HelpItemManager hmanange;
@@ -808,17 +809,27 @@ public final class Server implements LogInterface, Updatable, Tick {
      * @return
      *         An {@link ArrayList} of {@link Player}
      */
-    public List<Player> getPlayers() {
-        if (getClients().equals(cache) && getClients().size() == oldsize)
+    public synchronized List<Player> getPlayers() {
+        if (getClients().equals(cache) && getClients().size() == cachesize)
             return Collections.unmodifiableList(pcache);
+        rebuildPlayerCache();
+        return Collections.unmodifiableList(pcache);
+    }
+    
+    /**
+     * Rebuild the player cache. </br>
+     * The player cache is the list of {@link Player} objects currently connected to the server.
+     */
+    public synchronized void rebuildPlayerCache() {
+        Log("Rebuilding Player Cache", true);
         pcache = new ArrayList<Player>();
         for (IOClient i : getClients()) {
             if (i instanceof Player)
                 pcache.add((Player)i);
         }
         cache = getClients();
-        oldsize = cache.size();
-        return Collections.unmodifiableList(pcache);
+        cachesize = cache.size();
+        Log("OK!", true);
     }
 
     /**

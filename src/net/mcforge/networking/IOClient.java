@@ -274,5 +274,14 @@ public class IOClient {
                 closeConnection();
         }
     }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof IOClient) {
+            IOClient client = (IOClient)obj;
+            return client.address.equals(address) && client.getReaderThreadID() == getReaderThreadID() && client.client.equals(client);
+        }
+        return false;
+    }
 }
 
