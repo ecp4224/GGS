@@ -74,6 +74,8 @@ public class IOClient {
      *        return trues if this IOClient is connected to a client.
      */
     public boolean isConnected() {
+        if (client == null)
+            return false;
         return client.isConnected() && !client.isClosed() && connected;
     }
 
@@ -138,9 +140,14 @@ public class IOClient {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+            writerthread = null;
+            readerthread = null;
             writer.close();
             reader.close();
             client.close();
+            writer = null;
+            reader = null;
+            client = null;
             connected = false;
             packet_queue.clear();
             pm.disconnect(this);

@@ -76,6 +76,13 @@ public class Player extends IOClient implements CommandExecutor, Tick {
     private HashMap<String, Object> extra = new HashMap<String, Object>();
     private static final DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
     private static MessageDigest digest;
+    static {
+        try {
+            digest = MessageDigest.getInstance("MD5");
+        } catch (NoSuchAlgorithmException e1) {
+            e1.printStackTrace();
+        }
+    }
     /**
      * Whether or not the player is logged in
      */
@@ -158,13 +165,6 @@ public class Player extends IOClient implements CommandExecutor, Tick {
 
     public Player(Socket client, PacketManager pm) {
         super(client, pm);
-        if (digest == null) {
-            try {
-                digest = MessageDigest.getInstance("MD5");
-            } catch (NoSuchAlgorithmException e1) {
-                e1.printStackTrace();
-            }
-        }
         ID = getFreeID();
         this.chat = new Messages(getServer());
 
@@ -1932,10 +1932,13 @@ public class Player extends IOClient implements CommandExecutor, Tick {
      */
     @Override
     public void closeConnection() {
-        if(this.username != null)
-        {
+        if(this.username != null) {
             getServer().Log(this.username + " has left the server.");
             getServer().sendGlobalMessage(this.username + " has left the server.");        
+        }
+        if (levelsender != null) {
+            levelsender.interrupt();
+            levelsender = null;
         }
         despawn();
         PlayerDisconnectEvent event = new PlayerDisconnectEvent(this);
@@ -1948,6 +1951,12 @@ public class Player extends IOClient implements CommandExecutor, Tick {
         seeable.clear();
         color = null;
         client = null;
+        extra = null;
+        extend = null;
+        seeable = null;
+        lastCommunication = null;
+        level = null;
+        
 
         getServer().getTicker().removeTick(this); //Do this last as this takes a while to remove
     }
@@ -1977,16 +1986,32 @@ public class Player extends IOClient implements CommandExecutor, Tick {
             Packet pa;
             pa = pm.getPacket((byte)0x02);
             pa.Write(p, getServer());
+            if (Thread.interrupted()) {
+                p.getServer().Log("Level Sending Aborted", true);
+                return;
+            }
             pa = null;
             pa = pm.getPacket((byte)0x03);
             pa.Write(p, getServer());
+            if (Thread.interrupted()) {
+                p.getServer().Log("Level Sending Aborted", true);
+                return;
+            }
             pa = null;
             pa = pm.getPacket((byte)0x04);
             pa.Write(p, getServer());
+            if (Thread.interrupted()) {
+                p.getServer().Log("Level Sending Aborted", true);
+                return;
+            }
             pa = null;
             long endTime = System.nanoTime();
             long duration = endTime - startTime;
             getServer().Log("Loading took: " + duration + "ms");
+            if (Thread.interrupted()) {
+                p.getServer().Log("Level Sending Aborted", true);
+                return;
+            }
             p.finishLevel();
         }
     }
@@ -2026,6 +2051,20 @@ public class Player extends IOClient implements CommandExecutor, Tick {
     @Override
     public int getTimeout() {
         return 500;
+    }
+    
+    @Override
+    public int hashCode() {
+        return ID * getName().hashCode();
+    }
+    
+    @Override
+    public boolean equals(Object p) {
+        if (p instanceof Player) {
+            Player player = (Player)p;
+            return player.getName().equals(getName()) && player.ID == ID && player.address.equals(address);
+        }
+        return false;
     }
 }
 

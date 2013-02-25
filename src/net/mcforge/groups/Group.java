@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -28,7 +29,6 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import net.mcforge.API.EventHandler;
 import net.mcforge.API.Listener;
-import net.mcforge.API.player.PlayerDisconnectEvent;
 import net.mcforge.API.player.PlayerLoginEvent;
 import net.mcforge.API.plugin.Command;
 import net.mcforge.chat.ChatColor;
@@ -46,7 +46,6 @@ public class Group implements Listener {
 	static ArrayList<Group> groups = new ArrayList<Group>();
 	static HashMap<Group, String> temp = new HashMap<Group, String>();
 	private ArrayList<String> members = new ArrayList<String>();
-	private ArrayList<Player> online = new ArrayList<Player>();
 	private HashMap<String, String> extradata = new HashMap<String, String>();
 	private Element data;
 	private static Group defaultgroup;
@@ -76,21 +75,20 @@ public class Group implements Listener {
 	 */
 	private ArrayList<String> exceptions = new ArrayList<String>(); 
 
-	public Group(String name, int permission, boolean isOP, ChatColor color, Group parent, Server server) {
+	public Group(String name, int permission, boolean isOP, ChatColor color, Group parent) {
 		this.name = name;
 		this.permissionlevel = permission;
 		this.isOP = isOP;
 		this.parent = parent;
 		this.color = color;
-		server.getEventSystem().registerEvents(new Listen());
 	}
 
-	public Group(String name, int permission, boolean isOP, ChatColor color, Server server) {
-		this(name, permission, isOP, color, null, server);
+	public Group(String name, int permission, boolean isOP, ChatColor color) {
+		this(name, permission, isOP, color, null);
 	}
 
-	public Group(String name, Group parent, Server server) {
-		this(name, parent.permissionlevel, parent.isOP, parent.color, parent, server);
+	public Group(String name, Group parent) {
+		this(name, parent.permissionlevel, parent.isOP, parent.color, parent);
 	}
 	
 	/**
@@ -193,7 +191,6 @@ public class Group implements Listener {
 	 */
 	public void addPlayer(Player p) {
 		addMember(p.username);
-		if (!online.contains(p)) online.add(p);
 	}
 
 	/**
@@ -204,7 +201,6 @@ public class Group implements Listener {
 	 */
 	public void removePlayer(Player p) {
 		removeMember(p.username);
-		if (online.contains(p)) online.remove(p);
 	}
 
 	/**
@@ -266,26 +262,14 @@ public class Group implements Listener {
 	/**
 	 * Gets an ArrayList containing the online members of this group
 	 */
-	public List<Player> getOnlinePlayers() {
-		return online;
-	}
-
-	public class Listen implements Listener {
-		@EventHandler
-		public void connect(PlayerLoginEvent event) {
-			for (String member : members) {
-				if (event.getPlayer().username.equalsIgnoreCase(member)) {
-					online.add(event.getPlayer());
-					return;
-				}
-			}
-		}
-		
-		@EventHandler
-		public void disconnect(PlayerDisconnectEvent event) {
-		    if (online.contains(event.getPlayer()))
-		        online.remove(event.getPlayer());
-		}
+	public List<Player> getOnlinePlayers(Server server) {
+		ArrayList<Player> online = new ArrayList<Player>();
+	    List<Player> players = server.getPlayers();
+	    for (Player p : players) {
+	        if (p.getGroup() == this)
+	            online.add(p);
+	    }
+	    return Collections.unmodifiableList(online);
 	}
 
 	/**
@@ -311,11 +295,6 @@ public class Group implements Listener {
 	 */
 	public static Group getGroup(Player p) {
 		for (Group g : groups) {
-			for (Player pp : g.online) {
-				if (p.username.equals(pp.username)) return g;
-			}
-		}
-		for (Group g : groups) {
 			for (String pp : g.members) {
 				if (pp.equals(p.username)) return g;
 			}
@@ -330,11 +309,6 @@ public class Group implements Listener {
 	 * @return The group player <b>playerName</b> is in
 	 */
 	public static Group getGroup(String playerName) {
-		for (Group g : groups) {
-			for (Player pp : g.online) {
-				if (playerName.equals(pp.username)) return g;
-			}
-		}
 		for (Group g : groups) {
 			for (String pp : g.members) {
 				if (pp.equals(playerName)) return g;
@@ -407,7 +381,8 @@ public class Group implements Listener {
 	 *            if operator or not (true/false)
 	 * @return returns if action was successful
 	 */
-	public boolean setColor(ChatColor color) {
+	public boolean setColor(ChatColor color, Server server) {
+	    List<Player> online = getOnlinePlayers(server);
 		for (int i = 0; i < online.size(); i++) {
 			Player who = online.get(i);
 			if (who.getDisplayColor().getName().equals(who.getGroup().color.getName()))
@@ -556,7 +531,7 @@ public class Group implements Listener {
 		defaultg = tryGetTextValue(e, "default", "false").equalsIgnoreCase("true");
 		color = ChatColor.parse(tryGetTextValue(e, "color", ChatColor.White.toString()));
 
-		Group g = new Group(name, permission, isOp, color, server);
+		Group g = new Group(name, permission, isOp, color);
 		if (!parent.equals("null")) temp.put(g, parent);
 		for (String s : exceptions) {
 			g.exceptions.add(s);

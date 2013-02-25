@@ -219,6 +219,7 @@ public class PacketManager {
     public boolean disconnect(IOClient client) {
        if (connectedclients.contains(client)) {
            connectedclients.remove(client);
+           server.Log("Removing IOClient connection", true);
            return true;
        }
        return false;
