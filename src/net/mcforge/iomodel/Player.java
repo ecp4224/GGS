@@ -73,6 +73,7 @@ public class Player extends IOClient implements CommandExecutor, Tick {
     protected ArrayList<Player> seeable = new ArrayList<Player>();
     protected ChatColor color = ChatColor.White;
     protected String custom_name;
+    protected String appended_message = "";
     private HashMap<String, Object> extra = new HashMap<String, Object>();
     private static final DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
     private static MessageDigest digest;
@@ -1908,7 +1909,21 @@ public class Player extends IOClient implements CommandExecutor, Tick {
             getServer().getEventSystem().callEvent(event);
             if (event.isCancelled())
                 return;
-            getServer().Log("User "+ this.username + " sent: " + message);
+            if (formattedMessage.endsWith(">") || formattedMessage.endsWith("<")) {
+                formattedMessage = formattedMessage.replaceAll(">", "");
+                formattedMessage = formattedMessage.replaceAll("<", "");
+                if (!appended_message.equals(""))
+                    appended_message += " " + formattedMessage;
+                else
+                    appended_message = formattedMessage;
+                sendMessage(ChatColor.Indigo + "Partial message: " + ChatColor.White + appended_message);
+                return;
+            }
+            else if (!appended_message.equals("")) {
+                formattedMessage = appended_message + formattedMessage;
+                appended_message = "";
+            }
+            getServer().Log("User "+ this.username + " sent: " + formattedMessage);
             chat.serverBroadcast(this.getDisplayName() + ChatColor.White + ": " + formattedMessage);
         }
     }
