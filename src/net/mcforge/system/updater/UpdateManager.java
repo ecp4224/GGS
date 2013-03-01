@@ -189,11 +189,18 @@ public class UpdateManager {
         
         if (version1.split("\\.").length >= index + 2 && version2.split("\\.").length >= index + 2 && recurse)
             return higherVersion(ve, ve2, index + 1, true);
-        else if (version1.split("\\.").length >= index + 2 && version2.split("\\.").length < index + 2)
-            return version1; //Assume version1 is higher than version2
-        else if (version1.split("\\.").length < index + 2 && version2.split("\\.").length >= index + 2)
-            return version2; //Assume version2 is higher than version1
-        else
+        else if (version1.split("\\.").length >= index + 2 && version2.split("\\.").length < index + 2) {
+            if (ve.indexOf("b") != -1 && ve.indexOf("b") == -1)
+                return version2;
+            else
+                return version1; //Assume version1 is higher than version2
+        }
+        else if (version1.split("\\.").length < index + 2 && version2.split("\\.").length >= index + 2) {
+            if (ve.indexOf("b") == -1 && ve2.indexOf("b") != -1)
+                return version1;
+            else
+                return version2; //Assume version2 is higher than version1
+        }
             return "";
     }
     
