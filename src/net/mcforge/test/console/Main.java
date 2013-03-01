@@ -101,7 +101,7 @@ public class Main extends Console implements Listener {
     @Override
     public void alertOfManualUpdate(Updatable u) {
         sendMessage("An update for " + u.getName() + " is available.");
-        sendMessage("You must manually download and install this update, go to " + u.getDownloadURL() + " to download this update.");
+        sendMessage("You must manually download and install this update, go to " + u.getWebsite() + " to download this update.");
     }
 }
 

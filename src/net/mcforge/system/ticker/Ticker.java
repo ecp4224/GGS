@@ -87,6 +87,7 @@ public class Ticker {
 
 		@Override
 		public void run() {
+		    Thread.currentThread().setName(t.getTick().tickName());
 			while (true) {
 				if (!getTicks().contains(t))
 					break;
@@ -103,6 +104,7 @@ public class Ticker {
 		@Override
 		public void run() {
 		    ArrayList<TickData> toremove = new ArrayList<TickData>();
+		    Thread.currentThread().setName("MCForge-Ticker");
 			while (run) {
 			    for (TickData t : toremove) {
 			        removeTick(t.getTick());
@@ -116,6 +118,7 @@ public class Ticker {
 							continue;
 						if (t.getTick().getTimeout() <= t.getTime()) {
 						    try {
+						        Thread.currentThread().setName(t.tick.tickName());
 						        t.getTick().tick();
 						        t.resetError();
 						    } catch (Exception e) {

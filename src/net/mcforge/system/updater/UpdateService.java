@@ -27,14 +27,14 @@ import net.mcforge.util.FileUtils;
 
 public class UpdateService implements Tick {
     private final UpdateManager um = new UpdateManager();
-    private ArrayList<Updatable> queue = new ArrayList<Updatable>();
+    private ArrayList<TempHolder> queue = new ArrayList<TempHolder>();
     private ArrayList<String> restart = new ArrayList<String>();
     private ArrayList<Updatable> ignore = new ArrayList<Updatable>();
     private ArrayList<Updatable> updating = new ArrayList<Updatable>();
     private Server server;
     private boolean update;
     private UpdateType defaulttype;
-    
+
     /**
      * Create a new UpdateService.
      * @param server
@@ -92,7 +92,7 @@ public class UpdateService implements Tick {
         if (queue.size() > 0)
             update = true;
     }
-    
+
     /**
      * Check for updates on an Updatable object.
      * If the object is already scheduled to update after restart, or scheduled to update
@@ -104,13 +104,38 @@ public class UpdateService implements Tick {
         if (isInRestartQueue(u) || queue.contains(u) || ignore.contains(u))
             return;
         try {
-            if (hasUpdate(u))
-                queue.add(u);
+            if (hasUpdate(u)) {
+                TempHolder th = new TempHolder();
+                th.updatable = u;
+                Update update = getUpdate(u);
+                if (update == null)
+                    return;
+                th.update = update;
+                queue.add(th);
+            }
         } catch (IOException e) {
             server.logError(e);
         }
     }
     
+    /**
+     * Get the next compatible version up for this {@link Updatable} object. If no update is found, then this method will return null.
+     * @param u
+     *         The {@link Updatable} object to retrieve the update for.
+     * @return
+     *        An {@link Update} object
+     * @throws IOException
+     *                    If there is an error getting the updates.
+     */
+    public Update getUpdate(Updatable u) throws IOException {
+        Update[] updates = um.getUpdates(u.getInfoURL());
+        for (Update update : updates) {
+            if (um.isUpdate(u, update))
+                return update;
+        }
+        return null;
+    }
+
     /**
      * Check to see if the Updatable object has any updates.
      * @param u
@@ -123,43 +148,39 @@ public class UpdateService implements Tick {
     public boolean hasUpdate(Updatable u) throws IOException {
         if (!um.checkUpdateServer(u))
             return false;
-        boolean toreturn = false;
-        URL url = new URL(u.getCheckURL());
-        BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
-        String str;
-        while ((str = in.readLine()) != null) {
-            if (!str.equals(u.getCurrentVersion()))
-                toreturn = true;
+        Update[] updates = um.getUpdates(u.getInfoURL());
+        for (Update update : updates) {
+            if (um.isUpdate(u, update))
+                return true;
         }
-        in.close();
-        return toreturn;
+        return false;
     }
 
     /**
-     * Update an updatable object.
+     * Update an {@link Updatable} object.
      * @param u
      *         The object to update
      */
-    public void normalUpdate(Updatable u) {
+    public void normalUpdate(Updatable u, Update update) {
         if (updating.contains(u))
             return;
-        Thread t = new Updater(u);
+        Thread t = new Updater(u, update);
         t.start();
     }
-    
+
     /**
-     * Force an updatable object to update
+     * Force an {@link Updatable} object to update to the latest version it has to offer.
      * @param u
-     *         The updatable object to update
+     *         The {@link Updatable} object to update
      */
     public void forceUpdate(Updatable u) {
         forceUpdate(u, true);
     }
-    
+
     /**
-     * Force an updatable object to update
+     * Force an {@link Updatable} object to update to the latest version is has to offer.
      * @param u
-     *         The updatable object to update
+     *         The {@link Updatable} object to update
      * @param notify
      *             Whether to notify the server or not
      */
@@ -167,13 +188,30 @@ public class UpdateService implements Tick {
         if (notify)
             server.Log("Updating " + u.getDownloadPath() + "..");
         u.unload();
+        Update highest = um.getHighestUpdate(u);
+        if (highest == null) {
+            server.Log("Could not retrieve update. ERROR 01");
+            return;
+        }
+        forceUpdate(u, highest, notify);
+    }
+    
+    /**
+     * Force an {@link Updatable} object to update to the {@link Update} <b>update</b> specified in the parameter.
+     * @param u
+     *         The {@link Updatable} object to update
+     * @param notify
+     *             Whether to notify the server or not
+     */
+    public void forceUpdate(Updatable u, Update update, boolean notify) {
         try {
-            downloadFile(u.getDownloadURL(), u.getDownloadPath());
+            downloadFile(update.getDownloadURL(), u.getDownloadPath());
             server.getPluginHandler().loadFile(new File(u.getDownloadPath()), true);
             if (notify)
                 server.Log(u.getDownloadPath() + " has been updated!");
         } catch (IOException e) {
             server.logError(e);
+            server.Log("Could not retrieve update. ERROR 02");
         }
     }
 
@@ -183,12 +221,12 @@ public class UpdateService implements Tick {
             checkAll();
         else {
             for (int i = 0; i < queue.size(); i++) {
-                normalUpdate(queue.get(i));
+                normalUpdate(queue.get(i).updatable, queue.get(i).update);
             }
             update = false;
         }
     }
-    
+
     /**
      * Remove an updatable object from the restart queue.
      * @param object
@@ -200,41 +238,41 @@ public class UpdateService implements Tick {
             return;
         restart.remove(index);
     }
-    
+
     public void ignoreUpdate(Updatable object) {
         if (!ignore.contains(object))
             ignore.add(object);
     }
-    
+
     public boolean isUpdateIgnored(Updatable object) {
         return ignore.contains(object);
     }
-    
+
     /**
-     * Add an updatable object to the restart queue.
+     * Add an {@link Update} object to the restart queue.
      * This will update the object the next time the server starts up.
      * @param object
      *              The object to add.
      * @param type
      *            The {@link UpdateType} of the Updatable object
      */
-    public void addToRestartQueue(Updatable object, UpdateType type) {
-        restart.add(object.getDownloadURL() + "@@" + object.getDownloadPath() + "@@" + type.getType());
+    public void addToRestartQueue(Updatable u, Update object, UpdateType type) {
+        restart.add(object.getDownloadURL() + "@@" + u.getDownloadPath() + "@@" + type.getType() + "@@" + u.getName());
         if (type == UpdateType.Auto_Notify_Restart)
-            server.Log(object.getName() + " will be updated after a restart!");
+            server.Log(u.getName() + " will be updated after a restart!");
         save();
     }
-    
+
     /**
      * Add an updatable object to the restart queue.
      * This will update the object the next time the server starts up.
      * @param object
      *             The object to add.
      */
-    public void addToRestartQueue(Updatable object) {
-        addToRestartQueue(object, object.getUpdateType());
+    public void addToRestartQueue(Updatable object, Update update) {
+        addToRestartQueue(object, update, update.getUpdateType());
     }
-    
+
     /**
      * Check to see if an updatable object will update after a restart.
      * @param object 
@@ -243,9 +281,9 @@ public class UpdateService implements Tick {
      *        True if it is, false if it isn't.
      */
     public boolean isInRestartQueue(Updatable object) {
-        return isInRestartQueue(object.getDownloadURL());
+        return isInRestartQueue(object.getName());
     }
-    
+
     /**
      * Check to see if a URL is in the restart queue
      * @param dlurl
@@ -253,24 +291,24 @@ public class UpdateService implements Tick {
      * @return
      *       True if it is, false if it isn't.
      */
-    public boolean isInRestartQueue(String dlurl) {
+    public boolean isInRestartQueue(String name) {
         for (String s : restart) {
-            if (s.split("\\@@")[0].equals(dlurl))
+            if (s.split("\\@@")[2].equals(name))
                 return true;
         }
         return false;
     }
-    
+
     private int getRestartQueueIndex(Updatable object) {
         if (!isInRestartQueue(object))
             return -1;
         for (int i = 0; i < restart.size(); i++) {
-            if (restart.get(i).split("\\@@")[0].equals(object.getDownloadURL()))
+            if (restart.get(i).split("\\@@")[2].equals(object.getName()))
                 return i;
         }
         return -1;
     }
-    
+
     private void save() {
         try {
             if (!new File("system").exists())
@@ -287,7 +325,7 @@ public class UpdateService implements Tick {
             server.logError(e);
         }
     }
-    
+
     private void load() throws IOException {
         if (!new File("system/restart.cache").exists())
             return;
@@ -303,7 +341,7 @@ public class UpdateService implements Tick {
         in.close();
         new File("system/restart.cache").delete();
     }
-    
+
     private void applyUpdates() {
         for (String s : restart) {
             if (s.split("\\@@").length != 3)
@@ -321,7 +359,7 @@ public class UpdateService implements Tick {
                 server.Log("Updates for " + path + " have been applied!");
         }
     }
-    
+
     private void downloadFile(String url, String path) throws IOException {
         URL website = new URL(url);
         ReadableByteChannel rbc = Channels.newChannel(website.openStream());
@@ -329,24 +367,25 @@ public class UpdateService implements Tick {
         fos.getChannel().transferFrom(rbc, 0, 1 << 24);
         fos.close();
     }
-    
+
     private class Updater extends Thread {
-        
+
         Updatable u;
-        public Updater(Updatable u) { this.u = u; }
+        Update update;
+        public Updater(Updatable u, Update update) { this.u = u; }
         @Override
         public void run() {
             updating.add(u);
-            UpdateType type = u.getUpdateType();
+            UpdateType type = update.getUpdateType();
             if (type.getType() < defaulttype.getType())
                 type = defaulttype;
             if (type == UpdateType.Auto_Silent || type == UpdateType.Auto_Notify)
                 forceUpdate(u, type == UpdateType.Auto_Notify);
             else if (type == UpdateType.Auto_Silent_Restart || type == UpdateType.Auto_Notify_Restart)
-                addToRestartQueue(u, type);
+                addToRestartQueue(u, update, type);
             else if (type == UpdateType.Ask) {
                 if (server.getConsole().askForUpdate(u))
-                    forceUpdate(u);
+                    forceUpdate(u, update, true);
                 else
                     ignore.add(u);
             }
@@ -364,6 +403,16 @@ public class UpdateService implements Tick {
     @Override
     public int getTimeout() {
         return 3000;
+    }
+
+    @Override
+    public String tickName() {
+        return "UpdateService";
+    }
+    
+    private class TempHolder {
+        public Update update;
+        public Updatable updatable;
     }
 }
 

@@ -33,6 +33,13 @@ public interface Tick {
      *        The amount of milliseconds to wait before calling the {@link Tick#tick()} method again.
      */
     public int getTimeout();
+    
+    /**
+     * Get the name of this tick. This will be the name will appear in exception stackTraces when an unhandled exception
+     * occurs. The name of the current thread will also be renamed to this by calling {@link Thread#setName(String)}
+     * @return
+     */
+    public String tickName();
 
 }
 

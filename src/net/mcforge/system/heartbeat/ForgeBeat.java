@@ -18,7 +18,7 @@ public class ForgeBeat extends Heart {
                 "&users=" + server.getPlayers().size() +
                 "&max=" + server.MaxPlayers +
                 "&port=" + server.Port +
-                "&version=" + server.VERSION + 
+                "&version=" + Server.CORE_VERSION + 
                 "&gcname=[Disabled]" +
                 "&public=" + (server.Public ? "1" : "0") +
                 "&motd=" + server.MOTD.trim().replace(" ", "%20") +

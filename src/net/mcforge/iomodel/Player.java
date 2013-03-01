@@ -2081,5 +2081,10 @@ public class Player extends IOClient implements CommandExecutor, Tick {
         }
         return false;
     }
+
+    @Override
+    public String tickName() {
+        return getName() + "PingService";
+    }
 }
 

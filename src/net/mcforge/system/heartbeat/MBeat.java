@@ -51,6 +51,7 @@ public class MBeat extends Heart {
         if (!url.equals("")) {
             String newHash = url.substring(url.lastIndexOf('/') + 1);
             if (server.hash == null || server.hash.equals("") || !newHash.equals(server.hash)) {
+                System.out.println("URL: " + url);
                 server.hash = newHash;
                 show = false;
             }

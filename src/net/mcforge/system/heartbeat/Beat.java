@@ -21,7 +21,7 @@ public class Beat extends Thread {
     private Server server;
 
     private ArrayList<Heart> hearts = new ArrayList<Heart>();
-    
+
     private boolean running;
 
     /**
@@ -45,7 +45,7 @@ public class Beat extends Thread {
                 hearts.add(h);
         }
     }
-    
+
     /**
      * Remove a heart currently beating.
      * @param h
@@ -57,7 +57,7 @@ public class Beat extends Thread {
                 hearts.remove(h);
         }
     }
-    
+
     /**
      * Start beating. If the beater already started beating, then
      * nothing will happen.
@@ -68,7 +68,7 @@ public class Beat extends Thread {
         running = true;
         super.start();
     }
-    
+
     /**
      * Stop beating. If the beater is already stopped, then
      * nothing will happen.
@@ -116,7 +116,7 @@ public class Beat extends Thread {
     public boolean isRunning() {
         return running;
     }
-    
+
     @Override
     public void run() {
         URL url;
@@ -124,44 +124,42 @@ public class Beat extends Thread {
         BufferedReader reader;
         byte[] data;
         while (isRunning()) {
-            synchronized(getHearts()) {
-                for (Heart h : getHearts()) {
-                    try {
-                        URL u = new URL(h.getURL());
-                        HttpURLConnection con = (HttpURLConnection)u.openConnection();
-                        con.connect();
+            for (Heart h : getHearts()) {
+                try {
+                    URL u = new URL(h.getURL());
+                    HttpURLConnection con = (HttpURLConnection)u.openConnection();
+                    con.connect();
 
-                        if(con.getResponseCode() == HttpURLConnection.HTTP_OK)
-                        {
-                            url = new URL(h.getURL() + "?" + h.Prepare(getServer()));
-                            connection = (HttpURLConnection)url.openConnection();
-                            data = h.Prepare(getServer()).getBytes();
-                            connection.setDoOutput(true);
-                            connection.setRequestProperty("Content-Lenght", String.valueOf(data.length));
-                            connection.setUseCaches(false);
-                            connection.setDoInput(true);
-                            connection.setDoOutput(true);
-                            connection.connect();
+                    if(con.getResponseCode() == HttpURLConnection.HTTP_OK)
+                    {
+                        url = new URL(h.getURL() + "?" + h.Prepare(getServer()));
+                        connection = (HttpURLConnection)url.openConnection();
+                        data = h.Prepare(getServer()).getBytes();
+                        connection.setDoOutput(true);
+                        connection.setRequestProperty("Content-Lenght", String.valueOf(data.length));
+                        connection.setUseCaches(false);
+                        connection.setDoInput(true);
+                        connection.setDoOutput(true);
+                        connection.connect();
+                        try {
+                            reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
                             try {
-                                reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                                try {
-                                    h.onPump(reader, getServer());
-                                } catch (Exception e) {
-                                    server.logError(e);
-                                }
+                                h.onPump(reader, getServer());
                             } catch (Exception e) {
                                 server.logError(e);
-                                getServer().Log("Error pumping " + h.getURL() + " heart!");
                             }
+                        } catch (Exception e) {
+                            server.logError(e);
+                            getServer().Log("Error pumping " + h.getURL() + " heart!");
                         }
-                    } catch (MalformedURLException e) {
-                        e.printStackTrace(server.getLoggerOutput());
-                    } catch (IOException e) {
-                        System.out.println("Unable to connect to " + h.getURL() + "!");
-                    } finally {
-                        if (connection != null)
-                            connection.disconnect();
                     }
+                } catch (MalformedURLException e) {
+                    e.printStackTrace(server.getLoggerOutput());
+                } catch (IOException e) {
+                    System.out.println("Unable to connect to " + h.getURL() + "!");
+                } finally {
+                    if (connection != null)
+                        connection.disconnect();
                 }
             }
             try {

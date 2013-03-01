@@ -7,11 +7,21 @@
  ******************************************************************************/
 package net.mcforge.system.heartbeat;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+
+import net.mcforge.server.Server;
+
 public class WBeat extends MBeat {
     
     @Override
     public String getURL() {
         return "http://direct.worldofminecraft.com/hb.php";
+    }
+    
+    @Override
+    public String onPump(BufferedReader rdr, Server server) throws IOException {
+        return ""; //Dont do anything
     }
 }
 

@@ -182,7 +182,7 @@ public final class Server implements LogInterface, Updatable, Tick {
     /**
      * The version of MCForge this server runs
      */
-    public final String VERSION = "6.0.0b6";
+    public static final String CORE_VERSION = "6.0.0b6";
     /**
      * The version number of this MCForge server </br>
      * Where 600 would be 6.0.0 </br>
@@ -588,12 +588,13 @@ public final class Server implements LogInterface, Updatable, Tick {
         startTicker();
         this.console = console;
         console.setServer(this);
+        Thread.currentThread().setName("Console-Thread");
         if (args.isLoadingEvents())
             startEvents();
         if (args.isLoadingLogger())
             startLogger();
         Log("=============================");
-        Log("Starting MCForge v" + VERSION);
+        Log("Starting MCForge v" + CORE_VERSION);
         if (args.isRunningInDebugMode()) {
             debug_mode = true;
             Log("MCForge running in debug mode", true);
@@ -1049,11 +1050,11 @@ public final class Server implements LogInterface, Updatable, Tick {
         return findPlayer(name);
     }
     @Override
-    public String getCheckURL() {
-        return "http://update.mcforge.net/mcf6/current.txt";
+    public String getInfoURL() {
+        return "http://update.mcforge.net/mcf6/updatej";
     }
     @Override
-    public String getDownloadURL() {
+    public String getWebsite() {
         return "www.mcforge.net";
     }
     @Override
@@ -1062,7 +1063,7 @@ public final class Server implements LogInterface, Updatable, Tick {
     }
     @Override
     public String getCurrentVersion() {
-        return VERSION;
+        return CORE_VERSION;
     }
     @Override
     public String getDownloadPath() {
@@ -1074,12 +1075,10 @@ public final class Server implements LogInterface, Updatable, Tick {
     }
     @Override
     public void unload() {
-        try {
-            stop(); //This method shouldn't be called...
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        throw new RuntimeException("This method should never be called.");
+    }
+    @Override
+    public String tickName() {
+        return "";
     }
 }

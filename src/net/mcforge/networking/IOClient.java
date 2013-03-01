@@ -204,6 +204,7 @@ public class IOClient {
 
         @Override
         public void run() {
+            Thread.currentThread().setName("IOClient-Writer");
             while (pm.server.Running && connected) {
                 try {
                     while (sendNextPacket());
@@ -225,6 +226,7 @@ public class IOClient {
         @Override
         public void run() {
             readID = Thread.currentThread().getId();
+            Thread.currentThread().setName("IOClient-Reader");
             while (pm.server.Running && connected) {
                 try {
                     int readvalue = (byte)reader.read();

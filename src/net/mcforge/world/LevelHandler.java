@@ -187,7 +187,7 @@ public class LevelHandler {
                 l = null;
                 return null;
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             server.Log("ERROR LOADING LEVEL!");
             e.printStackTrace();
         }
@@ -262,6 +262,11 @@ public class LevelHandler {
         @Override
         public int getTimeout() {
             return 6000;
+        }
+
+        @Override
+        public String tickName() {
+            return "LevelManagerService-Saver";
         }
     }
 

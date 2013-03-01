@@ -568,7 +568,7 @@ public class ClassicLevel implements Level, Serializable {
 
         @Override
         public void run() {
-            Thread.currentThread().getId();
+            Thread.currentThread().setName(ClassicLevel.this.getName() + "-Physics");
             ArrayList<Tick> toremove = new ArrayList<Tick>();
             while (run) {
                 try {

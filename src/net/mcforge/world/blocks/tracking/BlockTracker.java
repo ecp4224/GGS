@@ -336,4 +336,9 @@ public class BlockTracker implements Listener, Tick, Serializable {
             }
         }.start();
     }
+
+    @Override
+    public String tickName() {
+        return "BlockTrackerService";
+    }
 }

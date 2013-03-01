@@ -101,6 +101,11 @@ public abstract class PhysicsBlock extends Block implements Tick {
         this._level = level;
     }
     
+    @Override
+    public String tickName() {
+        return name + "-physics";
+    }
+    
     /**
      * Move the block
      * This method does update the physics block
