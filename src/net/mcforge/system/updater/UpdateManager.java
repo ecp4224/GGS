@@ -177,7 +177,9 @@ public class UpdateManager {
         return higherVersion(version1, version2, 0, true);
     }
     
-    private String higherVersion(String version1, String version2, int index, boolean recurse) {
+    private String higherVersion(String ve, String ve2, int index, boolean recurse) {
+        String version1 = ve.replaceAll("b", ".");
+        String version2 = ve2.replaceAll("b", ".");
         int v1 = Integer.parseInt(version1.split("\\.")[index]);
         int v2 = Integer.parseInt(version2.split("\\.")[index]);
         if (v1 > v2)
@@ -186,7 +188,7 @@ public class UpdateManager {
             return version2;
         
         if (version1.split("\\.").length >= index + 2 && version2.split("\\.").length >= index + 2 && recurse)
-            return higherVersion(version1, version2, index + 1, true);
+            return higherVersion(ve, ve2, index + 1, true);
         else if (version1.split("\\.").length >= index + 2 && version2.split("\\.").length < index + 2)
             return version1; //Assume version1 is higher than version2
         else if (version1.split("\\.").length < index + 2 && version2.split("\\.").length >= index + 2)

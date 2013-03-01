@@ -372,11 +372,15 @@ public class UpdateService implements Tick {
 
         Updatable u;
         Update update;
-        public Updater(Updatable u, Update update) { this.u = u; }
+        public Updater(Updatable u, Update update) { this.u = u; this.update = update;}
         @Override
         public void run() {
+            if (update == null)
+                return;
             updating.add(u);
             UpdateType type = update.getUpdateType();
+            if (type == null)
+                type = u.getUpdateType();
             if (type.getType() < defaulttype.getType())
                 type = defaulttype;
             if (type == UpdateType.Auto_Silent || type == UpdateType.Auto_Notify)
