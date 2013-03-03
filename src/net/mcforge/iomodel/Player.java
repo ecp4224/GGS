@@ -662,7 +662,7 @@ public class Player extends IOClient implements CommandExecutor, Tick {
      */
     public String getRealmppass() {
         try {
-            digest.update((String.valueOf(getServer().getSalt()) + username).getBytes());
+            digest.update((String.valueOf(getServer().getClassicSalt()) + username).getBytes());
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
@@ -1160,7 +1160,7 @@ public class Player extends IOClient implements CommandExecutor, Tick {
         if (Group.getGroup(this) == null)
             setGroup(Group.getDefault());
         sendWelcome();
-        final Level level = getServer().getLevelHandler().findLevel(getServer().MainLevel);
+        final Level level = getServer().getClassicLevelHandler().findLevel(getServer().MainLevel);
         if (level == null) {
             kick("The main level hasnt loaded yet!");
             return;

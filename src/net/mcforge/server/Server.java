@@ -207,7 +207,7 @@ public final class Server implements LogInterface, Updatable, Tick {
      * @return
      *        The {@link ClassicLevelHandler}
      */
-    public final ClassicLevelHandler getLevelHandler() {
+    public final ClassicLevelHandler getClassicLevelHandler() {
         return lm;
     }
     /**
@@ -387,7 +387,7 @@ public final class Server implements LogInterface, Updatable, Tick {
      *                               This is thrown when an attempt to call this method
      *                               is invalid.
      */
-    public final String getSalt() throws IllegalAccessException {
+    public final String getClassicSalt() throws IllegalAccessException {
         StackTraceElement[] stacks = Thread.currentThread().getStackTrace();
         try {
             StackTraceElement e = stacks[2]; //The heartbeat class will always be the 3rd in the stacktrace if the heartbeat is being sent correctly
@@ -627,7 +627,7 @@ public final class Server implements LogInterface, Updatable, Tick {
             loadSystemProperties();
             Log("OK!", true);
         }
-        if (args.isLoadingBlockTracking()) {
+        if (args.isLoadingBlockTracking() && args.isAllowingClassic()) {
             Log("Loading block tracking", true);
             track = new BlockTracker(this);
             Log("OK!", true);
@@ -637,9 +637,11 @@ public final class Server implements LogInterface, Updatable, Tick {
             us = new UpdateService(this);
             Log("OK!", true);
         }
-        Log("Loading the Message Service", true);
-        m = new Messages(this);
-        Log("OK!", true);
+        if (args.isAllowingClassic()) {
+            Log("Loading the Message Service", true);
+            m = new Messages(this);
+            Log("OK!", true);
+        }
         if (args.isLoadingPlugins()) {
             Log("Loading Plugin Service", true);
             ph = new PluginHandler(this);
@@ -659,7 +661,7 @@ public final class Server implements LogInterface, Updatable, Tick {
             return;
         }
         Log("OK!", true);
-        if (args.isLoadingPrivileges()) {
+        if (args.isLoadingPrivileges() && args.isAllowingClassic()) {
             Log("Loading Privileges Service", true);
             prh = new PrivilegesHandler(this);
             Log("OK!", true);
@@ -671,7 +673,7 @@ public final class Server implements LogInterface, Updatable, Tick {
             Log("OK!", true);
         }
         try {
-            if (args.isLoadingPrivileges()) {
+            if (args.isLoadingPrivileges() && args.isAllowingClassic()) {
                 Log("Initializing Privilieges Service", true);
                 prh.initialize();
                 Log("OK!", true);
@@ -680,11 +682,11 @@ public final class Server implements LogInterface, Updatable, Tick {
         catch (IOException e) {
             e.printStackTrace();
         }   
-        if (args.isLoadingLevels()) {
+        if (args.isClassicLoadingLevels() && args.isAllowingClassic()) {
             Log("Setting default system wide class loader to " + getDefaultClassLoader(), true);
             Serializer.getKryo().setClassLoader(getDefaultClassLoader());
             Log("OK!", true);
-            Log("Loading Level Service", true);
+            Log("Loading Classic Level Service", true);
             lm = new ClassicLevelHandler(this);
             Log("OK!", true);
             Log("Loading Main Level", true);
@@ -702,27 +704,29 @@ public final class Server implements LogInterface, Updatable, Tick {
             us.getUpdateManager().add(this);
             Log("OK!", true);
         }
-        Log("Creating Salt", true);
-        SecureRandom sr = null;
-        try {
-            sr = SecureRandom.getInstance("SHA1PRNG");
-        } catch (NoSuchAlgorithmException e1) {
-            e1.printStackTrace();
+        if (args.isAllowingClassic()) {
+            Log("Creating Classic Salt", true);
+            SecureRandom sr = null;
+            try {
+                sr = SecureRandom.getInstance("SHA1PRNG");
+            } catch (NoSuchAlgorithmException e1) {
+                e1.printStackTrace();
+            }
+            int i = 0;
+            for (; i < 100; i++) {
+                byte[] seedb = new byte[16];
+                sr.nextBytes(seedb);
+                Salt = new sun.misc.BASE64Encoder().encode(seedb).replace("=", "" + ((Salt != null) ? Salt.toCharArray()[0] : "A"));
+                if (new Random().nextDouble() < .3)
+                    break;
+            }
+            Log("Using " + i + " generated salt.", true);
+            Log("Formatting salt.", true);
+            Salt = LetterOrNumber(Salt);
+            Salt = Salt.substring(0, 16);
+            Log("SALT: " + Salt);
+            Log("OK!", true);
         }
-        int i = 0;
-        for (; i < 100; i++) {
-            byte[] seedb = new byte[16];
-            sr.nextBytes(seedb);
-            Salt = new sun.misc.BASE64Encoder().encode(seedb).replace("=", "" + ((Salt != null) ? Salt.toCharArray()[0] : "A"));
-            if (new Random().nextDouble() < .3)
-                break;
-        }
-        Log("Using " + i + " generated salt.", true);
-        Log("Formatting salt.", true);
-        Salt = LetterOrNumber(Salt);
-        Salt = Salt.substring(0, 16);
-        Log("SALT: " + Salt);
-        Log("OK!", true);
         if (startSQL) {
             Log("Starting SQL Service", true);
             startSQL();
@@ -732,15 +736,17 @@ public final class Server implements LogInterface, Updatable, Tick {
             Log("Loading Heartbeat Service", true);
             heartbeater = new Beat(this);
             Log("OK!", true);
-            Log("Adding Minecraft Heartbeat", true);
-            heartbeater.addHeart(new MBeat());
-            Log("OK!", true);
-            Log("Adding WOM Heartbeat", true);
-            heartbeater.addHeart(new WBeat());
-            Log("OK!", true);
-            Log("Adding MCForge Heartbeat", true);
-            heartbeater.addHeart(new ForgeBeat());
-            Log("OK!", true);
+            if (args.isAllowingClassic()) {
+                Log("Adding Minecraft Heartbeat", true);
+                heartbeater.addHeart(new MBeat());
+                Log("OK!", true);
+                Log("Adding WOM Heartbeat", true);
+                heartbeater.addHeart(new WBeat());
+                Log("OK!", true);
+                Log("Adding MCForge Heartbeat", true);
+                heartbeater.addHeart(new ForgeBeat());
+                Log("OK!", true);
+            }
             Log("Starting Heartbeat Service", true);
             heartbeater.startBeating();
             Log("OK!", true);
@@ -749,33 +755,35 @@ public final class Server implements LogInterface, Updatable, Tick {
         Log("Server url can be found in 'url.txt'");
 
         if (args.isLoadingGenerator()) {
-            Log("Adding Flatgrass generator to Generator Service", true);
-            gh.addGenerator(new FlatGrass(this));
-            Log("OK!", true);
-            Log("Adding Forest generator to Generator Service", true);
-            gh.addGenerator(new Forest(this));
-            Log("OK!", true);
-            Log("Adding Island generator to Generator Service", true);
-            gh.addGenerator(new Island(this));
-            Log("OK!", true);
-            Log("Adding Mountains generator to Generator Service", true);
-            gh.addGenerator(new Mountains(this));
-            Log("OK!", true);
-            Log("Adding Ocean generator to Generator Service", true);
-            gh.addGenerator(new Ocean(this));
-            Log("OK!", true);
-            Log("Adding Pixel generator to Generator Service", true);
-            gh.addGenerator(new Pixel(this));
-            Log("OK!", true);
-            Log("Adding Rainbow generator to Generator Service", true);
-            gh.addGenerator(new Rainbow(this));
-            Log("OK!", true);
-            Log("Adding Space generator to Generator Service", true);
-            gh.addGenerator(new Space(this));
-            Log("OK!", true);
+            if (args.isAllowingClassic()) {
+                Log("Adding Flatgrass generator to Generator Service", true);
+                gh.addGenerator(new FlatGrass(this));
+                Log("OK!", true);
+                Log("Adding Forest generator to Generator Service", true);
+                gh.addGenerator(new Forest(this));
+                Log("OK!", true);
+                Log("Adding Island generator to Generator Service", true);
+                gh.addGenerator(new Island(this));
+                Log("OK!", true);
+                Log("Adding Mountains generator to Generator Service", true);
+                gh.addGenerator(new Mountains(this));
+                Log("OK!", true);
+                Log("Adding Ocean generator to Generator Service", true);
+                gh.addGenerator(new Ocean(this));
+                Log("OK!", true);
+                Log("Adding Pixel generator to Generator Service", true);
+                gh.addGenerator(new Pixel(this));
+                Log("OK!", true);
+                Log("Adding Rainbow generator to Generator Service", true);
+                gh.addGenerator(new Rainbow(this));
+                Log("OK!", true);
+                Log("Adding Space generator to Generator Service", true);
+                gh.addGenerator(new Space(this));
+                Log("OK!", true);
+            }
         }
 
-        if (args.isLoadingCommands()) {
+        if (args.isLoadingCommands() && args.isAllowingClassic()) {
             Log("Adding /abort to Command Service", true);
             getCommandHandler().addCommand(new CmdAbort());
             Log("OK!", true);
@@ -839,6 +847,8 @@ public final class Server implements LogInterface, Updatable, Tick {
      *               The message to send
      */
     public void sendGlobalMessage(String message) {
+        if (m == null)
+            return;
         m.serverBroadcast(message);
     }
 
@@ -926,13 +936,13 @@ public final class Server implements LogInterface, Updatable, Tick {
         {
             p.sendMessage("Stopping server...");
         }
-        for (Level l : this.getLevelHandler().getLevelList()) {
+        for (Level l : this.getClassicLevelHandler().getLevelList()) {
             if (!l.getName().equals(MainLevel))
                 l.unload(this);
         }
-        if (getLevelHandler().findLevel(MainLevel) != null) {
-            getLevelHandler().findLevel(MainLevel).save();
-            getLevelHandler().findLevel(MainLevel).unload(this);
+        if (getClassicLevelHandler().findLevel(MainLevel) != null) {
+            getClassicLevelHandler().findLevel(MainLevel).save();
+            getClassicLevelHandler().findLevel(MainLevel).unload(this);
         }
         lm.stopBackup();
         ticker.stopTick();

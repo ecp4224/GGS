@@ -361,7 +361,7 @@ public class ClassicLevel implements Level, Serializable {
         server.Log("Unloading " + name);
         for (Player p : server.getPlayers()) {
             if (p.getLevel() == this)
-                p.changeLevel(server.getLevelHandler().findLevel(server.MainLevel), false);
+                p.changeLevel(server.getClassicLevelHandler().findLevel(server.MainLevel), false);
         }
         blocks = null;
     }

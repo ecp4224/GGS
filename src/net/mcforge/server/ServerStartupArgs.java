@@ -13,7 +13,8 @@ public class ServerStartupArgs {
     private boolean heartbeat;
     private boolean generator;
     private boolean tracker;
-    private boolean debug;
+    private boolean debug; 
+    private boolean classic;
     
     public ServerStartupArgs() {
         setLoadingEvents(true);
@@ -24,10 +25,27 @@ public class ServerStartupArgs {
         setLoadingUpdateService(true);
         setLoadingPlugins(true);
         setLoadingPrivileges(true);
-        setLoadingLevels(true);
+        setLoadingClassicLevels(true);
         setLoadingHeartbeat(true);
         setLoadingGenerator(true);
         setIsLoadingBlockTracking(true);
+    }
+    
+    /**
+     * Whether this server will allow classic clients to connect.
+     * @return
+     */
+    public boolean isAllowingClassic() {
+        return classic;
+    }
+    
+    /**
+     * Set whether the server should allow classic clients or not.
+     * @param allow
+     * @return
+     */
+    public void setAllowClassic(boolean allow) {
+        this.classic = allow;
     }
     
     /**
@@ -193,7 +211,7 @@ public class ServerStartupArgs {
      * Return whether or not the server is loading levels
      * @return the levels
      */
-    public boolean isLoadingLevels() {
+    public boolean isClassicLoadingLevels() {
         return levels;
     }
 
@@ -201,7 +219,7 @@ public class ServerStartupArgs {
      * Set whether or not the server will load levels
      * @param levels the levels to set
      */
-    public void setLoadingLevels(boolean levels) {
+    public void setLoadingClassicLevels(boolean levels) {
         this.levels = levels;
     }
 
