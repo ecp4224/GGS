@@ -8,13 +8,24 @@ import net.mcforge.networking.packets.Packet;
 import net.mcforge.networking.packets.PacketManager;
 import net.mcforge.server.Server;
 import net.mcforge.system.ticker.Tick;
+import net.mcforge.world.Location;
+import net.mcforge.world.Rotation;
 
 public class SMPPlayer extends IOClient implements Tick {
     
     private int pingID;
     private int dicpingc;
     private boolean pinged;
+    
     public String username;
+
+	private Location location;
+    private Rotation rotation;
+	private Location oldLocation;
+    private Rotation oldRotation;
+    private double stance;
+
+    
     private boolean onGround;
     
     private final static Random rand = new Random();
@@ -50,10 +61,94 @@ public class SMPPlayer extends IOClient implements Tick {
     /**
      * Controls if the player is marked as on ground.<br>
      * This value should only be set by the {@link net.mcforge.networking.packets.minecraft.Player Player packet}.
-    */
+     */
     public void setOnGround(boolean onGround) {
     	this.onGround = onGround;
     }
+    
+    /**
+     * Gets the player's {@link Location location}.
+     */
+    public Location getLocation() {
+		return location;
+	}
+
+    /**
+     * Sets the player's {@link Location location}.
+     * 
+     * @param location
+     * 				   The new location.
+     */
+	public void setLocation(Location location) {
+		this.location = location;
+	}
+
+	/**
+	 * Gets the player's {@link Rotation rotation}.
+	 */
+	public Rotation getRotation() {
+		return rotation;
+	}
+
+	/**
+	 * Sets the player's {@link Rotation rotation}.
+	 */
+	public void setRotation(Rotation rotation) {
+		this.rotation = rotation;
+	}
+	
+    /**
+     * Gets the players location before the {@link #getLocation() current location}.
+     */
+    public Location getOldLocation() {
+		return oldLocation;
+	}
+
+    /**
+     * Sets the players location before the {@link #setLocation() current location}.
+     * 
+     * @param oldlocation
+     * 					  The new old location.
+     */
+	public void setOldLocation(Location oldlocation) {
+		this.oldLocation = oldlocation;
+	}
+
+    /**
+     * Gets the players rotation before the {@link #getRotation() current location}.
+     */
+	public Rotation getOldRotation() {
+		return oldRotation;
+	}
+
+    /**
+     * Gets the players rotation before the {@link #setRotation() current location}.
+     * 
+     * @param oldrotation
+     * 					  The new old rotation.
+     */
+	public void setOldRotation(Rotation oldrotation) {
+		this.oldRotation = oldrotation;
+	}
+    
+	/**
+	 * Gets the player's stance.<br>
+	 * The stance is used to modify the players bounding box when going up stairs, crouching, etc...
+	 */
+	public double getStance() {
+		return stance;
+	}
+
+	/**
+	 * Sets the player's stance.<br>
+	 * The stance is used to modify the players bounding box when going up stairs, crouching, etc...
+	 * 
+	 * @param stance
+	 * 				 The new stance.
+	 */
+	public void setStance(double stance) {
+		this.stance = stance;
+	}
 
     @Override
     public void tick() {
