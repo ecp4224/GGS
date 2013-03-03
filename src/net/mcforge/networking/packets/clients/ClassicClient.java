@@ -19,7 +19,8 @@ public class ClassicClient implements IClient {
     @Override
     public IOClient create(Socket client, PacketManager pm) {
         Player object = new Player(client, pm);
-        Packet packet = pm.getPacket(getOPCode());
+        object.setClienttype(Client.MINECRAFT_CLASSIC);
+        Packet packet = pm.getPacket("Player Connect");
         if (packet == null)
             return null;
         else {

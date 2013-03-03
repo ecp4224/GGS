@@ -1,16 +1,11 @@
 package net.mcforge.networking.packets.minecraft;
 
 import java.io.DataInputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
-
 import net.mcforge.iomodel.SMPPlayer;
-import net.mcforge.networking.IOClient;
-import net.mcforge.networking.packets.DynamicPacket;
 import net.mcforge.networking.packets.PacketManager;
 import net.mcforge.server.Server;
 
-public class Handshake extends DynamicPacket {
+public class Handshake extends SMPPacket {
 
     public Handshake(String name, byte ID, PacketManager parent) {
         super(name, ID, parent);
@@ -21,9 +16,8 @@ public class Handshake extends DynamicPacket {
     }
 
     @Override
-    public void handle(Server server, IOClient player, InputStream reader) {
+    public void handle(SMPPlayer player, Server server, DataInputStream bais) {
         try {
-            DataInputStream bais = new DataInputStream(reader);
             byte ver = bais.readByte();
             String username = readString(bais);
             String server_host = readString(bais);
@@ -38,6 +32,6 @@ public class Handshake extends DynamicPacket {
     }
 
     @Override
-    public void write(Server server, IOClient player, OutputStream writer, Object... obj) { }
+    public void write(SMPPlayer client, Server server, Object... obj) { }
 
 }

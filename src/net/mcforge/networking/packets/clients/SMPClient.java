@@ -19,6 +19,7 @@ public class SMPClient implements IClient {
     @Override
     public IOClient create(Socket client, PacketManager pm) {
         SMPPlayer object = new SMPPlayer(client, pm);
+        object.setClienttype(Client.MINECRAFT);
         Packet packet = pm.getPacket("Hankshake");
         if (packet == null)
             return null;

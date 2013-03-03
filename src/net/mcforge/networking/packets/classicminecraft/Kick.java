@@ -13,11 +13,10 @@ import java.io.UnsupportedEncodingException;
 import net.mcforge.API.io.PacketPrepareEvent;
 import net.mcforge.iomodel.Player;
 import net.mcforge.networking.IOClient;
-import net.mcforge.networking.packets.Packet;
 import net.mcforge.networking.packets.PacketManager;
 import net.mcforge.server.Server;
 
-public class Kick extends Packet {
+public class Kick extends ClassicPacket {
 
     public Kick(String name, byte ID, PacketManager parent) {
         super(name, ID, parent);

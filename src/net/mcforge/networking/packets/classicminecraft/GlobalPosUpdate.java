@@ -12,11 +12,10 @@ import java.io.IOException;
 import net.mcforge.API.io.PacketPrepareEvent;
 import net.mcforge.iomodel.Player;
 import net.mcforge.networking.IOClient;
-import net.mcforge.networking.packets.Packet;
 import net.mcforge.networking.packets.PacketManager;
 import net.mcforge.server.Server;
 
-public class GlobalPosUpdate extends Packet {
+public class GlobalPosUpdate extends ClassicPacket {
 
     public GlobalPosUpdate(String name, byte ID, PacketManager parent) {
         super(name, ID, parent);

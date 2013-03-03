@@ -58,7 +58,7 @@ import net.mcforge.util.logger.LogInterface;
 import net.mcforge.util.logger.Logger;
 import net.mcforge.util.properties.Properties;
 import net.mcforge.world.Level;
-import net.mcforge.world.LevelHandler;
+import net.mcforge.world.ClassicLevelHandler;
 import net.mcforge.world.blocks.tracking.BlockTracker;
 import net.mcforge.world.generator.model.FlatGrass;
 import net.mcforge.world.generator.model.Forest;
@@ -72,7 +72,7 @@ import net.mcforge.world.generator.model.Space;
 public final class Server implements LogInterface, Updatable, Tick {
     private PacketManager pm;
     private final java.util.logging.Logger log = java.util.logging.Logger.getLogger("MCForge");
-    private LevelHandler lm;
+    private ClassicLevelHandler lm;
     private Logger logger;
     private Ticker ticker;
     private CommandHandler ch;
@@ -205,9 +205,9 @@ public final class Server implements LogInterface, Updatable, Tick {
      * level unloading and finding loaded
      * levels
      * @return
-     *        The {@link LevelHandler}
+     *        The {@link ClassicLevelHandler}
      */
-    public final LevelHandler getLevelHandler() {
+    public final ClassicLevelHandler getLevelHandler() {
         return lm;
     }
     /**
@@ -685,7 +685,7 @@ public final class Server implements LogInterface, Updatable, Tick {
             Serializer.getKryo().setClassLoader(getDefaultClassLoader());
             Log("OK!", true);
             Log("Loading Level Service", true);
-            lm = new LevelHandler(this);
+            lm = new ClassicLevelHandler(this);
             Log("OK!", true);
             Log("Loading Main Level", true);
             MainLevel = getSystemProperties().getValue("MainLevel");

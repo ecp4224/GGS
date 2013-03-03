@@ -24,6 +24,7 @@ import net.mcforge.iomodel.Player;
 import net.mcforge.networking.packets.DynamicPacket;
 import net.mcforge.networking.packets.Packet;
 import net.mcforge.networking.packets.PacketManager;
+import net.mcforge.networking.packets.clients.Client;
 
 public class IOClient {
     protected Socket client;
@@ -40,6 +41,8 @@ public class IOClient {
     
     protected boolean connected;
     
+    private Client clienttype;
+    
     protected long readID;
 
     protected List<byte[]> packet_queue = Collections.synchronizedList(new LinkedList<byte[]>());
@@ -52,6 +55,15 @@ public class IOClient {
      */
     public String getIP() {
         return getInetAddress().getHostAddress();
+    }
+    
+    /**
+     * Get the type of client this IOClient is.
+     * @return
+     *        The {@link Client} type.
+     */
+    public Client getClientType() {
+        return clienttype;
     }
 
     /**
@@ -166,7 +178,7 @@ public class IOClient {
      *                    the client.
      */
     public void writeData(byte[] data) throws IOException {
-        Packet p = pm.getPacket(data[0]);
+        Packet p = pm.getPacket(data[0], clienttype);
         if (p != null) {
             PacketSentEvent event = new PacketSentEvent(this, pm.server, p);
             pm.server.getEventSystem().callEvent(event);
@@ -239,7 +251,7 @@ public class IOClient {
                     pm.server.getEventSystem().callEvent(event);
                     if (event.isCancelled())
                         continue;
-                    Packet packet = pm.getPacket(opCode);
+                    Packet packet = pm.getPacket(opCode, clienttype);
                     if (packet == null) {
                         pm.server.Log("Client sent " + opCode);
                         pm.server.Log("How do..?");
@@ -284,6 +296,10 @@ public class IOClient {
             return client.address.equals(address) && client.getReaderThreadID() == getReaderThreadID() && client.client.equals(client);
         }
         return false;
+    }
+
+    public void setClienttype(Client clienttype) {
+        this.clienttype = clienttype;
     }
 }
 

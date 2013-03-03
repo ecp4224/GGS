@@ -13,12 +13,14 @@ import net.mcforge.iomodel.Browser;
 import net.mcforge.networking.IOClient;
 import net.mcforge.networking.packets.Packet;
 import net.mcforge.networking.packets.PacketManager;
+import net.mcforge.networking.packets.clients.Client;
 import net.mcforge.server.Server;
 
 public class GET extends Packet {
 
     public GET(String name, byte ID, PacketManager parent) {
         super(name, ID, parent);
+        addClientSupport(Client.BROWSER);
     }
     
     public GET(PacketManager parent) {

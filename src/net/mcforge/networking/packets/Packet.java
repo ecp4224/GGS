@@ -7,7 +7,12 @@
  ******************************************************************************/
 package net.mcforge.networking.packets;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import net.mcforge.networking.IOClient;
+import net.mcforge.networking.packets.clients.Client;
 import net.mcforge.server.Server;
 
 public abstract class Packet {
@@ -31,6 +36,8 @@ public abstract class Packet {
      * The name of the packet
      */
     public String name;
+    
+    private ArrayList<Client> supportedclients = new ArrayList<Client>();
     
     /**
      * This method will read the array of bytes and
@@ -95,7 +102,21 @@ public abstract class Packet {
         this.parent = parent;
     }
     
+    /**
+     * Add a client this packet supports.
+     * @param client
+     */
+    public void addClientSupport(Client client) {
+        supportedclients.add(client);
+    }
     
+    /**
+     * Get a list of Clients this packet supports.
+     * @return
+     */
+    public List<Client> getSupportedClients() {
+        return Collections.unmodifiableList(supportedclients);
+    }
 
 }
 

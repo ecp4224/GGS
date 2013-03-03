@@ -16,11 +16,10 @@ import java.util.zip.GZIPOutputStream;
 import net.mcforge.API.io.PacketPrepareEvent;
 import net.mcforge.iomodel.Player;
 import net.mcforge.networking.IOClient;
-import net.mcforge.networking.packets.Packet;
 import net.mcforge.networking.packets.PacketManager;
 import net.mcforge.server.Server;
 
-public class LevelSend extends Packet {
+public class LevelSend extends ClassicPacket {
 
     public LevelSend(String name, byte ID, PacketManager parent) {
         super(name, ID, parent);

@@ -14,12 +14,12 @@ import net.mcforge.API.ClassicExtension;
 import net.mcforge.API.player.PlayerMoveEvent;
 import net.mcforge.iomodel.Player;
 import net.mcforge.networking.IOClient;
-import net.mcforge.networking.packets.Packet;
+
 import net.mcforge.networking.packets.PacketManager;
 import net.mcforge.server.Server;
 
 @ClassicExtension(extName = "HeldBlock")
-public class PosUpdate extends Packet {
+public class PosUpdate extends ClassicPacket {
 
     public PosUpdate(String name, byte ID, PacketManager parent) {
         super(name, ID, parent);

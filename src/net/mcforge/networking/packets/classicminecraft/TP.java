@@ -15,11 +15,11 @@ import java.nio.ByteBuffer;
 import net.mcforge.API.io.PacketPrepareEvent;
 import net.mcforge.iomodel.Player;
 import net.mcforge.networking.IOClient;
-import net.mcforge.networking.packets.Packet;
+
 import net.mcforge.networking.packets.PacketManager;
 import net.mcforge.server.Server;
 
-public class TP extends Packet {
+public class TP extends ClassicPacket {
     public TP(String name, byte ID, PacketManager parent) {
         super(name, ID, parent);
     }

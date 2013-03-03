@@ -43,6 +43,7 @@ import net.mcforge.networking.packets.classicminecraft.extend.ExtRemovePlayerNam
 import net.mcforge.networking.packets.classicminecraft.extend.HoldThisPacket;
 import net.mcforge.networking.packets.clients.BrowserClient;
 import net.mcforge.networking.packets.clients.ClassicClient;
+import net.mcforge.networking.packets.clients.Client;
 import net.mcforge.networking.packets.clients.SMPClient;
 import net.mcforge.networking.packets.minecraft.Handshake;
 import net.mcforge.networking.packets.minecraft.SMPKick;
@@ -120,12 +121,30 @@ public class PacketManager {
      *        The packet found, if no packet is found, then it will
      *        return null.
      * @deprecated
-     *            Search by name to avoid getting the wrong packet.
+     *            Search by name to avoid getting the wrong packet or include the client type to filter.
      */
     @Deprecated
     public Packet getPacket(byte opCode) {
         for (Packet p : packets) {
             if (p.ID == opCode)
+                return p;
+        }
+        return null;
+    }
+    
+    /**
+     * Get a packet this PacketManager handles and only include packets the client <b>"client"</b> supports.
+     * @param opCode
+     *              The OpCode for the packet.
+     * @param client
+     *              The client type. This will exclude all other client types.
+     * @return
+     *        The packet found, if no packet is found, then it will
+     *        return null.
+     */
+    public Packet getPacket(byte opCode, Client client) {
+        for (Packet p : packets) {
+            if (p.ID == opCode && p.getSupportedClients().contains(client))
                 return p;
         }
         return null;

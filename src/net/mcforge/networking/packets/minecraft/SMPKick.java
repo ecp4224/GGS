@@ -1,15 +1,13 @@
 package net.mcforge.networking.packets.minecraft;
 
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.DataInputStream;
 import java.nio.ByteBuffer;
 
-import net.mcforge.networking.IOClient;
-import net.mcforge.networking.packets.DynamicPacket;
+import net.mcforge.iomodel.SMPPlayer;
 import net.mcforge.networking.packets.PacketManager;
 import net.mcforge.server.Server;
 
-public class SMPKick extends DynamicPacket {
+public class SMPKick extends SMPPacket {
 
     public SMPKick(String name, byte ID, PacketManager parent) {
         super(name, ID, parent);
@@ -20,13 +18,12 @@ public class SMPKick extends DynamicPacket {
     }
 
     @Override
-    public void handle(Server server, IOClient player, InputStream reader) {
+    public void handle(SMPPlayer player, Server server, DataInputStream reader) {
         
     }
 
     @Override
-    public void write(Server server, IOClient player, OutputStream writer,
-            Object... obj) {
+    public void write(SMPPlayer client, Server server, Object... obj) {
         try {
             String reason = obj.length == 0 ? "No reason given" : (String)obj[0];
             byte[] array = reason.getBytes("UTF-16BE");
@@ -34,7 +31,7 @@ public class SMPKick extends DynamicPacket {
             b.put(ID);
             b.putShort((short)reason.length());
             b.put(array);
-            writer.write(b.array());
+            client.writeData(b.array());
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -21,6 +21,7 @@ public class BrowserClient implements IClient {
     @Override
     public IOClient create(Socket client, PacketManager pm) {
         Browser b = new Browser(client, pm);
+        b.setClienttype(Client.BROWSER);
         b.setOutputStream(null);
         try {
             PrintStream writer = new PrintStream(client.getOutputStream(), false, "US-ASCII");
@@ -30,7 +31,7 @@ public class BrowserClient implements IClient {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Packet packet = pm.getPacket(getOPCode());
+        Packet packet = pm.getPacket("GET");
         if (packet == null)
             return null;
        else {

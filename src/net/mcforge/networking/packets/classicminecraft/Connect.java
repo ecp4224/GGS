@@ -18,7 +18,7 @@ import net.mcforge.networking.IOClient;
 import net.mcforge.networking.packets.Packet;
 import net.mcforge.networking.packets.PacketManager;
 import net.mcforge.server.Server;
-public class Connect extends Packet {
+public class Connect extends ClassicPacket {
 
     public Connect(String name, byte ID, PacketManager parent) {
         super(name, ID, parent);
@@ -61,9 +61,9 @@ public class Connect extends Packet {
             if (player.verifyLogin() && !connect.isCancelled() && !connect.getAutologin()) {
                 player.client = ClassicClientType.parse(message[129]);
                 if (player.client == ClassicClientType.Extend_Classic) {
-                    Packet packet = server.getPacketManager().getPacket((byte)0x10);
+                    Packet packet = server.getPacketManager().getPacket("ExtInfo");
                     packet.Write(player, player.getServer());
-                    packet = server.getPacketManager().getPacket((byte)0x11);
+                    packet = server.getPacketManager().getPacket("ExtEntry");
                     for (ClassicExtension c : player.getServer().getPluginHandler().getExtensions()) {
                         packet.Write(player, server, c);
                     }

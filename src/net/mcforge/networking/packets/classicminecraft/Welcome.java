@@ -13,12 +13,12 @@ import java.io.UnsupportedEncodingException;
 import net.mcforge.API.io.PacketPrepareEvent;
 import net.mcforge.iomodel.Player;
 import net.mcforge.networking.IOClient;
-import net.mcforge.networking.packets.Packet;
+
 import net.mcforge.networking.packets.PacketManager;
 import net.mcforge.server.Server;
 import net.mcforge.world.model.ClassicLevel;
 
-public class Welcome extends Packet {
+public class Welcome extends ClassicPacket {
 
     public Welcome(String name, byte ID, PacketManager parent) {
         super(name, ID, parent);

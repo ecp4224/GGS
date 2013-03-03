@@ -1273,7 +1273,7 @@ public class Player extends IOClient implements CommandExecutor, Tick {
         if (!this.isLoggedin)
             return;
         if ((old != null && old.isOP && !newgroup.isOP) || (old != null && !old.isOP && newgroup.isOP) || old == null) {
-            Packet p = pm.getPacket((byte)0x0f);
+            Packet p = pm.getPacket((byte)0x0f, getClientType());
             p.Write(this, getServer());
         }
         updateAllLists();
@@ -1285,7 +1285,7 @@ public class Player extends IOClient implements CommandExecutor, Tick {
     private void updateAllLists() {
         for (Player p : getServer().getPlayers()) {
             if (p.hasExtension("ExtAddPlayerName"))
-                pm.getPacket((byte)0x33).Write(p, getServer(), this);
+                pm.getPacket((byte)0x33, getClientType()).Write(p, getServer(), this);
         }
     }
 
@@ -1382,7 +1382,7 @@ public class Player extends IOClient implements CommandExecutor, Tick {
      *                  Whether or not the level should be updated as well.
      */
     public void globalBlockChange(BlockUpdate[] blockupdates, boolean updatelevel) {
-        final SetBlock sb = (SetBlock)getServer().getPacketManager().getPacket((byte)0x05);
+        final SetBlock sb = (SetBlock)getServer().getPacketManager().getPacket((byte)0x05, getClientType());
         ArrayList<byte[]> cache = new ArrayList<byte[]>();
         for (BlockUpdate b : blockupdates) {
             PlayerBlockChangeEvent event = new PlayerBlockChangeEvent(this, (short)b.getX(), (short)b.getY(), (short)b.getZ(), b.getBlock(), level, getServer(), (b.getBlock().ID == 0 ? PlaceMode.BREAK : PlaceMode.PLACE));
@@ -1428,7 +1428,7 @@ public class Player extends IOClient implements CommandExecutor, Tick {
         if (s == null)
             return;
         //Do this way to save on packet overhead
-        Packet sb = s.getPacketManager().getPacket((byte)0x05);
+        Packet sb = s.getPacketManager().getPacket("SetBlock");
         for (int i = 0; i < s.getPlayers().size(); i++) {
             final Player p = s.getPlayers().get(i);
             if (p.level == l)
@@ -1448,7 +1448,7 @@ public class Player extends IOClient implements CommandExecutor, Tick {
      *                  Whether the level should be updated
      */
     public static void GlobalBlockChange(BlockUpdate[] blockupdates, Level l, Server s, boolean updateLevel) {
-        final SetBlock sb = (SetBlock)s.getPacketManager().getPacket((byte)0x05);
+        final SetBlock sb = (SetBlock)s.getPacketManager().getPacket("SetBlock");
         ArrayList<byte[]> cache = new ArrayList<byte[]>();
         for (BlockUpdate b : blockupdates) {
             for (Player p : s.getPlayers()) {
@@ -1496,7 +1496,7 @@ public class Player extends IOClient implements CommandExecutor, Tick {
      * @param block The block to send
      */
     public void sendBlockChange(short X, short Y, short Z, Block block) {
-        getServer().getPacketManager().getPacket((byte)0x05).Write(this, getServer(), X, Y, Z, block.getVisibleBlock());
+        getServer().getPacketManager().getPacket("SetBlock").Write(this, getServer(), X, Y, Z, block.getVisibleBlock());
     }
 
     /**
@@ -1562,9 +1562,9 @@ public class Player extends IOClient implements CommandExecutor, Tick {
     public void spawnPlayer(Player p) {
         if (seeable.contains(p))
             return;
-        pm.getPacket((byte)0x07).Write(this, getServer(), p);
+        pm.getPacket("Spawn Player").Write(this, getServer(), p);
         if (this.hasExtension("ExtPlayer") && p.client == ClassicClientType.Extend_Classic)
-            pm.getPacket((byte)0x39).Write(this, getServer(), p);
+            pm.getPacket("ExtPlayer").Write(this, getServer(), p);
         seeable.add(p);
     }
 
@@ -1935,9 +1935,9 @@ public class Player extends IOClient implements CommandExecutor, Tick {
     public void despawn(Player p) {
         if (!seeable.contains(p))
             return;
-        pm.getPacket((byte)0x0c).Write(this, getServer(), p.ID);
+        pm.getPacket((byte)0x0c, getClientType()).Write(this, getServer(), p.ID);
         if (p.hasExtension("ExtRemovePlayerName"))
-            pm.getPacket((byte)0x35).Write(p, getServer(), this);
+            pm.getPacket((byte)0x35, getClientType()).Write(p, getServer(), this);
         seeable.remove(p);
     }
 
@@ -1999,21 +1999,21 @@ public class Player extends IOClient implements CommandExecutor, Tick {
         public void run() {
             long startTime = System.nanoTime();
             Packet pa;
-            pa = pm.getPacket((byte)0x02);
+            pa = pm.getPacket((byte)0x02, getClientType());
             pa.Write(p, getServer());
             if (Thread.interrupted()) {
                 p.getServer().Log("Level Sending Aborted", true);
                 return;
             }
             pa = null;
-            pa = pm.getPacket((byte)0x03);
+            pa = pm.getPacket((byte)0x03, getClientType());
             pa.Write(p, getServer());
             if (Thread.interrupted()) {
                 p.getServer().Log("Level Sending Aborted", true);
                 return;
             }
             pa = null;
-            pa = pm.getPacket((byte)0x04);
+            pa = pm.getPacket((byte)0x04, getClientType());
             pa.Write(p, getServer());
             if (Thread.interrupted()) {
                 p.getServer().Log("Level Sending Aborted", true);
@@ -2053,7 +2053,7 @@ public class Player extends IOClient implements CommandExecutor, Tick {
     @Override
     public void tick() {
         Packet pa;
-        pa = pm.getPacket((byte)0x01);
+        pa = pm.getPacket((byte)0x01, getClientType());
         pa.Write(this, getServer());
         pa = null;
     }

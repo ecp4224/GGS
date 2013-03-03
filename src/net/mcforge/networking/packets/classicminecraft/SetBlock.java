@@ -13,7 +13,7 @@ import java.nio.ByteBuffer;
 import net.mcforge.API.io.PacketPrepareEvent;
 import net.mcforge.iomodel.Player;
 import net.mcforge.networking.IOClient;
-import net.mcforge.networking.packets.Packet;
+
 import net.mcforge.networking.packets.PacketManager;
 import net.mcforge.server.Server;
 import net.mcforge.world.PlaceMode;
@@ -23,7 +23,7 @@ import net.mcforge.world.PlaceMode;
 * @author Eddie
 *
 */
-public class SetBlock extends Packet {
+public class SetBlock extends ClassicPacket {
     public SetBlock(String name, byte ID, PacketManager parent) {
         super(name, ID, parent);
     }
