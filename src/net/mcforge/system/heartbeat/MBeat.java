@@ -23,7 +23,7 @@ public class MBeat extends Heart {
                     "&name=" + server.Name.trim().replace(" ", "%20") +
                     "&public=" + server.Public +
                     "&version=7" +
-                    "&salt=" + server.getSalt() +
+                    "&salt=" + server.getClassicSalt() +
                     "&users=" + server.getPlayers().size();
         } catch (IllegalAccessException e) {
             server.logError(e);

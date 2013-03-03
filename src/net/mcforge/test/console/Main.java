@@ -21,8 +21,13 @@ import net.mcforge.system.updater.Updatable;
 
 public class Main extends Console implements Listener {
     Server s;
+    static ServerStartupArgs ss = new ServerStartupArgs();
     final Scanner scan = new Scanner(System.in);
     public static void main(String[] args) {
+        for (String s : args) {
+            if (s.equalsIgnoreCase("--smponly"))
+                ss.setAllowClassic(false);
+        }
         new Main().start();
     }
 
@@ -33,7 +38,7 @@ public class Main extends Console implements Listener {
     
     public void start() {
         s = new Server("[MCForge] Default", 25565, "Welcome!");
-        s.start(this, true, new ServerStartupArgs());
+        s.start(this, true, ss);
         Scanner scanner = new Scanner(System.in);
         while (s.Running) {
             String line = scanner.nextLine();

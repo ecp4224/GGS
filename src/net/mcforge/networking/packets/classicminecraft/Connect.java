@@ -58,6 +58,10 @@ public class Connect extends ClassicPacket {
                 player.kick("Invalid protocol version!");
                 return;
             }
+            if (server.getClassicLevelHandler() == null) {
+                player.kick("Classic is not enabled on this server.");
+                return;
+            }
             if (player.verifyLogin() && !connect.isCancelled() && !connect.getAutologin()) {
                 player.client = ClassicClientType.parse(message[129]);
                 if (player.client == ClassicClientType.Extend_Classic) {

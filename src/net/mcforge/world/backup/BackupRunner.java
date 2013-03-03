@@ -18,7 +18,7 @@ public class BackupRunner extends Thread {
     }
     
     private List<Level> getLevels() {
-        return server.getLevelHandler().getLevelList();
+        return server.getClassicLevelHandler().getLevelList();
     }
     
     /**
