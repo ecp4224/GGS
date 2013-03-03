@@ -19,28 +19,23 @@ public class KeepAlive extends SMPPacket {
 
     @Override
     public void handle(SMPPlayer player, Server server, DataInputStream reader) {
-        SMPPlayer p;
-        if (player instanceof SMPPlayer)
-            p = (SMPPlayer)player;
-        else
-            return;
-        DataInputStream dis = new DataInputStream(reader);
         int ID;
         try {
-            ID = dis.readInt();
+            ID = reader.readInt();
         } catch (IOException e) {
             e.printStackTrace();
             return;
         }
-        if (ID == p.getPingID() || ID == 0)
-            p.ping();
+        if (ID == player.getPingID() || ID == 0)
+            player.ping();
     }
 
     @Override
     public void write(SMPPlayer p, Server server, Object... obj) {
         if (obj.length >= 1 && obj[0] instanceof Integer) {
             int ID = (Integer)obj[0];
-            ByteBuffer bb = ByteBuffer.allocate(4);
+            ByteBuffer bb = ByteBuffer.allocate(5);
+            bb.put(this.ID);
             bb.putInt(ID);
             try {
                 p.writeData(bb.array());

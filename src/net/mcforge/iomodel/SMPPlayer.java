@@ -15,6 +15,7 @@ public class SMPPlayer extends IOClient implements Tick {
     private int dicpingc;
     private boolean pinged;
     public String username;
+    private boolean onGround;
     
     private final static Random rand = new Random();
 
@@ -34,6 +35,24 @@ public class SMPPlayer extends IOClient implements Tick {
     
     public void ping() {
         pinged = true;
+    }
+    
+    /**
+     * Whether the player is on ground.<br>
+     * If the value is <b>True</b>, the player is either walking or swiming. If the value is <b>False</b>
+     * the player is jumping or falling.<br>
+     * This value is set by the {@link net.mcforge.networking.packets.minecraft.Player Player packet}.
+     */
+    public boolean isOnGround() {
+    	return onGround;
+    }
+    
+    /**
+     * Controls if the player is marked as on ground.<br>
+     * This value should only be set by the {@link net.mcforge.networking.packets.minecraft.Player Player packet}.
+    */
+    public void setOnGround(boolean onGround) {
+    	this.onGround = onGround;
     }
 
     @Override

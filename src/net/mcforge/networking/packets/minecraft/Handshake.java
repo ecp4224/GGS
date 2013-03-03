@@ -6,7 +6,6 @@ import net.mcforge.networking.packets.PacketManager;
 import net.mcforge.server.Server;
 
 public class Handshake extends SMPPacket {
-
     public Handshake(String name, byte ID, PacketManager parent) {
         super(name, ID, parent);
     }
