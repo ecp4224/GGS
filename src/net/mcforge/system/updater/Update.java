@@ -7,6 +7,7 @@ public class Update {
     private String download_url;
     private String minimum_core_version;
     private UpdateType type;
+    private String update_type;
     
     private Update() { } //Hey hey hey STAY OUT OF MY SHED
     
@@ -27,6 +28,11 @@ public class Update {
     }
     
     public UpdateType getUpdateType() {
+        if (type == null) {
+            try {
+                type = UpdateType.parse(update_type);
+            } catch (Exception e) { }
+        }
         return type;
     }
 

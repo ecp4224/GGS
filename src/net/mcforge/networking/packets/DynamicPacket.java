@@ -1,5 +1,7 @@
 package net.mcforge.networking.packets;
 
+import java.io.DataInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -35,5 +37,21 @@ public abstract class DynamicPacket extends Packet {
     @Override
     public boolean dynamicSize() {
         return true;
+    }
+    
+    /**
+     * Read a string from the {@link DataInputStream} object.
+     * @param input
+     *             The input to read from
+     * @return
+     *        A string
+     * @throws IOException
+     */
+    public String readString(DataInputStream input) throws IOException {
+        short len = input.readShort();
+        byte[] array = new byte[len * 2];
+        input.read(array, 0, len * 2);
+        String toreturn = new String(array, 0, len * 2, "UTF-16BE");
+        return toreturn;
     }
 }

@@ -115,11 +115,14 @@ public class PacketManager {
     /**
      * Get a packet this PacketManager handles.
      * @param opCode
-     *              The OpCode for the packet
+     *              The OpCode for the packet.
      * @return
      *        The packet found, if no packet is found, then it will
      *        return null.
+     * @deprecated
+     *            Search by name to avoid getting the wrong packet.
      */
+    @Deprecated
     public Packet getPacket(byte opCode) {
         for (Packet p : packets) {
             if (p.ID == opCode)
