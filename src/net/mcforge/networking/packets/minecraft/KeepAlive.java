@@ -41,8 +41,7 @@ public class KeepAlive extends DynamicPacket {
     }
 
     @Override
-    public void write(Server server, IOClient player, OutputStream writer,
-            Object... obj) {
+    public void write(Server server, IOClient player, OutputStream writer, Object... obj) {
         Write(player, server, obj);
     }
     
@@ -55,7 +54,8 @@ public class KeepAlive extends DynamicPacket {
             return;
         if (obj.length >= 1 && obj[0] instanceof Integer) {
             int ID = (Integer)obj[0];
-            ByteBuffer bb = ByteBuffer.allocate(4);
+            ByteBuffer bb = ByteBuffer.allocate(5);
+            bb.put(this.ID);
             bb.putInt(ID);
             try {
                 p.writeData(bb.array());
