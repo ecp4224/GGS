@@ -2,7 +2,7 @@
 
 ![MCForge Logo](http://www.mcforge.net/community/public/style_images/4_logo.png)
 
-Minecraft Classic Custom Server Software
+MCForge is a server software
 
 ##Important stuff for Modders / Forkers
 - [MCForge Wiki](https://github.com/MCForge/MCForge-Vanilla/wiki)
@@ -13,7 +13,9 @@ Minecraft Classic Custom Server Software
 
 ##About MCForge Vanilla
 
-MCForge Vanilla is a Minecraft Classic Custom Server Software. It has been released under an open-source license to allow the community to help us develop it further.  We welcome all pull requests and will merge them in at our own discretion.
+MCForge is a Minecraft Server that can run a Minecraft Classic Custom Server and a Minecraft Premium Custom Server. 
+
+It has been released under an open-source license to allow the community to help us develop it further.  We welcome all pull requests and will merge them in at our own discretion.
 
 The official website for MCForge is [mcforge.net][1]
 
