@@ -1,4 +1,4 @@
-package net.mcforge.world;
+package net.mcforge.entity;
 
 /**
  * The Location class is used to store a location.<br>

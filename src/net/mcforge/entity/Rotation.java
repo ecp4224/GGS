@@ -1,4 +1,4 @@
-package net.mcforge.world;
+package net.mcforge.entity;
 
 /**
  * The Rotation class is used to store a rotation.<br>
@@ -9,6 +9,29 @@ package net.mcforge.world;
 public class Rotation {
 	private float yaw;
     private float pitch;
+    
+    /**
+     * Set both the yaw and the pitch.
+     * 
+     * @param yaw
+     * 			  The new yaw.
+     * @param pitch
+     * 				The new pitch.
+     */
+    public void set(float yaw, float pitch) {
+    	setYaw(yaw);
+    	setPitch(pitch);
+    }
+    
+    /**
+     * Set the yaw and pitch of this rotation to the values of the specified rotation.
+     * 
+     * @param rotation
+     * 				   The rotation to use.
+     */
+    public void set(Rotation rotation) {
+    	set(rotation.getYaw(), rotation.getPitch());
+    }
     
 	/**
 	 * Gets the rotation's yaw.<br>

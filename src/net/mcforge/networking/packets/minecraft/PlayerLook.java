@@ -20,8 +20,7 @@ public class PlayerLook extends SMPPacket {
     public void handle(SMPPlayer p, Server server, DataInputStream reader) {        
     	try {
     		p.setOldRotation(p.getRotation());
-        	p.getRotation().setYaw(reader.readFloat());
-        	p.getRotation().setPitch(reader.readFloat());
+        	p.getRotation().set(reader.readFloat(), reader.readFloat());
         	p.setOnGround(reader.readBoolean());
 		}
 		catch (IOException e) {

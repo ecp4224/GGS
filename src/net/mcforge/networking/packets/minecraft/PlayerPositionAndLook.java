@@ -32,8 +32,7 @@ public class PlayerPositionAndLook extends SMPPacket {
             
             player.getLocation().set(x, y, z);
             player.setStance(stance);
-            player.getRotation().setYaw(yaw); //TODO: make set like in Location
-            player.getRotation().setPitch(pitch);
+            player.getRotation().set(yaw, pitch);
             player.setOnGround(onGround);
         } catch (IOException e) {
             e.printStackTrace();
