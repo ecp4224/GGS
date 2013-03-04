@@ -22,9 +22,8 @@ public class Handshake extends SMPPacket {
             String server_host = readString(bais);
             int port = bais.readInt();
             System.out.println(ver + " : " + username + " : " + server_host + " : " + port);
-            if (player instanceof SMPPlayer) {
-                ((SMPPlayer)player).username = username;
-            }
+            
+            player.username = username;
         } catch (Exception e) {
             e.printStackTrace();
         }

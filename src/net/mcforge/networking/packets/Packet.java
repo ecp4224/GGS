@@ -70,7 +70,7 @@ public abstract class Packet {
      *               Extra data if this packet should require
      *               extra data
      */
-    public void Write(IOClient client, Server servers, Object...parrams) {
+    public void Write(IOClient client, Server servers, Object... params) {
         Write(client, servers);
     }
     
