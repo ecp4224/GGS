@@ -5,52 +5,53 @@
  * which accompanies this distribution, and is available at
  * http://www.gnu.org/licenses/gpl.html
  ******************************************************************************/
-package net.mcforge.world.generator.model;
+package net.mcforge.world.generator.classicmodel;
 
 import net.mcforge.server.Server;
-import net.mcforge.world.blocks.Block;
+import net.mcforge.world.blocks.classicmodel.ClassicBlock;
 import net.mcforge.world.generator.Generator;
 import net.mcforge.world.Level;
 
 /**
- * A generator that creates a flat grass area, perfect for freebuild!
+ * Create a level where the walls are made of white wool, perfect
+ * for pixel art!
  * @author MCForgeTeam
  *
  */
-public class FlatGrass implements Generator {
+public class Pixel implements Generator {
 
     private Server _server;
+    
     @Override
     public String getName() {
-    	return "FlatGrass";
+    	return "Pixel";
     }
 	@Override
 	public String[] getShortcuts() {
-		return new String[] { "Flat" };
+		return new String[0];
 	}
-    
+	
     /**
-     * The constructor for the flatgrass level generator
-     * @param server
-     *              The server the level is in
+     * The constructor for the pixel level generator
+     * 
+     * @param server - The server the level is in
      */
-    public FlatGrass(Server server) {
+    public Pixel(Server server) {
         this._server = server;
     }
     @Override
-    public void generate(final Level l) {
+    public void generate(Level l) {
         for (int x = 0; x < l.getWidth(); x++) {
             for (int y = 0; y < l.getHeight(); y++) {
                 for (int z = 0; z < l.getDepth(); z++) {
-                    if (y < l.getHeight() / 2)
-                        l.rawSetTile(x, y, z,Block.getBlock("dirt"),  _server, false);
-                    else if (y == l.getHeight() / 2)
-                        l.rawSetTile(x, y, z,Block.getBlock("grass"),  _server, false);
-                    else
-                        l.rawSetTile( x, y, z,Block.getBlock((byte)0),  _server, false);
+                    if (y == 0)
+                        l.rawSetTile(x, y, z, ClassicBlock.getBlock("Bedrock"), _server, false);
+                    else if (x == 0 || x == l.getWidth() - 1 || z == 0 || z == l.getDepth() - 1)
+                        l.rawSetTile(x, y, z, ClassicBlock.getBlock("White"), _server, false);
                 }
             }
         }
+
     }
     @Override
     public void generate(Level l, int x, int y, int z) {
@@ -58,4 +59,3 @@ public class FlatGrass implements Generator {
     }
 
 }
-

@@ -5,7 +5,7 @@
  * which accompanies this distribution, and is available at
  * http://www.gnu.org/licenses/gpl.html
  ******************************************************************************/
-package net.mcforge.world.model;
+package net.mcforge.world.classicmodel;
 
 import java.io.DataInputStream;
 import java.io.File;
@@ -30,7 +30,8 @@ import net.mcforge.util.FileUtils;
 import net.mcforge.util.properties.Properties;
 import net.mcforge.world.Level;
 import net.mcforge.world.blocks.Block;
-import net.mcforge.world.blocks.PhysicsBlock;
+import net.mcforge.world.blocks.classicmodel.ClassicBlock;
+import net.mcforge.world.blocks.classicmodel.PhysicsBlock;
 import net.mcforge.world.converter.MojangLevel;
 import net.mcforge.world.converter.MojangLevelInputStream;
 import net.mcforge.world.converter.OldBlocks;
@@ -64,7 +65,7 @@ public class ClassicLevel implements Level, Serializable {
     /**
      * All of the blocks in the level.
      */
-    public Block[] blocks;
+    public ClassicBlock[] blocks;
 
     /**
      * The width of the level (max X)
@@ -125,7 +126,7 @@ public class ClassicLevel implements Level, Serializable {
         this.spawnx = width / 2;
         this.spawny = 33;
         this.spawnz = depth / 2;
-        blocks = new Block[width*height*depth];
+        blocks = new ClassicBlock[width*height*depth];
     }
 
     /**
@@ -142,7 +143,7 @@ public class ClassicLevel implements Level, Serializable {
     @Override
     public void generateWorld(Generator g) {
         if (blocks == null)
-            blocks = new Block[width*height*depth];
+            blocks = new ClassicBlock[width*height*depth];
         g.generate(this);
     }
 
@@ -168,7 +169,7 @@ public class ClassicLevel implements Level, Serializable {
      * If the block is a physicsblock, it will be added
      * to the physics tick.
      * This method wont send out a change to the clients.
-     * To do this, use {@link Player#GlobalBlockChange(short, short, short, Block, ClassicLevel, Server)} instead
+     * To do this, use {@link Player#GlobalBlockChange(short, short, short, ClassicBlock, ClassicLevel, Server)} instead
      * @param b
      *         The block to add
      * @param index
@@ -176,10 +177,13 @@ public class ClassicLevel implements Level, Serializable {
      * @param server
      *              The server this blockchange is happening in
      */
-    public void setTile(Block b, int index, Server server, boolean physics) {
+    public void setTile(Block block, int index, Server server, boolean physics) {
+        if (!(block instanceof ClassicBlock))
+            return;
+        ClassicBlock b = (ClassicBlock)block;
         if (index < 0) index = 0;
         if (index >= blocks.length) index = blocks.length - 1;
-        Block wasthere = blocks[index];
+        ClassicBlock wasthere = blocks[index];
         int[] pos = IntToPos(index);
         if (b instanceof PhysicsBlock && physics) {
             blocks[index] = addTick(pos[0], pos[1], pos[2], b, server);
@@ -211,7 +215,10 @@ public class ClassicLevel implements Level, Serializable {
     }
 
     @Override
-    public PhysicsBlock addTick(int x, int y, int z, Block b, Server server) {
+    public PhysicsBlock addTick(int x, int y, int z, Block block, Server server) {
+        if (!(block instanceof ClassicBlock))
+            return null;
+        ClassicBlock b = (ClassicBlock)block;
         if (!(b instanceof PhysicsBlock))
             return null;
         PhysicsBlock pb = ((PhysicsBlock)b).clone(server);
@@ -269,18 +276,18 @@ public class ClassicLevel implements Level, Serializable {
     }
 
     @Override
-    public Block getTile(int index) {
+    public ClassicBlock getTile(int index) {
         if (index < 0) index = 0;
         if (index >= blocks.length) index = blocks.length - 1;
         if (blocks[index] == null)
-            return Block.getBlock((byte)0);
+            return ClassicBlock.getBlock((byte)0);
         if (blocks[index].name.equals("NULL"))
-            blocks[index] = Block.getBlock("Air");
+            blocks[index] = ClassicBlock.getBlock("Air");
         return blocks[index];
     }
 
     @Override
-    public Block getTile(int x, int y, int z) {
+    public ClassicBlock getTile(int x, int y, int z) {
         return getTile(posToInt(x, y, z));
     }
 
@@ -392,7 +399,7 @@ public class ClassicLevel implements Level, Serializable {
             blocks = l.blocks;
             if (blocks == null) {
                 server.Log(l.name + " BLOCK DATA CORRUPT!");
-                blocks = new Block[width*height*depth];
+                blocks = new ClassicBlock[width*height*depth];
             }
             depth = l.depth;
             motd = l.motd;
@@ -410,7 +417,7 @@ public class ClassicLevel implements Level, Serializable {
             saving = false;
             fis.close();
         }
-        if (getTile(spawnx, spawny, spawnz) != Block.getBlock("Air") || getTile(spawnx, spawny + 1, spawnz) != Block.getBlock("Air"))
+        if (getTile(spawnx, spawny, spawnz) != ClassicBlock.getBlock("Air") || getTile(spawnx, spawny + 1, spawnz) != ClassicBlock.getBlock("Air"))
             setNewSpawn(height / 2);
     }
     
@@ -489,7 +496,7 @@ public class ClassicLevel implements Level, Serializable {
         l.spawny = m.zSpawn; // TODO: Test this change! Y to Z
         l.spawnz = m.ySpawn; // TODO: Test this change! Z to Y
         for(int i = 0; i < m.blocks.length; i++){
-            l.blocks[i] = Block.getBlock(m.blocks[i]); // Did I do this right?
+            l.blocks[i] = ClassicBlock.getBlock(m.blocks[i]); // Did I do this right?
         }
         return l;
     }
@@ -551,14 +558,14 @@ public class ClassicLevel implements Level, Serializable {
         return (short) (((convert >> 8) & 0xff) + ((convert << 8) & 0xff00));
     }
 
-    private static Block translateBlock(byte id, Server s) {
+    private static ClassicBlock translateBlock(byte id, Server s) {
         if (id == 8)
-            return Block.getBlock((byte)9);
+            return ClassicBlock.getBlock((byte)9);
         if (id == 10)
-            return Block.getBlock((byte)11);
+            return ClassicBlock.getBlock((byte)11);
         if (id >= 0 && id <= 49)
-            return Block.getBlock(id);
-        return Block.getBlock(OldBlocks.convert(id, s));
+            return ClassicBlock.getBlock(id);
+        return ClassicBlock.getBlock(OldBlocks.convert(id, s));
     }
 
     private class Ticker extends Thread implements Serializable {
@@ -666,7 +673,7 @@ public class ClassicLevel implements Level, Serializable {
     }
 
     /**
-     * @see Level#rawSetTile(int, int, int, Block, Server, boolean)
+     * @see Level#rawSetTile(int, int, int, ClassicBlock, Server, boolean)
      * The last parameter is assumed as true.
      */
     public void skipChange(int x, int y, int z, Block block, Server server) {
@@ -674,7 +681,7 @@ public class ClassicLevel implements Level, Serializable {
     }
 
     /**
-     * @see Level#rawSetTile(int, int, int, Block, Server, boolean)
+     * @see Level#rawSetTile(int, int, int, ClassicBlock, Server, boolean)
      */
     public void skipChange(int x, int y, int z, Block block, Server server, boolean addtick) {
         if (x < 0 || y < 0 || z < 0) return;
@@ -808,8 +815,7 @@ public class ClassicLevel implements Level, Serializable {
         return updated;
     }
 
-    @Override
-    public List<Block> getBlockList() {
+    public List<ClassicBlock> getBlockList() {
         return Collections.unmodifiableList(Arrays.asList(blocks));
     }
 }

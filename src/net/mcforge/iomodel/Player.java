@@ -53,8 +53,8 @@ import net.mcforge.sql.MySQL;
 import net.mcforge.system.ticker.Tick;
 import net.mcforge.world.Level;
 import net.mcforge.world.PlaceMode;
-import net.mcforge.world.blocks.Block;
 import net.mcforge.world.blocks.BlockUpdate;
+import net.mcforge.world.blocks.classicmodel.ClassicBlock;
 
 public class Player extends IOClient implements CommandExecutor, Tick {
     protected short X;
@@ -1298,22 +1298,22 @@ public class Player extends IOClient implements CommandExecutor, Tick {
      * @param holding What the client was holding
      */
     public void HandleBlockChange(short X, short Y, short Z, PlaceMode type, byte holding) {
-        Block getOrginal = level.getTile(X, Y, Z);
+        ClassicBlock getOrginal = (ClassicBlock)level.getTile(X, Y, Z);
         if (holding > 49) {
             kick("Hack Client detected!");
             return;
         }
-        PlayerBlockChangeEvent event = new PlayerBlockChangeEvent(this, X, Y, Z, Block.getBlock(holding), level, getServer(), type);
+        PlayerBlockChangeEvent event = new PlayerBlockChangeEvent(this, X, Y, Z, ClassicBlock.getBlock(holding), level, getServer(), type);
         getServer().getEventSystem().callEvent(event);
         if (event.isCancelled()) {
             sendBlockChange(X, Y, Z, getOrginal);
             return;
         }
-        Block place = event.getBlock();
+        ClassicBlock place = event.getBlock();
         if (type == PlaceMode.PLACE)
             GlobalBlockChange(X, Y, Z, place, level, getServer());
         else if (type == PlaceMode.BREAK)
-            GlobalBlockChange(X, Y, Z, Block.getBlock((byte)0), level, getServer());
+            GlobalBlockChange(X, Y, Z, ClassicBlock.getBlock((byte)0), level, getServer());
     }
     /**
      * Cause this player to place a block in the current level this player is in.
@@ -1329,7 +1329,7 @@ public class Player extends IOClient implements CommandExecutor, Tick {
      * @param block
      *             The new block to place
      */
-    public void globalBlockChange(int x, int y, int z, Block block) {
+    public void globalBlockChange(int x, int y, int z, ClassicBlock block) {
         globalBlockChange(x, y, z, block, true);
     }
 
@@ -1349,7 +1349,7 @@ public class Player extends IOClient implements CommandExecutor, Tick {
      * @param updatelevel
      *                   Weather to update the level object or not.
      */
-    public void globalBlockChange(int x, int y, int z, Block block, boolean updatelevel) {
+    public void globalBlockChange(int x, int y, int z, ClassicBlock block, boolean updatelevel) {
         PlayerBlockChangeEvent event = new PlayerBlockChangeEvent(this, (short)X, (short)Y, (short)Z, block, level, getServer(), (block.ID == 0 ? PlaceMode.BREAK : PlaceMode.PLACE));
         getServer().getEventSystem().callEvent(event);
         if (event.isCancelled())
@@ -1422,7 +1422,7 @@ public class Player extends IOClient implements CommandExecutor, Tick {
      * @param s The getServer() the update happened in
      * @param updateLevel Whether the level should be updated
      */
-    public static void GlobalBlockChange(short X, short Y, short Z, Block block, Level l, Server s, boolean updateLevel) {
+    public static void GlobalBlockChange(short X, short Y, short Z, ClassicBlock block, Level l, Server s, boolean updateLevel) {
         if (updateLevel)
             l.setTile(block, X, Y, Z, s);
         if (s == null)
@@ -1495,7 +1495,7 @@ public class Player extends IOClient implements CommandExecutor, Tick {
      * @param Z The Z coord of the block
      * @param block The block to send
      */
-    public void sendBlockChange(short X, short Y, short Z, Block block) {
+    public void sendBlockChange(short X, short Y, short Z, ClassicBlock block) {
         getServer().getPacketManager().getPacket("SetBlock").Write(this, getServer(), X, Y, Z, block.getVisibleBlock());
     }
 
@@ -1508,7 +1508,7 @@ public class Player extends IOClient implements CommandExecutor, Tick {
      * @param l The level the update happened in
      * @param s The getServer() the update happened in
      */
-    public static void GlobalBlockChange(short X, short Y, short Z, Block block, Level l, Server s) {
+    public static void GlobalBlockChange(short X, short Y, short Z, ClassicBlock block, Level l, Server s) {
         GlobalBlockChange(X, Y, Z, block, l, s, true);
     }
 

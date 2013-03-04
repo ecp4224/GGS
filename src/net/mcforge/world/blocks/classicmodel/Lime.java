@@ -7,9 +7,8 @@
  ******************************************************************************/
 package net.mcforge.world.blocks.classicmodel;
 
-import net.mcforge.world.blocks.Block;
 
-public class Lime extends Block {
+public class Lime extends ClassicBlock {
 
     /**
      * 

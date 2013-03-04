@@ -9,7 +9,8 @@ import net.mcforge.server.Server;
 import net.mcforge.system.ticker.Tick;
 import net.mcforge.util.properties.Properties;
 import net.mcforge.world.blocks.Block;
-import net.mcforge.world.blocks.PhysicsBlock;
+import net.mcforge.world.blocks.classicmodel.ClassicBlock;
+import net.mcforge.world.blocks.classicmodel.PhysicsBlock;
 import net.mcforge.world.exceptions.BackupFailedException;
 import net.mcforge.world.generator.Generator;
 
@@ -88,7 +89,7 @@ public interface Level {
      * If the block is a physicsblock, it will be added
      * to the physics tick.
      * This method wont send out a change to the clients.
-     * To do this, use {@link Player#GlobalBlockChange(short, short, short, Block, ClassicLevel, Server)} instead
+     * To do this, use {@link Player#GlobalBlockChange(short, short, short, ClassicBlock, ClassicLevel, Server)} instead
      * @param b
      *         The block to add
      * @param x
@@ -303,10 +304,4 @@ public interface Level {
      * @return
      */
     public ArrayList<Tick> getTicks();
-
-    /**
-     * Get an ArrayList of blocks in this level.
-     * @return
-     */
-    public List<Block> getBlockList();
 }

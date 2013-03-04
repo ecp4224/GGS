@@ -7,9 +7,8 @@
  ******************************************************************************/
 package net.mcforge.world.blocks.classicmodel;
 
-import net.mcforge.world.blocks.Block;
 
-public class Obsidian extends Block {
+public class Obsidian extends ClassicBlock {
 
     /**
      * 

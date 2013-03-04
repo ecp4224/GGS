@@ -3,14 +3,14 @@ package net.mcforge.world.blocks.tracking;
 import java.io.Serializable;
 
 import net.mcforge.world.PlaceMode;
-import net.mcforge.world.blocks.Block;
+import net.mcforge.world.blocks.classicmodel.ClassicBlock;
 
 public class BlockData implements Serializable {
     private static final long serialVersionUID = -7231059348151242381L;
     protected int x, y, z;
     protected long milisecond;
     protected byte type;
-    protected Block before;
+    protected ClassicBlock before;
     protected String level;
     
     /**
@@ -68,7 +68,7 @@ public class BlockData implements Serializable {
      * Get the block that was there before this block change occurred
      * @return
      */
-    public Block getBlock() {
+    public ClassicBlock getBlock() {
         return before;
     }
 }

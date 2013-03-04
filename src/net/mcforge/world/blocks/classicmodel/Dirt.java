@@ -8,8 +8,6 @@
 package net.mcforge.world.blocks.classicmodel;
 
 import net.mcforge.server.Server;
-import net.mcforge.world.blocks.Block;
-import net.mcforge.world.blocks.PhysicsBlock;
 
 public class Dirt extends PhysicsBlock {
 
@@ -46,7 +44,7 @@ public class Dirt extends PhysicsBlock {
         }
         wait = 0;
         if (change())
-            super.change(Block.getBlock("Grass"));
+            super.change(ClassicBlock.getBlock("Grass"));
         else
             super.stopTick();
     }

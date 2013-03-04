@@ -9,8 +9,6 @@ package net.mcforge.world.blocks.classicmodel;
 
 import net.mcforge.iomodel.Player;
 import net.mcforge.server.Server;
-import net.mcforge.world.blocks.Block;
-import net.mcforge.world.blocks.PhysicsBlock;
 
 public class Grass extends PhysicsBlock {
 
@@ -48,9 +46,9 @@ public class Grass extends PhysicsBlock {
     @Override
     public void tick() {
         if (getLevel().getTile(getX(), getY() - 1, getZ()).getVisibleBlock() == 2)
-            Player.GlobalBlockChange((short)getX(), (short)(getY() - 1), (short)getZ(), Block.getBlock("Dirt"), getLevel(), getServer());
+            Player.GlobalBlockChange((short)getX(), (short)(getY() - 1), (short)getZ(), ClassicBlock.getBlock("Dirt"), getLevel(), getServer());
         if (!getLevel().getTile(getX(), getY() + 1, getZ()).canWalkThrough())
-            super.change(Block.getBlock("Dirt"));
+            super.change(ClassicBlock.getBlock("Dirt"));
         else
             super.stopTick();
     }

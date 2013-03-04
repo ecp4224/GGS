@@ -60,14 +60,14 @@ import net.mcforge.util.properties.Properties;
 import net.mcforge.world.Level;
 import net.mcforge.world.ClassicLevelHandler;
 import net.mcforge.world.blocks.tracking.BlockTracker;
-import net.mcforge.world.generator.model.FlatGrass;
-import net.mcforge.world.generator.model.Forest;
-import net.mcforge.world.generator.model.Island;
-import net.mcforge.world.generator.model.Mountains;
-import net.mcforge.world.generator.model.Ocean;
-import net.mcforge.world.generator.model.Pixel;
-import net.mcforge.world.generator.model.Rainbow;
-import net.mcforge.world.generator.model.Space;
+import net.mcforge.world.generator.classicmodel.FlatGrass;
+import net.mcforge.world.generator.classicmodel.Forest;
+import net.mcforge.world.generator.classicmodel.Island;
+import net.mcforge.world.generator.classicmodel.Mountains;
+import net.mcforge.world.generator.classicmodel.Ocean;
+import net.mcforge.world.generator.classicmodel.Pixel;
+import net.mcforge.world.generator.classicmodel.Rainbow;
+import net.mcforge.world.generator.classicmodel.Space;
 
 public final class Server implements LogInterface, Updatable, Tick {
     private PacketManager pm;

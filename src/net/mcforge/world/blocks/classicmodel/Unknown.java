@@ -8,25 +8,22 @@
 package net.mcforge.world.blocks.classicmodel;
 
 
-public class Sapling extends ClassicBlock {
+
+public class Unknown extends ClassicBlock {
 
     /**
      * 
      */
     private static final long serialVersionUID = 1L;
 
-    public Sapling(byte ID, String name) {
+    public Unknown(byte ID, String name) {
         super(ID, name);
     }
     
-    public Sapling() {
-        super((byte)6, "Sapling");
+    public Unknown() {
+        super((byte)0, "NULL");
     }
     
-    @Override
-    public boolean canWalkThrough() {
-        return true;
-    }
 
 }
 

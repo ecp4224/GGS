@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import net.mcforge.server.Server;
-import net.mcforge.world.blocks.PhysicsBlock;
 
 public class Sand extends PhysicsBlock {
 

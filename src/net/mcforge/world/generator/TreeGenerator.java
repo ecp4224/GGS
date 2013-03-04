@@ -13,6 +13,7 @@ import net.mcforge.iomodel.Player;
 import net.mcforge.server.Server;
 import net.mcforge.world.Level;
 import net.mcforge.world.blocks.Block;
+import net.mcforge.world.blocks.classicmodel.ClassicBlock;
 
 public abstract class TreeGenerator {
     /**
@@ -30,7 +31,7 @@ public abstract class TreeGenerator {
         short top = (short) (height - (2 + (int) (Math.random() * ((4 - 2) + 1))));
 
         for (short yy = 0; yy < height; yy++)
-            Player.GlobalBlockChange(x, (short)(y + yy), z, Block.getBlock("Wood"), lvl, serv, false);
+            Player.GlobalBlockChange(x, (short)(y + yy), z, ClassicBlock.getBlock("Wood"), lvl, serv, false);
 
         for (short xx = (short)-top; xx <= top; ++xx) {
             for (short yy = (short)-top; yy <= top; ++yy) {
@@ -42,7 +43,7 @@ public abstract class TreeGenerator {
                                 Player.GlobalBlockChange((short) (x + xx), 
                                                             (short) (y + yy + height),
                                                             (short) (z + zz),
-                                                         Block.getBlock("Leaves"), 
+                                                         ClassicBlock.getBlock("Leaves"), 
                                                          lvl, serv, false
                                                          );
                             }
@@ -71,7 +72,7 @@ public abstract class TreeGenerator {
         short xx, yy, zz,
               xxx, yyy, zzz;
         for (yy = 0; yy <= height; yy++) {
-            Player.GlobalBlockChange(x, (short)(y + yy), z, Block.getBlock("Wood"), lvl, serv, false);
+            Player.GlobalBlockChange(x, (short)(y + yy), z, ClassicBlock.getBlock("Wood"), lvl, serv, false);
         }
 
         for (yy = top; yy <= height + 1; yy++) {
@@ -88,11 +89,11 @@ public abstract class TreeGenerator {
                         if (yy > height)
                             continue;
                         if (rand.nextInt(2) == 0) {
-                            Player.GlobalBlockChange(xxx, yyy, zzz, Block.getBlock("Leaves"), lvl, serv, false);
+                            Player.GlobalBlockChange(xxx, yyy, zzz, ClassicBlock.getBlock("Leaves"), lvl, serv, false);
                         }
                     }
                     else {
-                        Player.GlobalBlockChange(xxx, yyy, zzz, Block.getBlock("Leaves"), lvl, serv, false);
+                        Player.GlobalBlockChange(xxx, yyy, zzz, ClassicBlock.getBlock("Leaves"), lvl, serv, false);
                     }
                 }
             }
@@ -113,30 +114,30 @@ public abstract class TreeGenerator {
 			for (int i = 0; i < 5; ++i) {
 				xx = x + (int)(1.5F + Math.cos(r) * (float)i);
 				zz = z + (int)(1.5F + Math.sin(r) * (float)i);
-				Player.GlobalBlockChange((short)xx, (short)(yyy - 3 + i / 2), (short)zz, Block.getBlock("Wood"), level, server);
+				Player.GlobalBlockChange((short)xx, (short)(yyy - 3 + i / 2), (short)zz, ClassicBlock.getBlock("Wood"), level, server);
 			}
 		}
 		
 		for (yy = 0; yy < height; ++yy) {
 			Block b = level.getTile(x, y + yy, z);
-			if (b.ID == 0 || b.equals(Block.getBlock("leaves"))) {
-				Player.GlobalBlockChange((short)x, (short)(y + yy), (short)z, Block.getBlock("Wood"), level, server);
+			if (b.getVisibleBlock() == 0 || b.equals(ClassicBlock.getBlock("leaves"))) {
+				Player.GlobalBlockChange((short)x, (short)(y + yy), (short)z, ClassicBlock.getBlock("Wood"), level, server);
 			}
 			
 			if (yy < height - 1) {
 				b = level.getTile(x + 1, y + yy, z);
-				if (b.ID == 0 || b.equals(Block.getBlock("leaves"))) {
-					Player.GlobalBlockChange((short)(x + 1), (short)(y + yy), (short)z, Block.getBlock("Wood"), level, server);
+				if (b.getVisibleBlock() == 0 || b.equals(ClassicBlock.getBlock("leaves"))) {
+					Player.GlobalBlockChange((short)(x + 1), (short)(y + yy), (short)z, ClassicBlock.getBlock("Wood"), level, server);
 				}
 				
 				b = level.getTile(x + 1, y + yy, z + 1);
-				if (b.ID == 0 || b.equals(Block.getBlock("leaves"))) {
-					Player.GlobalBlockChange((short)(x + 1), (short)(y + yy), (short)(z + 1), Block.getBlock("Wood"), level, server);
+				if (b.getVisibleBlock() == 0 || b.equals(ClassicBlock.getBlock("leaves"))) {
+					Player.GlobalBlockChange((short)(x + 1), (short)(y + yy), (short)(z + 1), ClassicBlock.getBlock("Wood"), level, server);
 				}
 				
 				b = level.getTile(x, y + yy, z + 1);
-				if (b.ID == 0 || b.equals(Block.getBlock("leaves"))) {
-					Player.GlobalBlockChange((short)x, (short)(y + yy), (short)(z + 1), Block.getBlock("Wood"), level, server);
+				if (b.getVisibleBlock() == 0 || b.equals(ClassicBlock.getBlock("leaves"))) {
+					Player.GlobalBlockChange((short)x, (short)(y + yy), (short)(z + 1), ClassicBlock.getBlock("Wood"), level, server);
 				}
 			}
 		}
@@ -151,7 +152,7 @@ public abstract class TreeGenerator {
     			for (int zz = z - l1; zz <= z + l1 + 1; ++zz) {
     				int zzz = zz - z;
     				if ((xxx >= 0 || zzz >= 0 || Math.pow(xxx, 2) + Math.pow(zzz, 2) <= Math.pow(l1, 2)) && (xxx <= 0 && zzz <= 0 || Math.pow(xxx, 2) + Math.pow(zzz, 2) < Math.pow(l1 + 1, 2)) && (rand.nextInt(4) != 0 || Math.pow(xxx, 2) + Math.pow(zzz, 2) <= Math.pow(l1 - 1, 2))) {
-    					Player.GlobalBlockChange((short)xx, (short)yy, (short)zz, Block.getBlock("leaves"), level, server);
+    					Player.GlobalBlockChange((short)xx, (short)yy, (short)zz, ClassicBlock.getBlock("leaves"), level, server);
     				}
     			}
     		}
@@ -173,7 +174,7 @@ public abstract class TreeGenerator {
             for (short yy = (short)-dist; yy <= dist; ++yy) {
                 for (short zz = (short)-dist; zz <= dist; ++zz) {
                     foundTile = lvl.getTile(x + xx, y + yy, z + zz);
-                    if (foundTile == Block.getBlock("Wood") || foundTile == Block.getBlock("Green")) {
+                    if (foundTile == ClassicBlock.getBlock("Wood") || foundTile == ClassicBlock.getBlock("Green")) {
                         return true;
                     }
                 }

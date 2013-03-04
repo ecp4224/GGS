@@ -12,19 +12,19 @@ import net.mcforge.API.Listener;
 import net.mcforge.API.player.PlayerBlockChangeEvent;
 import net.mcforge.iomodel.Player;
 import net.mcforge.world.PlaceMode;
-import net.mcforge.world.blocks.Block;
+import net.mcforge.world.blocks.classicmodel.ClassicBlock;
 
 public class BlockChangeAction extends Action<BlockChangeAction> implements Listener {
 
     private int X;
     private int Y;
     private int Z;
-    private Block holding;
+    private ClassicBlock holding;
     private PlaceMode mode;
     
     private boolean found;
     
-    private BlockChangeAction(Player p, int x, int y, int z, Block holding, PlaceMode mode) {
+    private BlockChangeAction(Player p, int x, int y, int z, ClassicBlock holding, PlaceMode mode) {
         setPlayer(p);
         this.X = x;
         this.Y = y;
@@ -69,7 +69,7 @@ public class BlockChangeAction extends Action<BlockChangeAction> implements List
      * @return
      *        The block
      */
-    public Block getHolding() {
+    public ClassicBlock getHolding() {
         return holding;
     }
     
@@ -79,7 +79,7 @@ public class BlockChangeAction extends Action<BlockChangeAction> implements List
      * @return
      *        The block.
      */
-    public Block getOrginalBlock() {
+    public ClassicBlock getOrginalBlock() {
         return getPlayer().getLevel().getTile(X, Y, Z);
     }
     

@@ -7,10 +7,9 @@
  ******************************************************************************/
 package net.mcforge.world.blocks.classicmodel;
 
-import net.mcforge.world.blocks.Block;
 
 
-public class Air extends Block {
+public class Air extends ClassicBlock {
 
     /**
      * 

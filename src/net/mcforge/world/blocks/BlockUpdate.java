@@ -3,9 +3,10 @@ package net.mcforge.world.blocks;
 import java.io.Serializable;
 
 import net.mcforge.iomodel.Player;
+import net.mcforge.world.blocks.classicmodel.ClassicBlock;
 
 /**
- * This class represents data for a Block Update. The only method that </br>
+ * This class represents data for a ClassicBlock Update. The only method that </br>
  * The following methods use this class in the core: </br>
  * {@link Player#GlobalBlockChange(BlockUpdate[], ClassicLevel, net.mcforge.server.Server)} </br>
  * {@link Player#GlobalBlockChange(BlockUpdate[], ClassicLevel, net.mcforge.server.Server, boolean)} </br>
@@ -19,8 +20,8 @@ public class BlockUpdate implements Serializable {
     private int x;
     private int y;
     private int z;
-    private Block b;
-    public BlockUpdate(Block b, int x, int y, int z) { this.setBlock(b); this.setX(x); this.setY(y); this.setZ(z); }
+    private ClassicBlock b;
+    public BlockUpdate(ClassicBlock b, int x, int y, int z) { this.setBlock(b); this.setX(x); this.setY(y); this.setZ(z); }
     /**
      * @return the x
      */
@@ -60,13 +61,13 @@ public class BlockUpdate implements Serializable {
     /**
      * @return the b
      */
-    public Block getBlock() {
+    public ClassicBlock getBlock() {
         return b;
     }
     /**
      * @param b the b to set
      */
-    public void setBlock(Block b) {
+    public void setBlock(ClassicBlock b) {
         this.b = b;
     }
 }

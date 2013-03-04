@@ -25,6 +25,7 @@ import net.mcforge.system.Serializer;
 import net.mcforge.system.Serializer.SaveType;
 import net.mcforge.system.ticker.Tick;
 import net.mcforge.util.FileUtils;
+import net.mcforge.world.blocks.classicmodel.ClassicBlock;
 
 public class BlockTracker implements Listener, Tick, Serializable {
     private static final long serialVersionUID = 6L;
@@ -122,7 +123,7 @@ public class BlockTracker implements Listener, Tick, Serializable {
     }
     
     /**
-     * Get the Block Change history of a player with the first element being the current time and the last element being the block change that occurred on
+     * Get the ClassicBlock Change history of a player with the first element being the current time and the last element being the block change that occurred on
      * the date specified in the parameter <b>date</b> 
      * @param player The player to get the data
      * @param date The lowest date
@@ -183,7 +184,7 @@ public class BlockTracker implements Listener, Tick, Serializable {
     }
     
     /**
-     * Get the Block Change history of a player that is offline.
+     * Get the ClassicBlock Change history of a player that is offline.
      * With the first element being the current time and the last element being the block change that occurred on
      * the date specified in the parameter <b>date</b> 
      * @param player The player to get the data
@@ -288,7 +289,7 @@ public class BlockTracker implements Listener, Tick, Serializable {
         bd.y = event.getY();
         bd.z = event.getZ();
         bd.type = event.getPlaceType().getType();
-        bd.before = p.getLevel().getTile(bd.x, bd.y, bd.z);
+        bd.before = (ClassicBlock)p.getLevel().getTile(bd.x, bd.y, bd.z);
         bd.milisecond = new Date().getTime();
         bd.level = p.getLevel().getName();
         

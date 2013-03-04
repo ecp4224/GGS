@@ -7,9 +7,8 @@
  ******************************************************************************/
 package net.mcforge.world.blocks.classicmodel;
 
-import net.mcforge.world.blocks.Block;
 
-public class GoldOre extends Block {
+public class GoldOre extends ClassicBlock {
 
     /**
      * 

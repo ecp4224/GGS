@@ -5,51 +5,49 @@
  * which accompanies this distribution, and is available at
  * http://www.gnu.org/licenses/gpl.html
  ******************************************************************************/
-package net.mcforge.world.generator.model;
-
-import java.util.Random;
+package net.mcforge.world.generator.classicmodel;
 
 import net.mcforge.server.Server;
-import net.mcforge.world.blocks.Block;
+import net.mcforge.world.blocks.classicmodel.ClassicBlock;
 import net.mcforge.world.generator.Generator;
 import net.mcforge.world.Level;
 
 /**
- * Creates a Space level where the walls are made of Bedrock.
- * @author MCForge Team
+ * A generator that creates a flat grass area, perfect for freebuild!
+ * @author MCForgeTeam
  *
  */
-public class Space implements Generator {
+public class FlatGrass implements Generator {
 
     private Server _server;
-    
     @Override
     public String getName() {
-    	return "Space";
+    	return "FlatGrass";
     }
 	@Override
 	public String[] getShortcuts() {
-		return new String[0];
+		return new String[] { "Flat" };
 	}
     
     /**
-     * The constructor for the space level generator
-     * 
-     * @param server - The server the level is in
+     * The constructor for the flatgrass level generator
+     * @param server
+     *              The server the level is in
      */
-    public Space(Server server) {
+    public FlatGrass(Server server) {
         this._server = server;
     }
     @Override
-    public void generate(Level l) {
-        Random rand = new Random(System.currentTimeMillis());
+    public void generate(final Level l) {
         for (int x = 0; x < l.getWidth(); x++) {
             for (int y = 0; y < l.getHeight(); y++) {
                 for (int z = 0; z < l.getDepth(); z++) {
-                    if (y == 0)
-                        l.rawSetTile(x, y, z, Block.getBlock("Bedrock"), _server, false);
-                    else if (x == 0 || x == l.getWidth() - 1 || z == 0 || z == l.getDepth() - 1 || y == 1 || y == l.getHeight() - 1)
-                        l.rawSetTile(x, y, z, Block.getBlock( rand.nextInt(100) == 0 ? "IronOre" : "Obsidian"), _server, false);
+                    if (y < l.getHeight() / 2)
+                        l.rawSetTile(x, y, z,ClassicBlock.getBlock("dirt"),  _server, false);
+                    else if (y == l.getHeight() / 2)
+                        l.rawSetTile(x, y, z,ClassicBlock.getBlock("grass"),  _server, false);
+                    else
+                        l.rawSetTile( x, y, z,ClassicBlock.getBlock((byte)0),  _server, false);
                 }
             }
         }
@@ -60,3 +58,4 @@ public class Space implements Generator {
     }
 
 }
+

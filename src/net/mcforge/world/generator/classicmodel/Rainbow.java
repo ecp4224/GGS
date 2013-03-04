@@ -5,57 +5,57 @@
  * which accompanies this distribution, and is available at
  * http://www.gnu.org/licenses/gpl.html
  ******************************************************************************/
-package net.mcforge.world.generator.model;
+package net.mcforge.world.generator.classicmodel;
+
+import java.util.Random;
 
 import net.mcforge.server.Server;
-import net.mcforge.world.blocks.Block;
+import net.mcforge.world.blocks.classicmodel.ClassicBlock;
 import net.mcforge.world.generator.Generator;
 import net.mcforge.world.Level;
 
 /**
- * Create a level where the walls are made of white wool, perfect
- * for pixel art!
- * @author MCForgeTeam
+ * Creates a rainbow level where the level is a giant box with a
+ * rainbow patterned wall
+ * @author MCForge Team
  *
  */
-public class Pixel implements Generator {
+public class Rainbow implements Generator {
 
     private Server _server;
     
     @Override
     public String getName() {
-    	return "Pixel";
+    	return "Rainbow";
     }
 	@Override
 	public String[] getShortcuts() {
 		return new String[0];
 	}
-	
+    
     /**
-     * The constructor for the pixel level generator
+     * The constructor for the rainbow level generator
      * 
      * @param server - The server the level is in
      */
-    public Pixel(Server server) {
+    public Rainbow(Server server) {
         this._server = server;
     }
+    
     @Override
     public void generate(Level l) {
+        Random rand = new Random(System.currentTimeMillis());
         for (int x = 0; x < l.getWidth(); x++) {
             for (int y = 0; y < l.getHeight(); y++) {
                 for (int z = 0; z < l.getDepth(); z++) {
-                    if (y == 0)
-                        l.rawSetTile(x, y, z, Block.getBlock("Bedrock"), _server, false);
-                    else if (x == 0 || x == l.getWidth() - 1 || z == 0 || z == l.getDepth() - 1)
-                        l.rawSetTile(x, y, z, Block.getBlock("White"), _server, false);
+                    if (y == 0 || y == l.getHeight() - 1 || x == 0 || x == l.getWidth() - 1 || z == 0 || z == l.getDepth() - 1) 
+                        l.rawSetTile(x, y, z, ClassicBlock.getBlock((byte)(rand.nextInt(36 - 21) + 21)), _server, false);
                 }
             }
         }
-
     }
     @Override
     public void generate(Level l, int x, int y, int z) {
         generate(l);
     }
-
 }

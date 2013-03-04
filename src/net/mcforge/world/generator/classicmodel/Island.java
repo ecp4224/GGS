@@ -5,22 +5,21 @@
  * which accompanies this distribution, and is available at
  * http://www.gnu.org/licenses/gpl.html
  ******************************************************************************/
-package net.mcforge.world.generator.model;
+package net.mcforge.world.generator.classicmodel;
 
 import java.util.Random;
 
 import net.mcforge.server.Server;
-import net.mcforge.world.blocks.Block;
+import net.mcforge.world.blocks.classicmodel.ClassicBlock;
 import net.mcforge.world.generator.Generator;
-import net.mcforge.world.generator.TreeGenerator;
 import net.mcforge.world.Level;
 
 /**
- * A generator that creates a forest like level.
+ * A generator that creates an island like level.
  * @author MCForgeTeam
  *
  */
-public class Forest implements Generator {
+public class Island implements Generator {
 
     final Random rand = new Random();
     float divide;
@@ -31,19 +30,19 @@ public class Forest implements Generator {
 
     @Override
     public String getName() {
-    	return "Forest";
+    	return "Island";
     }
 	@Override
 	public String[] getShortcuts() {
 		return new String[0];
 	}
-	
+    
     /**
      * The constructor for the island level generator
      * @param server
      *              The server the level is in
      */
-    public Forest(Server server) {
+    public Island(Server server) {
         this._server = server;
     }
 
@@ -62,36 +61,37 @@ public class Forest implements Generator {
         GenerateFault(terrain, l);
         FilterAverage(l);
         GeneratePerlinNoise(overlay, l, rand);
-        float RangeLow = 0.45f;
-        float RangeHigh = 0.8f;
-        float TreeDens = 0.7f;
-        short TreeDist = 2;
+
+        float RangeLow = 0.4f;
+        float RangeHigh = 0.75f;
+        float TreeDens = 0.35f;
+        short TreeDist = 3;
         try {
             for (int bb = 0; bb < terrain.length; bb++)
             {
                 short x = (short)(bb % l.getWidth());
                 short y = (short)(bb / l.getWidth());
-                short z = Evaluate(l, Range(terrain[bb], RangeLow, RangeHigh));
+                short z = Evaluate(l, Range(terrain[bb], RangeLow - NegateEdge(x, y, l), RangeHigh - NegateEdge(x, y, l)));
                 if (z > WaterLevel)
                 {
                     for (short zz = 0; z - zz >= 0; zz++)
                     {
-                        if (overlay[bb] < 0.72f)
+                        if (overlay[bb] < 0.72f)    //If not zoned for rocks or gravel
                         {
                             if (z > WaterLevel + 2)
                             {
-                                if (zz == 0) { l.rawSetTile(x, z - zz, y, Block.getBlock("Grass"), _server, false); }      //top layer
-                                else if (zz < 3) { l.rawSetTile(x, (short)(z - zz), y, Block.getBlock("Dirt"), _server, false); }   //next few
-                                else { l.rawSetTile(x, (short)(z - zz), y, Block.getBlock("Stone"), _server, false); }               //ten rock it
+                                if (zz == 0) { l.rawSetTile(x, z - zz, y, ClassicBlock.getBlock("Grass"), _server, false); }      //top layer
+                                else if (zz < 3) { l.rawSetTile(x, (short)(z - zz), y, ClassicBlock.getBlock("Dirt"), _server, false); }   //next few
+                                else { l.rawSetTile(x, (short)(z - zz), y, ClassicBlock.getBlock("Stone"), _server, false); }               //ten rock it
                             }
                             else
                             {
-                                l.rawSetTile(x, (short)(z - zz), y, Block.getBlock("Dirt"), _server, false); 
+                                l.rawSetTile(x, (short)(z - zz), y, ClassicBlock.getBlock("Sand"), _server, false);                        //SAAAND extra for islands
                             }
                         }
                         else
                         {
-                            l.rawSetTile(x, (short)(z - zz), y, Block.getBlock("Grass"), _server, false);
+                            l.rawSetTile(x, (short)(z - zz), y, ClassicBlock.getBlock("Stone"), _server, false);    //zoned for above sea level rock floor
                         }
                     }
                     int temprand = rand.nextInt(12);
@@ -99,20 +99,54 @@ public class Forest implements Generator {
                     switch (temprand)
                     {
                     case 10:
-                        l.rawSetTile(x, (short)(z + 1), y, Block.getBlock("RedFlower"), _server, false);
+                        l.rawSetTile(x, (short)(z + 1), y, ClassicBlock.getBlock("RedFlower"), _server, false);
                         break;
                     case 11:
-                        l.rawSetTile(x, (short)(z + 1), y, Block.getBlock("YellowFlower"), _server, false);
+                        l.rawSetTile(x, (short)(z + 1), y, ClassicBlock.getBlock("YellowFlower"), _server, false);
                         break;
                     default:
                         break;
                     }
                     if (overlay[bb] < 0.65f && overlay2[bb] < TreeDens)
+                    {
                         if (l.getTile(x, z + 1, y).getVisibleBlock() == (byte)0)
-                            if (l.getTile(x, z, y).name.equals("Grass"))
+                        {
+                            if (l.getTile(x, z, y).getName().equals("Grass"))
+                            {
                                 if (rand.nextInt(13) == 0)
-                                    if (!TreeGenerator.checkForTree(l, x, z, y, TreeDist))
-                                        TreeGenerator.generateTree(_server, l, x,(short)(z + 1), y, rand);                                
+                                {
+                                    if (!TreeCheck(l, x, z, y, TreeDist))
+                                    {
+                                        AddTree(l, x, (short)(z + 1), y, rand);
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                }
+                else    //Must be on/under the water line then
+                {
+                    for (short zz = 0; WaterLevel - zz >= 0; zz++)
+                    {
+                        if (WaterLevel - zz > z)
+                        { l.rawSetTile(x, (short)(WaterLevel - zz), y, ClassicBlock.getBlock("Water"), _server, false); }    //better fill the water aboce me
+                        else if (WaterLevel - zz > z - 3)
+                        {
+                            if (overlay[bb] < 0.75f)
+                            {
+                                l.rawSetTile(x, (short)(WaterLevel - zz), y, ClassicBlock.getBlock("Sand"), _server, false);   //sand top
+                            }
+                            else
+                            {
+                                l.rawSetTile(x, (short)(WaterLevel - zz), y, ClassicBlock.getBlock("Gravel"), _server, false);  //zoned for gravel
+                            }
+                        }
+                        else
+                        { 
+                            l.rawSetTile(x, (short)(WaterLevel - zz), y, ClassicBlock.getBlock("Stone"), _server, false); 
+                        }
+                    }
                 }
             }
             l.setNewSpawn(WaterLevel);
@@ -121,11 +155,58 @@ public class Forest implements Generator {
         {
             _server.logError(e);
         }
-        terrain = new float[0];
-        overlay = new float[0];
-        overlay2 = new float[0];
+
+        terrain = new float[0]; //Derp
+        overlay = new float[0]; //Derp
+        overlay2 = new float[0]; //Derp
     }
-    
+
+    void AddTree(Level Lvl, short x, short y, short z, Random Rand)
+    {
+        byte height = (byte)(5 + (int)(Math.random() * ((8 - 5) + 1)));
+        for (short yy = 0; yy < height; yy++) Lvl.rawSetTile(x, (short)(y + yy), z, ClassicBlock.getBlock("Wood"), _server, false);
+
+        short top = (short)(height - (2 + (int)(Math.random() * ((4 - 2) + 1))));
+
+        for (short xx = (short)-top; xx <= top; ++xx)
+        {
+            for (short yy = (short)-top; yy <= top; ++yy)
+            {
+                for (short zz = (short)-top; zz <= top; ++zz)
+                {
+                    short Dist = (short)(Math.sqrt(xx * xx + yy * yy + zz * zz));
+                    if (Dist < top + 1)
+                    {
+                        try {
+                            if (Rand.nextInt((int)(Dist)) < 2)
+                            {
+                                Lvl.rawSetTile((short)(x + xx), (short)(y + yy + height), (short)(z + zz), ClassicBlock.getBlock("Leaves"), _server, false);
+                            }
+                        } catch (Exception e) { }
+                    }
+                }
+            }
+        }
+    }
+    private boolean TreeCheck(Level Lvl, short x, short z, short y, short dist)         //return true if tree is near
+    {
+        for (short xx = (short)-dist; xx <= +dist; ++xx)
+        {
+            for (short yy = (short)-dist; yy <= +dist; ++yy)
+            {
+                for (short zz = (short)-dist; zz <= +dist; ++zz)
+                {
+                    byte foundTile = Lvl.getTile((short)(x + xx), (short)(z + zz), (short)(y + yy)).getVisibleBlock();
+                    if (foundTile == ClassicBlock.getBlock("Wood").getVisibleBlock() || foundTile == ClassicBlock.getBlock("Green").getVisibleBlock())
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
     private void GenerateFault(float[] array, Level l) {
         float startheight = 0.5f;
         float dispAux;

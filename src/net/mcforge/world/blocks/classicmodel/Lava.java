@@ -10,8 +10,6 @@ package net.mcforge.world.blocks.classicmodel;
 import java.util.Random;
 
 import net.mcforge.server.Server;
-import net.mcforge.world.blocks.Block;
-import net.mcforge.world.blocks.PhysicsBlock;
 
 public class Lava extends PhysicsBlock {
 
@@ -129,7 +127,7 @@ public class Lava extends PhysicsBlock {
     public boolean check(int b) {
         if (b < 0 || b >= getLevel().getLength())
             return false;
-        Block bb = getLevel().getTile(b);
+        ClassicBlock bb = (ClassicBlock) getLevel().getTile(b);
         byte btype = bb.getVisibleBlock();
         if (bb.getVisibleBlock() == 0 && !nearSponge(b))
             return true;
@@ -151,7 +149,7 @@ public class Lava extends PhysicsBlock {
         for (int x = -2; x <= +2; ++x) {
             for (int y = -2; y <= +2; ++y) {
                 for (int z = -2; z <= +2; ++z) {
-                    if (getLevel().getTile(IntOffset(b, x, y, z)) == Block.getBlock((byte)19))
+                    if (getLevel().getTile(IntOffset(b, x, y, z)) == ClassicBlock.getBlock((byte)19))
                         return true;
                 }
             }

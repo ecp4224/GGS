@@ -13,7 +13,7 @@ import net.mcforge.iomodel.Player;
 import net.mcforge.server.Server;
 import net.mcforge.world.Level;
 import net.mcforge.world.PlaceMode;
-import net.mcforge.world.blocks.Block;
+import net.mcforge.world.blocks.classicmodel.ClassicBlock;
 
 public class PlayerBlockChangeEvent extends PlayerEvent implements Cancelable {
 
@@ -23,7 +23,7 @@ public class PlayerBlockChangeEvent extends PlayerEvent implements Cancelable {
     
     private PlaceMode _type;
     
-    private Block block;
+    private ClassicBlock block;
     
     private short X;
     private short Y;
@@ -32,7 +32,7 @@ public class PlayerBlockChangeEvent extends PlayerEvent implements Cancelable {
     private Server server;
     
     
-    public PlayerBlockChangeEvent(Player who, short X, short Y, short Z, Block id, Level level, Server server, PlaceMode place) {
+    public PlayerBlockChangeEvent(Player who, short X, short Y, short Z, ClassicBlock id, Level level, Server server, PlaceMode place) {
         super(who);
         this.block = id;
         this.X = X;
@@ -75,7 +75,7 @@ public class PlayerBlockChangeEvent extends PlayerEvent implements Cancelable {
         return events;
     }
     
-    public Block getBlock() {
+    public ClassicBlock getBlock() {
         return block;
     }
     
@@ -83,7 +83,7 @@ public class PlayerBlockChangeEvent extends PlayerEvent implements Cancelable {
         return _type;
     }
     
-    public void setBlock(Block block) {
+    public void setBlock(ClassicBlock block) {
         this.block = block;
     }
     

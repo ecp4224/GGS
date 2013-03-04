@@ -10,7 +10,7 @@ package net.mcforge.API.level;
 import net.mcforge.API.Cancelable;
 import net.mcforge.API.Event;
 import net.mcforge.API.EventList;
-import net.mcforge.world.model.ClassicLevel;
+import net.mcforge.world.classicmodel.ClassicLevel;
 
 public class LevelPreLoadEvent extends Event implements Cancelable {
 

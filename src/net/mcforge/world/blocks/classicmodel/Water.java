@@ -8,7 +8,6 @@
 package net.mcforge.world.blocks.classicmodel;
 
 import net.mcforge.server.Server;
-import net.mcforge.world.blocks.PhysicsBlock;
 
 public class Water extends Lava {
 

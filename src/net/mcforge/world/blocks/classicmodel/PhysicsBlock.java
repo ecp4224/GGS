@@ -5,14 +5,14 @@
  * which accompanies this distribution, and is available at
  * http://www.gnu.org/licenses/gpl.html
  ******************************************************************************/
-package net.mcforge.world.blocks;
+package net.mcforge.world.blocks.classicmodel;
 
 import net.mcforge.iomodel.Player;
 import net.mcforge.server.Server;
 import net.mcforge.system.ticker.Tick;
 import net.mcforge.world.Level;
 
-public abstract class PhysicsBlock extends Block implements Tick {
+public abstract class PhysicsBlock extends ClassicBlock implements Tick {
     private static final long serialVersionUID = 3223381644534019388L;
     
     private int _x;
@@ -47,7 +47,7 @@ public abstract class PhysicsBlock extends Block implements Tick {
     public abstract boolean initAtStart();
     
     /**
-     * Create a clone of the Physics Block.
+     * Create a clone of the Physics ClassicBlock.
      * @param s
      * @return The clone of the block
      */
@@ -141,7 +141,7 @@ public abstract class PhysicsBlock extends Block implements Tick {
     public void remove(int x, int y, int z) {
         if (_level == null)
             return;
-        Player.GlobalBlockChange((short)x, (short)y, (short)z, Block.getBlock("Air"), _level, _server);
+        Player.GlobalBlockChange((short)x, (short)y, (short)z, ClassicBlock.getBlock("Air"), _level, _server);
     }
     
     /**
@@ -149,7 +149,7 @@ public abstract class PhysicsBlock extends Block implements Tick {
      * @param b
      *         The block to change into.
      */
-    public void change(Block b) {
+    public void change(ClassicBlock b) {
         if (_level == null)
             return;
         Player.GlobalBlockChange((short)_x, (short)_y, (short)_z, b, _level, _server);

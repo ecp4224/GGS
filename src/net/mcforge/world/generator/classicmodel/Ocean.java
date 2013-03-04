@@ -5,12 +5,12 @@
  * which accompanies this distribution, and is available at
  * http://www.gnu.org/licenses/gpl.html
  ******************************************************************************/
-package net.mcforge.world.generator.model;
+package net.mcforge.world.generator.classicmodel;
 
 import java.util.Random;
 
 import net.mcforge.server.Server;
-import net.mcforge.world.blocks.Block;
+import net.mcforge.world.blocks.classicmodel.ClassicBlock;
 import net.mcforge.world.generator.Generator;
 import net.mcforge.world.Level;
 
@@ -78,18 +78,18 @@ public class Ocean implements Generator {
                         {
                             if (z > WaterLevel + 2)
                             {
-                                if (zz == 0) { l.rawSetTile(x, z - zz, y, Block.getBlock("Grass"), _server, false); }      //top layer
-                                else if (zz < 3) { l.rawSetTile(x, (short)(z - zz), y, Block.getBlock("Dirt"), _server, false); }   //next few
-                                else { l.rawSetTile(x, (short)(z - zz), y, Block.getBlock("Stone"), _server, false); }               //ten rock it
+                                if (zz == 0) { l.rawSetTile(x, z - zz, y, ClassicBlock.getBlock("Grass"), _server, false); }      //top layer
+                                else if (zz < 3) { l.rawSetTile(x, (short)(z - zz), y, ClassicBlock.getBlock("Dirt"), _server, false); }   //next few
+                                else { l.rawSetTile(x, (short)(z - zz), y, ClassicBlock.getBlock("Stone"), _server, false); }               //ten rock it
                             }
                             else
                             {
-                                l.rawSetTile(x, (short)(z - zz), y, Block.getBlock("Sand"), _server, false);                        //SAAAND extra for islands
+                                l.rawSetTile(x, (short)(z - zz), y, ClassicBlock.getBlock("Sand"), _server, false);                        //SAAAND extra for islands
                             }
                         }
                         else
                         {
-                            l.rawSetTile(x, (short)(z - zz), y, Block.getBlock("Stone"), _server, false);    //zoned for above sea level rock floor
+                            l.rawSetTile(x, (short)(z - zz), y, ClassicBlock.getBlock("Stone"), _server, false);    //zoned for above sea level rock floor
                         }
                     }
                 }
@@ -98,21 +98,21 @@ public class Ocean implements Generator {
                     for (short zz = 0; WaterLevel - zz >= 0; zz++)
                     {
                         if (WaterLevel - zz > z)
-                        { l.rawSetTile(x, (short)(WaterLevel - zz), y, Block.getBlock("Water"), _server, false); }    //better fill the water aboce me
+                        { l.rawSetTile(x, (short)(WaterLevel - zz), y, ClassicBlock.getBlock("Water"), _server, false); }    //better fill the water aboce me
                         else if (WaterLevel - zz > z - 3)
                         {
                             if (overlay[bb] < 0.75f)
                             {
-                                l.rawSetTile(x, (short)(WaterLevel - zz), y, Block.getBlock("Sand"), _server, false);   //sand top
+                                l.rawSetTile(x, (short)(WaterLevel - zz), y, ClassicBlock.getBlock("Sand"), _server, false);   //sand top
                             }
                             else
                             {
-                                l.rawSetTile(x, (short)(WaterLevel - zz), y, Block.getBlock("Gravel"), _server, false);  //zoned for gravel
+                                l.rawSetTile(x, (short)(WaterLevel - zz), y, ClassicBlock.getBlock("Gravel"), _server, false);  //zoned for gravel
                             }
                         }
                         else
                         { 
-                            l.rawSetTile(x, (short)(WaterLevel - zz), y, Block.getBlock("Stone"), _server, false); 
+                            l.rawSetTile(x, (short)(WaterLevel - zz), y, ClassicBlock.getBlock("Stone"), _server, false); 
                         }
                     }
                 }
@@ -132,7 +132,7 @@ public class Ocean implements Generator {
     void AddTree(Level Lvl, short x, short y, short z, Random Rand)
     {
         byte height = (byte)(5 + (int)(Math.random() * ((8 - 5) + 1)));
-        for (short yy = 0; yy < height; yy++) Lvl.rawSetTile(x, (short)(y + yy), z, Block.getBlock("Wood"), _server, false);
+        for (short yy = 0; yy < height; yy++) Lvl.rawSetTile(x, (short)(y + yy), z, ClassicBlock.getBlock("Wood"), _server, false);
 
         short top = (short)(height - (2 + (int)(Math.random() * ((4 - 2) + 1))));
 
@@ -148,7 +148,7 @@ public class Ocean implements Generator {
                         try {
                             if (Rand.nextInt((int)(Dist)) < 2)
                             {
-                                Lvl.rawSetTile((short)(x + xx), (short)(y + yy + height), (short)(z + zz), Block.getBlock("Leaves"), _server, false);
+                                Lvl.rawSetTile((short)(x + xx), (short)(y + yy + height), (short)(z + zz), ClassicBlock.getBlock("Leaves"), _server, false);
                             }
                         } catch (Exception e) { }
                     }

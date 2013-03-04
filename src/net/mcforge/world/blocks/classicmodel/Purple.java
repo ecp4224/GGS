@@ -7,9 +7,8 @@
  ******************************************************************************/
 package net.mcforge.world.blocks.classicmodel;
 
-import net.mcforge.world.blocks.Block;
 
-public class Purple extends Block {
+public class Purple extends ClassicBlock {
 
     /**
      * 
