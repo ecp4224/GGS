@@ -1,5 +1,7 @@
 package net.mcforge.world.blocks.mcmodel;
 
+import net.mcforge.server.Server;
+import net.mcforge.world.Level;
 import net.mcforge.world.blocks.Block;
 
 public abstract class SMPBlock implements Block {
@@ -29,6 +31,22 @@ public abstract class SMPBlock implements Block {
     public byte getVisibleBlock() {
         return ID;
     }
+    
+    /**
+     * This method is called when the block is deleted
+     * @param l 
+     *          The level the block was deleted in
+     * @param index 
+     */
+    public void onDelete(Level l, int x, int y, int z, Server server) { }
+    
+    /**
+     * This method is called when the block is placed
+     * @param l 
+     *          The level the block was placed in
+     * @param index 
+     */
+    public void onPlace(Level l, int x, int y, int z, Server server) { }
     
     /**
      * Get a block by ID

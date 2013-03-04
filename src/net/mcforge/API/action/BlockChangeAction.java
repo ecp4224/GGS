@@ -12,6 +12,7 @@ import net.mcforge.API.Listener;
 import net.mcforge.API.player.PlayerBlockChangeEvent;
 import net.mcforge.iomodel.Player;
 import net.mcforge.world.PlaceMode;
+import net.mcforge.world.blocks.Block;
 import net.mcforge.world.blocks.classicmodel.ClassicBlock;
 
 public class BlockChangeAction extends Action<BlockChangeAction> implements Listener {
@@ -79,7 +80,7 @@ public class BlockChangeAction extends Action<BlockChangeAction> implements List
      * @return
      *        The block.
      */
-    public ClassicBlock getOrginalBlock() {
+    public Block getOrginalBlock() {
         return getPlayer().getLevel().getTile(X, Y, Z);
     }
     
