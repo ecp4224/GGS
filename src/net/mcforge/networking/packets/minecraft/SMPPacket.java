@@ -82,6 +82,17 @@ public abstract class SMPPacket extends DynamicPacket {
         }
     }
     
+    /**
+     * Put a boolean into a ByteBuffer
+     * @param bool
+     *              The boolean to put into the ByteBuffer
+     * @param buffer
+     *              The buffer to insert into
+     */
+    public void putBoolean(boolean bool, ByteBuffer buffer) {
+    	buffer.put((byte)(bool ? 0x01 : 0x00));
+    }
+    
     @Override
     public void handle(Server server, IOClient client, InputStream reader) {
         if (client instanceof SMPPlayer) {
