@@ -84,7 +84,7 @@ public class SetBlock extends ClassicPacket {
         short Z = bb.getShort(4);
         PlaceMode pm = PlaceMode.parse(bb.get(6));
         byte block = bb.get(7);
-        p.HandleBlockChange(X, Y, Z, pm, block);
+        p.handleBlockChange(X, Y, Z, pm, block);
     }
     @Override
     public void Write(IOClient player, Server servers) {

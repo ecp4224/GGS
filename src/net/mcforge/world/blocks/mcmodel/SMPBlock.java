@@ -32,21 +32,11 @@ public abstract class SMPBlock implements Block {
         return ID;
     }
     
-    /**
-     * This method is called when the block is deleted
-     * @param l 
-     *          The level the block was deleted in
-     * @param index 
-     */
-    public void onDelete(Level l, int x, int y, int z, Server server) { }
+    @Override
+    public boolean onDelete(Level l, int x, int y, int z, Server server) { return false; }
     
-    /**
-     * This method is called when the block is placed
-     * @param l 
-     *          The level the block was placed in
-     * @param index 
-     */
-    public void onPlace(Level l, int x, int y, int z, Server server) { }
+    @Override
+    public boolean onPlace(Level l, int x, int y, int z, Server server) { return false; }
     
     /**
      * Get a block by ID

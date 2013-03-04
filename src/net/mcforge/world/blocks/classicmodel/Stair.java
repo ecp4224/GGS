@@ -7,6 +7,10 @@
  ******************************************************************************/
 package net.mcforge.world.blocks.classicmodel;
 
+import net.mcforge.iomodel.Player;
+import net.mcforge.server.Server;
+import net.mcforge.world.Level;
+
 
 public class Stair extends ClassicBlock {
 
@@ -21,6 +25,16 @@ public class Stair extends ClassicBlock {
     
     public Stair() {
         super((byte)44, "Stair");
+    }
+    
+    @Override
+    public boolean onPlace(Level l, int x, int y, int z, Server server) {
+        if (l.getTile(x, y - 1, z).getName().equals("Stair")) {
+            Player.GlobalBlockChange((short)x, (short)y, (short)z, ClassicBlock.getBlock("Air"), l, server);
+            Player.GlobalBlockChange((short)x, (short)(y - 1), (short)z, ClassicBlock.getBlock("DoubleStair"), l, server);
+            return true;
+        }
+        return false;
     }
 
 }

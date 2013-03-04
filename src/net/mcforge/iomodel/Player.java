@@ -1297,7 +1297,7 @@ public class Player extends IOClient implements CommandExecutor, Tick {
      * @param type The type of action it did
      * @param holding What the client was holding
      */
-    public void HandleBlockChange(short X, short Y, short Z, PlaceMode type, byte holding) {
+    public void handleBlockChange(short X, short Y, short Z, PlaceMode type, byte holding) {
         ClassicBlock getOrginal = (ClassicBlock)level.getTile(X, Y, Z);
         if (holding > 49) {
             kick("Hack Client detected!");
@@ -1423,8 +1423,10 @@ public class Player extends IOClient implements CommandExecutor, Tick {
      * @param updateLevel Whether the level should be updated
      */
     public static void GlobalBlockChange(short X, short Y, short Z, ClassicBlock block, Level l, Server s, boolean updateLevel) {
-        if (updateLevel)
-            l.setTile(block, X, Y, Z, s);
+        if (updateLevel) {
+           l.setTile(block, X, Y, Z, s);
+           block = (ClassicBlock)l.getTile(X, Y, Z); //We dont want to send a ghost block :P
+        }
         if (s == null)
             return;
         //Do this way to save on packet overhead
@@ -1451,12 +1453,14 @@ public class Player extends IOClient implements CommandExecutor, Tick {
         final SetBlock sb = (SetBlock)s.getPacketManager().getPacket("SetBlock");
         ArrayList<byte[]> cache = new ArrayList<byte[]>();
         for (BlockUpdate b : blockupdates) {
+            if (updateLevel) {
+                l.setTile(b.getBlock(), b.getX(), b.getY(), b.getZ(), s);
+                b.setBlock((ClassicBlock)l.getTile(b.getX(), b.getY(), b.getZ())); //Prevent ghost blocks.
+            }
             for (Player p : s.getPlayers()) {
                 if (p.getLevel() == l)
                     cache.add(sb.getBytes(p, s, (short)b.getX(), (short)b.getY(), (short)b.getZ(), b.getBlock().getVisibleBlock()));
             }
-            if (updateLevel)
-                l.setTile(b.getBlock(), b.getX(), b.getY(), b.getZ(), s);
         }
 
         for (int pi = 0; pi < s.getPlayers().size(); pi++) {

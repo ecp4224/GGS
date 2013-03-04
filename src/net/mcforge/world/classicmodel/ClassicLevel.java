@@ -195,9 +195,15 @@ public class ClassicLevel implements Level, Serializable {
             updated = true;
         }
         if(wasthere != null){
-            wasthere.onDelete(this, pos[0], pos[1], pos[2], server);
+            if (wasthere.onDelete(this, pos[0], pos[1], pos[2], server)) {
+                blocks[index] = wasthere;
+                return;
+            }
         }
-        b.onPlace(this, pos[0], pos[1], pos[2], server);
+        if (b.onPlace(this, pos[0], pos[1], pos[2], server)) {
+            blocks[index] = wasthere;
+            return;
+        }
         if (!physics)
             return;
         try {
