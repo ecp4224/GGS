@@ -40,9 +40,9 @@ import net.mcforge.world.generator.Generator;
 
 public class ClassicLevel implements Level, Serializable {
 
-    private static final long serialVersionUID = -7297498370800056856L;
+    private static final long serialVersionUID = -7297498370800056858L;
     
-    private static final Serializer<ClassicLevel> saver = new Serializer<ClassicLevel>(SaveType.GZIP_KRYO);
+    private static final Serializer<ClassicLevel> saver = new Serializer<ClassicLevel>(SaveType.GZIP_KRYO, serialVersionUID);
 
     private transient Thread physics;
 

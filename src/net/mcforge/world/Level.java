@@ -2,8 +2,6 @@ package net.mcforge.world;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
-
 import net.mcforge.iomodel.Player;
 import net.mcforge.server.Server;
 import net.mcforge.system.ticker.Tick;

@@ -19,7 +19,7 @@ import net.mcforge.system.Serializer.SaveType;
 
 public class UpdateManager {
     private ArrayList<Updatable> updatelist = new ArrayList<Updatable>();
-    private static final Serializer<UpdateHolder> update = new Serializer<UpdateHolder>(SaveType.JSON);
+    private static final Serializer<UpdateHolder> update = new Serializer<UpdateHolder>(SaveType.JSON, 0L);
 
     /**
      * This method can only be called by the {@link Updateable} object being

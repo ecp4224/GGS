@@ -282,8 +282,8 @@ public class ClassicLevelHandler implements LevelHandler {
     }
 
     @Override
-    public void loadLevel(File file) {
-        loadClassicLevel(file.getAbsolutePath());
+    public Level loadLevel(File file) {
+        return loadClassicLevel(file.getAbsolutePath());
     }
 
     @Override

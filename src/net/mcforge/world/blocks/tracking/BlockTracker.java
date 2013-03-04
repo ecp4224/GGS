@@ -30,7 +30,7 @@ import net.mcforge.world.blocks.classicmodel.ClassicBlock;
 public class BlockTracker implements Listener, Tick, Serializable {
     private static final long serialVersionUID = 6L;
     private HashMap<Player, ArrayList<BlockData>> cache = new HashMap<Player, ArrayList<BlockData>>();
-    private Serializer<ArrayList<BlockData>> saver = new Serializer<ArrayList<BlockData>>(SaveType.GZIP_JAVA);
+    private Serializer<ArrayList<BlockData>> saver = new Serializer<ArrayList<BlockData>>(SaveType.GZIP_JAVA, serialVersionUID);
     private int wait = 60;
     private int oldest = 1;
     private Server server;

@@ -29,6 +29,7 @@ public class ServerStartupArgs {
         setLoadingHeartbeat(true);
         setLoadingGenerator(true);
         setIsLoadingBlockTracking(true);
+        setAllowClassic(true);
     }
     
     /**

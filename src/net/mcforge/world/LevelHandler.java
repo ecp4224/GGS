@@ -16,7 +16,7 @@ public interface LevelHandler {
     
     public void loadLevels();
     
-    public void loadLevel(File file);
+    public Level loadLevel(File file);
     
     public boolean unloadLevel(Level level);
     

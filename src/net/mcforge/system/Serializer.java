@@ -8,7 +8,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
-import java.lang.reflect.Field;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
@@ -20,6 +19,7 @@ import com.google.gson.Gson;
 public class Serializer<E> {
 
     private SaveType type;
+    private long version;
 
     private static final Kryo LOADER = new Kryo();
     private static final Gson GSON = new Gson();
@@ -43,8 +43,9 @@ public class Serializer<E> {
         return GSON;
     }
 
-    public Serializer(SaveType type) {
+    public Serializer(SaveType type, long version) {
         this.type = type;
+        this.version = version;
     }
 
     /**
@@ -156,7 +157,7 @@ public class Serializer<E> {
         long version = objInput.readLong();
         Class<?> class_ = LOADER.readObject(objInput, Class.class);
         E l = null;
-        if (version == getVersion(l)){
+        if (version == getVersion()){
             l = (E)LOADER.readObject(objInput, class_);
             objInput.close();
             if (g != null)
@@ -167,7 +168,7 @@ public class Serializer<E> {
             objInput.close();
             if (g != null)
                 g.close();
-            throw new IOException("Invalid class version. Expected version - " + getVersion(l) + ". Version got - " + version);
+            throw new IOException("Invalid class version. Expected version: " + getVersion() + ". Version got: " + version);
         }
     }
 
@@ -183,7 +184,7 @@ public class Serializer<E> {
             jin = new ObjectInputStream(in);
         long version = jin.readLong();
         E l = null;
-        if (version == getVersion(l)) {
+        if (version == getVersion()) {
             l = (E)jin.readObject();
             jin.close();
             if (g != null)
@@ -194,7 +195,7 @@ public class Serializer<E> {
             jin.close();
             if (g != null)
                 g.close();
-            throw new IOException("Invalid class version. Expected version - " + getVersion(l) + ". Version got - " + version);
+            throw new IOException("Invalid class version. Expected version: " + getVersion() + ". Version got: " + version);
         }
     }
 
@@ -207,7 +208,7 @@ public class Serializer<E> {
         }
         else
             jout = new ObjectOutputStream(out);
-        long version = getVersion(object);
+        long version = getVersion();
         jout.writeLong(version);
         jout.writeObject(object);
         jout.close();
@@ -224,7 +225,7 @@ public class Serializer<E> {
         }
         else
             kout = new Output(out);
-        long version = getVersion(object);
+        long version = getVersion();
         Class<?> class_ = object.getClass();
         kout.writeLong(version);
         LOADER.writeObject(kout, class_);
@@ -247,13 +248,8 @@ public class Serializer<E> {
         return GSON.fromJson(json, class_);
     }
 
-    private long getVersion(E object) {
-        try {
-            Field f = object.getClass().getDeclaredField("serialVersionUID");
-            return (long)f.getLong(object);
-        } catch (Exception e) {
-            return 0L;
-        }
+    private long getVersion() {
+        return version;
     }
 
 
