@@ -2,7 +2,7 @@
 
 ![MCForge Logo](http://www.mcforge.net/community/public/style_images/4_logo.png)
 
-MCForge is a server software
+MCForge minecraft server software
 
 ##Important stuff for Modders / Forkers
 - [MCForge Wiki](https://github.com/MCForge/MCForge-Vanilla/wiki)
