@@ -27,7 +27,7 @@ public class PlayerListItem extends SMPPacket {
 			ByteBuffer bb = ByteBuffer.allocate(6 + ((String)obj[0]).length() * 2);
 			bb.put(this.ID);
 			putMinecraftString((String)obj[0], bb);
-			bb.put((byte)((Boolean)obj[1] ? 0x00 : 0x01));
+			putBoolean((Boolean)obj[1], bb);
 			bb.putShort((Short)obj[2]);
 			
 			try{
