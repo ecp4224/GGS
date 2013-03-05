@@ -28,7 +28,6 @@ import net.mcforge.API.help.Help;
 import net.mcforge.API.help.HelpItemManager;
 import net.mcforge.API.io.ServerLogEvent;
 import net.mcforge.API.plugin.CommandHandler;
-import net.mcforge.API.plugin.GeneratorHandler;
 import net.mcforge.API.plugin.PluginHandler;
 import net.mcforge.API.server.ServerStartedEvent;
 import net.mcforge.chat.ChatColor;
@@ -60,6 +59,7 @@ import net.mcforge.util.properties.Properties;
 import net.mcforge.world.Level;
 import net.mcforge.world.ClassicLevelHandler;
 import net.mcforge.world.blocks.tracking.BlockTracker;
+import net.mcforge.world.generator.GeneratorHandler;
 import net.mcforge.world.generator.classicmodel.FlatGrass;
 import net.mcforge.world.generator.classicmodel.Forest;
 import net.mcforge.world.generator.classicmodel.Island;
@@ -68,6 +68,8 @@ import net.mcforge.world.generator.classicmodel.Ocean;
 import net.mcforge.world.generator.classicmodel.Pixel;
 import net.mcforge.world.generator.classicmodel.Rainbow;
 import net.mcforge.world.generator.classicmodel.Space;
+import net.mcforge.world.generator.mcmodel.FlatGrassChunk;
+import net.mcforge.world.mcmodel.ChunkLevel;
 
 public final class Server implements LogInterface, Updatable, Tick {
     private PacketManager pm;
@@ -80,6 +82,7 @@ public final class Server implements LogInterface, Updatable, Tick {
     private GeneratorHandler gh;
     private UpdateService us;
     private Properties p;
+    private ChunkLevel TEMP_MAIN_LEVEL; //TODO Remove this and make an SMPLevelHandler
     private PluginHandler ph;
     private Beat heartbeater;
     private EventSystem es;
@@ -648,7 +651,7 @@ public final class Server implements LogInterface, Updatable, Tick {
             Log("OK!", true);
         }
         if (args.isLoadingGenerator()) {
-            Log("Loading Generator Service", true);
+            Log("Loading ClassicGenerator Service", true);
             gh = new GeneratorHandler();
             Log("OK!", true);
         }
@@ -756,31 +759,32 @@ public final class Server implements LogInterface, Updatable, Tick {
 
         if (args.isLoadingGenerator()) {
             if (args.isAllowingClassic()) {
-                Log("Adding Flatgrass generator to Generator Service", true);
+                Log("Adding Flatgrass generator to ClassicGenerator Service", true);
                 gh.addGenerator(new FlatGrass(this));
                 Log("OK!", true);
-                Log("Adding Forest generator to Generator Service", true);
+                Log("Adding Forest generator to ClassicGenerator Service", true);
                 gh.addGenerator(new Forest(this));
                 Log("OK!", true);
-                Log("Adding Island generator to Generator Service", true);
+                Log("Adding Island generator to ClassicGenerator Service", true);
                 gh.addGenerator(new Island(this));
                 Log("OK!", true);
-                Log("Adding Mountains generator to Generator Service", true);
+                Log("Adding Mountains generator to ClassicGenerator Service", true);
                 gh.addGenerator(new Mountains(this));
                 Log("OK!", true);
-                Log("Adding Ocean generator to Generator Service", true);
+                Log("Adding Ocean generator to ClassicGenerator Service", true);
                 gh.addGenerator(new Ocean(this));
                 Log("OK!", true);
-                Log("Adding Pixel generator to Generator Service", true);
+                Log("Adding Pixel generator to ClassicGenerator Service", true);
                 gh.addGenerator(new Pixel(this));
                 Log("OK!", true);
-                Log("Adding Rainbow generator to Generator Service", true);
+                Log("Adding Rainbow generator to ClassicGenerator Service", true);
                 gh.addGenerator(new Rainbow(this));
                 Log("OK!", true);
-                Log("Adding Space generator to Generator Service", true);
+                Log("Adding Space generator to ClassicGenerator Service", true);
                 gh.addGenerator(new Space(this));
                 Log("OK!", true);
             }
+            gh.addGenerator(new FlatGrassChunk());
         }
 
         if (args.isLoadingCommands() && args.isAllowingClassic()) {
@@ -802,6 +806,11 @@ public final class Server implements LogInterface, Updatable, Tick {
         Log("Adding Server to ticker", true);
         getTicker().addTick(this);
         Log("OK!", true);
+        Log("Creating SMP Main Level..");
+        TEMP_MAIN_LEVEL = new ChunkLevel(this, "Test");
+        Log("Generating World..");
+        TEMP_MAIN_LEVEL.generateWorld(gh.findGenerator("FlatGrassChunk"));
+        Log("Done!");
     }
 
     /**

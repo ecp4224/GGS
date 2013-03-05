@@ -21,7 +21,7 @@ import net.mcforge.server.Server;
 import net.mcforge.system.ticker.Tick;
 import net.mcforge.world.backup.BackupRunner;
 import net.mcforge.world.classicmodel.ClassicLevel;
-import net.mcforge.world.generator.Generator;
+import net.mcforge.world.generator.classicmodel.ClassicGenerator;
 import net.mcforge.world.generator.classicmodel.FlatGrass;
 
 public class ClassicLevelHandler implements LevelHandler {
@@ -85,7 +85,7 @@ public class ClassicLevelHandler implements LevelHandler {
         newClassicLevel(name, width, height, length, new FlatGrass(server));
     }
 
-    public void newClassicLevel(String name, short width, short height, short length, Generator gen) {
+    public void newClassicLevel(String name, short width, short height, short length, ClassicGenerator gen) {
         if(!new File("levels/" + name + ".ggs").exists())
         {
             Level level = new ClassicLevel(width, height, length);
@@ -272,7 +272,7 @@ public class ClassicLevelHandler implements LevelHandler {
     }
 
     @Override
-    public void generateLevel(String name, Generator gen) {
+    public void generateLevel(String name, ClassicGenerator gen) {
         newClassicLevel(name, (short)64, (short)64, (short)64, gen);
     }
 
@@ -305,7 +305,7 @@ public class ClassicLevelHandler implements LevelHandler {
     }
 
     @Override
-    public void generateLevel(String name, Generator gen, Object... param) {
+    public void generateLevel(String name, ClassicGenerator gen, Object... param) {
         int x = 64;
         int y = 64;
         int z = 64;

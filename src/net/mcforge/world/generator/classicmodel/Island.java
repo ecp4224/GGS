@@ -11,7 +11,7 @@ import java.util.Random;
 
 import net.mcforge.server.Server;
 import net.mcforge.world.blocks.classicmodel.ClassicBlock;
-import net.mcforge.world.generator.Generator;
+import net.mcforge.world.classicmodel.ClassicLevel;
 import net.mcforge.world.Level;
 
 /**
@@ -19,7 +19,7 @@ import net.mcforge.world.Level;
  * @author MCForgeTeam
  *
  */
-public class Island implements Generator {
+public class Island implements ClassicGenerator {
 
     final Random rand = new Random();
     float divide;
@@ -47,12 +47,12 @@ public class Island implements Generator {
     }
 
     @Override
-    public void generate(Level l) {
+    public void generate(ClassicLevel l) {
         generate(l, 64, 64, 64);
     }
 
     @Override
-    public void generate(Level l, int sizex, int sizey, int sizez) {
+    public void generate(ClassicLevel l, int sizex, int sizey, int sizez) {
         terrain = new float[l.getWidth() * l.getHeight()];
         overlay = new float[l.getWidth() * l.getHeight()];
         overlay2 = new float[l.getWidth() * l.getHeight()]; 

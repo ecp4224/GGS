@@ -11,8 +11,7 @@ import java.util.Random;
 
 import net.mcforge.server.Server;
 import net.mcforge.world.blocks.classicmodel.ClassicBlock;
-import net.mcforge.world.generator.Generator;
-import net.mcforge.world.Level;
+import net.mcforge.world.classicmodel.ClassicLevel;
 
 /**
  * Creates a rainbow level where the level is a giant box with a
@@ -20,7 +19,7 @@ import net.mcforge.world.Level;
  * @author MCForge Team
  *
  */
-public class Rainbow implements Generator {
+public class Rainbow implements ClassicGenerator {
 
     private Server _server;
     
@@ -43,7 +42,7 @@ public class Rainbow implements Generator {
     }
     
     @Override
-    public void generate(Level l) {
+    public void generate(ClassicLevel l) {
         Random rand = new Random(System.currentTimeMillis());
         for (int x = 0; x < l.getWidth(); x++) {
             for (int y = 0; y < l.getHeight(); y++) {
@@ -55,7 +54,7 @@ public class Rainbow implements Generator {
         }
     }
     @Override
-    public void generate(Level l, int x, int y, int z) {
+    public void generate(ClassicLevel l, int x, int y, int z) {
         generate(l);
     }
 }

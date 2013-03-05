@@ -37,6 +37,11 @@ public class ChunkPoint {
     
     @Override
     public int hashCode() {
-        return (x + ":" + z).hashCode();
+        return toString().hashCode();
+    }
+    
+    @Override
+    public String toString() {
+        return x + ":" + z;
     }
 }

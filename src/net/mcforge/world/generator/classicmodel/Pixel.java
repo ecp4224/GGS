@@ -9,8 +9,7 @@ package net.mcforge.world.generator.classicmodel;
 
 import net.mcforge.server.Server;
 import net.mcforge.world.blocks.classicmodel.ClassicBlock;
-import net.mcforge.world.generator.Generator;
-import net.mcforge.world.Level;
+import net.mcforge.world.classicmodel.ClassicLevel;
 
 /**
  * Create a level where the walls are made of white wool, perfect
@@ -18,7 +17,7 @@ import net.mcforge.world.Level;
  * @author MCForgeTeam
  *
  */
-public class Pixel implements Generator {
+public class Pixel implements ClassicGenerator {
 
     private Server _server;
     
@@ -40,7 +39,7 @@ public class Pixel implements Generator {
         this._server = server;
     }
     @Override
-    public void generate(Level l) {
+    public void generate(ClassicLevel l) {
         for (int x = 0; x < l.getWidth(); x++) {
             for (int y = 0; y < l.getHeight(); y++) {
                 for (int z = 0; z < l.getDepth(); z++) {
@@ -54,7 +53,7 @@ public class Pixel implements Generator {
 
     }
     @Override
-    public void generate(Level l, int x, int y, int z) {
+    public void generate(ClassicLevel l, int x, int y, int z) {
         generate(l);
     }
 

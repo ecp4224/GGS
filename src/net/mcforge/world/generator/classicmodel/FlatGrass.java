@@ -9,15 +9,14 @@ package net.mcforge.world.generator.classicmodel;
 
 import net.mcforge.server.Server;
 import net.mcforge.world.blocks.classicmodel.ClassicBlock;
-import net.mcforge.world.generator.Generator;
-import net.mcforge.world.Level;
+import net.mcforge.world.classicmodel.ClassicLevel;
 
 /**
  * A generator that creates a flat grass area, perfect for freebuild!
  * @author MCForgeTeam
  *
  */
-public class FlatGrass implements Generator {
+public class FlatGrass implements ClassicGenerator {
 
     private Server _server;
     @Override
@@ -38,7 +37,7 @@ public class FlatGrass implements Generator {
         this._server = server;
     }
     @Override
-    public void generate(final Level l) {
+    public void generate(final ClassicLevel l) {
         for (int x = 0; x < l.getWidth(); x++) {
             for (int y = 0; y < l.getHeight(); y++) {
                 for (int z = 0; z < l.getDepth(); z++) {
@@ -53,7 +52,7 @@ public class FlatGrass implements Generator {
         }
     }
     @Override
-    public void generate(Level l, int x, int y, int z) {
+    public void generate(ClassicLevel l, int x, int y, int z) {
         generate(l);
     }
 

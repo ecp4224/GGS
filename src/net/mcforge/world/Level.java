@@ -20,7 +20,7 @@ public interface Level {
      *         The {@link Generator} object that will
      *         generate the world.
      */
-    public void generateWorld(Generator g);
+    public void generateWorld(Generator<?> g);
     
     /**
      * Whether or not this level will autosave.
@@ -225,21 +225,21 @@ public interface Level {
      * @return
      *        The x spawn
      */
-    public int getSpawnX();
+    public double getSpawnX();
     
     /**
      * Get the y spawn coordinates (in blocks pos)
      * @return
      *        The y spawn
      */
-    public int getSpawnY();
+    public double getSpawnY();
     
     /**
      * Get the z spawn coordinates (in block pos)
      * @return
      *        The z spawn
      */
-    public int getSpawnZ();
+    public double getSpawnZ();
     
     /**
      * Get the name of this level.
@@ -270,19 +270,19 @@ public interface Level {
      * Set the x spawn coordinates
      * @param spawnx
      */
-    public void setSpawnX(int spawnx);
+    public void setSpawnX(double spawnx);
     
     /**
      * Set the y spawn coordinates
      * @param spawny
      */
-    public void setSpawnY(int spawny);
+    public void setSpawnY(double spawny);
     
     /**
      * Set the z spawn coordinates
      * @param spawnz
      */
-    public void setSpawnZ(int spawnz);
+    public void setSpawnZ(double spawnz);
     
     /**
      * Set the name for this level

@@ -37,6 +37,7 @@ import net.mcforge.world.converter.MojangLevelInputStream;
 import net.mcforge.world.converter.OldBlocks;
 import net.mcforge.world.exceptions.BackupFailedException;
 import net.mcforge.world.generator.Generator;
+import net.mcforge.world.generator.classicmodel.ClassicGenerator;
 
 public class ClassicLevel implements Level, Serializable {
 
@@ -141,10 +142,15 @@ public class ClassicLevel implements Level, Serializable {
     }
     
     @Override
-    public void generateWorld(Generator g) {
+    public void generateWorld(Generator<?> g) {
+        ClassicGenerator c;
+        if (g instanceof ClassicGenerator)
+            c = (ClassicGenerator)g;
+        else
+            throw new InvalidParameterException("You can only generate a classic level with a ClassicGenerator!");
         if (blocks == null)
             blocks = new ClassicBlock[width*height*depth];
-        g.generate(this);
+        c.generate(this);
     }
 
     @Override
@@ -722,17 +728,17 @@ public class ClassicLevel implements Level, Serializable {
     }
 
     @Override
-    public int getSpawnX() {
+    public double getSpawnX() {
         return spawnx;
     }
 
     @Override
-    public int getSpawnY() {
+    public double getSpawnY() {
         return spawny;
     }
 
     @Override
-    public int getSpawnZ() {
+    public double getSpawnZ() {
         return spawnz;
     }
 
@@ -757,33 +763,33 @@ public class ClassicLevel implements Level, Serializable {
     }
 
     @Override
-    public void setSpawnX(int spawnx) {
+    public void setSpawnX(double spawnx) {
         if (spawnx > getWidth())
             this.spawnx = getWidth();
         else if (spawnx < 0)
             this.spawnx = 0;
         else
-            this.spawnx = spawnx;
+            this.spawnx = (int)spawnx;
     }
 
     @Override
-    public void setSpawnY(int spawny) {
+    public void setSpawnY(double spawny) {
         if (spawny > getHeight())
             this.spawny = getHeight();
         else if (spawny < 0)
             this.spawny = 0;
         else
-            this.spawny = spawny;
+            this.spawny = (int)spawny;
     }
 
     @Override
-    public void setSpawnZ(int spawnz) {
+    public void setSpawnZ(double spawnz) {
         if (spawnz > getDepth())
             this.spawnz = getDepth();
         else if (spawnz < 0)
             this.spawnz = 0;
         else
-            this.spawnz = spawnz;
+            this.spawnz = (int)spawnz;
     }
 
     @Override

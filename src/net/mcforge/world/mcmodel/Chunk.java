@@ -1,5 +1,6 @@
 package net.mcforge.world.mcmodel;
 
+import net.mcforge.server.Server;
 import net.mcforge.world.Level;
 import net.mcforge.world.blocks.Block;
 import net.mcforge.world.blocks.mcmodel.SMPBlock;
@@ -11,15 +12,19 @@ public class Chunk {
     private final int ylength = 256;
     private ChunkPoint point;
     private boolean updated;
-    private Level owner;
+    private ChunkLevel owner;
     
-    public Chunk(ChunkPoint point, Level owner) {
+    public Chunk(ChunkPoint point, ChunkLevel owner) {
         this.point = point;
         this.owner = owner;
     }
     
-    public Chunk(int x, int z, Level owner) {
-        this(ChunkPoint.toPoint(x, z), owner);
+    public Chunk(int x, int z, ChunkLevel owner) {
+        this(new ChunkPoint(x, z), owner);
+    }
+    
+    public Chunk(double x, double z, ChunkLevel owner) {
+        this((int)x >> 4, (int)z >> 4, owner);
     }
     
     public ChunkPoint getPoint() {
@@ -64,8 +69,24 @@ public class Chunk {
     private void setTile(SMPBlock block, int index) {
         if (index < 0) index = 0;
         if (index >= blocks.length) index = blocks.length - 1;
+        int[] pos = intToPos(index);
+        SMPBlock wasthere = blocks[index];
         blocks[index] = block;
+        if (wasthere != null) {
+            if (wasthere.onDelete(owner, pos[0], pos[1], pos[2], getServer())) {
+                blocks[index] = wasthere;
+                return;
+            }
+        }
+        if (block.onPlace(owner, pos[0], pos[1], pos[2], getServer())) {
+            blocks[index] = wasthere;
+            return;
+        }
         updated = true;
+    }
+    
+    public Server getServer() {
+        return owner.getServer();
     }
     
     public Level getOwner() {
@@ -73,7 +94,8 @@ public class Chunk {
     }
     
     public void save() {
-        //TODO Add to save queue
+        if (!updated)
+            return;
     }
     
     public boolean unload() {

@@ -1,6 +1,7 @@
 package net.mcforge.world.mcmodel;
 
 import java.io.IOException;
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -13,14 +14,71 @@ import net.mcforge.world.blocks.classicmodel.PhysicsBlock;
 import net.mcforge.world.blocks.mcmodel.SMPBlock;
 import net.mcforge.world.exceptions.BackupFailedException;
 import net.mcforge.world.generator.Generator;
+import net.mcforge.world.generator.classicmodel.ClassicGenerator;
+import net.mcforge.world.generator.mcmodel.ChunkGenerator;
 
-public class MCLevel implements Level {
+/**
+ * A level that is represented by an infinite number of {@link Chunks}.
+ * Each {@link Chunk} is 16x256x16.
+ * @author MCForgeTeam
+ *
+ */
+public class ChunkLevel implements Level {
     
     private HashMap<ChunkPoint, Chunk> chunks = new HashMap<ChunkPoint, Chunk>();
+    protected Server owner;
+    protected double spawnx;
+    protected double spawny;
+    protected double spawnz;
+    protected float spawnyaw;
+    protected float spawnpitch;
+    protected String name;
+    protected ChunkGeneratorService cgs;
+    
+    
+    public ChunkLevel(Server server, String name) {
+        this.owner = server;
+        this.name = name;
+        spawnx = 0.0;
+        spawny = 255.0;
+        spawnz = 0.0;
+        cgs = new ChunkGeneratorService(this);
+        server.getTicker().addTick(cgs);
+    }
+    
+    /**
+     * The server that owns this object
+     * @return
+     */
+    public Server getServer() {
+        return owner;
+    }
 
     @Override
-    public void generateWorld(Generator g) {
-        
+    public void generateWorld(Generator<?> g) {
+        ChunkGenerator c;
+        if (g instanceof ChunkGenerator)
+            c = (ChunkGenerator)g;
+        else
+            throw new InvalidParameterException("You can only generate a chunk based level with a ChunkGenerator!");
+        //TODO Find chunks to generate?
+        //For now I guess assume to generate the first few chunks
+        Chunk[] tchunks = {
+                new Chunk(0, 0, this),
+                new Chunk(0, 1, this),
+                new Chunk(1, 0, this),
+                new Chunk(1, 1, this),
+                new Chunk(-1, 0, this),
+                new Chunk(-1, -1, this),
+                new Chunk(0, -1, this)
+        };
+        for (Chunk cc : tchunks)
+            cgs.addChunk(cc, c);
+    }
+    
+    public void addChunk(Chunk c) {
+        if (!chunks.containsKey(c.getPoint()))
+            chunks.put(c.getPoint(), c);
     }
 
     @Override
@@ -150,18 +208,18 @@ public class MCLevel implements Level {
     }
 
     @Override
-    public int getSpawnX() {
-        return 0;
+    public double getSpawnX() {
+        return spawnx;
     }
 
     @Override
-    public int getSpawnY() {
-        return 0;
+    public double getSpawnY() {
+        return spawny;
     }
 
     @Override
-    public int getSpawnZ() {
-        return 0;
+    public double getSpawnZ() {
+        return spawnz;
     }
 
     @Override
@@ -185,18 +243,18 @@ public class MCLevel implements Level {
     }
 
     @Override
-    public void setSpawnX(int spawnx) {
-        // TODO Set X Spawn
+    public void setSpawnX(double spawnx) {
+        this.spawnx = spawnx;
     }
 
     @Override
-    public void setSpawnY(int spawny) {
-        // TODO Set Y Spawn
+    public void setSpawnY(double spawny) {
+        this.spawny = spawny;
     }
 
     @Override
-    public void setSpawnZ(int spawnz) {
-        // TODO Set Z Spawn
+    public void setSpawnZ(double spawnz) {
+        this.spawnz = spawnz;
     }
 
     @Override

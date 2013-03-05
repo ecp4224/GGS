@@ -11,15 +11,14 @@ import java.util.Random;
 
 import net.mcforge.server.Server;
 import net.mcforge.world.blocks.classicmodel.ClassicBlock;
-import net.mcforge.world.generator.Generator;
-import net.mcforge.world.Level;
+import net.mcforge.world.classicmodel.ClassicLevel;
 
 /**
  * Creates a Space level where the walls are made of Bedrock.
  * @author MCForge Team
  *
  */
-public class Space implements Generator {
+public class Space implements ClassicGenerator {
 
     private Server _server;
     
@@ -41,7 +40,7 @@ public class Space implements Generator {
         this._server = server;
     }
     @Override
-    public void generate(Level l) {
+    public void generate(ClassicLevel l) {
         Random rand = new Random(System.currentTimeMillis());
         for (int x = 0; x < l.getWidth(); x++) {
             for (int y = 0; y < l.getHeight(); y++) {
@@ -55,7 +54,7 @@ public class Space implements Generator {
         }
     }
     @Override
-    public void generate(Level l, int x, int y, int z) {
+    public void generate(ClassicLevel l, int x, int y, int z) {
         generate(l);
     }
 
