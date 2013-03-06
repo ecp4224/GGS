@@ -34,8 +34,8 @@ public class SMPPlayer extends IOClient implements Tick, CommandExecutor {
 	private boolean pinged;
 	private KeyPair privateKey;
 	private byte[] verify = new byte[4];
+	private byte lstep;
 	public String username;
-
 	private Location location;
 	private Rotation rotation;
 	private Location oldLocation;
@@ -63,7 +63,9 @@ public class SMPPlayer extends IOClient implements Tick, CommandExecutor {
 		pinged = true;
 	}
 	
-	public void requestLogin() {
+	public void requestLogin() throws IllegalAccessException {
+	    if (lstep != 0)
+	        throw new IllegalAccessException("This method can only be invoked during login.");
 	    try {
             KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA");
             kpg.initialize(1024);
@@ -73,13 +75,17 @@ public class SMPPlayer extends IOClient implements Tick, CommandExecutor {
             if (p == null)
                 return;
             p.Write(this, getServer(), privateKey.getPublic(), verify);
+            lstep = 1;
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
 	}
 	
-	public void validateLogin(byte[] sharedkey, byte[] verify, Packet packet) {
+	public void validateLogin(byte[] sharedkey, byte[] verify, Packet packet) throws IllegalAccessException {
+	    if (lstep != 1)
+	        throw new IllegalAccessException("This method can only be invoked during login.");
 	    try {
+	        getServer().Log("Something you find with a Public Key..", true);
             Cipher cipher = Cipher.getInstance("RSA");
             cipher.init(Cipher.DECRYPT_MODE, privateKey.getPrivate());
             byte[] data = cipher.doFinal(sharedkey);
@@ -89,14 +95,16 @@ public class SMPPlayer extends IOClient implements Tick, CommandExecutor {
             md.update(privateKey.getPublic().getEncoded());
             String hash = bytesToHex(md.digest());
             md = null;
-            System.out.println(hash);
+            getServer().Log("CLIENT: " + hash, true);
             String check = WebUtils.readContentsToArray(new URL("http://session.minecraft.net/game/checkserver.jsp?user=" + getName() + "&serverId=" + hash))[0];
-            System.out.println(check);
+            getServer().Log("SURVEY SAYS \"" + check + "\"", true);
             if (!check.equals("YES")) {
+                getServer().Log("I'm sorry, it seems you didn't get the answer. Well thanks for playing :)", true);
                 kick("Invalid login!");
                 return;
             }
             packet.Write(this, getServer());
+            lstep = 2;
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         } catch (NoSuchPaddingException e) {
@@ -112,6 +120,13 @@ public class SMPPlayer extends IOClient implements Tick, CommandExecutor {
         } catch (IOException e) {
             e.printStackTrace();
         }
+	}
+	
+	public void login() throws IllegalAccessException {
+	    if (lstep != 2)
+	        throw new IllegalAccessException("This method can only be invoked during login.");
+	    getServer().Log(getName() + " has joined the server!");
+	    //TODO Stuff
 	}
 	
 	private static String bytesToHex(byte[] bytes) {

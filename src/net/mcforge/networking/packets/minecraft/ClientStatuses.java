@@ -15,19 +15,26 @@ public class ClientStatuses extends SMPPacket {
 	
 	public ClientStatuses(PacketManager pm) {
         this("ClientStatuses", (byte)0xCD, pm);
-    }
+	}
 	
-
-	@SuppressWarnings("unused")
 	@Override
 	public void handle(SMPPlayer client, Server server, DataInputStream reader) {
 		try {
-			//TODO: finish
-			byte payload = reader.readByte(); 
+			byte payload = reader.readByte();
+			if (payload == 0) {
+			    client.login();
+			}
+			else if (payload == 1) {
+			    //TODO Respawn
+			}
+			else
+			    client.kick("Invalid payload!");
 		}
 		catch(IOException e) {
 			e.printStackTrace();
-		}
+		} catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
 	}
 	
 	@Override

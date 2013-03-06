@@ -45,6 +45,8 @@ public class EncryptionResponse extends SMPPacket {
             client.validateLogin(secret, verify, this);
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
         }
 
     }
