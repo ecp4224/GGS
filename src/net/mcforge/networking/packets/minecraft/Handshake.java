@@ -24,6 +24,7 @@ public class Handshake extends SMPPacket {
             System.out.println(ver + " : " + username + " : " + server_host + " : " + port);
             
             player.username = username;
+            player.requestLogin();
         } catch (Exception e) {
             e.printStackTrace();
         }

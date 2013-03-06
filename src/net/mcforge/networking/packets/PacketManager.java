@@ -17,36 +17,14 @@ import java.net.SocketException;
 import java.util.ArrayList;
 
 import net.mcforge.networking.IOClient;
-import net.mcforge.networking.packets.browser.GET;
-import net.mcforge.networking.packets.classicminecraft.Connect;
-import net.mcforge.networking.packets.classicminecraft.DespawnPlayer;
-import net.mcforge.networking.packets.classicminecraft.FinishLevelSend;
-import net.mcforge.networking.packets.classicminecraft.GlobalPosUpdate;
-import net.mcforge.networking.packets.classicminecraft.Kick;
-import net.mcforge.networking.packets.classicminecraft.LevelSend;
-import net.mcforge.networking.packets.classicminecraft.LevelStartSend;
-import net.mcforge.networking.packets.classicminecraft.MOTD;
-import net.mcforge.networking.packets.classicminecraft.Message;
-import net.mcforge.networking.packets.classicminecraft.Ping;
-import net.mcforge.networking.packets.classicminecraft.PosUpdate;
-import net.mcforge.networking.packets.classicminecraft.SetBlock;
-import net.mcforge.networking.packets.classicminecraft.SpawnPlayer;
-import net.mcforge.networking.packets.classicminecraft.TP;
-import net.mcforge.networking.packets.classicminecraft.UpdateUser;
-import net.mcforge.networking.packets.classicminecraft.Welcome;
-import net.mcforge.networking.packets.classicminecraft.extend.ClickDistancePacket;
-import net.mcforge.networking.packets.classicminecraft.extend.ExtAddPlayerNamePacket;
-import net.mcforge.networking.packets.classicminecraft.extend.ExtEntryPacket;
-import net.mcforge.networking.packets.classicminecraft.extend.ExtInfoPacket;
-import net.mcforge.networking.packets.classicminecraft.extend.ExtPlayerPacket;
-import net.mcforge.networking.packets.classicminecraft.extend.ExtRemovePlayerNamePacket;
-import net.mcforge.networking.packets.classicminecraft.extend.HoldThisPacket;
+import net.mcforge.networking.packets.browser.*;
+import net.mcforge.networking.packets.classicminecraft.*;
+import net.mcforge.networking.packets.classicminecraft.extend.*;
 import net.mcforge.networking.packets.clients.BrowserClient;
 import net.mcforge.networking.packets.clients.ClassicClient;
 import net.mcforge.networking.packets.clients.Client;
 import net.mcforge.networking.packets.clients.SMPClient;
-import net.mcforge.networking.packets.minecraft.Handshake;
-import net.mcforge.networking.packets.minecraft.SMPKick;
+import net.mcforge.networking.packets.minecraft.*;
 import net.mcforge.server.Server;
 
 public class PacketManager {
@@ -108,8 +86,30 @@ public class PacketManager {
                 new ExtPlayerPacket(this),
                 new ExtAddPlayerNamePacket(this),
                 new ExtRemovePlayerNamePacket(this),
+                
+                
+                new Animation(this),
+                new CollectItem(this),
+                new EncryptionKeyRequest(this),
+                new EncryptionResponse(this),
+                new EntityAction(this),
                 new Handshake(this),
-                new SMPKick(this)
+                new HeldItemChange(this),
+                new KeepAlive(this),
+                new LoginRequest(this),
+                new Player(this),
+                new PlayerDigging(this),
+                new PlayerLook(this),
+                new PlayerPosition(this),
+                new PlayerPositionAndLook(this),
+                new Respawn(this),
+                new SMPKick(this),
+                new SpawnExperienceOrb(this),
+                new SpawnPainting(this),
+                new SpawnPosition(this),
+                new TimeUpdate(this),
+                new UpdateHealth(this),
+                new UseEntity(this)
         };
     }
 

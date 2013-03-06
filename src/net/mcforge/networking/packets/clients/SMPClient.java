@@ -25,7 +25,7 @@ public class SMPClient implements IClient {
             return null;
         else {
             ((DynamicPacket)packet).handle(pm.server, object, object.getInputStream());
-            object.kick("This is not an SMP Server!");
+            //object.kick("This is not an SMP Server!");
             return object;
         }
     }

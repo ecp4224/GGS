@@ -111,7 +111,7 @@ public abstract class SMPPacket extends DynamicPacket {
     @Override
     public void Write(IOClient client, Server server, Object... obj) {
         if (client instanceof SMPPlayer)
-            Write((SMPPlayer)client, server, obj);
+            write((SMPPlayer)client, server, obj);
         else
             throw new InvalidPacketCall("You cant send a SMPPacket to a non SMP Player");
     }

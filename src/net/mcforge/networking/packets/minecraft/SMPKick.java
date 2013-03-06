@@ -26,11 +26,9 @@ public class SMPKick extends SMPPacket {
     public void write(SMPPlayer client, Server server, Object... obj) {
         try {
             String reason = obj.length == 0 ? "No reason given" : (String)obj[0];
-            byte[] array = reason.getBytes("UTF-16BE");
-            ByteBuffer b = ByteBuffer.allocate(3 + array.length);
+            ByteBuffer b = ByteBuffer.allocate(3 + (reason.length() * 2));
             b.put(ID);
-            b.putShort((short)reason.length());
-            b.put(array);
+            putMinecraftString(reason, b);
             client.writeData(b.array());
         } catch (Exception e) {
             e.printStackTrace();

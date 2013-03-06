@@ -293,7 +293,10 @@ public class IOClient {
     public boolean equals(Object obj) {
         if (obj instanceof IOClient) {
             IOClient client = (IOClient)obj;
-            return client.address.equals(address) && client.getReaderThreadID() == getReaderThreadID() && client.client.equals(client);
+            if (client.client != null && client != null)
+                return client.address.equals(address) && client.getReaderThreadID() == getReaderThreadID() && client.client.equals(client);
+            else
+                return client.address.equals(address) && client.getReaderThreadID() == getReaderThreadID();
         }
         return false;
     }
