@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import net.mcforge.world.generator.classicmodel.ClassicGenerator;
-
 /**
  * The GeneratorHandler is responsible for
  * managing the server's level generators.

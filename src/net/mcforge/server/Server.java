@@ -97,7 +97,12 @@ public final class Server implements LogInterface, Updatable, Tick {
     private ArrayList<Player> pcache;
     private HelpItemManager hmanange;
     private BlockTracker track;
-    public static final String[] devs = new String []{ "Dmitchell", "501st_commander", "Lavoaster", "Alem_Zupa", "QuantumParticle", "BeMacized", "Shade2010", "edh649", "hypereddie10", "Gamemakergm", "Serado", "Wouto1997", "cazzar", "givo" };
+    
+    //Staff
+    public static ArrayList<String> devs = new ArrayList<String>();
+    public static ArrayList<String> mods = new ArrayList<String>();
+    public static ArrayList<String> gcmods = new ArrayList<String>();
+    
     /**
      * The remote IP of this server. If there was an error finding the remote IP
      * when the server started up, then this value may equal loopback IP (127.0.0.1)
@@ -407,6 +412,25 @@ public final class Server implements LogInterface, Updatable, Tick {
         catch (ArrayIndexOutOfBoundsException e3) { }
         throw new IllegalAccessException("The salt can only be accessed by the heartbeaters and the Connect packet!");
     }
+    
+    /**
+     * Downloads the stafflist from MCForge
+     */
+    public void retrieveStafflist() {
+    	try{
+    		URL url = new URL("http://server.mcforge.net/devs.txt");
+    		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(url.openStream()));
+    		String line, type;
+    		while((line = bufferedReader.readLine()) != null) {
+    			type = line.split(":")[0];
+    			ArrayList<String> stafflist = type.equals("devs") ? devs : type.equals("mods") ? mods : gcmods;
+    			for (String string : line.split(":")[1].split(" ")) {
+					stafflist.add(string);
+				}
+    		}
+    		bufferedReader.close();
+    	} catch(Exception e){ }
+    }
 
     /**
      * Log an exception to the logger
@@ -617,13 +641,14 @@ public final class Server implements LogInterface, Updatable, Tick {
             Group.load(this);
             Log("OK!", true);
         }
+        retrieveStafflist();
         if (args.isLoadingProperties()) {
             Log("Loading Properties", true);
             p = Properties.init(this);
             Log("OK!", true);
             if (!p.getBool("Verify-Names")) {
                 Log("!!WARNING!! You are running the server with verify names off, this means");
-                Log("anyone can login to the server with any username. Its recommended to turn this");
+                Log("anyone can login to the server with any username. Its recommended to turn");
                 Log("this option on, if you know what your doing, then ignore this message.");
             }
             Log("Loading System Settings", true);

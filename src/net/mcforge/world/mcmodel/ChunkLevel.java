@@ -14,7 +14,6 @@ import net.mcforge.world.blocks.classicmodel.PhysicsBlock;
 import net.mcforge.world.blocks.mcmodel.SMPBlock;
 import net.mcforge.world.exceptions.BackupFailedException;
 import net.mcforge.world.generator.Generator;
-import net.mcforge.world.generator.classicmodel.ClassicGenerator;
 import net.mcforge.world.generator.mcmodel.ChunkGenerator;
 
 /**
