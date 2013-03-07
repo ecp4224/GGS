@@ -34,6 +34,7 @@ import net.mcforge.chat.ChatColor;
 import net.mcforge.chat.Messages;
 import net.mcforge.groups.Group;
 import net.mcforge.iomodel.Player;
+import net.mcforge.iomodel.SMPPlayer;
 import net.mcforge.networking.IOClient;
 import net.mcforge.networking.packets.PacketManager;
 import net.mcforge.sql.ISQL;
@@ -93,8 +94,10 @@ public final class Server implements LogInterface, Updatable, Tick {
     private boolean debug_mode;
     private int oldsize;
     private int cachesize;
+    private int cache2size;
     private ArrayList<IOClient> cache;
     private ArrayList<Player> pcache;
+    private ArrayList<SMPPlayer> scache;
     private HelpItemManager hmanange;
     private BlockTracker track;
     
@@ -123,7 +126,7 @@ public final class Server implements LogInterface, Updatable, Tick {
 
     /**
      * The players currently on the server.
-     * @deprecated Use {@link Server#getPlayers()}
+     * @deprecated Use {@link Server#getClassicPlayers()}
      */
     @Deprecated
     public ArrayList<Player> players = new ArrayList<Player>();
@@ -526,7 +529,7 @@ public final class Server implements LogInterface, Updatable, Tick {
             sql = set;
         sql.connect(this);
         final String[] commands = new String[] {
-                "CREATE TABLE if not exists " + sql.getPrefix() + "_extra (name VARCHAR(20), setting TEXT, value BLOB);",
+                "CREATE TABLE if not exists " + sql.getPrefix() + "_extra (name VARCHAR(20), setting TEXT, value LONGTEXT);",
         };
         sql.executeQuery(commands);
         Log("SQL all set.");
@@ -852,10 +855,10 @@ public final class Server implements LogInterface, Updatable, Tick {
      * @return
      *         An {@link ArrayList} of {@link Player}
      */
-    public synchronized List<Player> getPlayers() {
-        if (getClients().equals(cache) && getClients().size() == cachesize)
+    public synchronized List<Player> getClassicPlayers() {
+        if (pcache != null && getClients().equals(cache) && getClients().size() == cachesize)
             return Collections.unmodifiableList(pcache);
-        rebuildPlayerCache();
+        rebuildClassicPlayerCache();
         return Collections.unmodifiableList(pcache);
     }
     
@@ -863,8 +866,8 @@ public final class Server implements LogInterface, Updatable, Tick {
      * Rebuild the player cache. </br>
      * The player cache is the list of {@link Player} objects currently connected to the server.
      */
-    public synchronized void rebuildPlayerCache() {
-        Log("Rebuilding Player Cache", true);
+    public synchronized void rebuildClassicPlayerCache() {
+        Log("Rebuilding Classic Player Cache", true);
         pcache = new ArrayList<Player>();
         for (IOClient i : getClients()) {
             if (i instanceof Player)
@@ -872,6 +875,34 @@ public final class Server implements LogInterface, Updatable, Tick {
         }
         cache = getClients();
         cachesize = cache.size();
+        Log("OK!", true);
+    }
+    
+    /**
+     * Get all the {@link SMPPlayer} connected to the server
+     * @return
+     *         An {@link ArrayList} of {@link SMPPlayer}
+     */
+    public synchronized List<SMPPlayer> getSMPPlayers() {
+        if (scache != null && getClients().equals(cache) && getClients().size() == cache2size)
+            return Collections.unmodifiableList(scache);
+        rebuildSMPPlayerCache();
+        return Collections.unmodifiableList(scache);
+    }
+    
+    /**
+     * Rebuild the player cache. </br>
+     * The player cache is the list of {@link SMPPlayer} objects currently connected to the server.
+     */
+    public synchronized void rebuildSMPPlayerCache() {
+        Log("Rebuilding SMP Cache", true);
+        scache = new ArrayList<SMPPlayer>();
+        for (IOClient i : getClients()) {
+            if (i instanceof SMPPlayer)
+                scache.add((SMPPlayer)i);
+        }
+        cache = getClients();
+        cache2size = cache.size();
         Log("OK!", true);
     }
 
@@ -922,12 +953,12 @@ public final class Server implements LogInterface, Updatable, Tick {
      */
     public Player findPlayer(String name) {
         Player toreturn = null;
-        for (int i = 0; i < getPlayers().size(); i++) {
-            if (name.equalsIgnoreCase(getPlayers().get(i).username))
-                return getPlayers().get(i);
-            else if (getPlayers().get(i).username.toLowerCase().indexOf(name.toLowerCase()) != -1 && toreturn == null)
-                toreturn = getPlayers().get(i);
-            else if (getPlayers().get(i).username.toLowerCase().indexOf(name.toLowerCase()) != -1 && toreturn != null)
+        for (int i = 0; i < getClassicPlayers().size(); i++) {
+            if (name.equalsIgnoreCase(getClassicPlayers().get(i).username))
+                return getClassicPlayers().get(i);
+            else if (getClassicPlayers().get(i).username.toLowerCase().indexOf(name.toLowerCase()) != -1 && toreturn == null)
+                toreturn = getClassicPlayers().get(i);
+            else if (getClassicPlayers().get(i).username.toLowerCase().indexOf(name.toLowerCase()) != -1 && toreturn != null)
                 return null;
         }
         return toreturn;
@@ -983,7 +1014,7 @@ public final class Server implements LogInterface, Updatable, Tick {
         logger.Stop();
         heartbeater.stopBeating();
         ArrayList<Player> players = new ArrayList<Player>();
-        for (Player p : getPlayers())
+        for (Player p : getClassicPlayers())
             players.add(p);
                 for (int i = 0; i < players.size(); i++)
                     players.get(i).kick("Server shutting down!");

@@ -4,6 +4,10 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
+import javax.crypto.Cipher;
+import javax.crypto.CipherInputStream;
+import javax.crypto.CipherOutputStream;
+
 import net.mcforge.iomodel.SMPPlayer;
 import net.mcforge.networking.packets.PacketManager;
 import net.mcforge.server.Server;
@@ -20,17 +24,6 @@ public class EncryptionResponse extends SMPPacket {
 
     @Override
     public void write(SMPPlayer client, Server server, Object... obj) {
-        ByteBuffer b = ByteBuffer.allocate(5);
-        b.put(ID);
-        b.putShort((short)0);
-        b.put(new byte[0]);
-        b.putShort((short)0);
-        b.put(new byte[0]);
-        try {
-            client.writeData(b.array());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
@@ -42,13 +35,11 @@ public class EncryptionResponse extends SMPPacket {
             short vl = reader.readShort();
             byte[] verify = new byte[vl];
             reader.read(verify);
-            client.validateLogin(secret, verify, this);
+            client.validateLogin(secret, verify);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
-
     }
-
 }

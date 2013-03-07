@@ -131,9 +131,9 @@ public class ClassicLevelHandler implements LevelHandler {
      */
     public ArrayList<Player> getPlayers(Level level) {
         ArrayList<Player> temp = new ArrayList<Player>();
-        for (int i = 0; i < server.getPlayers().size(); i++)
-            if (server.getPlayers().get(i).getLevel() == level)
-                temp.add(server.getPlayers().get(i));
+        for (int i = 0; i < server.getClassicPlayers().size(); i++)
+            if (server.getClassicPlayers().get(i).getLevel() == level)
+                temp.add(server.getClassicPlayers().get(i));
         return temp;
     }
     /**

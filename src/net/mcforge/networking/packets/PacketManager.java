@@ -23,6 +23,7 @@ import net.mcforge.networking.packets.classicminecraft.extend.*;
 import net.mcforge.networking.packets.clients.BrowserClient;
 import net.mcforge.networking.packets.clients.ClassicClient;
 import net.mcforge.networking.packets.clients.Client;
+import net.mcforge.networking.packets.clients.MCServerList;
 import net.mcforge.networking.packets.clients.SMPClient;
 import net.mcforge.networking.packets.minecraft.*;
 import net.mcforge.server.Server;
@@ -34,7 +35,8 @@ public class PacketManager {
     protected IClient[] clients = new IClient[] {
             new BrowserClient(),
             new ClassicClient(),
-            new SMPClient()
+            new SMPClient(),
+            new MCServerList()
     };
 
     protected ServerSocket serverSocket;
@@ -277,7 +279,7 @@ public class PacketManager {
        if (connectedclients.contains(client)) {
            connectedclients.remove(client);
            server.Log("Removing IOClient connection", true);
-           server.rebuildPlayerCache();
+           server.rebuildClassicPlayerCache();
            return true;
        }
        return false;

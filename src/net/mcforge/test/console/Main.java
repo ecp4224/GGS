@@ -28,7 +28,7 @@ public class Main extends Console implements Listener {
             if (s.equalsIgnoreCase("--smponly"))
                 ss.setAllowClassic(false);
         }
-        ss.setAllowClassic(false);
+        //ss.setAllowClassic(false);
         new Main().start();
     }
 

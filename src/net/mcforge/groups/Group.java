@@ -264,7 +264,7 @@ public class Group implements Listener {
 	 */
 	public List<Player> getOnlinePlayers(Server server) {
 		ArrayList<Player> online = new ArrayList<Player>();
-	    List<Player> players = server.getPlayers();
+	    List<Player> players = server.getClassicPlayers();
 	    for (Player p : players) {
 	        if (p.getGroup() == this)
 	            online.add(p);

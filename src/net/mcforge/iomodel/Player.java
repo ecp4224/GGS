@@ -7,12 +7,8 @@
  ******************************************************************************/
 package net.mcforge.iomodel;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.NotSerializableException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.net.Socket;
@@ -26,9 +22,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.zip.GZIPInputStream;
-import java.util.zip.GZIPOutputStream;
-
 import net.mcforge.API.ClassicExtension;
 import net.mcforge.API.CommandExecutor;
 import net.mcforge.API.level.PlayerJoinedLevel;
@@ -50,6 +43,7 @@ import net.mcforge.networking.packets.classicminecraft.SetBlock;
 import net.mcforge.networking.packets.classicminecraft.TP;
 import net.mcforge.server.Server;
 import net.mcforge.sql.MySQL;
+import net.mcforge.system.Serializer;
 import net.mcforge.system.ticker.Tick;
 import net.mcforge.world.Level;
 import net.mcforge.world.PlaceMode;
@@ -592,7 +586,7 @@ public class Player extends IOClient implements CommandExecutor, Tick {
      * In other words, hide this player from all other players
      */
     public void despawn() {
-        for (Player p : getServer().getPlayers()) {
+        for (Player p : getServer().getClassicPlayers()) {
             if (p.getLevel() != getLevel())
                 continue;
             p.despawn(this);
@@ -604,7 +598,7 @@ public class Player extends IOClient implements CommandExecutor, Tick {
      * for this player
      */
     public void completeDespawn() {
-        for (Player p : getServer().getPlayers()) {
+        for (Player p : getServer().getClassicPlayers()) {
             if (p.getLevel() != getLevel())
                 continue;
             p.despawn(this);
@@ -625,7 +619,7 @@ public class Player extends IOClient implements CommandExecutor, Tick {
      * In other words, show this player to all the other players in the same level
      */
     public void spawn() {
-        for (Player p : getServer().getPlayers()) {
+        for (Player p : getServer().getClassicPlayers()) {
             if (p.getLevel() != getLevel() || p == this)
                 continue;
             p.spawnPlayer(this);
@@ -637,7 +631,7 @@ public class Player extends IOClient implements CommandExecutor, Tick {
      * Spawn this player for all players and spawn all players for this player.
      */
     public void completeSpawn() {
-        for (Player p : getServer().getPlayers()) {
+        for (Player p : getServer().getClassicPlayers()) {
             if (p.getLevel() != getLevel() || p == this)
                 continue;
             p.spawnPlayer(this);
@@ -725,51 +719,13 @@ public class Player extends IOClient implements CommandExecutor, Tick {
      *        The data that was stored.
      */
     @SuppressWarnings("unchecked")
-    public <T> T getAttribute(String key) {
+    public <T> T getAttribute(String key, Class<T> class_) {
         if (!extra.containsKey(key)) {
-            T value = (T)getPlayerAttribute(key, username, getServer());
+            T value = (T)getPlayerAttribute(key, username, getServer(), class_);
             extra.put(key, value);
             return (T)value;
         }
         return (T)extra.get(key);
-    }
-
-    /**
-     * Returns extra data stored in the player.
-     * If the extra data does not exist in the cache, and is compressed in the database, then it will be gotten
-     * from the database. </br>
-     * This method uses more CPU power, it not recommended to use this unless you need to save/get a big object.
-     * If this is not the case, then please use {@link Player#getAttribute(String)}
-     * @param key 
-     *           The name of the data
-     * @return 
-     *        The data that was stored.
-     */
-    @SuppressWarnings("unchecked")
-    public <T> T getCompressedAttribute(String key) {
-        if (!extra.containsKey(key)) {
-            T value = (T)getPlayerCompressedAttribute(key, username, getServer());
-            extra.put(key, value);
-            return (T)value;
-        }
-        return (T)extra.get(key);
-    }
-
-    /**
-     * Returns compressed extra data stored in an offline player. </br>
-     * This method uses more CPU power, it not recommended to use this unless you need to save/get a big object.
-     * If this is not the case, then please use {@link Player#getPlayerAttribute(String, String, Server)}
-     * @param key
-     *           The name of the data
-     * @param username
-     *                The username
-     * @param server
-     *              The server the user belongs to
-     * @return
-     *         The data that was found, null if nothing was found or in an error occurred while getting the data.
-     */
-    public static <T> T getPlayerCompressedAttribute(String key, String username, Server server) {
-        return getPlayerAttribute(key, username, server, true);
     }
 
     /**
@@ -783,8 +739,8 @@ public class Player extends IOClient implements CommandExecutor, Tick {
      * @return
      *         The data that was found, null if nothing was found or in an error occurred while getting the data.
      */
-    public static <T> T getPlayerAttribute(String key, String username, Server server) {
-        return getPlayerAttribute(key, username, server, false);
+    public static <T> T getPlayerAttribute(String key, String username, Server server, Class<T> class_) {
+        return getPlayerAttribute(key, username, server, false, class_);
     }
 
     /**
@@ -799,7 +755,7 @@ public class Player extends IOClient implements CommandExecutor, Tick {
      *         The data that was found, null if nothing was found or in an error occurred while getting the data.
      */
     @SuppressWarnings("unchecked")
-    public static <T> T getPlayerAttribute(String key, String username, Server server, boolean compressed) {
+    public static <T> T getPlayerAttribute(String key, String username, Server server, boolean compressed, Class<T> class_) {
         Object object = null;
         T value = null;
         ResultSet r = server.getSQL().fillData("SELECT count(*) FROM " + server.getSQL().getPrefix() + "_extra WHERE name='" + username + "' AND setting='" + key + "'");
@@ -819,33 +775,11 @@ public class Player extends IOClient implements CommandExecutor, Tick {
             try {
                 if (server.getSQL() instanceof MySQL)
                     r.next();
-                if (compressed) {
-                    ByteArrayInputStream bais;
-                    ObjectInputStream ins;
-                    bais = new ByteArrayInputStream(r.getBytes("value"));
-                    GZIPInputStream gis = new GZIPInputStream(bais);
-                    ins = new ObjectInputStream(gis);
-                    object = ins.readObject();
-                    ins.close();
-                    gis.close();
-                    bais.close();
-                }
-                else {
-                    ByteArrayInputStream bais;
-                    ObjectInputStream ins;
-                    bais = new ByteArrayInputStream(r.getBytes("value"));
-                    ins = new ObjectInputStream(bais);
-                    object = ins.readObject();
-                    ins.close(); 
-                    bais.close();
-                }
+                String so = r.getString("value");
+                object = Serializer.getGson().fromJson(so, class_);
             } catch (SQLException e) {
                 e.printStackTrace();
                 return null;
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
             }
             try {
                 r.close();
@@ -968,31 +902,6 @@ public class Player extends IOClient implements CommandExecutor, Tick {
     }
 
     /**
-     * Set the value of an offline player and save it into the database. The object passed will be compressed, serialized and inserted into the database.
-     * If the object already exists in the database, then it will execute an UPDATE rather than executing an INSERT. </br>
-     * This method uses more CPU power, it not recommended to use this unless you need to save a big object.
-     * If this is not the case, then please use {@link Player#setAttribute(String, Object)}
-     * @param key
-     *           The name of the value
-     * @param object
-     *              The value
-     * @param username
-     *                The username to save
-     * @param server
-     *              The server this user belongs to
-     * @throws SQLException
-     *                     If there was a problem executing the SQL statement to update/insert
-     *                     the object
-     * @throws IOException 
-     *                    If there was a problem writing the object to the SQL getServer().
-     * @throw NotSerializableException
-     *      
-     */
-    public static void setCompressedAttribute(String key, Object object, String username, Server server) throws SQLException, IOException, NotSerializableException {
-        setAttribute(key, object, username, server, true);
-    }
-
-    /**
      * Set the value of an offline player and save it into the database. The object passed will be serialized and inserted into the database.
      * If the object already exists in the database, then it will execute an UPDATE rather than executing an INSERT
      * @param key
@@ -1017,23 +926,7 @@ public class Player extends IOClient implements CommandExecutor, Tick {
         if (object instanceof Serializable) {
             if (object instanceof Boolean)
                 object = ((Boolean)object).toString();
-            byte[] data;
-            if (compressed) {
-                ByteArrayOutputStream output = new ByteArrayOutputStream();
-                GZIPOutputStream gos = new GZIPOutputStream(output);
-                ObjectOutputStream out = new ObjectOutputStream(gos);
-                out.writeObject(object);
-                out.close();
-                gos.close();
-                data = output.toByteArray();
-            }
-            else {
-                ByteArrayOutputStream output = new ByteArrayOutputStream();
-                ObjectOutputStream out = new ObjectOutputStream(output);
-                out.writeObject(object);
-                out.close();
-                data = output.toByteArray();
-            }
+            String json = Serializer.getGson().toJson(object);
             ResultSet r = server.getSQL().fillData("SElECT count(*) FROM " + server.getSQL().getPrefix() + "_extra WHERE name='" + username + "' AND setting='" + key + "'");
             int size = 0;
             if (server.getSQL() instanceof MySQL)
@@ -1044,12 +937,12 @@ public class Player extends IOClient implements CommandExecutor, Tick {
                 pstmt = server.getSQL().getConnection().prepareStatement("INSERT INTO " + server.getSQL().getPrefix() + "_extra(name, setting, value) VALUES (?, ?, ?)");
                 pstmt.setString(1, username);
                 pstmt.setString(2, key);
-                pstmt.setBytes(3, data);
+                pstmt.setString(3, json);
                 pstmt.executeUpdate();
             }
             else {
                 pstmt = server.getSQL().getConnection().prepareStatement("UPDATE " + server.getSQL().getPrefix() + "_extra SET value = ? WHERE name = ? AND setting = ?");
-                pstmt.setBytes(1, data);
+                pstmt.setString(1, json);
                 pstmt.setString(2, username);
                 pstmt.setString(3, key);
                 pstmt.executeUpdate();
@@ -1079,26 +972,6 @@ public class Player extends IOClient implements CommandExecutor, Tick {
     }
 
     /**
-     * Save the value <b>"key"</b> to the database.
-     * The object <b>"key"</b> represents will be compressed and serialized to the database using a {@link GZIPOutputStream} object.
-     * If an exception occurs, then the exception will just print to the server log and continue.
-     * No exceptions will be raised, if you need to know if an exception was caught, then please use
-     * {@link Player#saveCompressedAttributeRaised(String)} </br>
-     * This method uses more CPU power, it not recommended to use this unless you need to save a big object.
-     * If this is not the case, then please use {@link Player#saveAttribute(String)}
-     * @param key
-     */
-    public void saveCompressedAttribute(String key) {
-        if (!extra.containsKey(key))
-            return;
-        try {
-            saveCompressedAttributeRaised(key);
-        } catch (Exception e) {
-            getServer().logError(e);
-        }
-    }
-
-    /**
      * Save the value <b>key</b> to the database.
      * The object <b>key</b> represents will be serialized to the
      * database.
@@ -1121,38 +994,14 @@ public class Player extends IOClient implements CommandExecutor, Tick {
     }
 
     /**
-     * Save the value <b>key</b> to the database.
-     * The object <b>key</b> represents will be compressed and serialized to the
-     * database using a {@link GZIPOutputStream} object.
-     * This method will raise an exception when an exception occurs, this is good if you need
-     * to know if saving failed or not. Otherwise, use {@link Player#saveCompressedAttribute(String)}. </br>
-     * This method uses more CPU power, it not recommended to use this unless you need to save a big object.
-     * If this is not the case, then please use {@link Player#saveAttributeRaised(String)}
-     * @param key
-     *           The name of the data to save
-     * @throws SQLException
-     *                     If there was a problem executing the SQL statement to update/insert
-     *                     the object
-     * @throws IOException 
-     *                    If there was a problem writing the object to the SQL getServer().
-     * @throw NotSerializableException
-     *                                
-     */
-    public void saveCompressedAttributeRaised(String key) throws SQLException, IOException, NotSerializableException {
-        if (!extra.containsKey(key))
-            return;
-        setCompressedAttribute(key, extra.get(key), username, getServer());
-    }
-
-    /**
      * Login the player
      * @throws InterruptedException 
      */
     public void login() throws InterruptedException {
         if (isLoggedin)
             return;
-        for (int i = 0; i < getServer().getPlayers().size(); i++) {
-            Player p = getServer().getPlayers().get(i);
+        for (int i = 0; i < getServer().getClassicPlayers().size(); i++) {
+            Player p = getServer().getClassicPlayers().get(i);
             if ((username.equals(p.username)) && (!p.equals(this))) {
                 p.kick("Someone logged in as you!");
             }
@@ -1175,20 +1024,20 @@ public class Player extends IOClient implements CommandExecutor, Tick {
 
     private void loadExtraData() {
         if (this.hasAttribute("mcf_prefix"))
-            this.prefix = (String)getAttribute("mcf_prefix");
+            this.prefix = (String)getAttribute("mcf_prefix", String.class);
         if (this.hasAttribute("mcf_color"))
-            this.color = ChatColor.parse((String)getAttribute("mcf_color").toString());
+            this.color = ChatColor.parse((String)getAttribute("mcf_color", String.class).toString());
         if (this.hasAttribute("mcf_showprefix"))
-            this.showprefix = ((Boolean)(getAttribute("mcf_showprefix"))).booleanValue();
+            this.showprefix = ((Boolean)(getAttribute("mcf_showprefix", Boolean.class))).booleanValue();
         if (this.hasAttribute("mcf_nick"))
-            this.custom_name = getAttribute("mcf_nick");
+            this.custom_name = getAttribute("mcf_nick", String.class);
 
 
         final Calendar cal = Calendar.getInstance();
         final String date = dateFormat.format(cal.getTime());
         int login = 0;
         if (hasAttribute("totalLogin"))
-            login = ((Integer)(getAttribute("totalLogin"))).intValue();
+            login = ((Integer)(getAttribute("totalLogin", Integer.class))).intValue();
         login++;
         setAttribute("totalLogin", login);
         saveAttribute("totalLogin");
@@ -1208,7 +1057,7 @@ public class Player extends IOClient implements CommandExecutor, Tick {
     public int getTotalLogin() {
         int count = 0;
         if (hasAttribute("totalLogin"))
-            count = ((Integer)(getAttribute("totalLogin"))).intValue();
+            count = ((Integer)(getAttribute("totalLogin", Integer.class))).intValue();
         return count;
     }
 
@@ -1221,7 +1070,7 @@ public class Player extends IOClient implements CommandExecutor, Tick {
     public String getFirstLogin() {
         String data = "";
         if (hasAttribute("firstLogin"))
-            data = getAttribute("firstLogin");
+            data = getAttribute("firstLogin", String.class);
         return data;
     }
 
@@ -1238,7 +1087,7 @@ public class Player extends IOClient implements CommandExecutor, Tick {
     public static String getLastLogin(String username, Server server) {
         String data = "";
         if (hasAttribute("lastLogin", username, server))
-            data = getPlayerAttribute("lastLogin", username, server);
+            data = getPlayerAttribute("lastLogin", username, server, String.class);
         return data;
     }
 
@@ -1250,7 +1099,7 @@ public class Player extends IOClient implements CommandExecutor, Tick {
     public int getTotalKicked() {
         int data = 0;
         if (hasAttribute("totalKicked"))
-            data = ((Integer)(getAttribute("totalKicked"))).intValue();
+            data = ((Integer)(getAttribute("totalKicked", Integer.class))).intValue();
         return data;
     }
 
@@ -1283,7 +1132,7 @@ public class Player extends IOClient implements CommandExecutor, Tick {
      * Change this player in all ext player's lists.
      */
     private void updateAllLists() {
-        for (Player p : getServer().getPlayers()) {
+        for (Player p : getServer().getClassicPlayers()) {
             if (p.hasExtension("ExtAddPlayerName"))
                 pm.getPacket((byte)0x33, getClientType()).Write(p, getServer(), this);
         }
@@ -1389,7 +1238,7 @@ public class Player extends IOClient implements CommandExecutor, Tick {
             getServer().getEventSystem().callEvent(event);
             if (event.isCancelled())
                 continue;
-            for (Player p : getServer().getPlayers()) {
+            for (Player p : getServer().getClassicPlayers()) {
                 if (p.getLevel() == getLevel())
                     cache.add(sb.getBytes(p, getServer(), (short)b.getX(), (short)b.getY(), (short)b.getZ(), b.getBlock().getVisibleBlock()));
             }
@@ -1397,8 +1246,8 @@ public class Player extends IOClient implements CommandExecutor, Tick {
                 getLevel().setTile(b.getBlock(), b.getX(), b.getY(), b.getZ(), getServer());
         }
 
-        for (int pi = 0; pi < getServer().getPlayers().size(); pi++) {
-            final Player p = getServer().getPlayers().get(pi);
+        for (int pi = 0; pi < getServer().getClassicPlayers().size(); pi++) {
+            final Player p = getServer().getClassicPlayers().get(pi);
             for (int i = 0; i < cache.size(); i++) {
                 if (p.getLevel() != getLevel())
                     continue;
@@ -1431,8 +1280,8 @@ public class Player extends IOClient implements CommandExecutor, Tick {
             return;
         //Do this way to save on packet overhead
         Packet sb = s.getPacketManager().getPacket("SetBlock");
-        for (int i = 0; i < s.getPlayers().size(); i++) {
-            final Player p = s.getPlayers().get(i);
+        for (int i = 0; i < s.getClassicPlayers().size(); i++) {
+            final Player p = s.getClassicPlayers().get(i);
             if (p.level == l)
                 sb.Write(p, s, X, Y, Z, block.getVisibleBlock());
         }
@@ -1457,14 +1306,14 @@ public class Player extends IOClient implements CommandExecutor, Tick {
                 l.setTile(b.getBlock(), b.getX(), b.getY(), b.getZ(), s);
                 b.setBlock((ClassicBlock)l.getTile(b.getX(), b.getY(), b.getZ())); //Prevent ghost blocks.
             }
-            for (Player p : s.getPlayers()) {
+            for (Player p : s.getClassicPlayers()) {
                 if (p.getLevel() == l)
                     cache.add(sb.getBytes(p, s, (short)b.getX(), (short)b.getY(), (short)b.getZ(), b.getBlock().getVisibleBlock()));
             }
         }
 
-        for (int pi = 0; pi < s.getPlayers().size(); pi++) {
-            final Player p = s.getPlayers().get(pi);
+        for (int pi = 0; pi < s.getClassicPlayers().size(); pi++) {
+            final Player p = s.getClassicPlayers().get(pi);
             for (int i = 0; i < cache.size(); i++) {
                 if (p.getLevel() != l)
                     continue;
@@ -1550,7 +1399,7 @@ public class Player extends IOClient implements CommandExecutor, Tick {
             tosend = t.toSend(this);
         else
             tosend = gps.toSend(this);
-        Player[] players = getServer().getPlayers().toArray(new Player[getServer().getPlayers().size()]);
+        Player[] players = getServer().getClassicPlayers().toArray(new Player[getServer().getClassicPlayers().size()]);
         for (Player p : players) {
             if (p == this)
                 continue;
@@ -1635,7 +1484,7 @@ public class Player extends IOClient implements CommandExecutor, Tick {
             chat.serverBroadcast(username + " has been kicked (" + reason + ")");
         int kicked = 0;
         if (hasAttribute("totalKicked"))
-            kicked = ((Integer)(getAttribute("totalKicked"))).intValue();
+            kicked = ((Integer)(getAttribute("totalKicked", Integer.class))).intValue();
         kicked++;
         setAttribute("totalKicked", kicked);
         saveAttribute("totalKicked");
@@ -1649,7 +1498,7 @@ public class Player extends IOClient implements CommandExecutor, Tick {
         byte toreturn = 0;
         for (int i = 0; i < 255; i++) {
             found = true;
-            for (Player p : getServer().getPlayers()) {
+            for (Player p : getServer().getClassicPlayers()) {
                 if (p.ID == i) {
                     found = false;
                     break;
@@ -1779,7 +1628,7 @@ public class Player extends IOClient implements CommandExecutor, Tick {
 
     protected void TP() {
         Packet p = pm.getPacket("TP");
-        for (Player pp : getServer().getPlayers()) {
+        for (Player pp : getServer().getClassicPlayers()) {
             if (pp.level == level)
                 p.Write(pp, pp.getServer(), this, ID); //Tell all the other players as well...
         }

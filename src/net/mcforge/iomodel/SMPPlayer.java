@@ -13,6 +13,8 @@ import java.util.Random;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
+import javax.crypto.CipherInputStream;
+import javax.crypto.CipherOutputStream;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
@@ -36,6 +38,7 @@ public class SMPPlayer extends IOClient implements Tick, CommandExecutor {
 	private byte[] verify = new byte[4];
 	private byte lstep;
 	public String username;
+	private Cipher cipher;
 	private Location location;
 	private Rotation rotation;
 	private Location oldLocation;
@@ -81,13 +84,15 @@ public class SMPPlayer extends IOClient implements Tick, CommandExecutor {
         }
 	}
 	
-	public void validateLogin(byte[] sharedkey, byte[] verify, Packet packet) throws IllegalAccessException {
+	public void validateLogin(byte[] sharedkey, byte[] verify) throws IllegalAccessException {
 	    if (lstep != 1)
 	        throw new IllegalAccessException("This method can only be invoked during login.");
 	    try {
 	        getServer().Log("Something you find with a Public Key..", true);
-            Cipher cipher = Cipher.getInstance("RSA");
-            cipher.init(Cipher.DECRYPT_MODE, privateKey.getPrivate());
+	        if (cipher == null) {
+	            cipher = Cipher.getInstance("RSA");
+	            cipher.init(Cipher.DECRYPT_MODE, privateKey.getPrivate());
+	        }
             byte[] data = cipher.doFinal(sharedkey);
             MessageDigest md = MessageDigest.getInstance("SHA-1");
             md.update("IRAIDYUS".getBytes());
@@ -103,8 +108,12 @@ public class SMPPlayer extends IOClient implements Tick, CommandExecutor {
                 kick("Invalid login!");
                 return;
             }
-            packet.Write(this, getServer());
             lstep = 2;
+            CipherOutputStream out = new CipherOutputStream(client.getOutputStream(), cipher);
+            setOutputStream(out);
+            CipherInputStream in = new CipherInputStream(client.getInputStream(), cipher);
+            setInputStream(in);
+            login();
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         } catch (NoSuchPaddingException e) {
@@ -126,6 +135,10 @@ public class SMPPlayer extends IOClient implements Tick, CommandExecutor {
 	    if (lstep != 2)
 	        throw new IllegalAccessException("This method can only be invoked during login.");
 	    getServer().Log(getName() + " has joined the server!");
+        Packet packet = pm.getPacket((byte)0x01, getClientType());
+        if (packet == null)
+            throw new RuntimeException("ClientStatuses packet can't be found!");
+        packet.Write(this, getServer(), 0, "flat", (byte)0, (byte)0, (byte)0, (byte)0, (byte)25);
 	    //TODO Stuff
 	}
 	

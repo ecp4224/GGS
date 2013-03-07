@@ -2,7 +2,6 @@ package net.mcforge.networking.packets.minecraft;
 
 import java.io.DataInputStream;
 import java.io.IOException;
-
 import net.mcforge.iomodel.SMPPlayer;
 import net.mcforge.networking.packets.PacketManager;
 import net.mcforge.server.Server;
@@ -21,9 +20,8 @@ public class ClientStatuses extends SMPPacket {
 	public void handle(SMPPlayer client, Server server, DataInputStream reader) {
 		try {
 			byte payload = reader.readByte();
-			if (payload == 0) {
+			if (payload == 0)
 			    client.login();
-			}
 			else if (payload == 1) {
 			    //TODO Respawn
 			}
@@ -38,5 +36,11 @@ public class ClientStatuses extends SMPPacket {
 	}
 	
 	@Override
-	public void write(SMPPlayer client, Server server, Object... obj) { }
+	public void write(SMPPlayer client, Server server, Object... obj) {
+	    try {
+            client.writeData(new byte[] { ID, (byte)0 });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+	}
 }
