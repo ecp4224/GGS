@@ -66,10 +66,8 @@ public class Chunk {
     private SMPBlock getTile(int index) {
         if (index < 0) index = 0;
         if (index >= blocks.length) index = blocks.length - 1;
-        if (blocks[index] == null) {
-            blocks[index] = SMPBlock.getBlock("Air");
+        if (blocks[index] == null)
             return SMPBlock.getBlock("Air");
-        }
         else
             return blocks[index];
     }
