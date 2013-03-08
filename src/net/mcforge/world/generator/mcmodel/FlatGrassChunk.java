@@ -20,7 +20,7 @@ public class FlatGrassChunk implements ChunkGenerator {
         for (int x = 0; x < 16; x++) {
             for (int y = 0; y < 16; y++) {
                 for (int z = 0; z < 16; z++) {
-                    if (c.getWorldPosition(x, y, z)[1] / 2 > 128)
+                    if (c.getWorldPosition(x, y, z)[1] > 128)
                         c.setTile(SMPBlock.getBlock("Air"), x, y, z);
                     else
                         c.setTile(SMPBlock.getBlock("Grass"), x, y, z);

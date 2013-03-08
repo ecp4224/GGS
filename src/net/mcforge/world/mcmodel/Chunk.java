@@ -9,12 +9,21 @@ public class Chunk {
     private final int xlength = 16;
     private final int zlength = 16;
     private final int ylength = 16;
+    private int airc;
     private boolean updated;
     private ChunkColumn owner;
     private int y;
     public Chunk(ChunkColumn owner, int y) {
         this.owner = owner;
         this.y = y;
+    }
+    
+    /**
+     * Returns whether or not this chunk is full of air or not.
+     * @return
+     */
+    public boolean isChunkAir() {
+        return airc == 0;
     }
     
     /**
@@ -57,7 +66,12 @@ public class Chunk {
     private SMPBlock getTile(int index) {
         if (index < 0) index = 0;
         if (index >= blocks.length) index = blocks.length - 1;
-        return blocks[index];
+        if (blocks[index] == null) {
+            blocks[index] = SMPBlock.getBlock("Air");
+            return SMPBlock.getBlock("Air");
+        }
+        else
+            return blocks[index];
     }
     
     private void setTile(SMPBlock block, int index) {
@@ -76,6 +90,10 @@ public class Chunk {
             blocks[index] = wasthere;
             return;
         }
+        if ((wasthere == null || wasthere.getVisibleBlock() == 0) && block.getVisibleBlock() != 0)
+            airc--;
+        else if (wasthere != null && wasthere.getVisibleBlock() != 0 && block.getVisibleBlock() == 0)
+            airc++;
         updated = true;
     }
     

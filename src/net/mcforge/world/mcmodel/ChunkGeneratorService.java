@@ -26,7 +26,7 @@ public class ChunkGeneratorService implements Tick {
             @Override
             public void run(CData data, int index) {
                 data.gen.generate(data.c);
-                owner.getServer().Log("Generated chunk @ " + data.c.getChunkOwner().getPoint() + " Y: " + data.c.getY() + " Thread: " + Thread.currentThread().getId());
+                owner.getServer().Log("Generated chunk @ " + data.c.getChunkOwner().getPoint() + " Y: " + data.c.getY() + " Thread: " + Thread.currentThread().getId() + " Air?: " + data.c.isChunkAir());
                 data.c.getChunkOwner().addChunk(data.c.getY(), data.c);
                 chunk_queue.remove(data);
             }
