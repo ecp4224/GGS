@@ -2,12 +2,6 @@ package net.mcforge.networking.packets.minecraft;
 
 import java.io.DataInputStream;
 import java.io.IOException;
-import java.nio.ByteBuffer;
-
-import javax.crypto.Cipher;
-import javax.crypto.CipherInputStream;
-import javax.crypto.CipherOutputStream;
-
 import net.mcforge.iomodel.SMPPlayer;
 import net.mcforge.networking.packets.PacketManager;
 import net.mcforge.server.Server;

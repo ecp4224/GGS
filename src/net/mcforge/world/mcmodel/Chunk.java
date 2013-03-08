@@ -2,33 +2,27 @@ package net.mcforge.world.mcmodel;
 
 import net.mcforge.server.Server;
 import net.mcforge.world.Level;
-import net.mcforge.world.blocks.Block;
 import net.mcforge.world.blocks.mcmodel.SMPBlock;
 
 public class Chunk {
-    private SMPBlock[] blocks = new SMPBlock[16 * 16 * 256];
+    private SMPBlock[] blocks = new SMPBlock[16 * 16 * 16];
     private final int xlength = 16;
     private final int zlength = 16;
-    private final int ylength = 256;
-    private ChunkPoint point;
+    private final int ylength = 16;
     private boolean updated;
-    private ChunkLevel owner;
-    
-    public Chunk(ChunkPoint point, ChunkLevel owner) {
-        this.point = point;
+    private ChunkColumn owner;
+    private int y;
+    public Chunk(ChunkColumn owner, int y) {
         this.owner = owner;
+        this.y = y;
     }
     
-    public Chunk(int x, int z, ChunkLevel owner) {
-        this(new ChunkPoint(x, z), owner);
-    }
-    
-    public Chunk(double x, double z, ChunkLevel owner) {
-        this((int)x >> 4, (int)z >> 4, owner);
-    }
-    
-    public ChunkPoint getPoint() {
-        return point;
+    /**
+     * Get the Y position of this chunk inside a {@link ChunkColumn}
+     * @return
+     */
+    public int getY() {
+        return y;
     }
     
     /**
@@ -38,7 +32,7 @@ public class Chunk {
      * @param x
      *         The X cord. <b>in this chunk. This value can't be greater than 16</b> 
      * @param y
-     *         The Y cord. <b>in this chunk. This value can't be greater than 256</b>
+     *         The Y cord. <b>in this chunk. This value can't be greater than 16</b>
      * @param z
      *         The Z cord. <b>in this chunk. This value can't be greator than 16</b>
      */
@@ -51,16 +45,16 @@ public class Chunk {
      * @param x
      *         The X cord. <b>in this chunk. This value can't be greater than 16</b> 
      * @param y
-     *         The Y cord. <b>in this chunk. This value can't be greater than 256</b>
+     *         The Y cord. <b>in this chunk. This value can't be greater than 16</b>
      * @param z
      *         The Z cord. <b>in this chunk. This value can't be greator than 16</b>
      * @return
      */
-    public Block getTile(int x, int y, int z) {
+    public SMPBlock getTile(int x, int y, int z) {
         return getTile(posToInt(x, y, z));
     }
     
-    private Block getTile(int index) {
+    private SMPBlock getTile(int index) {
         if (index < 0) index = 0;
         if (index >= blocks.length) index = blocks.length - 1;
         return blocks[index];
@@ -73,24 +67,50 @@ public class Chunk {
         SMPBlock wasthere = blocks[index];
         blocks[index] = block;
         if (wasthere != null) {
-            if (wasthere.onDelete(owner, pos[0], pos[1], pos[2], getServer())) {
+            if (wasthere.onDelete(owner.getOwner(), pos[0], pos[1], pos[2], getServer())) {
                 blocks[index] = wasthere;
                 return;
             }
         }
-        if (block.onPlace(owner, pos[0], pos[1], pos[2], getServer())) {
+        if (block.onPlace(owner.getOwner(), pos[0], pos[1], pos[2], getServer())) {
             blocks[index] = wasthere;
             return;
         }
         updated = true;
     }
     
+    /**
+     * Convert the X, Y, Z position to a position in the world.
+     * For example:
+     * X-5 in the chunk may be X-21 in the world
+     * @param x
+     *        The X position in the chunk
+     * @param y
+     *        The Y position in the chunk
+     * @param z
+     *        The Z position in the chunk
+     * @return
+     *       An array of integers where index 0 is the X, index 1 is the Y, and index 2 is the Z.
+     */
+    public int[] getWorldPosition(int x, int y, int z) {
+        int cx = getChunkOwner().getPoint().getX();
+        int cz = getChunkOwner().getPoint().getZ();
+        int truex = cx * 16 + x;
+        int truez = cz * 16 + z;
+        int truey = (getY() * 16) - (getY() - y);
+        return new int[] { truex, truey, truez };
+    }
+    
     public Server getServer() {
-        return owner.getServer();
+        return owner.getOwner().getServer();
+    }
+    
+    public ChunkColumn getChunkOwner() {
+        return owner;
     }
     
     public Level getOwner() {
-        return owner;
+        return owner.getOwner();
     }
     
     public void save() {

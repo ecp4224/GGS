@@ -24,7 +24,7 @@ import net.mcforge.world.generator.mcmodel.ChunkGenerator;
  */
 public class ChunkLevel implements Level {
     
-    private HashMap<ChunkPoint, Chunk> chunks = new HashMap<ChunkPoint, Chunk>();
+    private HashMap<ChunkPoint, ChunkColumn> chunks = new HashMap<ChunkPoint, ChunkColumn>();
     protected Server owner;
     protected double spawnx;
     protected double spawny;
@@ -62,23 +62,25 @@ public class ChunkLevel implements Level {
             throw new InvalidParameterException("You can only generate a chunk based level with a ChunkGenerator!");
         //TODO Find chunks to generate?
         //For now I guess assume to generate the first few chunks
-        Chunk[] tchunks = {
-                new Chunk(0, 0, this),
-                new Chunk(0, 1, this),
-                new Chunk(1, 0, this),
-                new Chunk(1, 1, this),
-                new Chunk(-1, 0, this),
-                new Chunk(-1, -1, this),
-                new Chunk(0, -1, this)
+        ChunkColumn[] tchunks = {
+                new ChunkColumn(0, 0, this),
+                new ChunkColumn(0, 1, this),
+                new ChunkColumn(1, 0, this),
+                new ChunkColumn(1, 1, this),
+                new ChunkColumn(-1, 0, this),
+                new ChunkColumn(-1, -1, this),
+                new ChunkColumn(0, -1, this)
         };
-        for (Chunk cc : tchunks)
-            cgs.addChunk(cc, c);
+        for (ChunkColumn cc : tchunks) {
+            cc.generateFully(c);
+            chunks.put(cc.getPoint(), cc);
+        }
     }
     
-    public void addChunk(Chunk c) {
+    /*public void addChunk(Chunk c) {
         if (!chunks.containsKey(c.getPoint()))
             chunks.put(c.getPoint(), c);
-    }
+    }*/
 
     @Override
     public boolean isAutoSaveEnabled() {
@@ -112,10 +114,10 @@ public class ChunkLevel implements Level {
             //TODO Add to generate queue
             return null;
         }
-        Chunk c = chunks.get(cp);
+        ChunkColumn c = chunks.get(cp);
         int cx = x & 0xf;
         int cz = z & 0xf;
-        return c.getTile(cx, y, cz);
+        return c.getBlock(cx, y, cz);
     }
 
     @Override
@@ -134,10 +136,10 @@ public class ChunkLevel implements Level {
             //TODO Add to generate queue
             return;
         }
-        Chunk c = chunks.get(cp);
+        ChunkColumn c = chunks.get(cp);
         int cx = x & 0xf;
         int cz = z & 0xf;
-        c.setTile(block, cx, y, cz);
+        c.setBlock(cz, cx, y, block);
     }
 
     @Override
