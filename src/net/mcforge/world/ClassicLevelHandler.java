@@ -9,6 +9,7 @@ package net.mcforge.world;
 
 import java.io.File;
 import java.io.IOException;
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -21,6 +22,7 @@ import net.mcforge.server.Server;
 import net.mcforge.system.ticker.Tick;
 import net.mcforge.world.backup.BackupRunner;
 import net.mcforge.world.classicmodel.ClassicLevel;
+import net.mcforge.world.generator.Generator;
 import net.mcforge.world.generator.classicmodel.ClassicGenerator;
 import net.mcforge.world.generator.classicmodel.FlatGrass;
 
@@ -272,8 +274,13 @@ public class ClassicLevelHandler implements LevelHandler {
     }
 
     @Override
-    public void generateLevel(String name, ClassicGenerator gen) {
-        newClassicLevel(name, (short)64, (short)64, (short)64, gen);
+    public void generateLevel(String name, Generator<?> gen) {
+        ClassicGenerator g;
+        if (gen instanceof ClassicGenerator)
+            g = (ClassicGenerator)gen;
+        else
+            throw new InvalidParameterException("You can not create a classic level with a non classic generator!");
+        newClassicLevel(name, (short)64, (short)64, (short)64, g);
     }
 
     @Override
@@ -305,7 +312,12 @@ public class ClassicLevelHandler implements LevelHandler {
     }
 
     @Override
-    public void generateLevel(String name, ClassicGenerator gen, Object... param) {
+    public void generateLevel(String name, Generator<?> gen, Object... param) {
+        ClassicGenerator g;
+        if (gen instanceof ClassicGenerator)
+            g = (ClassicGenerator)gen;
+        else
+            throw new InvalidParameterException("You can not create a classic level with a non classic generator!");
         int x = 64;
         int y = 64;
         int z = 64;
@@ -315,7 +327,7 @@ public class ClassicLevelHandler implements LevelHandler {
             y = (Integer)param[1];
         if (param.length >= 3 && param[2] instanceof Integer)
             z = (Integer)param[2];
-        newClassicLevel(name, (short)x, (short)y, (short)z, gen);
+        newClassicLevel(name, (short)x, (short)y, (short)z, g);
     }
 
 }
