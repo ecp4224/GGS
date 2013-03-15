@@ -19,11 +19,11 @@ public class RedFlower extends PhysicsBlock {
     public RedFlower(byte ID, String name) {
         super(ID, name);
     }
-    
+
     public RedFlower() {
         super((byte)38, "RedFlower");
     }
-    
+
     public RedFlower(Server s) {
         super((byte)38, "RedFlower", s);
     }
@@ -49,7 +49,7 @@ public class RedFlower extends PhysicsBlock {
         else
             super.stopTick();
     }
-    
+
     @Override
     public boolean canWalkThrough() {
         return true;

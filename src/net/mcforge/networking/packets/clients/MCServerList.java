@@ -9,6 +9,8 @@ import net.mcforge.networking.packets.IClient;
 import net.mcforge.networking.packets.PacketManager;
 
 public class MCServerList implements IClient {
+    
+    private static final char COLOR_CHAR = '\u00A7';
 
     @Override
     public byte getOPCode() {
@@ -21,7 +23,7 @@ public class MCServerList implements IClient {
         DataOutputStream dos = new DataOutputStream(ic.getOutputStream());
         try {
             dos.write((byte)0xFF);
-            String data = "§1\0\51\0\1.4.7\0" + pm.server.MOTD + "\0" + pm.server.getSMPPlayers().size() + "\0" + pm.server.MaxPlayers;
+            String data = COLOR_CHAR + "1\0\51\0\1.4.7\0" + pm.server.MOTD + "\0" + pm.server.getSMPPlayers().size() + "\0" + pm.server.MaxPlayers;
             dos.writeShort((short)data.length());
             dos.writeChars(data);
         } catch (IOException e) {
