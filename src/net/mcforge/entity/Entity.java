@@ -19,25 +19,25 @@ import net.mcforge.system.ticker.Tick;
 public abstract class Entity implements org.bukkit.entity.Entity, Tick  {
 
     @Override
-    public List<MetadataValue> getMetadata(String arg0) {
+    public List<MetadataValue> getMetadata(String metadataKey) {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public boolean hasMetadata(String arg0) {
+    public boolean hasMetadata(String metadataKey) {
         // TODO Auto-generated method stub
         return false;
     }
 
     @Override
-    public void removeMetadata(String arg0, Plugin arg1) {
+    public void removeMetadata(String metadatakey, Plugin owningPlugin) {
         // TODO Auto-generated method stub
         
     }
 
     @Override
-    public void setMetadata(String arg0, MetadataValue arg1) {
+    public void setMetadata(String metadataKey, MetadataValue newMetadataValue) {
         // TODO Auto-generated method stub
         
     }
@@ -94,7 +94,7 @@ public abstract class Entity implements org.bukkit.entity.Entity, Tick  {
     }
 
     @Override
-    public Location getLocation(Location arg0) {
+    public Location getLocation(Location loc) {
         // TODO Auto-generated method stub
         return null;
     }
@@ -106,8 +106,7 @@ public abstract class Entity implements org.bukkit.entity.Entity, Tick  {
     }
 
     @Override
-    public List<org.bukkit.entity.Entity> getNearbyEntities(double arg0,
-            double arg1, double arg2) {
+    public List<org.bukkit.entity.Entity> getNearbyEntities(double x, double y, double z) {
         // TODO Auto-generated method stub
         return null;
     }
@@ -191,7 +190,7 @@ public abstract class Entity implements org.bukkit.entity.Entity, Tick  {
     }
 
     @Override
-    public void playEffect(EntityEffect arg0) {
+    public void playEffect(EntityEffect type) {
         // TODO Auto-generated method stub
         
     }
@@ -203,61 +202,61 @@ public abstract class Entity implements org.bukkit.entity.Entity, Tick  {
     }
 
     @Override
-    public void setFallDistance(float arg0) {
+    public void setFallDistance(float distance) {
         // TODO Auto-generated method stub
         
     }
 
     @Override
-    public void setFireTicks(int arg0) {
+    public void setFireTicks(int ticks) {
         // TODO Auto-generated method stub
         
     }
 
     @Override
-    public void setLastDamageCause(EntityDamageEvent arg0) {
+    public void setLastDamageCause(EntityDamageEvent event) {
         // TODO Auto-generated method stub
         
     }
 
     @Override
-    public boolean setPassenger(org.bukkit.entity.Entity arg0) {
+    public boolean setPassenger(org.bukkit.entity.Entity passenger) {
         // TODO Auto-generated method stub
         return false;
     }
 
     @Override
-    public void setTicksLived(int arg0) {
+    public void setTicksLived(int ticks) {
         // TODO Auto-generated method stub
         
     }
 
     @Override
-    public void setVelocity(Vector arg0) {
+    public void setVelocity(Vector velocity) {
         // TODO Auto-generated method stub
         
     }
 
     @Override
-    public boolean teleport(Location arg0) {
+    public boolean teleport(Location location) {  	
         // TODO Auto-generated method stub
         return false;
     }
 
     @Override
-    public boolean teleport(org.bukkit.entity.Entity arg0) {
+    public boolean teleport(org.bukkit.entity.Entity destination) {
         // TODO Auto-generated method stub
         return false;
     }
 
     @Override
-    public boolean teleport(Location arg0, TeleportCause arg1) {
+    public boolean teleport(Location location, TeleportCause cause) {
         // TODO Auto-generated method stub
         return false;
     }
 
     @Override
-    public boolean teleport(org.bukkit.entity.Entity arg0, TeleportCause arg1) {
+    public boolean teleport(org.bukkit.entity.Entity destination, TeleportCause cause) {
         // TODO Auto-generated method stub
         return false;
     }

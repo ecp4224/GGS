@@ -464,67 +464,67 @@ public class SMPPlayer extends NetworkEntity implements CommandExecutor, org.buk
     }
 
     @Override
-    public InventoryView openEnchanting(Location arg0, boolean arg1) {
+    public InventoryView openEnchanting(Location location, boolean force) {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public InventoryView openInventory(Inventory arg0) {
+    public InventoryView openInventory(Inventory inventory) {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public void openInventory(InventoryView arg0) {
+    public void openInventory(InventoryView inventory) {
         // TODO Auto-generated method stub
         
     }
 
     @Override
-    public InventoryView openWorkbench(Location arg0, boolean arg1) {
+    public InventoryView openWorkbench(Location location, boolean force) {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public void setGameMode(GameMode arg0) {
+    public void setGameMode(GameMode mode) {
         // TODO Auto-generated method stub
         
     }
 
     @Override
-    public void setItemInHand(ItemStack arg0) {
+    public void setItemInHand(ItemStack item) {
         // TODO Auto-generated method stub
         
     }
 
     @Override
-    public void setItemOnCursor(ItemStack arg0) {
+    public void setItemOnCursor(ItemStack item) {
         // TODO Auto-generated method stub
         
     }
 
     @Override
-    public boolean setWindowProperty(Property arg0, int arg1) {
+    public boolean setWindowProperty(Property prop, int value) {
         // TODO Auto-generated method stub
         return false;
     }
 
     @Override
-    public boolean addPotionEffect(PotionEffect arg0) {
+    public boolean addPotionEffect(PotionEffect effect) {
         // TODO Auto-generated method stub
         return false;
     }
 
     @Override
-    public boolean addPotionEffect(PotionEffect arg0, boolean arg1) {
+    public boolean addPotionEffect(PotionEffect effect, boolean force) {
         // TODO Auto-generated method stub
         return false;
     }
 
     @Override
-    public boolean addPotionEffects(Collection<PotionEffect> arg0) {
+    public boolean addPotionEffects(Collection<PotionEffect> effects) {
         // TODO Auto-generated method stub
         return false;
     }
@@ -554,7 +554,7 @@ public class SMPPlayer extends NetworkEntity implements CommandExecutor, org.buk
     }
 
     @Override
-    public double getEyeHeight(boolean arg0) {
+    public double getEyeHeight(boolean ignoreSneaking) {
         // TODO Auto-generated method stub
         return 0;
     }
@@ -578,13 +578,13 @@ public class SMPPlayer extends NetworkEntity implements CommandExecutor, org.buk
     }
 
     @Override
-    public List<Block> getLastTwoTargetBlocks(HashSet<Byte> arg0, int arg1) {
+    public List<Block> getLastTwoTargetBlocks(HashSet<Byte> transparent, int maxDistance) {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public List<Block> getLineOfSight(HashSet<Byte> arg0, int arg1) {
+    public List<Block> getLineOfSight(HashSet<Byte> transparent, int maxDistance) {
         // TODO Auto-generated method stub
         return null;
     }
@@ -620,73 +620,73 @@ public class SMPPlayer extends NetworkEntity implements CommandExecutor, org.buk
     }
 
     @Override
-    public Block getTargetBlock(HashSet<Byte> arg0, int arg1) {
+    public Block getTargetBlock(HashSet<Byte> transparent, int maxDistance) {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public boolean hasLineOfSight(Entity arg0) {
+    public boolean hasLineOfSight(Entity other) {
         // TODO Auto-generated method stub
         return false;
     }
 
     @Override
-    public boolean hasPotionEffect(PotionEffectType arg0) {
+    public boolean hasPotionEffect(PotionEffectType type) {
         // TODO Auto-generated method stub
         return false;
     }
 
     @Override
-    public <T extends Projectile> T launchProjectile(Class<? extends T> arg0) {
+    public <T extends Projectile> T launchProjectile(Class<? extends T> projectile) {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public void removePotionEffect(PotionEffectType arg0) {
+    public void removePotionEffect(PotionEffectType type) {
         // TODO Auto-generated method stub
         
     }
 
     @Override
-    public void setCanPickupItems(boolean arg0) {
+    public void setCanPickupItems(boolean pickup) {
         // TODO Auto-generated method stub
         
     }
 
     @Override
-    public void setLastDamage(int arg0) {
+    public void setLastDamage(int damage) {
         // TODO Auto-generated method stub
         
     }
 
     @Override
-    public void setMaximumAir(int arg0) {
+    public void setMaximumAir(int ticks) {
         // TODO Auto-generated method stub
         
     }
 
     @Override
-    public void setMaximumNoDamageTicks(int arg0) {
+    public void setMaximumNoDamageTicks(int ticks) {
         // TODO Auto-generated method stub
         
     }
 
     @Override
-    public void setNoDamageTicks(int arg0) {
+    public void setNoDamageTicks(int ticks) {
         // TODO Auto-generated method stub
         
     }
 
     @Override
-    public void setRemainingAir(int arg0) {
+    public void setRemainingAir(int ticks) {
         // TODO Auto-generated method stub
         
     }
 
     @Override
-    public void setRemoveWhenFarAway(boolean arg0) {
+    public void setRemoveWhenFarAway(boolean remove) {
         // TODO Auto-generated method stub
         
     }
@@ -710,13 +710,13 @@ public class SMPPlayer extends NetworkEntity implements CommandExecutor, org.buk
     }
 
     @Override
-    public void damage(int arg0) {
+    public void damage(int amount) {
         // TODO Auto-generated method stub
         
     }
 
     @Override
-    public void damage(int arg0, Entity arg1) {
+    public void damage(int amount, Entity source) {
         // TODO Auto-generated method stub
         
     }
@@ -740,39 +740,37 @@ public class SMPPlayer extends NetworkEntity implements CommandExecutor, org.buk
     }
 
     @Override
-    public void setHealth(int arg0) {
+    public void setHealth(int health) {
         // TODO Auto-generated method stub
         
     }
 
     @Override
-    public void setMaxHealth(int arg0) {
+    public void setMaxHealth(int health) {
         // TODO Auto-generated method stub
         
     }
 
     @Override
-    public PermissionAttachment addAttachment(Plugin arg0) {
+    public PermissionAttachment addAttachment(Plugin plugin) {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public PermissionAttachment addAttachment(Plugin arg0, int arg1) {
+    public PermissionAttachment addAttachment(Plugin plugin, int ticks) {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public PermissionAttachment addAttachment(Plugin arg0, String arg1,
-            boolean arg2) {
+    public PermissionAttachment addAttachment(Plugin plugin, String name, boolean value) {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public PermissionAttachment addAttachment(Plugin arg0, String arg1,
-            boolean arg2, int arg3) {
+    public PermissionAttachment addAttachment(Plugin plugin, String name, boolean value, int ticks) {
         // TODO Auto-generated method stub
         return null;
     }
@@ -784,25 +782,25 @@ public class SMPPlayer extends NetworkEntity implements CommandExecutor, org.buk
     }
 
     @Override
-    public boolean hasPermission(String arg0) {
+    public boolean hasPermission(String name) {
         // TODO Auto-generated method stub
         return false;
     }
 
     @Override
-    public boolean hasPermission(Permission arg0) {
+    public boolean hasPermission(Permission perm) {
         // TODO Auto-generated method stub
         return false;
     }
 
     @Override
-    public boolean isPermissionSet(String arg0) {
+    public boolean isPermissionSet(String name) {
         // TODO Auto-generated method stub
         return false;
     }
 
     @Override
-    public boolean isPermissionSet(Permission arg0) {
+    public boolean isPermissionSet(Permission perm) {
         // TODO Auto-generated method stub
         return false;
     }
@@ -814,7 +812,7 @@ public class SMPPlayer extends NetworkEntity implements CommandExecutor, org.buk
     }
 
     @Override
-    public void removeAttachment(PermissionAttachment arg0) {
+    public void removeAttachment(PermissionAttachment attachment) {
         // TODO Auto-generated method stub
         
     }
@@ -826,32 +824,31 @@ public class SMPPlayer extends NetworkEntity implements CommandExecutor, org.buk
     }
 
     @Override
-    public void setOp(boolean arg0) {
+    public void setOp(boolean value) {
         // TODO Auto-generated method stub
         
     }
 
     @Override
-    public void abandonConversation(Conversation arg0) {
+    public void abandonConversation(Conversation conversation) {
         // TODO Auto-generated method stub
         
     }
 
     @Override
-    public void abandonConversation(Conversation arg0,
-            ConversationAbandonedEvent arg1) {
+    public void abandonConversation(Conversation conversation, ConversationAbandonedEvent details) {
         // TODO Auto-generated method stub
         
     }
 
     @Override
-    public void acceptConversationInput(String arg0) {
+    public void acceptConversationInput(String input) {
         // TODO Auto-generated method stub
         
     }
 
     @Override
-    public boolean beginConversation(Conversation arg0) {
+    public boolean beginConversation(Conversation conversation) {
         // TODO Auto-generated method stub
         return false;
     }
@@ -863,9 +860,10 @@ public class SMPPlayer extends NetworkEntity implements CommandExecutor, org.buk
     }
 
     @Override
-    public void sendMessage(String[] arg0) {
-        // TODO Auto-generated method stub
-        
+    public void sendMessage(String[] messages) {
+        for (int i = 0; i < messages.length; i++) {
+        	sendMessage(messages[i]);
+        }
     }
 
     @Override
@@ -911,13 +909,13 @@ public class SMPPlayer extends NetworkEntity implements CommandExecutor, org.buk
     }
 
     @Override
-    public void setBanned(boolean arg0) {
+    public void setBanned(boolean banned) {
         // TODO Auto-generated method stub
         
     }
 
     @Override
-    public void setWhitelisted(boolean arg0) {
+    public void setWhitelisted(boolean value) {
         // TODO Auto-generated method stub
         
     }
@@ -935,7 +933,7 @@ public class SMPPlayer extends NetworkEntity implements CommandExecutor, org.buk
     }
 
     @Override
-    public void sendPluginMessage(Plugin arg0, String arg1, byte[] arg2) {
+    public void sendPluginMessage(Plugin source, String channel, byte[] message) {
         // TODO Auto-generated method stub
         
     }
@@ -1170,8 +1168,7 @@ public class SMPPlayer extends NetworkEntity implements CommandExecutor, org.buk
     }
 
     @Override
-    public void playSound(Location location, Sound sound, float volume,
-            float pitch) {
+    public void playSound(Location location, Sound sound, float volume, float pitch) {
         // TODO Auto-generated method stub
         
     }
@@ -1201,8 +1198,7 @@ public class SMPPlayer extends NetworkEntity implements CommandExecutor, org.buk
     }
 
     @Override
-    public boolean sendChunkChange(Location loc, int sx, int sy, int sz,
-            byte[] data) {
+    public boolean sendChunkChange(Location loc, int sx, int sy, int sz, byte[] data) {
         // TODO Auto-generated method stub
         return false;
     }
@@ -1350,5 +1346,4 @@ public class SMPPlayer extends NetworkEntity implements CommandExecutor, org.buk
         // TODO Auto-generated method stub
         
     }
-
 }
