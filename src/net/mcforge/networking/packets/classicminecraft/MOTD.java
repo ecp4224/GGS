@@ -12,7 +12,6 @@ import java.io.UnsupportedEncodingException;
 
 import net.mcforge.API.io.PacketPrepareEvent;
 import net.mcforge.networking.IOClient;
-
 import net.mcforge.networking.packets.PacketManager;
 import net.mcforge.server.Server;
 
@@ -58,8 +57,6 @@ public class MOTD extends ClassicPacket {
 
     @Override
     public void Handle(byte[] message, Server server, IOClient player) {
-        // TODO Auto-generated method stub
-
     }
 
     @Override

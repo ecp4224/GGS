@@ -12,11 +12,10 @@ import java.net.Socket;
 import java.util.Date;
 
 import net.mcforge.API.browser.BrowserGETRequestEvent;
-import net.mcforge.networking.IOClient;
 import net.mcforge.networking.packets.PacketManager;
 import net.mcforge.server.Server;
 
-public class Browser extends IOClient {
+public class Browser extends SimpleIOClient {
 
     public Browser(Socket client, PacketManager pm) {
         super(client, pm);

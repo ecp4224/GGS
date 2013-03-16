@@ -19,8 +19,37 @@ import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
+import java.util.Set;
+import java.util.UUID;
+
+import org.bukkit.GameMode;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.Warning.WarningState;
+import org.bukkit.World;
+import org.bukkit.WorldCreator;
+import org.bukkit.command.CommandException;
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.command.PluginCommand;
+import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.help.HelpMap;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.ItemFactory;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.Recipe;
+import org.bukkit.map.MapView;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.ServicesManager;
+import org.bukkit.plugin.messaging.Messenger;
+import org.bukkit.scheduler.BukkitScheduler;
+
+import com.avaje.ebean.config.ServerConfig;
 
 import net.mcforge.API.EventSystem;
 import net.mcforge.API.action.CmdAbort;
@@ -35,6 +64,7 @@ import net.mcforge.chat.Messages;
 import net.mcforge.groups.Group;
 import net.mcforge.iomodel.Player;
 import net.mcforge.iomodel.SMPPlayer;
+import net.mcforge.iomodel.SimpleIOClient;
 import net.mcforge.networking.IOClient;
 import net.mcforge.networking.packets.PacketManager;
 import net.mcforge.sql.ISQL;
@@ -72,7 +102,7 @@ import net.mcforge.world.generator.classicmodel.Space;
 import net.mcforge.world.generator.mcmodel.FlatGrassChunk;
 import net.mcforge.world.mcmodel.ChunkLevel;
 
-public final class Server implements LogInterface, Updatable, Tick {
+public final class Server implements LogInterface, Updatable, Tick, org.bukkit.Server {
     private PacketManager pm;
     private final java.util.logging.Logger log = java.util.logging.Logger.getLogger("MCForge");
     private ClassicLevelHandler lm;
@@ -312,7 +342,7 @@ public final class Server implements LogInterface, Updatable, Tick {
     }
 
     public final PrintWriter getLoggerOutput() {
-        return getLogger().getWriter();
+        return getMCFLogger().getWriter();
     }
 
     /**
@@ -817,9 +847,9 @@ public final class Server implements LogInterface, Updatable, Tick {
     }
 
     /**
-     * Get all the {@link IOClient} connected to the server
+     * Get all the {@link SimpleIOClient} connected to the server
      * @return
-     *        An {@link ArrayList} of {@link IOClient}
+     *        An {@link ArrayList} of {@link SimpleIOClient}
      */
     public ArrayList<IOClient> getClients() {
         return pm.getConnectedClients();
@@ -1023,7 +1053,7 @@ public final class Server implements LogInterface, Updatable, Tick {
      * @return
      *        The {@link Logger} object
      */
-    public Logger getLogger() {
+    public Logger getMCFLogger() {
         return logger;
     }
 
@@ -1092,13 +1122,6 @@ public final class Server implements LogInterface, Updatable, Tick {
         System.out.println(message);
         log.log(java.util.logging.Level.SEVERE, message);
     }
-
-    /**
-     * Calls {@link Server#findPlayer(String)}
-     */
-    public Player getPlayer(String name) {
-        return findPlayer(name);
-    }
     @Override
     public String getInfoURL() {
         return "http://update.mcforge.net/mcf6/updatej";
@@ -1130,5 +1153,427 @@ public final class Server implements LogInterface, Updatable, Tick {
     @Override
     public String tickName() {
         return "";
+    }
+    @Override
+    public Set<String> getListeningPluginChannels() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+    @Override
+    public void sendPluginMessage(Plugin arg0, String arg1, byte[] arg2) {
+        // TODO Auto-generated method stub
+        
+    }
+    @Override
+    public boolean addRecipe(Recipe recipe) {
+        // TODO Auto-generated method stub
+        return false;
+    }
+    @Override
+    public void banIP(String address) {
+        // TODO Auto-generated method stub
+        
+    }
+    @Override
+    public int broadcast(String message, String permission) {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+    @Override
+    public int broadcastMessage(String message) {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+    @Override
+    public void clearRecipes() {
+        // TODO Auto-generated method stub
+        
+    }
+    @Override
+    public void configureDbConfig(ServerConfig config) {
+        // TODO Auto-generated method stub
+        
+    }
+    @Override
+    public Inventory createInventory(InventoryHolder owner, InventoryType type) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+    @Override
+    public Inventory createInventory(InventoryHolder owner, int size) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+    @Override
+    public Inventory createInventory(InventoryHolder owner, int size,
+            String title) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+    @Override
+    public MapView createMap(World world) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+    @Override
+    public World createWorld(WorldCreator creator) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+    @Override
+    public boolean dispatchCommand(CommandSender sender, String commandLine)
+            throws CommandException {
+        // TODO Auto-generated method stub
+        return false;
+    }
+    @Override
+    public boolean getAllowEnd() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+    @Override
+    public boolean getAllowFlight() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+    @Override
+    public boolean getAllowNether() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+    @Override
+    public int getAmbientSpawnLimit() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+    @Override
+    public int getAnimalSpawnLimit() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+    @Override
+    public Set<OfflinePlayer> getBannedPlayers() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+    @Override
+    public String getBukkitVersion() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+    @Override
+    public Map<String, String[]> getCommandAliases() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+    @Override
+    public long getConnectionThrottle() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+    @Override
+    public ConsoleCommandSender getConsoleSender() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+    @Override
+    public GameMode getDefaultGameMode() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+    @Override
+    public boolean getGenerateStructures() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+    @Override
+    public HelpMap getHelpMap() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+    @Override
+    public Set<String> getIPBans() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+    @Override
+    public String getIp() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+    @Override
+    public ItemFactory getItemFactory() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+    @Override
+    public MapView getMap(short id) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+    @Override
+    public int getMaxPlayers() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+    @Override
+    public Messenger getMessenger() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+    @Override
+    public int getMonsterSpawnLimit() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+    @Override
+    public String getMotd() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+    @Override
+    public OfflinePlayer getOfflinePlayer(String name) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+    @Override
+    public OfflinePlayer[] getOfflinePlayers() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+    @Override
+    public boolean getOnlineMode() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+    @Override
+    public org.bukkit.entity.Player[] getOnlinePlayers() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+    @Override
+    public Set<OfflinePlayer> getOperators() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+    @Override
+    public org.bukkit.entity.Player getPlayerExact(String name) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+    @Override
+    public PluginCommand getPluginCommand(String name) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+    @Override
+    public PluginManager getPluginManager() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+    @Override
+    public int getPort() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+    @Override
+    public List<Recipe> getRecipesFor(ItemStack result) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+    @Override
+    public BukkitScheduler getScheduler() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+    @Override
+    public String getServerId() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+    @Override
+    public String getServerName() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+    @Override
+    public ServicesManager getServicesManager() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+    @Override
+    public String getShutdownMessage() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+    @Override
+    public int getSpawnRadius() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+    @Override
+    public int getTicksPerAnimalSpawns() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+    @Override
+    public int getTicksPerMonsterSpawns() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+    @Override
+    public String getUpdateFolder() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+    @Override
+    public File getUpdateFolderFile() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+    @Override
+    public String getVersion() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+    @Override
+    public int getViewDistance() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+    @Override
+    public WarningState getWarningState() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+    @Override
+    public int getWaterAnimalSpawnLimit() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+    @Override
+    public Set<OfflinePlayer> getWhitelistedPlayers() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+    @Override
+    public World getWorld(String name) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+    @Override
+    public World getWorld(UUID uid) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+    @Override
+    public File getWorldContainer() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+    @Override
+    public String getWorldType() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+    @Override
+    public List<World> getWorlds() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+    @Override
+    public boolean hasWhitelist() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+    @Override
+    public boolean isHardcore() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+    @Override
+    public boolean isPrimaryThread() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+    @Override
+    public List<org.bukkit.entity.Player> matchPlayer(String name) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+    @Override
+    public Iterator<Recipe> recipeIterator() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+    @Override
+    public void reload() {
+        // TODO Auto-generated method stub
+        
+    }
+    @Override
+    public void reloadWhitelist() {
+        // TODO Auto-generated method stub
+        
+    }
+    @Override
+    public void resetRecipes() {
+        // TODO Auto-generated method stub
+        
+    }
+    @Override
+    public void savePlayers() {
+        // TODO Auto-generated method stub
+        
+    }
+    @Override
+    public void setDefaultGameMode(GameMode mode) {
+        // TODO Auto-generated method stub
+        
+    }
+    @Override
+    public void setSpawnRadius(int value) {
+        // TODO Auto-generated method stub
+        
+    }
+    @Override
+    public void setWhitelist(boolean value) {
+        // TODO Auto-generated method stub
+        
+    }
+    @Override
+    public void shutdown() {
+        // TODO Auto-generated method stub
+        
+    }
+    @Override
+    public void unbanIP(String address) {
+        // TODO Auto-generated method stub
+        
+    }
+    @Override
+    public boolean unloadWorld(String name, boolean save) {
+        // TODO Auto-generated method stub
+        return false;
+    }
+    @Override
+    public boolean unloadWorld(World world, boolean save) {
+        // TODO Auto-generated method stub
+        return false;
+    }
+    @Override
+    public boolean useExactLoginLocation() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+    @Override
+    public java.util.logging.Logger getLogger() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+    @Override
+    public org.bukkit.entity.Player getPlayer(String name) {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

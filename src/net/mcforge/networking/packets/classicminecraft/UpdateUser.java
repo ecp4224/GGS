@@ -11,7 +11,6 @@ import java.io.IOException;
 
 import net.mcforge.iomodel.Player;
 import net.mcforge.networking.IOClient;
-
 import net.mcforge.networking.packets.PacketManager;
 import net.mcforge.server.Server;
 
@@ -43,6 +42,7 @@ public class UpdateUser extends ClassicPacket {
         try {
             player.writeData(final1);
         } catch (IOException e) {
+
             e.printStackTrace();
         }
     }

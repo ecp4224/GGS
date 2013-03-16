@@ -4,6 +4,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 
+import net.mcforge.iomodel.SimpleIOClient;
 import net.mcforge.networking.IOClient;
 import net.mcforge.networking.packets.IClient;
 import net.mcforge.networking.packets.PacketManager;
@@ -19,7 +20,7 @@ public class MCServerList implements IClient {
 
     @Override
     public IOClient create(Socket client, PacketManager pm) {
-        IOClient ic = new IOClient(client, pm);
+        SimpleIOClient ic = new SimpleIOClient(client, pm);
         DataOutputStream dos = new DataOutputStream(ic.getOutputStream());
         try {
             dos.write((byte)0xFF);

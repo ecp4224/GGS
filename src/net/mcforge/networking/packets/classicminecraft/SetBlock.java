@@ -12,8 +12,9 @@ import java.nio.ByteBuffer;
 
 import net.mcforge.API.io.PacketPrepareEvent;
 import net.mcforge.iomodel.Player;
-import net.mcforge.networking.IOClient;
+import net.mcforge.iomodel.SimpleIOClient;
 
+import net.mcforge.networking.IOClient;
 import net.mcforge.networking.packets.PacketManager;
 import net.mcforge.server.Server;
 import net.mcforge.world.PlaceMode;
@@ -31,7 +32,7 @@ public class SetBlock extends ClassicPacket {
         super("SetBlock", (byte)0x05, pm);
         this.length = 8;
     }
-    public byte[] getBytes(IOClient player, Server server, Object...parma) {
+    public byte[] getBytes(SimpleIOClient player, Server server, Object...parma) {
         short X = ((Short)parma[0]).shortValue();
         short Y = ((Short)parma[1]).shortValue();
         short Z = ((Short)parma[2]).shortValue();

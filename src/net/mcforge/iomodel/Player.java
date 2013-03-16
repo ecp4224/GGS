@@ -35,7 +35,6 @@ import net.mcforge.chat.ChatColor;
 import net.mcforge.chat.Messages;
 import net.mcforge.groups.Group;
 import net.mcforge.networking.ClassicClientType;
-import net.mcforge.networking.IOClient;
 import net.mcforge.networking.packets.Packet;
 import net.mcforge.networking.packets.PacketManager;
 import net.mcforge.networking.packets.classicminecraft.GlobalPosUpdate;
@@ -50,7 +49,7 @@ import net.mcforge.world.PlaceMode;
 import net.mcforge.world.blocks.BlockUpdate;
 import net.mcforge.world.blocks.classicmodel.ClassicBlock;
 
-public class Player extends IOClient implements CommandExecutor, Tick {
+public class Player extends SimpleIOClient implements CommandExecutor, Tick {
     protected short X;
     protected short Y;
     protected short Z;

@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import net.mcforge.iomodel.SimpleIOClient;
 import net.mcforge.networking.IOClient;
 import net.mcforge.networking.packets.clients.Client;
 import net.mcforge.server.Server;
@@ -47,7 +48,7 @@ public abstract class Packet {
      * @param server
      *              The server that the PacketManager reads for
      * @param player
-     *              The socket or {@link IOClient} that send this packet
+     *              The socket or {@link SimpleIOClient} that send this packet
      */
     public abstract void Handle(byte[] message, Server server, IOClient player);
     

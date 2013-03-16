@@ -30,7 +30,9 @@ public class PlayerPositionAndLook extends SMPPacket {
             float pitch = reader.readFloat();
             boolean onGround = reader.readBoolean();
             
-            player.getLocation().set(x, y, z);
+            player.getLocation().setX(x);
+            player.getLocation().setY(y);
+            player.getLocation().setZ(z);
             player.setStance(stance);
             player.getRotation().set(yaw, pitch);
             player.setOnGround(onGround);

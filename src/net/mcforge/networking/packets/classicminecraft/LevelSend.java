@@ -82,9 +82,8 @@ public class LevelSend extends ClassicPacket {
 
     @Override
     public void Handle(byte[] message, Server server, IOClient player) {
-        // TODO Auto-generated method stub
-
     }
+    
     private byte[] HTNO(short x) throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         DataOutputStream dos = new DataOutputStream(baos);

@@ -269,7 +269,7 @@ public class PacketManager {
     }
     
     /**
-     * Remove an {@link IOClient} from the {@link PacketManager#getConnectedClients()} list.
+     * Remove an {@link SimpleIOClient} from the {@link PacketManager#getConnectedClients()} list.
      * @param client
      *              The client to remove
      * @return
@@ -278,7 +278,7 @@ public class PacketManager {
     public boolean disconnect(IOClient client) {
        if (connectedclients.contains(client)) {
            connectedclients.remove(client);
-           server.Log("Removing IOClient connection", true);
+           server.Log("Removing SimpleIOClient connection", true);
            server.rebuildClassicPlayerCache();
            return true;
        }
@@ -312,7 +312,7 @@ public class PacketManager {
         if (clientconnection == null)
             return;
         connectedclients.add(clientconnection);
-        clientconnection.Listen();
+        clientconnection.listen();
     }
 
     private class Read extends Thread {

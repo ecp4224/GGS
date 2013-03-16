@@ -8,12 +8,9 @@
 package net.mcforge.networking.packets.classicminecraft;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.nio.ByteBuffer;
 
 import net.mcforge.API.io.PacketPrepareEvent;
 import net.mcforge.networking.IOClient;
-
 import net.mcforge.networking.packets.PacketManager;
 import net.mcforge.server.Server;
 
@@ -42,21 +39,6 @@ public class LevelStartSend extends ClassicPacket {
 
     @Override
     public void Handle(byte[] message, Server server, IOClient player) {
-        //SMP Handshake
-        final String KICKMESSAGE = "This is not an SMP Server!";
-        try {
-            byte[] kickbyte = KICKMESSAGE.getBytes("US-ASCII");
-            ByteBuffer bb = ByteBuffer.allocate(3 + kickbyte.length);
-            bb.put((byte)255);
-            bb.putShort((short)kickbyte.length);
-            bb.put(kickbyte);
-            player.writeData(bb.array());
-        } catch (UnsupportedEncodingException e) {;
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        player.closeConnection();
     }
 
 }

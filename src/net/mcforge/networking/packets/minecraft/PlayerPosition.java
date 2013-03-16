@@ -39,8 +39,9 @@ public class PlayerPosition extends SMPPacket {
         	if (Math.abs(x) > 3.2E7d || Math.abs(y) > 3.2E7d) {
         		p.kick("Illegal Position");
         	}
-        	
-        	p.getLocation().set(x, y, z);
+        	p.getLocation().setX(x);
+        	p.getLocation().setY(y);
+        	p.getLocation().setZ(z);
         	p.setStance(stance);
         	p.setOnGround(onGround);
 		}

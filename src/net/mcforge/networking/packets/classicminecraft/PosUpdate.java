@@ -14,7 +14,6 @@ import net.mcforge.API.ClassicExtension;
 import net.mcforge.API.player.PlayerMoveEvent;
 import net.mcforge.iomodel.Player;
 import net.mcforge.networking.IOClient;
-
 import net.mcforge.networking.packets.PacketManager;
 import net.mcforge.server.Server;
 
