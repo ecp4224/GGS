@@ -269,7 +269,7 @@ public class PacketManager {
     }
     
     /**
-     * Remove an {@link SimpleIOClient} from the {@link PacketManager#getConnectedClients()} list.
+     * Remove an {@link IOClient} from the {@link PacketManager#getConnectedClients()} list.
      * @param client
      *              The client to remove
      * @return

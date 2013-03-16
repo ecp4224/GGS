@@ -26,6 +26,7 @@ import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Warning.WarningState;
@@ -219,6 +220,10 @@ public final class Server implements LogInterface, Updatable, Tick, org.bukkit.S
      * The version of MCForge this server runs
      */
     public static final String CORE_VERSION = "6.0.0b6";
+    /**
+     * The version of Bukkit this server implements
+     */
+    public static final String BUKKIT_VERSION = "1.4.7-R1.1-SNAPSHOT";
     /**
      * The version number of this MCForge server </br>
      * Where 600 would be 6.0.0 </br>
@@ -631,6 +636,9 @@ public final class Server implements LogInterface, Updatable, Tick, org.bukkit.S
             startLogger();
         Log("=============================");
         Log("Starting MCForge v" + CORE_VERSION);
+        Log("Telling bukkit to use MCForge", true);
+        Bukkit.setServer(this);
+        Log("OK!", true);
         if (args.isRunningInDebugMode()) {
             debug_mode = true;
             Log("MCForge running in debug mode", true);
@@ -1258,8 +1266,7 @@ public final class Server implements LogInterface, Updatable, Tick, org.bukkit.S
     }
     @Override
     public String getBukkitVersion() {
-        // TODO Auto-generated method stub
-        return null;
+        return BUKKIT_VERSION;
     }
     @Override
     public Map<String, String[]> getCommandAliases() {
@@ -1328,8 +1335,7 @@ public final class Server implements LogInterface, Updatable, Tick, org.bukkit.S
     }
     @Override
     public String getMotd() {
-        // TODO Auto-generated method stub
-        return null;
+        return MOTD;
     }
     @Override
     public OfflinePlayer getOfflinePlayer(String name) {
@@ -1348,8 +1354,7 @@ public final class Server implements LogInterface, Updatable, Tick, org.bukkit.S
     }
     @Override
     public org.bukkit.entity.Player[] getOnlinePlayers() {
-        // TODO Auto-generated method stub
-        return null;
+        return getSMPPlayers().toArray(new SMPPlayer[getSMPPlayers().size()]);
     }
     @Override
     public Set<OfflinePlayer> getOperators() {
@@ -1373,8 +1378,7 @@ public final class Server implements LogInterface, Updatable, Tick, org.bukkit.S
     }
     @Override
     public int getPort() {
-        // TODO Auto-generated method stub
-        return 0;
+        return Port;
     }
     @Override
     public List<Recipe> getRecipesFor(ItemStack result) {
@@ -1393,8 +1397,7 @@ public final class Server implements LogInterface, Updatable, Tick, org.bukkit.S
     }
     @Override
     public String getServerName() {
-        // TODO Auto-generated method stub
-        return null;
+        return Name;
     }
     @Override
     public ServicesManager getServicesManager() {
@@ -1433,8 +1436,7 @@ public final class Server implements LogInterface, Updatable, Tick, org.bukkit.S
     }
     @Override
     public String getVersion() {
-        // TODO Auto-generated method stub
-        return null;
+        return CORE_VERSION;
     }
     @Override
     public int getViewDistance() {
@@ -1568,8 +1570,7 @@ public final class Server implements LogInterface, Updatable, Tick, org.bukkit.S
     }
     @Override
     public java.util.logging.Logger getLogger() {
-        // TODO Auto-generated method stub
-        return null;
+        return log;
     }
     @Override
     public org.bukkit.entity.Player getPlayer(String name) {

@@ -20,8 +20,8 @@ public abstract class IOEvent extends Event {
     }
     
     /**
-     * Get the SimpleIOClient associated with this event
-     * @return The SimpleIOClient
+     * Get the IOClient associated with this event
+     * @return The IOClient
      */
     public IOClient getIOClient() {
         return _client;
