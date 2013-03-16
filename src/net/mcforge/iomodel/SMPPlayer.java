@@ -1055,7 +1055,6 @@ public class SMPPlayer extends NetworkEntity implements CommandExecutor, org.buk
     @Override
     public void giveExp(int amount) {
         // TODO Auto-generated method stub
-        
     }
 
     @Override
@@ -1185,7 +1184,9 @@ public class SMPPlayer extends NetworkEntity implements CommandExecutor, org.buk
 
     @Override
     public void playSound(Location location, Sound sound, float volume, float pitch) {
-        // TODO Auto-generated method stub       
+        pm.getPacket("NamedSoundEffect").Write(this, getServer(), (int)(location.getBlockX() * 8d), 
+        		                               (int)(location.getBlockY() * 8d), (int)(location.getBlockZ() * 8d),
+        		                               volume, (byte)(pitch * 63F));
     }
 
     @Override
@@ -1202,14 +1203,12 @@ public class SMPPlayer extends NetworkEntity implements CommandExecutor, org.buk
 
     @Override
     public void sendBlockChange(Location loc, Material material, byte data) {
-        // TODO Auto-generated method stub
-        
+        sendBlockChange(loc, material.getId(), data);
     }
 
     @Override
     public void sendBlockChange(Location loc, int material, byte data) {
-        // TODO Auto-generated method stub
-        
+    	pm.getPacket("BlockChange").Write(this, getServer(), loc.getBlockX(), (byte)loc.getBlockY(), loc.getBlockZ(), material, data);
     }
 
     @Override
