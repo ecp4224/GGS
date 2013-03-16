@@ -224,6 +224,16 @@ public final class Server implements LogInterface, Updatable, Tick, org.bukkit.S
      * The version of Bukkit this server implements
      */
     public static final String BUKKIT_VERSION = "1.4.7-R1.1-SNAPSHOT";
+    
+    /**
+     * The version of Minecraft protocol this server implements.
+     */
+    public static final String PROTOCOL_VERSION = "60";
+    
+    /**
+     * The version of Minecraft this server supports.
+     */
+    public static final String MINECRAFT_VERSION = "1.5";
     /**
      * The version number of this MCForge server </br>
      * Where 600 would be 6.0.0 </br>

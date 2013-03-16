@@ -24,6 +24,15 @@ import javax.crypto.CipherOutputStream;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
+import net.mcforge.API.CommandExecutor;
+import net.mcforge.entity.NetworkEntity;
+import net.mcforge.entity.Rotation;
+import net.mcforge.groups.Group;
+import net.mcforge.networking.packets.Packet;
+import net.mcforge.networking.packets.PacketManager;
+import net.mcforge.server.Server;
+import net.mcforge.util.WebUtils;
+
 import org.bukkit.Achievement;
 import org.bukkit.Effect;
 import org.bukkit.GameMode;
@@ -55,15 +64,6 @@ import org.bukkit.permissions.PermissionAttachmentInfo;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-
-import net.mcforge.API.CommandExecutor;
-import net.mcforge.entity.NetworkEntity;
-import net.mcforge.entity.Rotation;
-import net.mcforge.groups.Group;
-import net.mcforge.networking.packets.Packet;
-import net.mcforge.networking.packets.PacketManager;
-import net.mcforge.server.Server;
-import net.mcforge.util.WebUtils;
 
 public class SMPPlayer extends NetworkEntity implements CommandExecutor, org.bukkit.entity.Player {
 	private final static Random rand = new Random();
@@ -120,6 +120,7 @@ public class SMPPlayer extends NetworkEntity implements CommandExecutor, org.buk
         }
 	}
 	
+	@SuppressWarnings("resource")
 	public void validateLogin(byte[] sharedkey, byte[] verify) throws IllegalAccessException {
 	    if (lstep != 1)
 	        throw new IllegalAccessException("This method can only be invoked during login.");
@@ -940,8 +941,7 @@ public class SMPPlayer extends NetworkEntity implements CommandExecutor, org.buk
 
     @Override
     public void awardAchievement(Achievement achievement) {
-        // TODO Auto-generated method stub
-        
+        pm.getPacket("IncrementStatistic").Write(this, getServer(), achievement.getId(), 1);
     }
 
     @Override
@@ -1072,27 +1072,44 @@ public class SMPPlayer extends NetworkEntity implements CommandExecutor, org.buk
 
     @Override
     public void incrementStatistic(Statistic statistic) {
-        // TODO Auto-generated method stub
-        
+    	incrementStatistic(statistic, 1);
     }
 
     @Override
     public void incrementStatistic(Statistic statistic, int amount) {
-        // TODO Auto-generated method stub
-        
+    	pm.getPacket("IncrementStatistic").Write(this, getServer(), statistic.getId(), 1);
     }
 
     @Override
     public void incrementStatistic(Statistic statistic, Material material) {
-        // TODO Auto-generated method stub
-        
+        incrementStatistic(statistic, material, 1);
     }
 
     @Override
-    public void incrementStatistic(Statistic statistic, Material material,
-            int amount) {
-        // TODO Auto-generated method stub
+    public void incrementStatistic(Statistic statistic, Material material, int amount) {
+        if (!statistic.isSubstatistic()) {
+            throw new IllegalArgumentException("The specified statistic isn't a substatistic!");
+        }
+        if (statistic.isBlock() != material.isBlock()) {
+            throw new IllegalArgumentException("The specified material is not valid for the specified substatistic!");
+        }
+
+        int id = material.getId();
+
+        if (!material.isBlock()) {
+            id -= 255;
+        }
         
+        sendStatistic(statistic.getId() + id, amount);
+    }
+    
+    private void sendStatistic(int statisticID, int amount) {
+        while (amount > Byte.MAX_VALUE) {
+            sendStatistic(statisticID, Byte.MAX_VALUE);
+            amount -= Byte.MAX_VALUE;
+        }
+        
+        pm.getPacket("IncrementStatistic").Write(this, getServer(), statisticID, amount);
     }
 
     @Override
@@ -1127,8 +1144,7 @@ public class SMPPlayer extends NetworkEntity implements CommandExecutor, org.buk
 
     @Override
     public void kickPlayer(String message) {
-        // TODO Auto-generated method stub
-        
+        pm.getPacket("SMPKick").Write(this, getServer(), message);
     }
 
     @Override
@@ -1145,8 +1161,8 @@ public class SMPPlayer extends NetworkEntity implements CommandExecutor, org.buk
 
     @Override
     public void playEffect(Location loc, Effect effect, int data) {
-        // TODO Auto-generated method stub
-        
+        pm.getPacket("SoundOrParticleEffect").Write(this, getServer(), effect.getId(), loc.getBlockX(), 
+        		                                    (byte)loc.getBlockY(), loc.getBlockZ(), data, false);
     }
 
     @Override
@@ -1157,20 +1173,19 @@ public class SMPPlayer extends NetworkEntity implements CommandExecutor, org.buk
 
     @Override
     public void playNote(Location loc, byte instrument, byte note) {
-        // TODO Auto-generated method stub
+        pm.getPacket("BlockAction").Write(this, getServer(), loc.getBlockX(), (short)loc.getBlockY(), loc.getBlockZ(),
+        								  getWorld().getBlockTypeIdAt(loc), instrument, note);
         
     }
 
     @Override
     public void playNote(Location loc, Instrument instrument, Note note) {
-        // TODO Auto-generated method stub
-        
+        playNote(loc, instrument.getType(), note.getId());
     }
 
     @Override
     public void playSound(Location location, Sound sound, float volume, float pitch) {
-        // TODO Auto-generated method stub
-        
+        // TODO Auto-generated method stub       
     }
 
     @Override

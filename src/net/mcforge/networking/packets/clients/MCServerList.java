@@ -8,6 +8,7 @@ import net.mcforge.iomodel.SimpleIOClient;
 import net.mcforge.networking.IOClient;
 import net.mcforge.networking.packets.IClient;
 import net.mcforge.networking.packets.PacketManager;
+import net.mcforge.server.Server;
 
 public class MCServerList implements IClient {
     
@@ -24,7 +25,7 @@ public class MCServerList implements IClient {
         DataOutputStream dos = new DataOutputStream(ic.getOutputStream());
         try {
             dos.write((byte)0xFF);
-            String data = COLOR_CHAR + "1\0\51\0\1.4.7\0" + pm.server.MOTD + "\0" + pm.server.getSMPPlayers().size() + "\0" + pm.server.MaxPlayers;
+            String data = COLOR_CHAR + "1\0\\" + Server.PROTOCOL_VERSION + "\0\\ " + Server.MINECRAFT_VERSION + "\0" + pm.server.MOTD + "\0" + pm.server.getSMPPlayers().size() + "\0" + pm.server.MaxPlayers;
             dos.writeShort((short)data.length());
             dos.writeChars(data);
         } catch (IOException e) {

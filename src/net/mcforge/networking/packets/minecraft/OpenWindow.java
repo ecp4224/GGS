@@ -23,13 +23,15 @@ public class OpenWindow extends SMPPacket {
 	
 	@Override
 	public void write(SMPPlayer p, Server server, Object... obj) {
-		if(obj.length >= 4 && obj[0] instanceof Byte && obj[1] instanceof Byte && obj[2] instanceof String && obj[3] instanceof Byte){
+		if(obj.length >= 5 && obj[0] instanceof Byte && obj[1] instanceof Byte && obj[2] instanceof String && 
+		   obj[3] instanceof Byte && obj[4] instanceof Boolean){
 			ByteBuffer bb = ByteBuffer.allocate(6 + ((String)obj[2]).length() * 2);
 			bb.put(this.ID);
 			bb.put((Byte)obj[0]);
 			bb.put((Byte)obj[1]);
 			putMinecraftString((String)obj[1], bb);
 			bb.put((Byte)obj[3]);
+			putBoolean((Boolean)obj[4], bb);
 			
 			try{
 				p.writeData(bb.array());
