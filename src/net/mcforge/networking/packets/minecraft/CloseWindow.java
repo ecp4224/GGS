@@ -18,8 +18,15 @@ public class CloseWindow extends SMPPacket {
         this("CloseWindow", (byte)0x65, pm);
     }
 
-    @Override
+    @SuppressWarnings("unused") //temp
+	@Override
     public void handle(SMPPlayer p, Server server, DataInputStream reader) {
+    	try {
+			int closedWindowID = reader.readByte();
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+		}
     }
 
     @Override

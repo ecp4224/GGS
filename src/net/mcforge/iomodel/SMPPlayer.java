@@ -384,7 +384,7 @@ public class SMPPlayer extends NetworkEntity implements CommandExecutor, org.buk
 
     @Override
     public void sendMessage(String message) {
-        //TODO Send a message
+        pm.getPacket("ChatMessage").Write(this, getServer(), message);
     }
 
     @Override
@@ -400,8 +400,7 @@ public class SMPPlayer extends NetworkEntity implements CommandExecutor, org.buk
 
     @Override
     public void closeInventory() {
-        // TODO Auto-generated method stub
-        
+        pm.getPacket("CloseWindow").Write(this, getServer(), (byte)0);
     }
 
     @Override
@@ -694,20 +693,17 @@ public class SMPPlayer extends NetworkEntity implements CommandExecutor, org.buk
 
     @Override
     public Arrow shootArrow() {
-        // TODO Auto-generated method stub
-        return null;
+        return launchProjectile(Arrow.class);
     }
 
     @Override
     public Egg throwEgg() {
-        // TODO Auto-generated method stub
-        return null;
+        return launchProjectile(Egg.class);
     }
 
     @Override
     public Snowball throwSnowball() {
-        // TODO Auto-generated method stub
-        return null;
+        return launchProjectile(Snowball.class);
     }
 
     @Override
