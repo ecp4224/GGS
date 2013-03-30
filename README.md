@@ -1,4 +1,4 @@
-#MCForge Vanilla
+#MCForge
 
 ![MCForge Logo](http://www.mcforge.net/community/public/style_images/4_logo.png)
 
