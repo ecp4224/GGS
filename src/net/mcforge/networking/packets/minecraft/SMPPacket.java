@@ -89,6 +89,20 @@ public abstract class SMPPacket extends DynamicPacket {
         }
     }
     
+	/**
+	 * Gets the byte length of a Minecraft string.
+	 * 
+	 * @param string
+	 *            The string to get the length for.
+	 */
+    public int stringLength(Object string) {
+    	if (!(string instanceof String)) {
+    		throw new IllegalArgumentException("Object isn't instanceof string!");
+    	}
+    	
+    	return ((String)string).length() * 2;
+    }
+    
     /**
      * Put a boolean into a ByteBuffer
      * @param bool

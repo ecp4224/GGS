@@ -26,6 +26,56 @@ import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
 
+import net.mcforge.API.EventSystem;
+import net.mcforge.API.action.CmdAbort;
+import net.mcforge.API.help.Help;
+import net.mcforge.API.help.HelpItemManager;
+import net.mcforge.API.io.ServerLogEvent;
+import net.mcforge.API.plugin.CommandHandler;
+import net.mcforge.API.plugin.PluginHandler;
+import net.mcforge.API.server.ServerStartedEvent;
+import net.mcforge.chat.ChatColor;
+import net.mcforge.chat.Messages;
+import net.mcforge.groups.Group;
+import net.mcforge.iomodel.Player;
+import net.mcforge.iomodel.SMPPlayer;
+import net.mcforge.networking.IOClient;
+import net.mcforge.networking.packets.PacketManager;
+import net.mcforge.sql.ISQL;
+import net.mcforge.sql.MySQL;
+import net.mcforge.sql.SQLite;
+import net.mcforge.system.Console;
+import net.mcforge.system.PrivilegesHandler;
+import net.mcforge.system.Serializer;
+import net.mcforge.system.heartbeat.Beat;
+import net.mcforge.system.heartbeat.ForgeBeat;
+import net.mcforge.system.heartbeat.Heart;
+import net.mcforge.system.heartbeat.MBeat;
+import net.mcforge.system.heartbeat.WBeat;
+import net.mcforge.system.ticker.Tick;
+import net.mcforge.system.ticker.Ticker;
+import net.mcforge.system.updater.Updatable;
+import net.mcforge.system.updater.UpdateService;
+import net.mcforge.system.updater.UpdateType;
+import net.mcforge.util.FileUtils;
+import net.mcforge.util.logger.LogInterface;
+import net.mcforge.util.logger.Logger;
+import net.mcforge.util.properties.Properties;
+import net.mcforge.world.ClassicLevelHandler;
+import net.mcforge.world.Level;
+import net.mcforge.world.blocks.tracking.BlockTracker;
+import net.mcforge.world.generator.GeneratorHandler;
+import net.mcforge.world.generator.classicmodel.FlatGrass;
+import net.mcforge.world.generator.classicmodel.Forest;
+import net.mcforge.world.generator.classicmodel.Island;
+import net.mcforge.world.generator.classicmodel.Mountains;
+import net.mcforge.world.generator.classicmodel.Ocean;
+import net.mcforge.world.generator.classicmodel.Pixel;
+import net.mcforge.world.generator.classicmodel.Rainbow;
+import net.mcforge.world.generator.classicmodel.Space;
+import net.mcforge.world.generator.mcmodel.FlatGrassChunk;
+import net.mcforge.world.mcmodel.ChunkLevel;
+
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.OfflinePlayer;
@@ -51,57 +101,6 @@ import org.bukkit.plugin.messaging.Messenger;
 import org.bukkit.scheduler.BukkitScheduler;
 
 import com.avaje.ebean.config.ServerConfig;
-
-import net.mcforge.API.EventSystem;
-import net.mcforge.API.action.CmdAbort;
-import net.mcforge.API.help.Help;
-import net.mcforge.API.help.HelpItemManager;
-import net.mcforge.API.io.ServerLogEvent;
-import net.mcforge.API.plugin.CommandHandler;
-import net.mcforge.API.plugin.PluginHandler;
-import net.mcforge.API.server.ServerStartedEvent;
-import net.mcforge.chat.ChatColor;
-import net.mcforge.chat.Messages;
-import net.mcforge.groups.Group;
-import net.mcforge.iomodel.Player;
-import net.mcforge.iomodel.SMPPlayer;
-import net.mcforge.iomodel.SimpleIOClient;
-import net.mcforge.networking.IOClient;
-import net.mcforge.networking.packets.PacketManager;
-import net.mcforge.sql.ISQL;
-import net.mcforge.sql.MySQL;
-import net.mcforge.sql.SQLite;
-import net.mcforge.system.Console;
-import net.mcforge.system.PrivilegesHandler;
-import net.mcforge.system.Serializer;
-import net.mcforge.system.heartbeat.Beat;
-import net.mcforge.system.heartbeat.ForgeBeat;
-import net.mcforge.system.heartbeat.Heart;
-import net.mcforge.system.heartbeat.MBeat;
-import net.mcforge.system.heartbeat.WBeat;
-import net.mcforge.system.ticker.Tick;
-import net.mcforge.system.ticker.Ticker;
-import net.mcforge.system.updater.Updatable;
-import net.mcforge.system.updater.UpdateService;
-import net.mcforge.system.updater.UpdateType;
-import net.mcforge.util.FileUtils;
-import net.mcforge.util.logger.LogInterface;
-import net.mcforge.util.logger.Logger;
-import net.mcforge.util.properties.Properties;
-import net.mcforge.world.Level;
-import net.mcforge.world.ClassicLevelHandler;
-import net.mcforge.world.blocks.tracking.BlockTracker;
-import net.mcforge.world.generator.GeneratorHandler;
-import net.mcforge.world.generator.classicmodel.FlatGrass;
-import net.mcforge.world.generator.classicmodel.Forest;
-import net.mcforge.world.generator.classicmodel.Island;
-import net.mcforge.world.generator.classicmodel.Mountains;
-import net.mcforge.world.generator.classicmodel.Ocean;
-import net.mcforge.world.generator.classicmodel.Pixel;
-import net.mcforge.world.generator.classicmodel.Rainbow;
-import net.mcforge.world.generator.classicmodel.Space;
-import net.mcforge.world.generator.mcmodel.FlatGrassChunk;
-import net.mcforge.world.mcmodel.ChunkLevel;
 
 public final class Server implements LogInterface, Updatable, Tick, org.bukkit.Server {
     private PacketManager pm;
@@ -224,6 +223,16 @@ public final class Server implements LogInterface, Updatable, Tick, org.bukkit.S
      * The version of Bukkit this server implements
      */
     public static final String BUKKIT_VERSION = "1.4.7-R1.1-SNAPSHOT";
+    
+    /**
+     * The version of Minecraft protocol this server implements.
+     */
+    public static final String PROTOCOL_VERSION = "60";
+    
+    /**
+     * The version of Minecraft this server supports.
+     */
+    public static final String MINECRAFT_VERSION = "1.5";
     /**
      * The version number of this MCForge server </br>
      * Where 600 would be 6.0.0 </br>
@@ -755,6 +764,7 @@ public final class Server implements LogInterface, Updatable, Tick, org.bukkit.S
                 sr = SecureRandom.getInstance("SHA1PRNG");
             } catch (NoSuchAlgorithmException e1) {
                 e1.printStackTrace();
+                return;
             }
             int i = 0;
             for (; i < 100; i++) {
@@ -1049,8 +1059,7 @@ public final class Server implements LogInterface, Updatable, Tick, org.bukkit.S
         if (debug) {
             if (!isLoggingDebugInfo())
                 return;
-            else
-                logger.Log("[DEBUG] " + log);
+			logger.Log("[DEBUG] " + log);
         }
         else
             logger.Log(log);
@@ -1184,13 +1193,30 @@ public final class Server implements LogInterface, Updatable, Tick, org.bukkit.S
     }
     @Override
     public int broadcast(String message, String permission) {
-        // TODO Auto-generated method stub
-        return 0;
+        List<SMPPlayer> players = getSMPPlayers();
+        int count = 0;
+        
+        for (int i = 0; i < players.size(); i++) {
+        	SMPPlayer p = players.get(i);
+        	
+        	if (p.hasPermission(permission)) {
+            	p.sendMessage(message);
+            	count++;
+        	}
+        }
+        
+        return count;
     }
+    
     @Override
     public int broadcastMessage(String message) {
-        // TODO Auto-generated method stub
-        return 0;
+        List<SMPPlayer> players = getSMPPlayers();
+        
+        for (int i = 0; i < players.size(); i++) {
+        	players.get(i).sendMessage(message);
+        }
+        
+        return players.size();
     }
     @Override
     public void clearRecipes() {
