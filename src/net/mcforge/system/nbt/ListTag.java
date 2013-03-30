@@ -15,10 +15,10 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * The String tag is used to store lists of tags of the same type. Its ID is 9.
+ * The List tag is used to store lists of tags of the same type. Its ID is 9.
  */
 public class ListTag extends Tag<List<Tag<?>>> {
-	private byte tagID;
+	private byte tagID = -1;
 	
 	@Override
 	public byte getID() {
@@ -79,8 +79,13 @@ public class ListTag extends Tag<List<Tag<?>>> {
 	}
 	
 	public void addTag(Tag<?> tag) {
-		if (tag.getID() != tagID) {
-			throw new IllegalArgumentException("This list doesn't support the specified tag!");
+		if (tagID != -1) {
+			if (tag.getID() != tagID) {
+				throw new IllegalArgumentException("This list doesn't support the specified tag!");
+			}
+		}
+		else {
+			tagID = tag.getID();
 		}
 		
 		value.add(tag);
@@ -92,7 +97,9 @@ public class ListTag extends Tag<List<Tag<?>>> {
 	}
 	
 	public synchronized void removeTag(Tag<?> tag) {
-		value.remove(tag);
+		if (value.contains(tag)) {
+			value.remove(tag);
+		}
 	}
 	
 	public void clear() {
