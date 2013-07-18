@@ -1,5 +1,5 @@
 #GGS
-This is the old GGS code for Minecraft Classic/SMP before mcforge shutdown.
+This is the old GGS code for Minecraft Classic/SMP.
 
 No more development is being done on this software. All pull requests will be ignored
 
@@ -10,9 +10,19 @@ No more development is being done on this software. All pull requests will be ig
 - [GSon][11]
 - [Bukkit][12]
 
+##Documentation
+Javadocs for GGS can be found in the docs folder in this repo
+
 ##Building with Maven
 The source has a maven script for required dependencies, so just run 'mvn clean install' in the source directory
 to build the source.
+
+##Command-line arguments
+- --smponly - This argument will only allow SMP clients to connect (buggy and non-working)
+- --classiconly - This argument will only allow classic clients to connect
+
+##GGS Plugin Pack
+The GGS Plugin Pack can be found [here][13]
 
 
 [1]: http://www.mcforge.net
@@ -27,3 +37,4 @@ to build the source.
 [10]: http://code.google.com/p/kryo/downloads/list
 [11]: http://code.google.com/p/google-gson/downloads/list
 [12]: http://dl.bukkit.org/latest-dev/bukkit.jar
+[13]: https://github.com/hypereddie10/GGS-Plugin-Pack
