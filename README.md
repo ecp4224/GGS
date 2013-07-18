@@ -1,5 +1,7 @@
-#MCForge
-This is the old MCForge code for Minecraft Classic/SMP before mcforge shutdown. Here lies what could of been...
+#GGS
+This is the old GGS code for Minecraft Classic/SMP before mcforge shutdown.
+
+No more development is being done on this software. All pull requests will be ignored
 
 ##Required Dependencies
 - [MySQL Driver][7]
