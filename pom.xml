@@ -1,10 +1,10 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>net.mcforge</groupId>
-  <artifactId>MCForge</artifactId>
-  <version>6.0.0-beta7-SNAPSHOT</version>
-  <name>MCForge Core</name>
-  <description>The Core for MCForge 6</description>
+  <groupId>com.ep.ggs</groupId>
+  <artifactId>GGS</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
+  <name>GGS</name>
+  <description>The Core for GGS</description>
   <repositories>
     <repository>
       <id>maven-central</id>
@@ -67,12 +67,12 @@
 	          <Main-Class>net.mcforge.test.console.Main</Main-Class>
 	          <Implementation-Title>${project.name}</Implementation-Title>
 	          <Implementation-Version>${describe}</Implementation-Version>
-	          <Implementation-Vendor>MCForge</Implementation-Vendor>
+	          <Implementation-Vendor>GamezGalaxy</Implementation-Vendor>
 	          <Sealed>true</Sealed>
 	        </manifestEntries>
 	        <manifestSections>
 	          <manifestSection>
-	            <name>net/mcforge/test/console</name>
+	            <name>com/ep/ggs/test/console</name>
 	              <manifestEntries>
 	                <Sealed>true</Sealed>
 	              </manifestEntries>
