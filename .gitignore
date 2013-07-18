@@ -1,4 +1,3 @@
-*.class
 # Package Files #
 *.jar
 *.war
@@ -10,7 +9,6 @@
 bin/**
 tmp/**
 tmp/**/*
-doc/*
 *.tmp
 *.bak
 *.swp
@@ -19,7 +17,6 @@ local.properties
 *.settings/
 *.loadpath
 *.classpath
-target/*
 
 # External tool builders
 .externalToolBuilders/
@@ -46,10 +43,8 @@ plugins/*
 *.project
 .project
 .classpath
-url.txt
-*.mcuf
+ctf/*
+ctf2/*
 
-#NetBeans
-build/
-dist/
-nbproject/
+#Documentation files
+doc/*
