@@ -165,10 +165,8 @@ public class UpdateManager {
             if (con.getResponseCode() != HttpURLConnection.HTTP_OK)
                 return false;
         } catch (MalformedURLException e) {
-            e.printStackTrace();
             return false;
         } catch (IOException e) {
-            e.printStackTrace();
             return false;
         }
         return true;
