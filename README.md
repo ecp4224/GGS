@@ -1,4 +1,4 @@
-#GGS
+![Logo](http://i.imgur.com/wammvvD.png)
 This is the old GGS code for Minecraft Classic/SMP.
 
 No more development is being done on this software. All pull requests will be ignored
