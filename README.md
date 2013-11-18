@@ -1,5 +1,7 @@
 ![Logo](http://i.imgur.com/JkNbVO5.png)
 
+[![Build Status](https://drone.io/github.com/hypereddie10/GGS/status.png)](https://drone.io/github.com/hypereddie10/GGS/latest)
+
 This is the old GGS code for Minecraft Classic/SMP.
 
 No more development is being done on this software. All pull requests will be ignored
