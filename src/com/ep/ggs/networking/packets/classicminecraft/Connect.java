@@ -47,7 +47,7 @@ public class Connect extends ClassicPacket {
             byte[] name = new byte[64];
             for (int i = 1; i < 64; i++)
                 name[i - 1] = message[i];
-            player.username = new String(name, "US-ASCII").trim();
+            player.setUsername(new String(name, "US-ASCII").trim());
             name = new byte[64];
             for (int i = 65; i < 65 + 32; i++)
                 name[i - 65] = message[i];
@@ -87,7 +87,7 @@ public class Connect extends ClassicPacket {
                 }
                 else
                 {
-                    server.log("plugin granted " + player.username + " verification bypass!");
+                    server.log("plugin granted " + player.getUsername() + " verification bypass!");
                 }
             }
         } catch (UnsupportedEncodingException e) {

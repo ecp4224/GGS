@@ -197,7 +197,7 @@ public final class Server implements LogInterface, Updatable, Tick, org.bukkit.S
     public String MainLevel;
     /**
      * Whether or not the server is public
-     */    
+     */
     public boolean Public;
 
     /**
@@ -261,7 +261,7 @@ public final class Server implements LogInterface, Updatable, Tick, org.bukkit.S
     }
     /**
      * Gets the server's generator handler.
-     * 
+     *
      * @return The {@link GeneratorHandler}
      */
     public final GeneratorHandler getGeneratorHandler() {
@@ -387,7 +387,7 @@ public final class Server implements LogInterface, Updatable, Tick, org.bukkit.S
 
     /**
      * Save the system settings
-     * @throws IOException 
+     * @throws IOException
      */
     public void saveSystemSettings() throws IOException {
         getSystemProperties().save("system.config");
@@ -578,7 +578,7 @@ public final class Server implements LogInterface, Updatable, Tick, org.bukkit.S
     /**
      * Start listening to the port specified in {@link Server#Port}
      * and start accepting new connections.
-     * @throws IOException 
+     * @throws IOException
      */
     public void startListening() throws IOException {
         pm = new PacketManager(this);
@@ -738,7 +738,7 @@ public final class Server implements LogInterface, Updatable, Tick, org.bukkit.S
         } 
         MCForge Admin Privileges service down, remove code
         */
-        
+
         if (args.isClassicLoadingLevels() && args.isAllowingClassic()) {
             log("Setting default system wide class loader to " + getDefaultClassLoader(), true);
             Serializer.getKryo().setClassLoader(getDefaultClassLoader());
@@ -987,11 +987,11 @@ public final class Server implements LogInterface, Updatable, Tick, org.bukkit.S
     public Player findPlayer(String name) {
         Player toreturn = null;
         for (int i = 0; i < getClassicPlayers().size(); i++) {
-            if (name.equalsIgnoreCase(getClassicPlayers().get(i).username))
+            if (name.equalsIgnoreCase(getClassicPlayers().get(i).getUsername()))
                 return getClassicPlayers().get(i);
-            else if (getClassicPlayers().get(i).username.toLowerCase().indexOf(name.toLowerCase()) != -1 && toreturn == null)
+            else if (getClassicPlayers().get(i).getUsername().toLowerCase().contains(name.toLowerCase()) && toreturn == null)
                 toreturn = getClassicPlayers().get(i);
-            else if (getClassicPlayers().get(i).username.toLowerCase().indexOf(name.toLowerCase()) != -1 && toreturn != null)
+            else if (getClassicPlayers().get(i).getUsername().toLowerCase().contains(name.toLowerCase()) && toreturn != null)
                 return null;
         }
         return toreturn;
@@ -1049,10 +1049,10 @@ public final class Server implements LogInterface, Updatable, Tick, org.bukkit.S
         ArrayList<Player> players = new ArrayList<Player>();
         for (Player p : getClassicPlayers())
             players.add(p);
-                for (int i = 0; i < players.size(); i++)
-                    players.get(i).kick("Server shutting down!");
-                Properties.reset();
-                pm.stopReading();
+        for (int i = 0; i < players.size(); i++)
+            players.get(i).kick("Server shutting down!");
+        Properties.reset();
+        pm.stopReading();
     }
 
     /**
@@ -1088,7 +1088,7 @@ public final class Server implements LogInterface, Updatable, Tick, org.bukkit.S
      * Add a task to be called every 10 milliseconds
      * @param t
      *         The {@link Tick} object to call
-     * 
+     *
      * @deprecated Use {@link Server#getTicker()} and {@link Ticker#addTick(Tick)}
      */
     @Deprecated
@@ -1250,7 +1250,7 @@ public final class Server implements LogInterface, Updatable, Tick, org.bukkit.S
     }
     @Override
     public Inventory createInventory(InventoryHolder owner, int size,
-            String title) {
+                                     String title) {
         // TODO Auto-generated method stub
         return null;
     }

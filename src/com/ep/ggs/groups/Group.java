@@ -191,7 +191,7 @@ public class Group implements Listener {
 	 *            The player to add
 	 */
 	public void addPlayer(Player p) {
-		addMember(p.username);
+		addMember(p.getUsername());
 	}
 
 	/**
@@ -201,7 +201,7 @@ public class Group implements Listener {
 	 *            The player to remove
 	 */
 	public void removePlayer(Player p) {
-		removeMember(p.username);
+		removeMember(p.getUsername());
 	}
 
 	/**
@@ -297,7 +297,7 @@ public class Group implements Listener {
 	public static Group getGroup(Player p) {
 		for (Group g : groups) {
 			for (String pp : g.members) {
-				if (pp.equals(p.username)) return g;
+				if (pp.equals(p.getUsername())) return g;
 			}
 		}
 		return null;

@@ -53,7 +53,7 @@ public class Messages {
     public void sendMessage(String message, String playerName)
     {
         for (Player p : server.getClassicPlayers())
-            if(p.username == playerName)
+            if(p.getUsername().equals(playerName))
                 p.sendMessage(message);
     }
     

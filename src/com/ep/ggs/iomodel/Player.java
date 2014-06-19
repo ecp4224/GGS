@@ -89,7 +89,7 @@ public class Player extends SimpleIOClient implements CommandExecutor, Tick {
     /**
      * The username of the player
      */
-    public String username;
+    private String username = null;
     /**
      * The world the player is currently in
      */
@@ -165,6 +165,16 @@ public class Player extends SimpleIOClient implements CommandExecutor, Tick {
 
         afk = false;
         getServer().getTicker().addTick(this);
+    }
+
+    public void setUsername(String name) {
+        if (username != null)
+            throw new IllegalAccessError("The username has already been set!");
+        this.username = name;
+    }
+
+    public String getUsername() {
+        return username;
     }
 
     @Override

@@ -99,7 +99,7 @@ public class CommandHandler {
         				int playerPerm = _server.getPrivilegesHandler().getStaffRank(player.getName()).getValue();
         				int pPerm = _server.getPrivilegesHandler().getStaffRank(p).getValue();
         				if (pPerm > playerPerm) {
-        					player.sendMessage("You can't use " + c.getName() + " on " + p.username);
+        					player.sendMessage("You can't use " + c.getName() + " on " + p.getUsername());
         					return;
         				}
         			}
