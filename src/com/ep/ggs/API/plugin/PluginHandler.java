@@ -259,7 +259,7 @@ public class PluginHandler {
         plugin.onLoad(new String[]{"-normal"}); //Load called after added so plugins can disable/unload in the load method.
         PluginLoadEvent ple = new PluginLoadEvent(plugin, server);
         server.getEventSystem().callEvent(ple);
-        server.Log(plugin.getName() + " v" + plugin.getVersion() + " was loaded.");
+        server.log(plugin.getName() + " v" + plugin.getVersion() + " was loaded.");
         if (plugin instanceof Updatable)
             server.getUpdateService().getUpdateManager().add((Updatable)plugin);
     }
@@ -290,14 +290,14 @@ public class PluginHandler {
                     server.logError(e);
                 } catch (NoClassDefFoundError e) {  
                     server.logError(e);
-                    server.Log("The plugin " + pluginFiles[i] + " failed to load! Try contacting the author of the plugin for a fix.");
+                    server.log("The plugin " + pluginFiles[i] + " failed to load! Try contacting the author of the plugin for a fix.");
                 }  
             }
         }
         if (require.size() > 0) {
-            server.Log("The following plugins could not be loaded due to dependency issues:");
+            server.log("The following plugins could not be loaded due to dependency issues:");
             for (Entry<Plugin, String> p : require.entrySet()) {
-                server.Log(p.getKey().getFileName() + " requires " + p.getValue());
+                server.log(p.getKey().getFileName() + " requires " + p.getValue());
             }
             require.clear();
         }

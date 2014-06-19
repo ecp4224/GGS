@@ -87,7 +87,7 @@ public class Connect extends ClassicPacket {
                 }
                 else
                 {
-                    server.Log("plugin granted " + player.username + " verification bypass!");
+                    server.log("plugin granted " + player.username + " verification bypass!");
                 }
             }
         } catch (UnsupportedEncodingException e) {

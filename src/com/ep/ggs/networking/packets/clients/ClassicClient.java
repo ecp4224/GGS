@@ -35,7 +35,7 @@ public class ClassicClient implements IClient {
             byte[] message = new byte[packet.length];
             try {
                 if(object.getInputStream().read(message) != packet.length) {
-                    pm.server.Log("Bad packet...");
+                    pm.server.log("Bad packet...");
                     return null;
                 }
             } catch (IOException e) {

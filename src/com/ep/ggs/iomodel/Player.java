@@ -1016,7 +1016,7 @@ public class Player extends SimpleIOClient implements CommandExecutor, Tick {
         }
         changeLevel(level, true);
         loadExtraData();
-        getServer().Log(this.username + " has joined the server.");
+        getServer().log(this.username + " has joined the server.");
         chat.serverBroadcast(this.username + " has joined the server.");
         updateAllLists(); //Update me in your list
         isLoggedin = true;
@@ -1437,7 +1437,7 @@ public class Player extends SimpleIOClient implements CommandExecutor, Tick {
         if (this.level == level)
             return;
         this.level = level;
-        getServer().Log(username + " moved to " + level.getName());
+        getServer().log(username + " moved to " + level.getName());
         levelsender = new SendLevel(this);
         levelsender.start();
     }
@@ -1475,7 +1475,7 @@ public class Player extends SimpleIOClient implements CommandExecutor, Tick {
         PlayerKickedEvent pke = new PlayerKickedEvent(this, reason);
         getServer().getEventSystem().callEvent(pke);
         if (pke.isCancelled()) {
-            getServer().Log(username + " kicking has been canceled by a plugin!");
+            getServer().log(username + " kicking has been canceled by a plugin!");
             return;
         }
         if (reason.equals(""))
@@ -1776,7 +1776,7 @@ public class Player extends SimpleIOClient implements CommandExecutor, Tick {
                 formattedMessage = appended_message + formattedMessage;
                 appended_message = "";
             }
-            getServer().Log("User "+ this.username + " sent: " + formattedMessage);
+            getServer().log("User " + this.username + " sent: " + formattedMessage);
             chat.serverBroadcast(this.getDisplayName() + ChatColor.White + ": " + formattedMessage);
         }
     }
@@ -1801,7 +1801,7 @@ public class Player extends SimpleIOClient implements CommandExecutor, Tick {
     @Override
     public void closeConnection() {
         if(this.username != null) {
-            getServer().Log(this.username + " has left the server.");
+            getServer().log(this.username + " has left the server.");
             getServer().sendGlobalMessage(this.username + " has left the server.");        
         }
         if (levelsender != null) {
@@ -1855,29 +1855,29 @@ public class Player extends SimpleIOClient implements CommandExecutor, Tick {
             pa = pm.getPacket((byte)0x02, getClientType());
             pa.Write(p, getServer());
             if (Thread.interrupted()) {
-                p.getServer().Log("Level Sending Aborted", true);
+                p.getServer().log("Level Sending Aborted", true);
                 return;
             }
             pa = null;
             pa = pm.getPacket((byte)0x03, getClientType());
             pa.Write(p, getServer());
             if (Thread.interrupted()) {
-                p.getServer().Log("Level Sending Aborted", true);
+                p.getServer().log("Level Sending Aborted", true);
                 return;
             }
             pa = null;
             pa = pm.getPacket((byte)0x04, getClientType());
             pa.Write(p, getServer());
             if (Thread.interrupted()) {
-                p.getServer().Log("Level Sending Aborted", true);
+                p.getServer().log("Level Sending Aborted", true);
                 return;
             }
             pa = null;
             long endTime = System.nanoTime();
             long duration = endTime - startTime;
-            getServer().Log("Loading took: " + duration + "ms");
+            getServer().log("Loading took: " + duration + "ms");
             if (Thread.interrupted()) {
-                p.getServer().Log("Level Sending Aborted", true);
+                p.getServer().log("Level Sending Aborted", true);
                 return;
             }
             p.finishLevel();

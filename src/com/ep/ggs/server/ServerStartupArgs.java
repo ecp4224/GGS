@@ -38,7 +38,7 @@ public class ServerStartupArgs {
         setLoadingGenerator(true);
         setIsLoadingBlockTracking(true);
         setAllowClassic(true);
-        setAllowSMP(true);
+        setAllowSMP(false); //SMP is not complete and never will...
     }
     
     /**

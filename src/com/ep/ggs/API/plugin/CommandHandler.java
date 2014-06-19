@@ -85,7 +85,7 @@ public class CommandHandler {
             if (player != null)
                 player.sendMessage("Command not found!");
             else
-                _server.Log("Command not found!");
+                _server.log("Command not found!");
         }
         Command c = find(command);
         if (args.length == 1 && args[0].equals(""))
@@ -128,7 +128,7 @@ public class CommandHandler {
                         ce.start();
                     }
                     else {
-                        _server.Log(player.getName() + " used /" + c.getName() + arrayToString(args));
+                        _server.log(player.getName() + " used /" + c.getName() + arrayToString(args));
                         c.execute(player, args);
                     }
                 } catch (Exception e) {
@@ -285,7 +285,7 @@ public class CommandHandler {
         
         @Override
         public void run() {
-            _server.Log(p.getName() + " used /" + cmd.getName() + arrayToString(args));
+            _server.log(p.getName() + " used /" + cmd.getName() + arrayToString(args));
             cmd.execute(p, args);
         }
     }

@@ -50,7 +50,7 @@ public class BrowserClient implements IClient {
                 e.printStackTrace();
             }
             if (message.length < packet.length) {
-                pm.server.Log("Bad packet..");
+                pm.server.log("Bad packet..");
                 return null;
             }
             else

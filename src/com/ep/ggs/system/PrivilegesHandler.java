@@ -110,12 +110,12 @@ public class PrivilegesHandler {
 			staffList = WebUtils.readContentsToArray(new URL("http://server.mcforge.net/devs.txt"));
 		}
 		catch (MalformedURLException e) {
-			server.Log("Couldn't retrieve the MCForge staff list!");
+			server.log("Couldn't retrieve the MCForge staff list!");
 			server.logError(e);
 			return false;
 		}
 		catch (IOException e) {
-			server.Log("Couldn't retrieve the MCForge staff list!");
+			server.log("Couldn't retrieve the MCForge staff list!");
 			server.logError(e);
 			return false;
 		}

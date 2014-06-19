@@ -217,7 +217,7 @@ public class PacketManager {
         running = true;
         reader = new Read();
         reader.start();
-        server.Log("Listening on port " + server.Port);
+        server.log("Listening on port " + server.Port);
     }
 
     /**
@@ -279,7 +279,7 @@ public class PacketManager {
     public boolean disconnect(IOClient client) {
        if (connectedclients.contains(client)) {
            connectedclients.remove(client);
-           server.Log("Removing SimpleIOClient connection", true);
+           server.log("Removing SimpleIOClient connection", true);
            server.rebuildClassicPlayerCache();
            return true;
        }
@@ -327,7 +327,7 @@ public class PacketManager {
                 try {
                     connection = serverSocket.accept();
                     connection.setSoTimeout(300000);
-                    server.Log("Connection made from " + connection.getInetAddress().toString());
+                    server.log("Connection made from " + connection.getInetAddress().toString());
                     new AcceptThread(connection).start();
                 } catch (IOException e) {
                     if (e.getMessage().indexOf("socket closed") == -1) //Happens when the socket is shutdown

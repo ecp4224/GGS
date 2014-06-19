@@ -119,7 +119,7 @@ public class SimpleIOClient implements IOClient {
             writer = new PrintStream(client.getOutputStream());
             reader = new DataInputStream(client.getInputStream());
         } catch (IOException e) {
-            pm.server.Log("Error");
+            pm.server.log("Error");
             e.printStackTrace();
         }
         this.address = client.getInetAddress();
@@ -146,7 +146,7 @@ public class SimpleIOClient implements IOClient {
         if (!connected)
             return;
         try {
-            pm.server.Log("Closing connection");
+            pm.server.log("Closing connection");
             connected = false;
             try {
                 writerthread.join(100);
@@ -254,15 +254,15 @@ public class SimpleIOClient implements IOClient {
                         continue;
                     Packet packet = pm.getPacket(opCode, clienttype);
                     if (packet == null) {
-                        pm.server.Log("Client sent " + opCode);
-                        pm.server.Log("How do..?");
+                        pm.server.log("Client sent " + opCode);
+                        pm.server.log("How do..?");
                         continue;
                     }
                     if (!packet.dynamicSize() && !(packet instanceof DynamicPacket)) {
                         byte[] message = new byte[packet.length];
                         reader.read(message);
                         if (message.length < packet.length && !packet.dynamicSize()) {
-                            pm.server.Log("Bad packet..");
+                            pm.server.log("Bad packet..");
                             continue;
                         }
                         packet.Handle(message, pm.server, client);

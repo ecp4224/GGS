@@ -112,7 +112,7 @@ public class Properties {
     
     private static void makeDefaults(String filename, Server server, Properties p) {
         //TODO Fill in all defaults
-        server.Log("System config not found..creating..");
+        server.log("System config not found..creating..");
         p = getDefaults(p);
         try {
             p.save(filename);

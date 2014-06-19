@@ -371,14 +371,14 @@ public class ClassicLevel implements Level, Serializable {
             save();
         run = false;
         unloading = true;
-        server.Log("[" + name + "] Stopping physics..");
+        server.log("[" + name + "] Stopping physics..");
         try {
             physics.interrupt();
             physics.join(5000);
         } catch (InterruptedException e) {
            server.logError(e);
         }
-        server.Log("Unloading " + name);
+        server.log("Unloading " + name);
         for (Player p : server.getClassicPlayers()) {
             if (p.getLevel() == this)
                 p.changeLevel(server.getClassicLevelHandler().findLevel(server.MainLevel), false);
@@ -411,7 +411,7 @@ public class ClassicLevel implements Level, Serializable {
             autosave = l.autosave;
             blocks = l.blocks;
             if (blocks == null) {
-                server.Log(l.name + " BLOCK DATA CORRUPT!");
+                server.log(l.name + " BLOCK DATA CORRUPT!");
                 blocks = new ClassicBlock[width*height*depth];
             }
             depth = l.depth;
@@ -629,7 +629,7 @@ public class ClassicLevel implements Level, Serializable {
                     Thread.sleep(physicsspeed);
                 } catch (InterruptedException e) { }
             }
-            server.Log("[" + name + "] Physics stopped.");
+            server.log("[" + name + "] Physics stopped.");
         }
     }
     

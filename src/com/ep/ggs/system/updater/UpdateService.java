@@ -187,11 +187,11 @@ public class UpdateService implements Tick {
      */
     public void forceUpdate(Updatable u, boolean notify) {
         if (notify)
-            server.Log("Updating " + u.getDownloadPath() + "..");
+            server.log("Updating " + u.getDownloadPath() + "..");
         u.unload();
         Update highest = um.getHighestUpdate(u);
         if (highest == null) {
-            server.Log("Could not retrieve update. ERROR 01");
+            server.log("Could not retrieve update. ERROR 01");
             return;
         }
         forceUpdate(u, highest, notify);
@@ -209,10 +209,10 @@ public class UpdateService implements Tick {
             downloadFile(update.getDownloadURL(), u.getDownloadPath());
             server.getPluginHandler().loadFile(new File(u.getDownloadPath()), true);
             if (notify)
-                server.Log(u.getDownloadPath() + " has been updated!");
+                server.log(u.getDownloadPath() + " has been updated!");
         } catch (IOException e) {
             server.logError(e);
-            server.Log("Could not retrieve update. ERROR 02");
+            server.log("Could not retrieve update. ERROR 02");
         }
     }
 
@@ -260,7 +260,7 @@ public class UpdateService implements Tick {
     public void addToRestartQueue(Updatable u, Update object, UpdateType type) {
         restart.add(object.getDownloadURL() + "@@" + u.getDownloadPath() + "@@" + type.getType() + "@@" + u.getName());
         if (type == UpdateType.Auto_Notify_Restart)
-            server.Log(u.getName() + " will be updated after a restart!");
+            server.log(u.getName() + " will be updated after a restart!");
         save();
     }
 
@@ -357,7 +357,7 @@ public class UpdateService implements Tick {
             }
             //We dont need to load the plugin, the server will do that.
             if (ut == UpdateType.Auto_Notify_Restart)
-                server.Log("Updates for " + path + " have been applied!");
+                server.log("Updates for " + path + " have been applied!");
         }
     }
 

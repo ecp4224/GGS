@@ -181,21 +181,21 @@ public class ClassicLevelHandler implements LevelHandler {
             l.load(filename, server);
             long endTime = System.nanoTime();
             long duration = endTime - startTime;
-            server.Log("Loading took: " + duration + "ms");
+            server.log("Loading took: " + duration + "ms");
             LevelLoadEvent event = new LevelLoadEvent(l);
             server.getEventSystem().callEvent(event);
             if(event.isCancelled()) {
-                server.Log("Loading of level " + l.getName() + " was canceled by " + event.getCanceler());
+                server.log("Loading of level " + l.getName() + " was canceled by " + event.getCanceler());
                 l.unload(server); //Dispose the level
                 l = null;
                 return null;
             }
         } catch (Exception e) {
-            server.Log("ERROR LOADING LEVEL!");
+            server.log("ERROR LOADING LEVEL!");
             e.printStackTrace();
         }
         if (l != null) {
-            server.Log("[" + l.getName()+ "] Loaded!");
+            server.log("[" + l.getName() + "] Loaded!");
             levels.add(l);
         }
         return l;
@@ -227,7 +227,7 @@ public class ClassicLevelHandler implements LevelHandler {
         LevelUnloadEvent event = new LevelUnloadEvent(level);
         server.getEventSystem().callEvent(event);
         if (event.isCancelled()) {
-            server.Log("The unloading of level " + level + " was canceled by " + event.getCanceler());
+            server.log("The unloading of level " + level + " was canceled by " + event.getCanceler());
             return false;
         }
         if (!levels.contains(level))

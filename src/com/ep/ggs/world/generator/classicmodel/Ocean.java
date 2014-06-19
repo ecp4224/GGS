@@ -181,7 +181,7 @@ public class Ocean implements ClassicGenerator {
         int numIterations = (int)((l.getWidth() + l.getHeight()));
         for (k = 0; k < numIterations; k++)
         {
-            //s.Log("itteration " + k.ToString());
+            //s.log("itteration " + k.ToString());
             d = (float)Math.sqrt(halfX * halfX + halfZ * halfZ);
             w = (float)(rand.nextDouble() * 360);
             //w = (float)(rand.NextDouble()*90);
@@ -298,7 +298,7 @@ public class Ocean implements ClassicGenerator {
             temp = tempy - 0.15f;
         }
 
-        //s.Log("temp = " + temp.ToString());
+        //s.log("temp = " + temp.ToString());
         if (temp > 0.0f) { return temp; }
         return 0.0f;
     }

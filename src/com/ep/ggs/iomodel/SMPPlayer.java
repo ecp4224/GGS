@@ -132,7 +132,7 @@ public class SMPPlayer extends NetworkEntity implements CommandExecutor, org.buk
 	    if (lstep != 1)
 	        throw new IllegalAccessException("This method can only be invoked during login.");
 	    try {
-	        getServer().Log("Something you find with a Public Key..", true);
+	        getServer().log("Something you find with a Public Key..", true);
 	        if (cipher == null) {
 	            cipher = Cipher.getInstance("RSA");
 	            cipher.init(Cipher.DECRYPT_MODE, privateKey.getPrivate());
@@ -144,11 +144,11 @@ public class SMPPlayer extends NetworkEntity implements CommandExecutor, org.buk
             md.update(privateKey.getPublic().getEncoded());
             String hash = bytesToHex(md.digest());
             md = null;
-            getServer().Log("CLIENT: " + hash, true);
+            getServer().log("CLIENT: " + hash, true);
             String check = WebUtils.readContentsToArray(new URL("http://session.minecraft.net/game/checkserver.jsp?user=" + getName() + "&serverId=" + hash))[0];
-            getServer().Log("SURVEY SAYS \"" + check + "\"", true);
+            getServer().log("SURVEY SAYS \"" + check + "\"", true);
             if (!check.equals("YES")) {
-                getServer().Log("I'm sorry, it seems you didn't get the answer. Well thanks for playing :)", true);
+                getServer().log("I'm sorry, it seems you didn't get the answer. Well thanks for playing :)", true);
                 kick("Invalid login!");
                 return;
             }
@@ -178,7 +178,7 @@ public class SMPPlayer extends NetworkEntity implements CommandExecutor, org.buk
 	public void login() throws IllegalAccessException {
 	    if (lstep != 2)
 	        throw new IllegalAccessException("This method can only be invoked during login.");
-	    getServer().Log(getName() + " has joined the server!");
+	    getServer().log(getName() + " has joined the server!");
         Packet packet = pm.getPacket((byte)0x01, getClientType());
         if (packet == null)
             throw new RuntimeException("ClientStatuses packet can't be found!");

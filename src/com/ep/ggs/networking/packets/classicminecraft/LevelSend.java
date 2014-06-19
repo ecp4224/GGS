@@ -99,7 +99,7 @@ public class LevelSend extends ClassicPacket {
             gzip.write(orginal);
             gzip.close();
         } catch (IOException e) {
-            this.parent.server.Log("Error compressing level!");
+            this.parent.server.log("Error compressing level!");
             e.printStackTrace();
             return null;
         }

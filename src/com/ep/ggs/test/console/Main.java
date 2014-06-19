@@ -36,7 +36,7 @@ public class Main extends Console implements Listener {
 
     @Override
     public void sendMessage(String message) {
-        s.Log(message);
+        s.log(message);
     }
     
     public void start() {
@@ -63,7 +63,7 @@ public class Main extends Console implements Listener {
             }
             else {
                 super.sendGlobalMessage(line);
-                s.Log("[Server] " + line);
+                s.log("[Server] " + line);
             }
         }
         System.out.println("Server stopped..");

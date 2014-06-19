@@ -151,7 +151,7 @@ public class Beat extends Thread {
                             }
                         } catch (Exception e) {
                             server.logError(e);
-                            getServer().Log("Error pumping " + h.getURL() + " heart!");
+                            getServer().log("Error pumping " + h.getURL() + " heart!");
                         }
                     }
                 } catch (MalformedURLException e) {

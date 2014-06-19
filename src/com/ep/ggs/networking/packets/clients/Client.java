@@ -30,5 +30,5 @@ public enum Client {
     /**
      * This SimpleIOClient is a browser and all other protocols should be filtered out.
      */
-    BROWSER;
+    BROWSER
 }

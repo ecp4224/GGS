@@ -58,9 +58,9 @@ public class MySQL implements ISQL {
                     statement.executeUpdate(s);
                 }
                 catch (SQLException e) {
-                    server.Log("ERROR EXECUTING STATEMENT!");
-                    server.Log("Statement: ");
-                    server.Log(s);
+                    server.log("ERROR EXECUTING STATEMENT!");
+                    server.log("Statement: ");
+                    server.log(s);
                     server.logError(e);
                 }
             }

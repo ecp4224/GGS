@@ -74,7 +74,6 @@ import com.ep.ggs.system.Console;
 import com.ep.ggs.system.PrivilegesHandler;
 import com.ep.ggs.system.Serializer;
 import com.ep.ggs.system.heartbeat.Beat;
-import com.ep.ggs.system.heartbeat.ForgeBeat;
 import com.ep.ggs.system.heartbeat.Heart;
 import com.ep.ggs.system.heartbeat.MBeat;
 import com.ep.ggs.system.heartbeat.WBeat;
@@ -456,7 +455,7 @@ public final class Server implements LogInterface, Updatable, Tick, org.bukkit.S
     }
 
     /**
-     * Log an exception to the logger
+     * log an exception to the logger
      * This method will also invoke {@link Throwable#printStackTrace()}
      * @param t The exception to log
      */
@@ -491,7 +490,7 @@ public final class Server implements LogInterface, Updatable, Tick, org.bukkit.S
     /**
      * Start the logger.
      * The logger can be started before the server is started, but
-     * this method is called in {@link Server#Start()}
+     * this method is called in {@link Server#start()}
      */
     public void startLogger() {
         Calendar cal = Calendar.getInstance();
@@ -552,7 +551,7 @@ public final class Server implements LogInterface, Updatable, Tick, org.bukkit.S
                 "CREATE TABLE if not exists " + sql.getPrefix() + "_extra (name VARCHAR(20), setting TEXT, value LONGTEXT);",
         };
         sql.executeQuery(commands);
-        Log("SQL all set.");
+        log("SQL all set.");
     }
 
     /**
@@ -643,95 +642,95 @@ public final class Server implements LogInterface, Updatable, Tick, org.bukkit.S
             startEvents();
         if (args.isLoadingLogger())
             startLogger();
-        Log("=============================");
-        Log("Starting GGS v" + CORE_VERSION);
+        log("=============================");
+        log("Starting GGS v" + CORE_VERSION);
         if (args.isAllowingSMP()) {
-            Log("Telling bukkit to use GGS", true);
+            log("Telling bukkit to use GGS", true);
             Bukkit.setServer(this);
-            Log("OK!", true);
+            log("OK!", true);
         }
         if (args.isRunningInDebugMode()) {
             debug_mode = true;
-            Log("GGS running in debug mode", true);
+            log("GGS running in debug mode", true);
         }
-        Log("Starting Command Handler", true);
+        log("Starting Command Handler", true);
         ch = new CommandHandler(this);
-        Log("OK!", true);
-        Log("Staring Help Service", true);
+        log("OK!", true);
+        log("Staring Help Service", true);
         hmanange = new HelpItemManager();
         hmanange.init(this);
-        Log("OK!", true);
-        Log("Creating default files and directories", true);
+        log("OK!", true);
+        log("Creating default files and directories", true);
         FileUtils.createFilesAndDirs();
-        Log("OK!", true);
+        log("OK!", true);
         if (args.isLoadingGroups()) {
-            Log("Loading groups", true);
+            log("Loading groups", true);
             Group.load(this);
-            Log("OK!", true);
+            log("OK!", true);
         }
         if (args.isLoadingProperties()) {
-            Log("Loading Properties", true);
+            log("Loading Properties", true);
             p = Properties.init(this);
-            Log("OK!", true);
+            log("OK!", true);
             if (!p.getBool("Verify-Names")) {
-                Log("!!WARNING!! You are running the server with verify names off, this means");
-                Log("anyone can login to the server with any username. Its recommended to turn");
-                Log("this option on, if you know what your doing, then ignore this message.");
+                log("!!WARNING!! You are running the server with verify names off, this means");
+                log("anyone can login to the server with any username. Its recommended to turn");
+                log("this option on, if you know what your doing, then ignore this message.");
             }
-            Log("Loading System Settings", true);
+            log("Loading System Settings", true);
             loadSystemProperties();
-            Log("OK!", true);
+            log("OK!", true);
         }
         if (args.isLoadingBlockTracking() && args.isAllowingClassic()) {
-            Log("Loading block tracking", true);
+            log("Loading block tracking", true);
             track = new BlockTracker(this);
-            Log("OK!", true);
+            log("OK!", true);
         }
         if (args.isLoadingUpdateService()) {
-            Log("Loading the Update Service", true);
+            log("Loading the Update Service", true);
             us = new UpdateService(this);
-            Log("OK!", true);
+            log("OK!", true);
         }
         if (args.isAllowingClassic()) {
-            Log("Loading the Message Service", true);
+            log("Loading the Message Service", true);
             m = new Messages(this);
-            Log("OK!", true);
+            log("OK!", true);
         }
         if (args.isLoadingPlugins()) {
-            Log("Loading Plugin Service", true);
+            log("Loading Plugin Service", true);
             ph = new PluginHandler(this);
-            Log("OK!", true);
+            log("OK!", true);
         }
         if (args.isLoadingGenerator()) {
-            Log("Loading ClassicGenerator Service", true);
+            log("Loading ClassicGenerator Service", true);
             gh = new GeneratorHandler();
-            Log("OK!", true);
+            log("OK!", true);
         }
-        Log("Attempting to bind to port", true);
+        log("Attempting to bind to port", true);
         try {
             startListening();
         } catch (IOException e2) {
             e2.printStackTrace();
-            Log("FAILED!", true);
+            log("FAILED!", true);
             return;
         }
-        Log("OK!", true);
+        log("OK!", true);
         if (args.isLoadingPrivileges() && args.isAllowingClassic()) {
-            Log("Loading Privileges Service", true);
+            log("Loading Privileges Service", true);
             prh = new PrivilegesHandler(this);
-            Log("OK!", true);
+            log("OK!", true);
         }
         if (args.isLoadingPlugins()) {
-            Log("Loading plugins", true);
+            log("Loading plugins", true);
             ph.loadplugins();
-            Log("Loaded plugins");
-            Log("OK!", true);
+            log("Loaded plugins");
+            log("OK!", true);
         }
         /*try {
             if (args.isLoadingPrivileges() && args.isAllowingClassic()) {
-                Log("Initializing Privilieges Service", true);
+                log("Initializing Privilieges Service", true);
                 prh.initialize();
-                Log("OK!", true);
+                log("OK!", true);
             }
         }
         catch (IOException e) {
@@ -741,31 +740,31 @@ public final class Server implements LogInterface, Updatable, Tick, org.bukkit.S
         */
         
         if (args.isClassicLoadingLevels() && args.isAllowingClassic()) {
-            Log("Setting default system wide class loader to " + getDefaultClassLoader(), true);
+            log("Setting default system wide class loader to " + getDefaultClassLoader(), true);
             Serializer.getKryo().setClassLoader(getDefaultClassLoader());
-            Log("OK!", true);
-            Log("Loading Classic Level Service", true);
+            log("OK!", true);
+            log("Loading Classic Level Service", true);
             lm = new ClassicLevelHandler(this);
-            Log("OK!", true);
-            Log("Loading Main Level", true);
+            log("OK!", true);
+            log("Loading Main Level", true);
             MainLevel = getSystemProperties().getValue("MainLevel");
             if (!new File("levels/" + MainLevel + ".ggs").exists()) {
                 lm.newClassicLevel("Main", (short)64, (short)64, (short)64);
                 MainLevel = "Main";
             }
             lm.loadClassicLevels();
-            Log("Loaded levels");
-            Log("OK!", true);
+            log("Loaded levels");
+            log("OK!", true);
         }
         /*if (args.isLoadingUpdateService()) {
-            Log("Adding GGS to Update Service", true);
+            log("Adding GGS to Update Service", true);
             us.getUpdateManager().add(this);
-            Log("OK!", true);
+            log("OK!", true);
         }
         Update server offline, remove code
          */
         if (args.isAllowingClassic()) {
-            Log("Creating Classic Salt", true);
+            log("Creating Classic Salt", true);
             SecureRandom sr = null;
             try {
                 sr = SecureRandom.getInstance("SHA1PRNG");
@@ -781,97 +780,97 @@ public final class Server implements LogInterface, Updatable, Tick, org.bukkit.S
                 if (new Random().nextDouble() < .3)
                     break;
             }
-            Log("Using " + i + " generated salt.", true);
-            Log("Formatting salt.", true);
+            log("Using " + i + " generated salt.", true);
+            log("Formatting salt.", true);
             Salt = LetterOrNumber(Salt);
             Salt = Salt.substring(0, 16);
-            Log("SALT: " + Salt);
-            Log("OK!", true);
+            log("SALT: " + Salt);
+            log("OK!", true);
         }
         if (startSQL) {
-            Log("Starting SQL Service", true);
+            log("Starting SQL Service", true);
             startSQL();
-            Log("OK!", true);
+            log("OK!", true);
         }
         if (args.isLoadingHeartbeat()) {
-            Log("Loading Heartbeat Service", true);
+            log("Loading Heartbeat Service", true);
             heartbeater = new Beat(this);
-            Log("OK!", true);
+            log("OK!", true);
             if (args.isAllowingClassic()) {
-                Log("Adding Minecraft Heartbeat", true);
+                log("Adding Minecraft Heartbeat", true);
                 heartbeater.addHeart(new MBeat());
-                Log("OK!", true);
-                Log("Adding WOM Heartbeat", true);
+                log("OK!", true);
+                log("Adding WOM Heartbeat", true);
                 heartbeater.addHeart(new WBeat());
-                Log("OK!", true);
-                /*Log("Adding GGS Heartbeat", true);
+                log("OK!", true);
+                /*log("Adding GGS Heartbeat", true);
                 heartbeater.addHeart(new ForgeBeat());
-                Log("OK!", true);
+                log("OK!", true);
                 Heartbeat service down, remove code
                 */
             }
-            Log("Starting Heartbeat Service", true);
+            log("Starting Heartbeat Service", true);
             heartbeater.startBeating();
-            Log("OK!", true);
+            log("OK!", true);
         }
-        Log("Created heartbeat");
-        Log("Server url can be found in 'url.txt'");
+        log("Created heartbeat");
+        log("Server url can be found in 'url.txt'");
 
         if (args.isLoadingGenerator()) {
             if (args.isAllowingClassic()) {
-                Log("Adding Flatgrass generator to ClassicGenerator Service", true);
+                log("Adding Flatgrass generator to ClassicGenerator Service", true);
                 gh.addGenerator(new FlatGrass(this));
-                Log("OK!", true);
-                Log("Adding Forest generator to ClassicGenerator Service", true);
+                log("OK!", true);
+                log("Adding Forest generator to ClassicGenerator Service", true);
                 gh.addGenerator(new Forest(this));
-                Log("OK!", true);
-                Log("Adding Island generator to ClassicGenerator Service", true);
+                log("OK!", true);
+                log("Adding Island generator to ClassicGenerator Service", true);
                 gh.addGenerator(new Island(this));
-                Log("OK!", true);
-                Log("Adding Mountains generator to ClassicGenerator Service", true);
+                log("OK!", true);
+                log("Adding Mountains generator to ClassicGenerator Service", true);
                 gh.addGenerator(new Mountains(this));
-                Log("OK!", true);
-                Log("Adding Ocean generator to ClassicGenerator Service", true);
+                log("OK!", true);
+                log("Adding Ocean generator to ClassicGenerator Service", true);
                 gh.addGenerator(new Ocean(this));
-                Log("OK!", true);
-                Log("Adding Pixel generator to ClassicGenerator Service", true);
+                log("OK!", true);
+                log("Adding Pixel generator to ClassicGenerator Service", true);
                 gh.addGenerator(new Pixel(this));
-                Log("OK!", true);
-                Log("Adding Rainbow generator to ClassicGenerator Service", true);
+                log("OK!", true);
+                log("Adding Rainbow generator to ClassicGenerator Service", true);
                 gh.addGenerator(new Rainbow(this));
-                Log("OK!", true);
-                Log("Adding Space generator to ClassicGenerator Service", true);
+                log("OK!", true);
+                log("Adding Space generator to ClassicGenerator Service", true);
                 gh.addGenerator(new Space(this));
-                Log("OK!", true);
+                log("OK!", true);
             }
             gh.addGenerator(new FlatGrassChunk());
         }
 
         if (args.isLoadingCommands() && args.isAllowingClassic()) {
-            Log("Adding /abort to Command Service", true);
+            log("Adding /abort to Command Service", true);
             getCommandHandler().addCommand(new CmdAbort());
-            Log("OK!", true);
-            Log("Adding /help to Command Service", true);
+            log("OK!", true);
+            log("Adding /help to Command Service", true);
             getCommandHandler().addCommand(new Help());
-            Log("OK!", true);
+            log("OK!", true);
         }
         if (args.isLoadingEvents()) {
-            Log("Creating \"ServerStartedEvent\"", true);
+            log("Creating \"ServerStartedEvent\"", true);
             ServerStartedEvent sse = new ServerStartedEvent(this);
-            Log("OK!", true);
-            Log("Calling event", true);
+            log("OK!", true);
+            log("Calling event", true);
             es.callEvent(sse);
-            Log("OK!", true);
+            log("OK!", true);
         }
-        Log("Adding Server to ticker", true);
+        log("Adding Server to ticker", true);
         getTicker().addTick(this);
-        Log("OK!", true);
+        log("OK!", true);
         if (args.isAllowingSMP()) {
-            Log("Creating SMP Main Level..");
+            log("Creating SMP Main Level..");
             TEMP_MAIN_LEVEL = new ChunkLevel(this, "Test");
-            Log("Generating World..");
+            log("Generating World..");
             TEMP_MAIN_LEVEL.generateWorld(gh.findGenerator("FlatGrassChunk"));
-            Log("Done!");
+            log("Done!");
         }
     }
 
@@ -901,7 +900,7 @@ public final class Server implements LogInterface, Updatable, Tick, org.bukkit.S
      * The player cache is the list of {@link Player} objects currently connected to the server.
      */
     public synchronized void rebuildClassicPlayerCache() {
-        Log("Rebuilding Classic Player Cache", true);
+        log("Rebuilding Classic Player Cache", true);
         pcache = new ArrayList<Player>();
         for (IOClient i : getClients()) {
             if (i instanceof Player)
@@ -909,7 +908,7 @@ public final class Server implements LogInterface, Updatable, Tick, org.bukkit.S
         }
         cache = getClients();
         cachesize = cache.size();
-        Log("OK!", true);
+        log("OK!", true);
     }
 
     /**
@@ -929,7 +928,7 @@ public final class Server implements LogInterface, Updatable, Tick, org.bukkit.S
      * The player cache is the list of {@link SMPPlayer} objects currently connected to the server.
      */
     public synchronized void rebuildSMPPlayerCache() {
-        Log("Rebuilding SMP Cache", true);
+        log("Rebuilding SMP Cache", true);
         scache = new ArrayList<SMPPlayer>();
         for (IOClient i : getClients()) {
             if (i instanceof SMPPlayer)
@@ -937,7 +936,7 @@ public final class Server implements LogInterface, Updatable, Tick, org.bukkit.S
         }
         cache = getClients();
         cache2size = cache.size();
-        Log("OK!", true);
+        log("OK!", true);
     }
 
     /**
@@ -1029,7 +1028,7 @@ public final class Server implements LogInterface, Updatable, Tick, org.bukkit.S
         if (!Running)
             return;
         Running = false;
-        Log("Stopping server...");
+        log("Stopping server...");
         getTicker().removeTick(this);
         for(Player p : players)
         {
@@ -1057,14 +1056,14 @@ public final class Server implements LogInterface, Updatable, Tick, org.bukkit.S
     }
 
     /**
-     * Log something to the logs
+     * log something to the logs
      * @param log
      */
-    public void Log(String log) {
-        Log(log, false);
+    public void log(String log) {
+        log(log, false);
     }
 
-    public void Log(String log, boolean debug) {
+    public void log(String log, boolean debug) {
         if (logger == null)
             return;
         if (debug) {

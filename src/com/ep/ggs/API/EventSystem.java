@@ -32,7 +32,7 @@ public class EventSystem {
                 listen.execute(event);
             }
             catch (Exception e) {
-                server.Log("==!EVENT ERROR!==");
+                server.log("==!EVENT ERROR!==");
                 server.logError(e);
             }
         }
@@ -42,7 +42,7 @@ public class EventSystem {
             try {
                 getEventListeners(getRegistrationClass(entry.getKey())).registerAll(entry.getValue());
             } catch (IllegalAccessException e) {
-                server.Log("==!EVENT ERROR!==");
+                server.log("==!EVENT ERROR!==");
                 server.logError(e);
             }
         }
@@ -54,7 +54,7 @@ public class EventSystem {
             method.setAccessible(true);
             return (EventList) method.invoke(null);
         } catch (Exception e) {
-            server.Log("==!EVENT ERROR!==");
+            server.log("==!EVENT ERROR!==");
             server.logError(e);
             return null;
         }
